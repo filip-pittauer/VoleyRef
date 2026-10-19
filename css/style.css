@@ -647,7 +647,8 @@ progress::-moz-progress-bar {
   white-space: nowrap;
 }
 
-.leaderboard tbody tr:nth-child(-n + 3) td:first-child {
+/* první tři místa – jen v žebříčku (třída leaderboard--ranked) */
+.leaderboard--ranked tbody tr:nth-child(-n + 3) td:first-child {
   font-weight: 700;
   color: var(--color-accent);
 }
@@ -669,6 +670,84 @@ progress::-moz-progress-bar {
 
 .hide-narrow {
   display: none;
+}
+
+/* ---------- Statistiky ---------- */
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.stat-tile {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.75rem var(--space);
+}
+
+.stat-tile p {
+  margin: 0;
+}
+
+.stat-tile__value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tile__label {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.stat-tile__note {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.cat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* název vlevo, číslo vpravo, pruh pod nimi přes celou šířku */
+.cat-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+}
+
+.cat-row__name {
+  font-weight: 600;
+}
+
+.cat-row__value {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.cat-row__bar {
+  grid-column: 1 / -1;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.cat-row__bar span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+}
+
+.cat-row--empty .cat-row__name {
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 
 /* ---------- Pravidla ---------- */
@@ -774,6 +853,10 @@ progress::-moz-progress-bar {
 
   .hide-narrow {
     display: table-cell;
+  }
+
+  .stat-tiles {
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .card-grid {

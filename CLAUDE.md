@@ -27,6 +27,7 @@ index.html          úvodní stránka / rozcestník
 kviz.html           kvíz
 pravidla.html       knížka pravidel (kapitoly mají id = kategorie otázek)
 zebricek.html       žebříček
+statistiky.html     statistiky přihlášeného hráče (RPC moje_statistiky)
 ucet.html           přihlášení, registrace, profil, smazání účtu
 ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
 css/style.css       společné styly
@@ -92,6 +93,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Konvence kódu
 - **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.**
+- Navigace: Kvíz, Pravidla, Žebříček, Statistiky, Účet (úvod přes logo). Víc položek se na 375 px nevejde na řádek.
 - Hlavička a navigace jsou v každém HTML souboru zvlášť (bez build kroku) – při změně upravit všechny stránky.
 - Texty v UI jsou česky. Názvy proměnných a funkcí v kódu anglicky, komentáře česky.
 - Sémantické HTML, přístupnost (alt texty, popisky formulářů, ovladatelnost klávesnicí).

@@ -58,6 +58,9 @@ function fillCategories() {
   for (const [id, name] of Object.entries(CATEGORIES)) {
     categorySelect.append(el('option', { value: id }, name));
   }
+  // kviz.html?kategorie=blok → kategorie předvybraná (odkaz ze statistik)
+  const fromUrl = new URLSearchParams(location.search).get('kategorie');
+  if (fromUrl && CATEGORIES[fromUrl]) categorySelect.value = fromUrl;
 }
 
 async function handleStart() {

@@ -96,6 +96,17 @@ onSubmit($('register-form'), async ({ nickname, email, password }, form) => {
   if (error) throw error;
 
   form.reset();
+
+  // E-mail už má účet: Supabase z bezpečnostních důvodů nehlásí chybu,
+  // ale vrátí uživatele bez přihlašovacích „identit“ a e-mail nepošle.
+  if (data.user && data.user.identities?.length === 0) {
+    showSection('login-section');
+    $('login-email').value = email;
+    showMessage('Tento e-mail už má účet. Přihlas se heslem nebo přes Google. '
+      + 'Pokud jsi účet založil přes Google a chceš i heslo, použij „Zapomenuté heslo?“.', 'error');
+    return;
+  }
+
   if (!data.session) {
     // Supabase vyžaduje potvrzení e-mailu – hráč zatím není přihlášený.
     showSection('login-section');
