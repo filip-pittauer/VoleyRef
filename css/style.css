@@ -197,7 +197,244 @@ h3 {
   background: var(--color-primary-dark);
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.button--secondary {
+  background: transparent;
+  color: var(--color-primary);
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+
+.button--secondary:hover {
+  background: var(--color-bg);
+}
+
 .muted {
+  color: var(--color-text-muted);
+}
+
+.small {
+  font-size: 0.875rem;
+}
+
+/* Atribut hidden musí vyhrát i nad display z jiných pravidel */
+[hidden] {
+  display: none !important;
+}
+
+/* Skryté vizuálně, ale čtečka obrazovky to přečte */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Svislé mezery mezi potomky („sovička“ * + *) */
+.stack > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.stack > * + * {
+  margin-top: var(--space);
+}
+
+/* ---------- Formuláře ---------- */
+.field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+input:not([type="radio"]):not([type="checkbox"]),
+select {
+  width: 100%;
+  max-width: 24rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius) / 2);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.alert {
+  padding: 0.75rem var(--space);
+  border-radius: var(--radius);
+  border: 1px solid currentColor;
+}
+
+.alert--error {
+  color: var(--color-error);
+}
+
+.alert--success {
+  color: var(--color-success);
+}
+
+/* ---------- Kvíz ---------- */
+/* <progress> má v každém prohlížeči jiný vzhled – sjednotíme ho */
+progress {
+  appearance: none;
+  width: 100%;
+  height: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+  background: var(--color-border);
+}
+
+progress::-webkit-progress-value {
+  background: var(--color-accent);
+}
+
+progress::-moz-progress-bar {
+  background: var(--color-accent);
+}
+
+.situation {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.media {
+  margin: 0;
+}
+
+.media img,
+.media video,
+.media svg {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+.answers {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.answers legend {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Odpověď = celý řádek je klikací (label obaluje radio) */
+.answer {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.answer:hover {
+  border-color: var(--color-primary);
+}
+
+/* Radio necháme v DOM kvůli klávesnici, jen ho vizuálně schováme */
+.answer input {
+  position: absolute;
+  opacity: 0;
+}
+
+.answer__key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  font-weight: 700;
+}
+
+/* :has() – styluje label podle stavu radia uvnitř */
+.answer:has(input:checked) {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+}
+
+.answer:has(input:checked) .answer__key {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.answer:has(input:focus-visible) {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Výsledek ---------- */
+.score {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.result-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space);
+}
+
+.result {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 6px solid;
+  border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.result p {
+  margin: 0.25rem 0;
+}
+
+.result--ok {
+  border-left-color: var(--color-success);
+}
+
+.result--wrong {
+  border-left-color: var(--color-error);
+}
+
+.result__status {
+  font-weight: 700;
+}
+
+.result--ok .result__status {
+  color: var(--color-success);
+}
+
+.result--wrong .result__status {
+  color: var(--color-error);
+}
+
+.result__explanation {
+  padding: 0.5rem 0.75rem;
+  background: var(--color-bg);
+  border-radius: calc(var(--radius) / 2);
+}
+
+.result__rule {
+  font-size: 0.875rem;
   color: var(--color-text-muted);
 }
 

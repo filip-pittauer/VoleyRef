@@ -59,6 +59,10 @@ Platí pro `data/otazky.json` a později pro DB schéma.
 - Správná odpověď se hráči ukazuje **až na konci kola**, ne po každé otázce.
 - Jen halový (šestkový) volejbal. Tlačítko „Nevím“ pro hráče nebudeme dělat.
 
+### Kde otázky leží
+- `private/otazky.json` – **plná sada se správnými odpověďmi**. Složka `private/` je v `.gitignore` a nesmí do veřejného repa. Je jen na disku autora (zálohovat!).
+- `data/otazky.json` – jen pár veřejných ukázek pro lokální fázi 2.
+
 ## Postup vývoje (fáze)
 Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 1. **Kostra webu:** stránky, navigace, základní responzivní CSS (mobile-first).

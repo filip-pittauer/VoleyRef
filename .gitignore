@@ -6,3 +6,6 @@ desktop.ini
 # Lokální tajemství – NIKDY necommitovat (service_role klíč, heslo k DB)
 .env
 .env.*
+
+# Plná sada otázek se správnými odpověďmi – NESMÍ do veřejného repa
+private/

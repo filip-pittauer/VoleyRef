@@ -6,6 +6,8 @@
   <meta name="description" content="Kvíz pro volejbalové rozhodčí – rozhodni herní situace.">
   <title>Kvíz – Volejbal: trénink rozhodčích</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- type="module": soubor je ES modul (import/export) a spustí se až po načtení HTML -->
+  <script type="module" src="js/quiz.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -26,9 +28,55 @@
 
   <main id="obsah">
     <h1>Kvíz</h1>
-    <div class="card">
-      <p class="muted">Kvíz se připravuje (fáze 2). Tady se bude zobrazovat situace a odpovědi A/B/C.</p>
-    </div>
+
+    <p id="quiz-error" class="alert alert--error" role="alert" hidden></p>
+
+    <!-- 1) Start kola -->
+    <section id="quiz-start" class="card stack">
+      <p>Kolo má až 10 situací. U každé vyber, jak má rozhodčí postupovat. Správné odpovědi a vysvětlení uvidíš až na konci.</p>
+      <div class="field">
+        <label for="category">Kategorie</label>
+        <select id="category">
+          <option value="">Všechny kategorie</option>
+        </select>
+      </div>
+      <div>
+        <button id="start-button" class="button" type="button">Začít kolo</button>
+      </div>
+    </section>
+
+    <!-- 2) Otázka -->
+    <section id="quiz-question" class="card stack" hidden>
+      <div>
+        <p id="quiz-progress" class="muted small"></p>
+        <progress id="quiz-progress-bar" value="0" max="10" aria-hidden="true"></progress>
+      </div>
+      <h2 id="question-heading" class="visually-hidden" tabindex="-1">Situace</h2>
+      <p id="question-text" class="situation"></p>
+      <div id="question-media"></div>
+      <form id="question-form" class="stack">
+        <fieldset class="answers">
+          <legend>Jak má rozhodčí postupovat?</legend>
+          <div id="answers" class="stack"></div>
+        </fieldset>
+        <div>
+          <button id="next-button" class="button" type="submit">Další otázka</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 3) Výsledek -->
+    <section id="quiz-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="result-heading" tabindex="-1">Výsledek kola</h2>
+        <div id="result-summary"></div>
+        <div>
+          <button id="again-button" class="button" type="button">Hrát znovu</button>
+        </div>
+      </div>
+      <h2>Vysvětlení</h2>
+      <ol id="result-list" class="result-list"></ol>
+    </section>
   </main>
 
   <footer class="site-footer">
