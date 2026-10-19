@@ -44,12 +44,12 @@ function categoryRow(id, stats) {
   const name = categoryName(id);
   if (!stats) {
     return el('li', { class: 'cat-row cat-row--empty' },
-      el('span', { class: 'cat-row__name' }, name),
+      el('span', { class: 'cat-row__name' }, name), ' ',
       el('span', { class: 'cat-row__value' }, 'zatím nehráno'));
   }
   const value = percent(stats.spravne, stats.otazek);
   return el('li', { class: 'cat-row' },
-    el('span', { class: 'cat-row__name' }, name),
+    el('span', { class: 'cat-row__name' }, name), ' ',
     el('span', { class: 'cat-row__value' }, `${value} % (${stats.spravne} z ${stats.otazek})`),
     // pruh je jen vizuální doplněk, číslo je v textu → aria-hidden
     el('span', { class: 'cat-row__bar', 'aria-hidden': 'true' },

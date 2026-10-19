@@ -20,7 +20,7 @@ const dateFormat = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'nu
 function renderRow(row) {
   return el('tr', { class: row.je_moje ? 'is-me' : null },
     el('td', { class: 'num' }, `${row.poradi}.`),
-    el('th', { scope: 'row' }, row.prezdivka, row.je_moje ? el('span', { class: 'badge' }, 'ty') : null),
+    el('th', { scope: 'row' }, row.prezdivka, row.je_moje ? [' ', el('span', { class: 'badge' }, 'ty')] : null),
     el('td', { class: 'num' }, `${row.skore}/${row.pocet}`),
     el('td', { class: 'num' }, formatDuration(row.trvani_s)),
     el('td', { class: 'num hide-narrow' }, dateFormat.format(new Date(row.datum))));
