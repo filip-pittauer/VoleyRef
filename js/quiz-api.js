@@ -48,7 +48,8 @@ export async function getMistakesCount() {
 
 /**
  * Odevzdá odpovědi kola. answers = { [idOtazky]: 'A' | 'B' | ... }
- * Vrací { score, total, durationSeconds, results: [{ id, answer, correctAnswer, isCorrect, explanation }] }
+ * Vrací { score, total, durationSeconds, newBadges: [id odznaku…],
+ *         results: [{ id, answer, correctAnswer, isCorrect, explanation }] }
  */
 export async function submitRound(roundId, answers) {
   requireSupabase();
@@ -63,6 +64,7 @@ export async function submitRound(roundId, answers) {
     score: data.skore,
     total: data.pocet,
     durationSeconds: data.trvani_s,
+    newBadges: data.nove_odznaky ?? [],
     results: data.vysledky.map(v => ({
       id: v.id,
       answer: v.odpoved,

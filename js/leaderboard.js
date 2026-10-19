@@ -2,6 +2,7 @@
 // Pořadí počítá server (sql/02_funkce.sql – zebricek, sql/04_denni_vyzva.sql – denni_zebricek).
 import { el } from './dom.js';
 import { formatDuration } from './format.js';
+import { badgeById } from './badges.js';
 import { supabase, isConfigured, NOT_CONFIGURED_MESSAGE, getUser } from './supabase.js';
 
 const LIMIT = 50;
@@ -30,10 +31,23 @@ const boards = {
 };
 
 // ---------- Tabulka ----------
+/** Odznaky, které si hráč vybral do žebříčku (ikony s popiskem pro čtečku i myš). */
+function renderBadgeIcons(ids) {
+  if (!ids?.length) return null;
+  return [' ', el('span', { class: 'badge-icons' },
+    ...ids.map(id => {
+      const badge = badgeById(id);
+      return el('span', { role: 'img', 'aria-label': badge.name, title: badge.name }, badge.icon);
+    }))];
+}
+
 function renderRow(row, withDate) {
   return el('tr', { class: row.je_moje ? 'is-me' : null },
     el('td', { class: 'num' }, `${row.poradi}.`),
-    el('th', { scope: 'row' }, row.prezdivka, row.je_moje ? [' ', el('span', { class: 'badge' }, 'ty')] : null),
+    el('th', { scope: 'row' },
+      row.prezdivka,
+      renderBadgeIcons(row.odznaky),
+      row.je_moje ? [' ', el('span', { class: 'you-tag' }, 'ty')] : null),
     el('td', { class: 'num' }, `${row.skore}/${row.pocet}`),
     el('td', { class: 'num' }, formatDuration(row.trvani_s)),
     withDate ? el('td', { class: 'num hide-narrow' }, dateFormat.format(new Date(row.datum))) : null);

@@ -194,6 +194,7 @@ declare
   v_vysledky  jsonb;
   v_ulozene   jsonb;
   v_skore     integer;
+  v_nove      text[] := '{}';
 begin
   select * into v_kolo
   from public.kola
@@ -230,11 +231,23 @@ begin
   set konec = now(), skore = v_skore, odpovedi = v_ulozene
   where id = p_kolo_id;
 
+  -- Odznaky (05_odznaky.sql) – jen přihlášený hráč. Chyba při jejich
+  -- výpočtu nesmí zmařit odevzdání kola, proto vlastní blok s ošetřením
+  -- výjimky (vrátí se jen zápis odznaků, výsledek kola zůstane).
+  if auth.uid() is not null then
+    begin
+      v_nove := private.udel_odznaky(auth.uid());
+    exception when others then
+      raise warning 'Odznaky se nepodařilo udělit: %', sqlerrm;
+    end;
+  end if;
+
   return jsonb_build_object(
     'skore', v_skore,
     'pocet', v_kolo.pocet,
     'trvani_s', round(extract(epoch from now() - v_kolo.zacatek))::integer,
-    'vysledky', v_vysledky
+    'vysledky', v_vysledky,
+    'nove_odznaky', to_jsonb(v_nove)
   );
 end;
 $$;
@@ -245,7 +258,11 @@ $$;
 -- Počítají se jen běžná kola ze všech kategorií a obtížností (ne vybraná
 -- kategorie/obtížnost, opakování chyb ani denní výzva) a kola s rozumným
 -- časem (aspoň 3 s na otázku – ochrana proti botům).
+-- Vrací i odznaky, které si hráč vybral do žebříčku (nejvýše 3).
 -- ---------------------------------------------------------------------
+-- Změna vracených sloupců nejde přes "create or replace" → nejdřív smazat.
+drop function if exists public.zebricek(integer);
+
 create or replace function public.zebricek(p_limit integer default 50)
 returns table (
   poradi     bigint,
@@ -254,7 +271,8 @@ returns table (
   pocet      smallint,
   trvani_s   integer,
   datum      timestamptz,
-  je_moje    boolean
+  je_moje    boolean,
+  odznaky    text[]
 )
 language sql
 stable
@@ -284,7 +302,8 @@ as $$
     n.pocet,
     round(extract(epoch from n.trvani))::integer,
     n.konec,
-    coalesce(n.uzivatel_id = auth.uid(), false)
+    coalesce(n.uzivatel_id = auth.uid(), false),
+    p.vybrane_odznaky
   from nejlepsi n
   join public.profily p on p.id = n.uzivatel_id
   order by n.skore desc, n.trvani asc, n.konec asc

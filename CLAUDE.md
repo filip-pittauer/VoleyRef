@@ -34,6 +34,7 @@ css/style.css       společné styly
 js/config.js        Supabase URL + publishable klíč (veřejné)
 js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro přihlášení
 js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo
+js/badges.js        názvy a ikony odznaků (podmínky jsou v sql/05_odznaky.sql)
 js/                 další moduly (quiz.js, account.js, dom.js, …)
 img/                obrázky situací, img/icons/ ikony aplikace (zdroj icon.svg)
 manifest.json       PWA manifest
@@ -111,7 +112,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Aktuální stav
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček), fáze 5 (animace + 3 ukázkové), fáze 6 (PWA), statistiky, obtížnost, opakování chyb, denní výzva.
+- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček), fáze 5 (animace + 3 ukázkové), fáze 6 (PWA), statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku).
 - Google OAuth: projekt `VoleyRef` v Google Cloud (zatím osobní účet, později převést na firemní), Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`. Secret je jen v Supabase.
 - SQL je spuštěné v Supabase, js/config.js vyplněný (ověřeno proti živé DB).
 - Otestováno uživatelem na živém webu (19. 10. 2026): přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu.

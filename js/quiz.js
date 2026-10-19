@@ -2,6 +2,7 @@
 import { el, showOnly } from './dom.js';
 import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
 import { formatDuration, plural } from './format.js';
+import { badgeById } from './badges.js';
 import { renderMedia } from './media.js';
 import { startRound, submitRound, getMistakesCount, getDailyStatus } from './quiz-api.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
@@ -298,6 +299,20 @@ function leaderboardNote(round, result) {
     el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
 }
 
+/** Blok „🏅 Nový odznak!“ ve výsledku kola (null, když žádný nový není). */
+function renderNewBadges(ids) {
+  if (!ids?.length) return null;
+  return el('div', { class: 'new-badges', role: 'status' },
+    el('p', { class: 'new-badges__title' }, ids.length === 1 ? '🏅 Nový odznak!' : '🏅 Nové odznaky!'),
+    el('ul', {}, ...ids.map(id => {
+      const badge = badgeById(id);
+      return el('li', {},
+        el('span', { class: 'new-badges__icon', 'aria-hidden': 'true' }, badge.icon), ' ',
+        el('strong', {}, badge.name), ' – ', badge.description);
+    })),
+    el('a', { href: 'statistiky.html#odznaky' }, 'Všechny odznaky'));
+}
+
 function renderResult(result) {
   const round = state;
   const questionsById = new Map(round.questions.map(q => [q.id, q]));
@@ -307,7 +322,8 @@ function renderResult(result) {
     el('p', { class: 'score' }, `${result.score} / ${result.total}`),
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
     el('p', { class: 'muted small' }, leaderboardNote(round, result)),
-    extra);
+    extra,
+    renderNewBadges(result.newBadges) ?? '');
 
   resultList.replaceChildren(
     ...result.results.map(r => renderResultItem(questionsById.get(r.id), r)));

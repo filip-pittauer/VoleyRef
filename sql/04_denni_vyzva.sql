@@ -77,8 +77,11 @@ revoke all on function private.denni_poradi(date) from public, anon, authenticat
 revoke all on function private.denni_serie(uuid)  from public, anon, authenticated;
 
 -- ---------------------------------------------------------------------
--- denni_zebricek(limit) → dnešní pořadí
+-- denni_zebricek(limit) → dnešní pořadí (i s vybranými odznaky hráčů)
 -- ---------------------------------------------------------------------
+-- Změna vracených sloupců nejde přes "create or replace" → nejdřív smazat.
+drop function if exists public.denni_zebricek(integer);
+
 create or replace function public.denni_zebricek(p_limit integer default 50)
 returns table (
   poradi     bigint,
@@ -86,7 +89,8 @@ returns table (
   skore      smallint,
   pocet      smallint,
   trvani_s   integer,
-  je_moje    boolean
+  je_moje    boolean,
+  odznaky    text[]
 )
 language sql
 stable
@@ -99,7 +103,8 @@ as $$
     d.skore,
     d.pocet,
     round(extract(epoch from d.trvani))::integer,
-    coalesce(d.uzivatel_id = auth.uid(), false)
+    coalesce(d.uzivatel_id = auth.uid(), false),
+    p.vybrane_odznaky
   from private.denni_poradi(private.dnes()) d
   join public.profily p on p.id = d.uzivatel_id
   order by d.poradi, d.konec

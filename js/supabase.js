@@ -58,6 +58,8 @@ const AUTH_ERRORS = {
 export function errorMessage(error) {
   console.error(error);
   if (AUTH_ERRORS[error?.code]) return AUTH_ERRORS[error.code];
+  // výjimky z našich SQL funkcí (raise exception '…') mají českou hlášku pro hráče
+  if (error?.code === 'P0001' && error.message) return error.message;
   if (error?.code === '23505') return 'Tato přezdívka už je obsazená.';   // unique_violation
   if (error?.code === '23514') return 'Přezdívka musí mít 3–20 znaků.';   // check_violation
   if (/provider is not enabled/i.test(error?.message ?? '')) return AUTH_ERRORS.provider_disabled;

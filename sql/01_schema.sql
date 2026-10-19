@@ -48,6 +48,12 @@ create table if not exists public.profily (
   vytvoreno  timestamptz not null default now()
 );
 
+-- Odznaky, které si hráč vybral do žebříčku (nejvýše 3, jen získané –
+-- hlídá funkce nastav_odznaky v 05_odznaky.sql).
+alter table public.profily add column if not exists
+  vybrane_odznaky text[] not null default '{}'
+  check (cardinality(vybrane_odznaky) <= 3);
+
 -- ---------------------------------------------------------------------
 -- Odehraná kola. Čas a skóre zapisují jen serverové funkce (02_funkce.sql).
 -- uzivatel_id = null → hrál nepřihlášený hráč (do žebříčku se nepočítá).
@@ -94,6 +100,17 @@ create table if not exists public.denni_vyzvy (
   vytvoreno  timestamptz not null default now()
 );
 
+-- ---------------------------------------------------------------------
+-- Získané odznaky. Zapisuje je jen server (05_odznaky.sql), jednou
+-- získaný odznak zůstává. Podmínky odznaků jsou v private.metriky_odznaku.
+-- ---------------------------------------------------------------------
+create table if not exists public.odznaky_hracu (
+  uzivatel_id  uuid not null references auth.users (id) on delete cascade,
+  odznak       text not null,
+  ziskano      timestamptz not null default now(),
+  primary key (uzivatel_id, odznak)
+);
+
 create index if not exists kola_zebricek_idx
   on public.kola (uzivatel_id, skore desc, (konec - zacatek))
   where konec is not null and uzivatel_id is not null and kategorie is null;
@@ -110,6 +127,7 @@ alter table private.otazky_reseni  enable row level security;
 alter table public.profily         enable row level security;
 alter table public.kola            enable row level security;
 alter table public.denni_vyzvy     enable row level security;
+alter table public.odznaky_hracu   enable row level security;
 
 -- Práva: nejdřív všechno odebrat, pak povolit jen to nutné.
 -- (Supabase nové tabulky automaticky zpřístupňuje – tady to zužujeme.)
@@ -118,6 +136,7 @@ revoke all on private.otazky_reseni  from anon, authenticated;
 revoke all on public.profily         from anon, authenticated;
 revoke all on public.kola            from anon, authenticated;
 revoke all on public.denni_vyzvy     from anon, authenticated;   -- jen přes funkce
+revoke all on public.odznaky_hracu   from anon, authenticated;   -- jen přes funkce
 
 -- Otázky: žádný přímý přístup. Hráč je dostane jen přes zacni_kolo().
 

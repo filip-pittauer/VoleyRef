@@ -1,5 +1,6 @@
 // Stránka účtu: přihlášení, registrace, obnova hesla, profil.
-import { showOnly } from './dom.js';
+import { el, showOnly } from './dom.js';
+import { BADGE_GROUPS } from './badges.js';
 import {
   supabase, isConfigured, NOT_CONFIGURED_MESSAGE,
   getProfile, pageUrl, errorMessage,
@@ -54,6 +55,55 @@ function onSubmit(form, handler) {
   });
 }
 
+// ---------- Odznaky v žebříčku ----------
+const MAX_SHOWN_BADGES = 3;
+const badgesCard = $('odznaky-zebricek');
+const badgeOptions = $('badge-options');
+
+/** Když jsou vybrané 3 odznaky, ostatní zaškrtávátka zablokujeme. */
+function updateBadgeLimit() {
+  const boxes = [...badgeOptions.querySelectorAll('input')];
+  const full = boxes.filter(box => box.checked).length >= MAX_SHOWN_BADGES;
+  for (const box of boxes) box.disabled = full && !box.checked;
+}
+
+async function renderBadgePicker() {
+  const { data, error } = await supabase.rpc('moje_odznaky');
+  if (error) {
+    console.error(error);
+    badgesCard.hidden = true;
+    return;
+  }
+  const earned = new Set(data.odznaky.filter(o => o.ziskano).map(o => o.id));
+  const selected = new Set(data.vybrane);
+
+  // získané odznaky ve stejném pořadí jako ve Statistikách
+  const options = BADGE_GROUPS.flatMap(group => Object.entries(group.badges))
+    .filter(([id]) => earned.has(id))
+    .map(([id, badge]) => el('label', { class: 'badge-option' },
+      el('input', { type: 'checkbox', name: 'odznak', value: id, checked: selected.has(id) }),
+      el('span', { class: 'badge-option__icon', 'aria-hidden': 'true' }, badge.icon),
+      el('span', {}, badge.name)));
+
+  badgeOptions.replaceChildren(...options);
+  $('badges-form').hidden = options.length === 0;
+  $('badges-empty').hidden = options.length > 0;
+  badgesCard.hidden = false;
+  updateBadgeLimit();
+
+  // odkaz ucet.html#odznaky-zebricek (ze Statistik) – karta byla skrytá
+  if (location.hash === '#odznaky-zebricek') badgesCard.scrollIntoView();
+}
+
+badgeOptions.addEventListener('change', updateBadgeLimit);
+
+onSubmit($('badges-form'), async () => {
+  const chosen = [...badgeOptions.querySelectorAll('input:checked')].map(box => box.value);
+  const { error } = await supabase.rpc('nastav_odznaky', { p_odznaky: chosen });
+  if (error) throw error;
+  showMessage(chosen.length ? 'Odznaky v žebříčku jsou uložené.' : 'Odznaky v žebříčku jsou skryté.', 'success');
+});
+
 // ---------- Vykreslení podle stavu přihlášení ----------
 async function renderLoggedIn(user) {
   const profile = await getProfile();
@@ -61,6 +111,7 @@ async function renderLoggedIn(user) {
   $('account-email').textContent = user.email ?? '';
   $('nickname').value = profile?.prezdivka ?? '';
   showSection('account-section');
+  renderBadgePicker().catch(error => console.error(error));
 }
 
 async function render(session) {

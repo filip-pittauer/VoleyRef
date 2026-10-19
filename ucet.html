@@ -154,6 +154,21 @@
         </form>
       </div>
 
+      <div id="odznaky-zebricek" class="card stack" hidden>
+        <h2>Odznaky v žebříčku</h2>
+        <p class="muted small">Vyber až 3 získané odznaky, které se zobrazí vedle tvé přezdívky v žebříčku.</p>
+        <form id="badges-form" class="stack">
+          <fieldset class="badge-picker">
+            <legend class="visually-hidden">Získané odznaky</legend>
+            <div id="badge-options" class="badge-picker__options"></div>
+          </fieldset>
+          <div>
+            <button class="button" type="submit">Uložit výběr</button>
+          </div>
+        </form>
+        <p id="badges-empty" hidden>Zatím nemáš žádné odznaky. Získáš je hraním, přehled je ve <a href="statistiky.html#odznaky">Statistikách</a>.</p>
+      </div>
+
       <div class="card stack danger-zone">
         <h2>Smazat účet</h2>
         <p>Smaže účet, přezdívku i všechny výsledky. Tuto akci nejde vrátit.</p>
