@@ -50,4 +50,9 @@ async function load() {
   table.hidden = false;
 }
 
-load();
+load().catch(error => {
+  // neočekávaná chyba (např. výpadek sítě) – raději hláška než věčné „Načítám…“
+  console.error(error);
+  status.hidden = false;
+  status.textContent = 'Žebříček se nepodařilo načíst. Zkus obnovit stránku.';
+});

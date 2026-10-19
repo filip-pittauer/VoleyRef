@@ -3,12 +3,16 @@
 // načte rychle a pravidla jdou číst i bez internetu.
 //
 // Strategie:
-//  - soubory našeho webu: nejdřív síť (vždy aktuální verze), bez sítě z mezipaměti
+//  - soubory našeho webu: nejdřív síť (vždy aktuální verze), bez sítě z mezipaměti.
+//    Síť se ptá s cache: 'no-cache' – prohlížeč se vždy zeptá serveru, jestli
+//    nemá novější verzi (nezměněný soubor = krátká odpověď 304). Bez toho by
+//    prohlížeč mohl 10 minut používat starý soubor z HTTP cache a smíchat
+//    staré a nové moduly (import pak selže a stránka nefunguje).
 //  - knihovny z CDN s pevnou verzí: nejdřív mezipaměť (nemění se)
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v3';
+const CACHE = 'voleyref-v4';
 
 const APP_SHELL = [
   './',
@@ -48,7 +52,8 @@ const CDN = 'https://cdn.jsdelivr.net/';
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE)
-      .then(cache => cache.addAll(APP_SHELL))
+      // cache: 'reload' = stáhnout ze serveru, ne z HTTP cache prohlížeče
+      .then(cache => cache.addAll(APP_SHELL.map(url => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting())   // nová verze se aktivuje hned
   );
 });
@@ -78,7 +83,7 @@ self.addEventListener('fetch', event => {
 async function networkFirst(request) {
   const cache = await caches.open(CACHE);
   try {
-    const response = await fetch(request);
+    const response = await fetch(request, { cache: 'no-cache' });
     if (response.ok) cache.put(request, response.clone());
     return response;
   } catch {

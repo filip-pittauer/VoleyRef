@@ -142,4 +142,9 @@ async function load() {
   content.hidden = false;
 }
 
-load();
+load().catch(error => {
+  // neočekávaná chyba (např. výpadek sítě) – raději hláška než věčné „Načítám…“
+  console.error(error);
+  status.hidden = false;
+  status.textContent = 'Statistiky se nepodařilo načíst. Zkus obnovit stránku.';
+});
