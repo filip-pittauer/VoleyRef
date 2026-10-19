@@ -224,8 +224,11 @@ function renderResultItem(question, result) {
       el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))));
 }
 
+// Stejné pravidlo jako v SQL funkci zebricek(): ochrana proti botům.
+const MIN_SECONDS_PER_QUESTION = 3;
+
 /** Poznámka pod skóre: proč se (ne)zapsalo do žebříčku. */
-function leaderboardNote(round) {
+function leaderboardNote(round, result) {
   if (!profile) {
     return el('span', {}, 'Výsledek se nezapsal do žebříčku, protože nejsi přihlášený. ',
       el('a', { href: 'ucet.html' }, 'Přihlásit se'));
@@ -233,6 +236,9 @@ function leaderboardNote(round) {
   if (round.mode === 'chyby') return 'Opakování chyb se do žebříčku nepočítá.';
   if (round.category || round.difficulty) {
     return 'Kola s vybranou kategorií nebo obtížností se do žebříčku nepočítají.';
+  }
+  if (result.durationSeconds < result.total * MIN_SECONDS_PER_QUESTION) {
+    return `Kolo bylo příliš rychlé (méně než ${MIN_SECONDS_PER_QUESTION} s na otázku), do žebříčku se nepočítá.`;
   }
   return el('span', {}, 'Výsledek je uložený. Pokud je to tvé nejlepší kolo, uvidíš ho v ',
     el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
@@ -246,7 +252,7 @@ function renderResult(result) {
   resultSummary.replaceChildren(
     el('p', { class: 'score' }, `${result.score} / ${result.total}`),
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
-    el('p', { class: 'muted small' }, leaderboardNote(round)),
+    el('p', { class: 'muted small' }, leaderboardNote(round, result)),
     round.mode === 'chyby' ? remaining : '');
 
   resultList.replaceChildren(

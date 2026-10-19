@@ -34,8 +34,15 @@
 
   <main id="obsah">
     <h1>Žebříček</h1>
-    <p>Nejlepší kolo každého hráče. Rozhoduje počet bodů, při shodě kratší čas.
-      Počítají se jen kola ze všech kategorií odehraná přihlášenými hráči.</p>
+    <p>Nejlepší kolo každého hráče. Rozhoduje počet bodů, při shodě kratší čas.</p>
+    <details class="small">
+      <summary>Která kola se počítají?</summary>
+      <ul>
+        <li>jen kola přihlášených hráčů,</li>
+        <li>jen kola <strong>bez výběru</strong> kategorie a obtížnosti (ne opakování chyb),</li>
+        <li>jen kola, která trvala aspoň 3 sekundy na otázku (ochrana proti botům).</li>
+      </ul>
+    </details>
 
     <p id="login-hint" class="muted small" hidden>
       Chceš být v žebříčku? <a href="ucet.html">Přihlas se</a> a <a href="kviz.html">zahraj si kvíz</a>.
