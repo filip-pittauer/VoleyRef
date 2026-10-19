@@ -40,6 +40,17 @@
 
     <!-- 1) Start kola -->
     <section id="quiz-start" class="stack">
+      <!-- Denní výzva: 5 otázek, pro všechny ten den stejných -->
+      <div id="denni" class="card stack daily-card">
+        <h2>🗓️ Denní výzva</h2>
+        <p>Dnešních 5 otázek je pro všechny hráče stejných. Přihlášený hráč má jeden pokus.</p>
+        <p id="daily-text" class="small" aria-live="polite">Načítám…</p>
+        <div class="actions">
+          <button id="daily-button" class="button" type="button" hidden>Hrát denní výzvu</button>
+          <a href="zebricek.html#denni">Denní žebříček</a>
+        </div>
+      </div>
+
       <div class="card stack">
         <h2>Nové kolo</h2>
         <p>Kolo má až 10 situací. U každé vyber, jak má rozhodčí postupovat. Správné odpovědi a vysvětlení uvidíš až na konci.</p>

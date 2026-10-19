@@ -626,6 +626,39 @@ progress::-moz-progress-bar {
   color: var(--color-text-muted);
 }
 
+/* ---------- Záložky (žebříček) ---------- */
+.tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space);
+}
+
+.tab {
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab[aria-selected="true"] {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* ---------- Denní výzva (karta v kvízu) ---------- */
+.daily-card {
+  border-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
+  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
+}
+
 /* ---------- Žebříček ---------- */
 .table-wrap {
   overflow-x: auto;   /* široká tabulka se na mobilu posouvá, ne celá stránka */

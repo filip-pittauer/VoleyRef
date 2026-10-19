@@ -3,7 +3,7 @@ import { el, showOnly } from './dom.js';
 import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
 import { formatDuration, plural } from './format.js';
 import { renderMedia } from './media.js';
-import { startRound, submitRound, getMistakesCount } from './quiz-api.js';
+import { startRound, submitRound, getMistakesCount, getDailyStatus } from './quiz-api.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -18,6 +18,9 @@ const difficultySelect = document.getElementById('difficulty');
 const filterNote = document.getElementById('filter-note');
 const startButton = document.getElementById('start-button');
 const errorBox = document.getElementById('quiz-error');
+
+const dailyText = document.getElementById('daily-text');
+const dailyButton = document.getElementById('daily-button');
 
 const mistakesCard = document.getElementById('opakovani');
 const mistakesText = document.getElementById('mistakes-text');
@@ -47,6 +50,7 @@ let profile = null;
 async function renderPlayerInfo() {
   if (!isConfigured) {
     showError(NOT_CONFIGURED_MESSAGE);
+    dailyText.textContent = '';
     return;
   }
   try {
@@ -60,6 +64,7 @@ async function renderPlayerInfo() {
         el('a', { href: 'ucet.html' }, 'Přihlásit se')));
   updateFilterNote();
   renderMistakes();
+  renderDaily();
 }
 
 function fillSelects() {
@@ -85,6 +90,45 @@ function selectedFilters() {
 function updateFilterNote() {
   const { category, difficulty } = selectedFilters();
   filterNote.hidden = !profile || (!category && !difficulty);
+}
+
+// ---------- Start: denní výzva ----------
+function streakText(serie) {
+  if (!serie || serie.aktualni === 0) return null;
+  return `🔥 Série: ${plural(serie.aktualni, 'den', 'dny', 'dní')} v řadě`;
+}
+
+async function renderDaily() {
+  let status;
+  try {
+    status = await getDailyStatus();
+  } catch (error) {
+    console.error(error);
+    dailyText.textContent = 'Denní výzvu se nepodařilo načíst.';
+    dailyButton.hidden = true;
+    return;
+  }
+
+  const players = `V dnešním žebříčku: ${plural(status.hracu, 'hráč', 'hráči', 'hráčů')}.`;
+  const lines = [];
+  dailyButton.hidden = false;
+  dailyButton.textContent = 'Hrát denní výzvu';
+
+  if (!profile) {
+    lines.push('Bez přihlášení se výsledek do denního žebříčku nezapíše.', players);
+  } else if (status.stav === 'nehrano') {
+    lines.push(streakText(status.serie) ? `${streakText(status.serie)} – nepřeruš ji!` : 'Dnes jsi ještě nehrál.', players);
+  } else if (status.stav === 'rozehrano') {
+    lines.push('Výzvu máš rozehranou. Čas běží od prvního otevření.');
+    dailyButton.textContent = 'Pokračovat';
+  } else {
+    dailyButton.hidden = true;
+    lines.push(`Dnes: ${status.skore}/${status.pocet} za ${formatDuration(status.trvani_s)}`
+      + (status.poradi ? ` · ${status.poradi}. místo z ${status.hracu}.` : ' · do žebříčku se nezapočítalo (moc rychlé).'));
+    if (streakText(status.serie)) lines.push(streakText(status.serie));
+    lines.push('Další výzva bude zítra.');
+  }
+  dailyText.replaceChildren(...lines.filter(Boolean).flatMap((line, i) => (i ? [el('br'), line] : [line])));
 }
 
 // ---------- Start: opakování chyb ----------
@@ -124,15 +168,17 @@ async function renderMistakes() {
 // ---------- Začátek kola ----------
 async function begin(mode) {
   hideError();
-  const filters = mode === 'chyby' ? { category: null, difficulty: null } : selectedFilters();
-  const button = mode === 'chyby' ? mistakesButton : startButton;
+  const filters = mode === 'bezne' ? selectedFilters() : { category: null, difficulty: null };
+  const button = { bezne: startButton, chyby: mistakesButton, denni: dailyButton }[mode];
   button.disabled = true;
   try {
     const { roundId, questions } = await startRound({ ...filters, mode });
     if (questions.length === 0) {
-      showError(mode === 'chyby'
-        ? 'Nemáš žádné chyby k opakování.'
-        : 'Pro tento výběr kategorie a obtížnosti zatím nejsou žádné otázky.');
+      showError({
+        bezne: 'Pro tento výběr kategorie a obtížnosti zatím nejsou žádné otázky.',
+        chyby: 'Nemáš žádné chyby k opakování.',
+        denni: 'Denní výzva dnes nemá žádné otázky.',
+      }[mode]);
       return;
     }
     state = { roundId, questions, mode, ...filters, index: 0, answers: {} };
@@ -140,9 +186,14 @@ async function begin(mode) {
     renderQuestion();
   } catch (error) {
     console.error(error);
-    showError(isConfigured
-      ? 'Kvíz se nepodařilo spustit. Zkontroluj připojení k internetu a zkus to znovu.'
-      : NOT_CONFIGURED_MESSAGE);
+    if (error.message?.includes('už máš odehranou')) {
+      showError('Dnešní výzvu už máš odehranou. Další bude zítra.');
+      renderDaily();
+    } else {
+      showError(isConfigured
+        ? 'Kvíz se nepodařilo spustit. Zkontroluj připojení k internetu a zkus to znovu.'
+        : NOT_CONFIGURED_MESSAGE);
+    }
   } finally {
     button.disabled = false;
   }
@@ -240,6 +291,9 @@ function leaderboardNote(round, result) {
   if (result.durationSeconds < result.total * MIN_SECONDS_PER_QUESTION) {
     return `Kolo bylo příliš rychlé (méně než ${MIN_SECONDS_PER_QUESTION} s na otázku), do žebříčku se nepočítá.`;
   }
+  if (round.mode === 'denni') {
+    return el('span', {}, 'Výsledek je v ', el('a', { href: 'zebricek.html#denni' }, 'denním žebříčku'), '.');
+  }
   return el('span', {}, 'Výsledek je uložený. Pokud je to tvé nejlepší kolo, uvidíš ho v ',
     el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
 }
@@ -247,13 +301,13 @@ function leaderboardNote(round, result) {
 function renderResult(result) {
   const round = state;
   const questionsById = new Map(round.questions.map(q => [q.id, q]));
-  const remaining = el('p', { class: 'muted small' });
+  const extra = el('p', { class: 'muted small' });
 
   resultSummary.replaceChildren(
     el('p', { class: 'score' }, `${result.score} / ${result.total}`),
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
     el('p', { class: 'muted small' }, leaderboardNote(round, result)),
-    round.mode === 'chyby' ? remaining : '');
+    extra);
 
   resultList.replaceChildren(
     ...result.results.map(r => renderResultItem(questionsById.get(r.id), r)));
@@ -262,13 +316,23 @@ function renderResult(result) {
   document.getElementById('result-heading').focus();
   state = null;
 
-  // Po kole chyb ukážeme, kolik jich ještě zbývá (načte se dodatečně).
+  // Doplňující informace se načtou dodatečně (další dotaz na server).
   if (round.mode === 'chyby') {
     getMistakesCount()
       .then(count => {
-        remaining.textContent = count === 0
+        extra.textContent = count === 0
           ? 'Všechny chyby máš opravené! 🎉'
           : `K opakování ti zbývá ${plural(count, 'otázka', 'otázky', 'otázek')}.`;
+      })
+      .catch(error => console.error(error));
+  } else if (round.mode === 'denni' && profile) {
+    getDailyStatus()
+      .then(status => {
+        const streak = streakText(status.serie);
+        extra.textContent = [
+          status.poradi ? `Jsi ${status.poradi}. z ${plural(status.hracu, 'hráče', 'hráčů', 'hráčů')} v dnešní výzvě.` : null,
+          streak,
+        ].filter(Boolean).join(' ');
       })
       .catch(error => console.error(error));
   }
@@ -291,9 +355,11 @@ categorySelect.addEventListener('change', updateFilterNote);
 difficultySelect.addEventListener('change', updateFilterNote);
 startButton.addEventListener('click', () => begin('bezne'));
 mistakesButton.addEventListener('click', () => begin('chyby'));
+dailyButton.addEventListener('click', () => begin('denni'));
 questionForm.addEventListener('submit', handleAnswer);
 againButton.addEventListener('click', () => {
   hideError();
   showOnly(startSection, sections);
-  renderMistakes();   // počet chyb se po kole mohl změnit
+  renderMistakes();   // počet chyb i stav denní výzvy se po kole mohl změnit
+  renderDaily();
 });

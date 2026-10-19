@@ -34,37 +34,64 @@
 
   <main id="obsah">
     <h1>Žebříček</h1>
-    <p>Nejlepší kolo každého hráče. Rozhoduje počet bodů, při shodě kratší čas.</p>
-    <details class="small">
-      <summary>Která kola se počítají?</summary>
-      <ul>
-        <li>jen kola přihlášených hráčů,</li>
-        <li>jen kola <strong>bez výběru</strong> kategorie a obtížnosti (ne opakování chyb),</li>
-        <li>jen kola, která trvala aspoň 3 sekundy na otázku (ochrana proti botům).</li>
-      </ul>
-    </details>
 
     <p id="login-hint" class="muted small" hidden>
       Chceš být v žebříčku? <a href="ucet.html">Přihlas se</a> a <a href="kviz.html">zahraj si kvíz</a>.
     </p>
 
-    <p id="leaderboard-status" class="muted" aria-live="polite">Načítám…</p>
-
-    <div class="table-wrap">
-      <table id="leaderboard" class="leaderboard leaderboard--ranked" hidden>
-        <caption class="visually-hidden">Žebříček hráčů</caption>
-        <thead>
-          <tr>
-            <th scope="col" class="num">#</th>
-            <th scope="col">Hráč</th>
-            <th scope="col" class="num">Body</th>
-            <th scope="col" class="num">Čas</th>
-            <th scope="col" class="num hide-narrow">Datum</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <!-- Záložky: přepínají dva panely níže (zebricek.html#denni otevře denní) -->
+    <div class="tabs" role="tablist" aria-label="Typ žebříčku">
+      <button id="tab-celkovy" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-celkovy">Celkový</button>
+      <button id="tab-denni" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-denni">Dnešní výzva</button>
     </div>
+
+    <section id="panel-celkovy" class="stack" role="tabpanel" aria-labelledby="tab-celkovy">
+      <p>Nejlepší kolo každého hráče. Rozhoduje počet bodů, při shodě kratší čas.</p>
+      <details class="small">
+        <summary>Která kola se počítají?</summary>
+        <ul>
+          <li>jen kola přihlášených hráčů,</li>
+          <li>jen kola <strong>bez výběru</strong> kategorie a obtížnosti (ne opakování chyb ani denní výzva),</li>
+          <li>jen kola, která trvala aspoň 3 sekundy na otázku (ochrana proti botům).</li>
+        </ul>
+      </details>
+      <p id="overall-status" class="muted" aria-live="polite">Načítám…</p>
+      <div class="table-wrap">
+        <table id="overall-table" class="leaderboard leaderboard--ranked" hidden>
+          <caption class="visually-hidden">Celkový žebříček</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="num">#</th>
+              <th scope="col">Hráč</th>
+              <th scope="col" class="num">Body</th>
+              <th scope="col" class="num">Čas</th>
+              <th scope="col" class="num hide-narrow">Datum</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="panel-denni" class="stack" role="tabpanel" aria-labelledby="tab-denni" hidden>
+      <p>Dnešních 5 otázek je pro všechny stejných a každý má jeden pokus. Nová výzva začíná o půlnoci.
+        <a href="kviz.html#denni">Hrát denní výzvu</a></p>
+      <p id="daily-status" class="muted" aria-live="polite">Načítám…</p>
+      <div class="table-wrap">
+        <table id="daily-table" class="leaderboard leaderboard--ranked" hidden>
+          <caption class="visually-hidden">Žebříček dnešní výzvy</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="num">#</th>
+              <th scope="col">Hráč</th>
+              <th scope="col" class="num">Body</th>
+              <th scope="col" class="num">Čas</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">

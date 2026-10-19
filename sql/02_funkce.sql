@@ -37,12 +37,29 @@ $$;
 revoke all on function private.chybne_otazky(uuid) from public, anon, authenticated;
 
 -- ---------------------------------------------------------------------
+-- dnes() → dnešní datum v českém čase (nový den začíná o půlnoci v ČR,
+-- ne v UTC, ve kterém běží server)
+-- ---------------------------------------------------------------------
+create or replace function private.dnes()
+returns date
+language sql
+stable
+set search_path = ''
+as $$
+  select (now() at time zone 'Europe/Prague')::date;
+$$;
+
+revoke all on function private.dnes() from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
 -- zacni_kolo(kategorie, obtiznost, rezim) → { kolo_id, otazky: [...] }
--- Vybere až 10 náhodných aktivních otázek, založí kolo a uloží čas
--- startu (na serveru, takže ho hráč nemůže podvrhnout).
--- Vrací otázky BEZ správných odpovědí.
---   rezim 'bezne' = náhodné otázky (lze zúžit kategorií a obtížností)
+-- Založí kolo a uloží čas startu (na serveru, takže ho hráč nemůže
+-- podvrhnout). Vrací otázky BEZ správných odpovědí.
+--   rezim 'bezne' = až 10 náhodných otázek (lze zúžit kategorií a obtížností)
 --   rezim 'chyby' = jen otázky, ve kterých hráč naposledy chyboval
+--   rezim 'denni' = denní výzva: 5 otázek, pro všechny hráče ten den stejných.
+--                   Přihlášený hráč má jeden pokus; rozehrané kolo pokračuje
+--                   (čas běží dál), dokončené už znovu začít nejde.
 -- ---------------------------------------------------------------------
 -- Starší verze měla jen jeden parametr. Bez smazání by vedle sebe
 -- existovaly dvě funkce stejného jména a API by nevědělo, kterou volat.
@@ -62,8 +79,11 @@ declare
   v_otazky  integer[];
   v_kolo_id uuid;
   v_chyby   boolean := p_rezim = 'chyby';
+  v_denni   boolean := p_rezim = 'denni';
+  v_den     date := private.dnes();
+  v_hotovo  boolean;
 begin
-  if p_rezim is null or p_rezim not in ('bezne', 'chyby') then
+  if p_rezim is null or p_rezim not in ('bezne', 'chyby', 'denni') then
     raise exception 'Neznámý režim kola.';
   end if;
   if v_chyby and auth.uid() is null then
@@ -74,34 +94,68 @@ begin
   delete from public.kola
   where konec is null and zacatek < now() - interval '1 day';
 
-  select coalesce(array_agg(vyber.id), '{}')
-  into v_otazky
-  from (
-    select o.id
-    from public.otazky o
-    where o.aktivni
-      and exists (select 1 from private.otazky_reseni r where r.otazka_id = o.id)
-      -- opakování chyb: jen chybné otázky, filtry kategorie a obtížnosti se ignorují
-      and (not v_chyby or o.id in (select private.chybne_otazky(auth.uid())))
-      and (v_chyby or p_kategorie is null or o.kategorie = p_kategorie)
-      and (v_chyby or p_obtiznost is null or o.obtiznost = p_obtiznost)
-    order by random()
-    limit 10
-  ) as vyber;
+  if v_denni then
+    -- Dnešní sadu otázek vytvoří první hráč dne, ostatní dostanou stejnou.
+    -- "on conflict do nothing": když ji mezitím vytvořil někdo jiný, nic se nestane.
+    insert into public.denni_vyzvy (den, otazky)
+    select v_den, coalesce(array_agg(vyber.id), '{}')
+    from (
+      select o.id
+      from public.otazky o
+      where o.aktivni
+        and exists (select 1 from private.otazky_reseni r where r.otazka_id = o.id)
+      order by random()
+      limit 5
+    ) as vyber
+    on conflict (den) do nothing;
+
+    select d.otazky into v_otazky from public.denni_vyzvy d where d.den = v_den;
+
+    -- přihlášený hráč: jeden pokus denně
+    if auth.uid() is not null then
+      select k.id, k.konec is not null
+      into v_kolo_id, v_hotovo
+      from public.kola k
+      where k.uzivatel_id = auth.uid() and k.rezim = 'denni' and k.den = v_den;
+
+      if v_hotovo then
+        raise exception 'Dnešní výzvu už máš odehranou.';
+      end if;
+      -- v_kolo_id není null → rozehrané kolo, pokračuje se v něm
+    end if;
+  else
+    select coalesce(array_agg(vyber.id), '{}')
+    into v_otazky
+    from (
+      select o.id
+      from public.otazky o
+      where o.aktivni
+        and exists (select 1 from private.otazky_reseni r where r.otazka_id = o.id)
+        -- opakování chyb: jen chybné otázky, filtry kategorie a obtížnosti se ignorují
+        and (not v_chyby or o.id in (select private.chybne_otazky(auth.uid())))
+        and (v_chyby or p_kategorie is null or o.kategorie = p_kategorie)
+        and (v_chyby or p_obtiznost is null or o.obtiznost = p_obtiznost)
+      order by random()
+      limit 10
+    ) as vyber;
+  end if;
 
   if cardinality(v_otazky) = 0 then
     return jsonb_build_object('kolo_id', null, 'otazky', '[]'::jsonb);
   end if;
 
-  insert into public.kola (uzivatel_id, kategorie, obtiznost, rezim, otazky, pocet)
-  values (
-    auth.uid(),
-    case when v_chyby then null else p_kategorie end,
-    case when v_chyby then null else p_obtiznost end,
-    p_rezim,
-    v_otazky,
-    cardinality(v_otazky))
-  returning id into v_kolo_id;
+  if v_kolo_id is null then
+    insert into public.kola (uzivatel_id, kategorie, obtiznost, rezim, den, otazky, pocet)
+    values (
+      auth.uid(),
+      case when p_rezim = 'bezne' then p_kategorie end,
+      case when p_rezim = 'bezne' then p_obtiznost end,
+      p_rezim,
+      case when v_denni then v_den end,
+      v_otazky,
+      cardinality(v_otazky))
+    returning id into v_kolo_id;
+  end if;
 
   return jsonb_build_object(
     'kolo_id', v_kolo_id,

@@ -72,8 +72,27 @@ alter table public.kola add column if not exists
   rezim text not null default 'bezne'
   check (rezim in ('bezne', 'chyby', 'denni'));                -- běžné kolo / opakování chyb / denní výzva
 
+alter table public.kola add column if not exists
+  den date;                                                    -- jen u denní výzvy: ke kterému dni patří
+
 create index if not exists kola_uzivatel_idx
   on public.kola (uzivatel_id, konec desc) where konec is not null;
+
+-- Denní výzva: přihlášený hráč má na každý den jen jedno kolo
+-- (jedinečný index to hlídá i při dvou současných požadavcích).
+create unique index if not exists kola_denni_jednou_idx
+  on public.kola (uzivatel_id, den)
+  where rezim = 'denni' and uzivatel_id is not null;
+
+-- ---------------------------------------------------------------------
+-- Denní výzva: sada otázek pro každý den (pro všechny hráče stejná).
+-- Vytvoří ji první hráč, který ten den výzvu otevře (zacni_kolo).
+-- ---------------------------------------------------------------------
+create table if not exists public.denni_vyzvy (
+  den        date primary key,
+  otazky     integer[] not null,
+  vytvoreno  timestamptz not null default now()
+);
 
 create index if not exists kola_zebricek_idx
   on public.kola (uzivatel_id, skore desc, (konec - zacatek))
@@ -90,6 +109,7 @@ alter table public.otazky          enable row level security;
 alter table private.otazky_reseni  enable row level security;
 alter table public.profily         enable row level security;
 alter table public.kola            enable row level security;
+alter table public.denni_vyzvy     enable row level security;
 
 -- Práva: nejdřív všechno odebrat, pak povolit jen to nutné.
 -- (Supabase nové tabulky automaticky zpřístupňuje – tady to zužujeme.)
@@ -97,6 +117,7 @@ revoke all on public.otazky          from anon, authenticated;
 revoke all on private.otazky_reseni  from anon, authenticated;
 revoke all on public.profily         from anon, authenticated;
 revoke all on public.kola            from anon, authenticated;
+revoke all on public.denni_vyzvy     from anon, authenticated;   -- jen přes funkce
 
 -- Otázky: žádný přímý přístup. Hráč je dostane jen přes zacni_kolo().
 
