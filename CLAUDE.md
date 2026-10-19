@@ -110,11 +110,33 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
 - **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists` staré signatury). Změny se dělají přímo v nich a uživatel je po změně spustí znovu v pořadí 01, 02, 03… Před nasazením otestovat přechod ze stávající verze (git HEAD) na novou.
 
-## Aktuální stav
+## Aktuální stav (konec práce 20. 10. 2026)
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček), fáze 5 (animace + 3 ukázkové), fáze 6 (PWA), statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku).
-- Google OAuth: projekt `VoleyRef` v Google Cloud (zatím osobní účet, později převést na firemní), Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`. Secret je jen v Supabase.
-- SQL je spuštěné v Supabase, js/config.js vyplněný (ověřeno proti živé DB).
-- Otestováno uživatelem na živém webu (19. 10. 2026): přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu.
-- Google OAuth je v testovacím režimu (jen přidaní testeři) – „Publish app“ až před spuštěním pro veřejnost.
-- Před spuštěním pro veřejnost: firemní e-mail (kontakt v ochrana-udaju.html + Google projekt), vyměnit Google Client secret, vlastní SMTP v Supabase (free limit e-mailů), ověřit obsah otázek a pravidel, zvážit vypnutí/zapnutí registrací.
+- Hotovo: fáze 1–6, knížka pravidel, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku).
+- Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva.
+
+### ⚠️ Rozpracované – první věc příště
+- **Odznaky jsou nasazené v kódu, ale uživatel ještě NESPUSTIL SQL** v Supabase. Spustit v pořadí: `01_schema.sql`, `02_funkce.sql`, `04_denni_vyzva.sql`, `05_odznaky.sql` (05 závisí na 02 a 04). Do té doby: kvíz funguje (odevzdej_kolo odznaky jen přeskočí), sekce odznaků ve Statistikách a karta na Účtu se nezobrazí, žebříček může hlásit chybu (frontend čte sloupec `odznaky`). Pak nechat uživatele odznaky vyzkoušet.
+
+### Další krok: balíček 4 (schválený uživatelem)
+1. **Trenažér postavení** (bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. **Před psaním NEJDŘÍV ověřit aktuální znění pravidla 7.4/7.5 FIVB 2025–2028** (pravidlo o postavení se měnilo – nepsat z paměti).
+2. **Gesta rozhodčích:** nakreslit a animovat gesta v SVG (postava rozhodčího, gesta jako data – klíčové polohy rukou), kvíz „co znamená toto gesto“ (lokálně, bez DB) a gesta i v pravidla.html#signalizace. Uživatel chce, aby se na tom nespěchalo. Seznam gest ověřit proti oficiálním (FIVB Diagram 11).
+3. Oba režimy přístupné z kvíz.html (karty) a z úvodní stránky; navigace se už nerozšiřuje (5 položek je maximum na mobilu).
+- Odznaky pro trenažér/gesta až později (vyžadují ukládání výsledků na server).
+
+### Odložené / nápady
+- Editor animací s „developer módem“ (jen pro vybrané editory, animace by se přesunuly do DB) – uživatel zatím neví, jestli animace, nebo videa (rozhodne s kamarádem, jehož je to nápad).
+- Animace vs. video: formát otázky podporuje obojí (`media.typ`).
+- Vlastní doména (jméno zatím nevybrané).
+
+### Jak jsem testoval (testy nejsou v repu)
+- SQL: PGlite (Postgres ve WASM, npm `@electric-sql/pglite`) s napodobeným Supabase (role anon/authenticated/supabase_auth_admin, `auth.users`, `auth.uid()` z `request.jwt.claim.sub`). Vždy testovat i přechod ze stávající verze (`git show HEAD:sql/…`) a dvojí spuštění skriptů.
+- Prohlížeč: `playwright-core` + nainstalovaný Chrome (`C:/Program Files/Google/Chrome/Application/chrome.exe`), statický server `http-server`, Supabase API odchycené a obsloužené PGlite. **V testech blokovat service workery** (`serviceWorkers: 'block'`) a všechny požadavky na skutečný Supabase – jinak test sáhne na živou DB.
+- Nástroje byly v dočasné složce sezení; příště je případně nainstalovat znovu (mimo repo).
+
+### Před spuštěním pro veřejnost
+- Firemní e-mail (kontakt v ochrana-udaju.html je dočasný alias `raphael.silva955@flounderfantasy.com`) a převod Google Cloud projektu na firemní účet (IAM → Owner).
+- Google OAuth: projekt `VoleyRef`, Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`, je v testovacím režimu (jen přidaní testeři) – „Publish app“ až před spuštěním. Vyměnit Client secret (byl vidět na screenshotu); secret patří jen do Supabase.
+- Vlastní SMTP v Supabase (např. Brevo) – vestavěný posílá jen pár e-mailů za hodinu.
+- Ověřit obsah otázek (`private/otazky.json`, psané z paměti) a pravidel; zálohovat složku `private/` (není v repu).
+- Zvážit vypnutí/zapnutí registrací.
