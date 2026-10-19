@@ -35,6 +35,7 @@ js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro př
 js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo
 js/                 další moduly (quiz.js, account.js, dom.js, …)
 img/                obrázky situací
+animace/            SVG animace situací jako JSON (formát v animace/README.md)
 sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
 tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
 private/            NENÍ v repu: otázky se správnými odpověďmi
@@ -103,5 +104,5 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Aktuální stav
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček).
+- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček), fáze 5 (animace + 3 ukázkové).
 - Čeká na uživatele: spustit SQL v Supabase, doplnit js/config.js, nastavit Auth (URL, Google), kontakt v ochrana-udaju.html.

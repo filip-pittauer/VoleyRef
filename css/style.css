@@ -252,7 +252,7 @@ h3 {
   font-weight: 600;
 }
 
-input:not([type="radio"]):not([type="checkbox"]),
+input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),
 select {
   width: 100%;
   max-width: 24rem;
@@ -448,6 +448,109 @@ progress::-moz-progress-bar {
 .answer:has(input:focus-visible) {
   outline: 3px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* ---------- Animace (SVG, jednotky = metry) ---------- */
+.anim svg {
+  background: #2f6f9f;
+}
+
+.anim-placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 24 / 14;
+  border-radius: var(--radius);
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  padding: var(--space);
+  text-align: center;
+}
+
+.anim-free {
+  fill: #2f6f9f;
+}
+
+.anim-floor {
+  fill: #e98a3c;
+  stroke: #fff;
+  stroke-width: 0.08;
+}
+
+.anim-line {
+  stroke: #fff;
+  stroke-width: 0.06;
+}
+
+.anim-net {
+  stroke: #fff;
+  stroke-width: 0.15;
+  stroke-dasharray: 0.25 0.12;
+}
+
+.anim-antenna {
+  fill: #fff;
+  stroke: #c0392b;
+  stroke-width: 0.06;
+}
+
+.anim-highlight {
+  stroke: #ffe14d;
+  stroke-width: 0.18;
+  stroke-linecap: round;
+}
+
+.anim-player circle {
+  stroke: #fff;
+  stroke-width: 0.1;
+}
+
+.anim-team-a circle {
+  fill: #1d4ed8;
+}
+
+.anim-team-b circle {
+  fill: #b91c1c;
+}
+
+.anim-player text {
+  fill: #fff;
+  font-size: 0.62px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.anim-ball {
+  fill: #ffe14d;
+  stroke: #1e3a8a;
+  stroke-width: 0.05;
+}
+
+.anim-ball-shadow {
+  fill: rgb(0 0 0 / 0.3);
+}
+
+.anim__caption {
+  min-height: 1.6em;
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+}
+
+.anim__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.anim__slider {
+  flex: 1;
+  accent-color: var(--color-accent);
+}
+
+.button--small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 /* ---------- Výsledek ---------- */

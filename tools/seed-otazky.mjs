@@ -11,7 +11,7 @@
 // Výsledné SQL obsahuje správné odpovědi, proto se ukládá do private/
 // (je v .gitignore). NIKDY ho necommituj.
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const INPUT = 'private/otazky.json';
 const OUTPUT = 'private/seed-otazky.sql';
@@ -49,6 +49,7 @@ function validate(questions) {
     if (q.media !== null && q.media !== undefined) {
       if (!MEDIA_TYPES.includes(q.media.typ)) err(`neznámý typ média "${q.media.typ}"`);
       if (!q.media.soubor) err('médium nemá soubor');
+      else if (!/^https?:/.test(q.media.soubor) && !existsSync(q.media.soubor)) err(`soubor média "${q.media.soubor}" neexistuje`);
       if (!q.media.popis) err('médium nemá popis (alt text)');
     }
   }
