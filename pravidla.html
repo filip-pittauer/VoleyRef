@@ -24,14 +24,240 @@
     </div>
   </header>
 
-  <main id="obsah">
+  <main id="obsah" class="rules">
     <h1>Pravidla</h1>
-    <p>Vlastní vysvětlení pravidel volejbalu. Závazné znění najdeš v oficiálních pravidlech
-      <a href="https://www.cvf.cz/" rel="noopener">ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.</p>
+    <p>Pravidla halového volejbalu vysvětlená vlastními slovy pro začínající rozhodčí. Nejde o úplné ani závazné znění.
+      U každé části je číslo pravidla, podle kterého najdeš přesný text v oficiálních pravidlech
+      <a href="https://www.cvf.cz/" rel="noopener">ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      Vycházíme z pravidel FIVB 2025–2028.</p>
 
-    <div class="card">
-      <p class="muted">Kapitoly se připravují.</p>
-    </div>
+    <nav class="toc card" aria-labelledby="toc-heading">
+      <h2 id="toc-heading">Obsah</h2>
+      <ol>
+        <li><a href="#hriste">Hřiště, síť a míč</a></li>
+        <li><a href="#body">Body, sety a utkání</a></li>
+        <li><a href="#podani">Podání</a></li>
+        <li><a href="#prijem-nahravka">Příjem a nahrávka</a></li>
+        <li><a href="#utok">Útok</a></li>
+        <li><a href="#blok">Blok</a></li>
+        <li><a href="#dotyky-chyby">Dotyky, síť a chyby ve hře</a></li>
+        <li><a href="#rotace-postaveni">Rotace a postavení</a></li>
+        <li><a href="#stridani">Střídání a libero</a></li>
+        <li><a href="#preruseni-hry">Přerušení a zdržování hry</a></li>
+        <li><a href="#chovani">Chování a tresty</a></li>
+        <li><a href="#signalizace">Signalizace rozhodčích</a></li>
+      </ol>
+    </nav>
+
+    <!-- ===================================================== -->
+    <section id="hriste" class="rules-section">
+      <h2>Hřiště, síť a míč</h2>
+      <p class="rule-ref">Pravidla 1–3</p>
+
+      <figure class="court-figure">
+        <svg viewBox="0 0 220 120" role="img" aria-labelledby="court-title court-desc">
+          <title id="court-title">Hřiště při pohledu shora</title>
+          <desc id="court-desc">Hřiště 18 × 9 metrů rozdělené sítí na dvě poloviny. V každé polovině je 3 metry od sítě útočná čára, která odděluje přední a zadní zónu. Na levé polovině jsou čísla pozic: vpředu 4, 3, 2, vzadu 5, 6, 1.</desc>
+          <rect class="court-free" x="0" y="0" width="220" height="120" rx="6" />
+          <rect class="court-floor" x="20" y="15" width="180" height="90" />
+          <line class="court-attack" x1="80" y1="15" x2="80" y2="105" />
+          <line class="court-attack" x1="140" y1="15" x2="140" y2="105" />
+          <line class="court-net" x1="110" y1="8" x2="110" y2="112" />
+          <g class="court-label">
+            <text x="95" y="33">4</text>
+            <text x="95" y="63">3</text>
+            <text x="95" y="93">2</text>
+            <text x="50" y="33">5</text>
+            <text x="50" y="63">6</text>
+            <text x="50" y="93">1</text>
+            <text class="court-small" x="80" y="113">útočná čára</text>
+            <text class="court-small" x="110" y="6">síť</text>
+          </g>
+        </svg>
+        <figcaption>Hřiště shora. Čísla ukazují pozice hráčů jednoho týmu (podává hráč na pozici 1).</figcaption>
+      </figure>
+
+      <ul>
+        <li><strong>Hřiště</strong> měří 18 × 9 m a kolem něj je volná zóna (alespoň 3 m).</li>
+        <li><strong>Čáry patří k hřišti.</strong> Míč, který dopadne na čáru, je v poli.</li>
+        <li><strong>Útočná čára</strong> je 3 m od středové čáry. Odděluje přední zónu (u sítě) a zadní zónu.</li>
+        <li><strong>Výška sítě</strong> je pro muže 2,43 m a pro ženy 2,24 m. U mládeže je síť nižší podle soutěžního řádu.</li>
+        <li><strong>Antény</strong> jsou na síti nad postranními čarami. Ohraničují prostor, kterým musí míč přejít na druhou stranu.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="body" class="rules-section">
+      <h2>Body, sety a utkání</h2>
+      <p class="rule-ref">Pravidlo 6</p>
+      <ul>
+        <li>Každá rozehra končí bodem. Tým, který rozehru vyhraje, získá bod. Pokud nepodával, získá i podání a jeho hráči se otočí o jednu pozici.</li>
+        <li><strong>Set</strong> vyhrává tým, který první dosáhne 25 bodů s rozdílem alespoň 2 bodů. Při stavu 24:24 se hraje, dokud jeden tým nevede o 2 body.</li>
+        <li><strong>Rozhodující 5. set</strong> se hraje do 15 bodů, také s rozdílem 2 bodů.</li>
+        <li><strong>Utkání</strong> vyhrává tým, který první vyhraje 3 sety.</li>
+        <li>Když chybu udělají oba týmy současně (<em>dvojitá chyba</em>), rozehra se opakuje.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="podani" class="rules-section">
+      <h2>Podání</h2>
+      <p class="rule-ref">Pravidlo 12</p>
+      <ul>
+        <li>Podávající má na úder <strong>8 sekund</strong> od hvizdu prvního rozhodčího.</li>
+        <li>Míč musí <strong>nadhodit nebo pustit z ruky</strong> a udeřit jednou rukou nebo paží. Nadhoz smí být jen jeden. Předtím si ale míč smí pohazovat nebo s ním driblovat.</li>
+        <li>V okamžiku úderu (u podání ve výskoku v okamžiku odrazu) <strong>nesmí šlápnout na hřiště ani mimo zónu podání</strong>. Koncová čára patří k hřišti, takže dotyk čáry je přešlap. Po úderu už do hřiště vstoupit smí.</li>
+        <li>Podaný míč se <strong>smí dotknout sítě</strong>. Pokud přejde na druhou stranu prostorem mezi anténami, hraje se dál.</li>
+        <li><strong>Clonění</strong> je zakázané: hráči podávajícího týmu nesmějí soupeři zakrývat výhled na podávajícího a let míče (mávat rukama, poskakovat, stát ve skupině, nad kterou míč letí).</li>
+        <li>Podávat se musí v pořadí podle rotace. Podání mimo pořadí je chyba rotace (viz <a href="#rotace-postaveni">Rotace a postavení</a>).</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="prijem-nahravka" class="rules-section">
+      <h2>Příjem a nahrávka</h2>
+      <p class="rule-ref">Pravidlo 9</p>
+      <ul>
+        <li>Tým má na vrácení míče přes síť nejvýše <strong>3 odbití</strong>. Dotek při bloku se do nich nepočítá.</li>
+        <li>Stejný hráč nesmí odbít míč dvakrát po sobě (výjimkou je blok a první odbití týmu).</li>
+        <li>Míč se smí dotknout <strong>jakékoli části těla</strong>, i nohy.</li>
+        <li>Míč se musí odrazit, nesmí se <strong>chytit ani hodit</strong> (zadržený míč).</li>
+        <li><strong>První odbití týmu</strong> (typicky příjem): míč se smí postupně dotknout více částí těla, pokud jde o jednu akci. U dalších odbití je takový postupný dotek <strong>dvojí dotek</strong>, tedy chyba.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="utok" class="rules-section">
+      <h2>Útok</h2>
+      <p class="rule-ref">Pravidla 8.4 a 13</p>
+      <ul>
+        <li><strong>Útočný úder</strong> je každé odbití směrem k soupeři kromě podání a bloku. Dokončený je ve chvíli, kdy míč celý přejde rovinu sítě nebo se ho dotkne soupeř.</li>
+        <li><strong>Hráč přední řady</strong> smí útočit z jakékoli výšky.</li>
+        <li><strong>Hráč zadní řady</strong> smí útočit nad horním okrajem sítě jen tehdy, když se odrazí zpoza útočné čáry (čáry se při odrazu nesmí dotknout). Doskočit pak smí i do přední zóny. Z přední zóny smí útočit jen na míč, který je alespoň zčásti pod horním okrajem sítě.</li>
+        <li><strong>Libero</strong> nesmí dokončit útok na míč, který je celý nad horním okrajem sítě.</li>
+        <li>Když libero nahraje <strong>prsty vrchem v přední zóně</strong>, nesmí spoluhráč takový míč zakončit útokem nad horním okrajem sítě. Ze zadní zóny libero nahrávat smí bez omezení.</li>
+        <li>Na <strong>podání soupeře</strong> se nesmí útočit, pokud je míč v přední zóně a celý nad horním okrajem sítě.</li>
+        <li>Míč, který se dotkne <strong>antény</strong>, je v autu.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="blok" class="rules-section">
+      <h2>Blok</h2>
+      <p class="rule-ref">Pravidlo 14</p>
+      <ul>
+        <li>Blok je snaha hráčů u sítě zastavit míč od soupeře rukama nad horním okrajem sítě.</li>
+        <li>Blokovat smějí <strong>jen hráči přední řady</strong>. Hráč zadní řady ani libero se dokončeného bloku nesmí účastnit. Skupinový blok je dokončený, jakmile se míče dotkne kterýkoli z blokařů.</li>
+        <li>Dotek bloku se <strong>nepočítá do tří odbití</strong>. První odbití po bloku smí provést kdokoli, i hráč, který blokoval.</li>
+        <li>Při bloku se smí ruce dostat nad síť na stranu soupeře, ale míče se smí dotknout až <strong>při útočném úderu soupeře nebo po něm</strong>.</li>
+        <li><strong>Blokovat podání</strong> je chyba.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="dotyky-chyby" class="rules-section">
+      <h2>Dotyky, síť a chyby ve hře</h2>
+      <p class="rule-ref">Pravidla 8, 10 a 11</p>
+      <h3>Míč v poli a v autu</h3>
+      <ul>
+        <li>Míč je <strong>v poli</strong>, když se dotkne hřiště včetně čar.</li>
+        <li>Míč je <strong>v autu</strong>, když dopadne celý mimo čáry, dotkne se předmětu mimo hřiště, stropu nebo osoby mimo hru, dotkne se antény, lan nebo sloupků, přejde na druhou stranu mimo prostor mezi anténami nebo celý proletí pod sítí.</li>
+        <li>Míč, který přeletí mimo anténu do volné zóny soupeře, smí tým vrátit (také mimo antény) a hrát dál, pokud ještě má odbití.</li>
+      </ul>
+      <h3>Síť a středová čára</h3>
+      <ul>
+        <li><strong>Dotyk sítě mezi anténami</strong> během hraní míče (odraz, úder i doskok) je chyba. Dotyk sítě mimo antény nebo mimo akci je povolený, pokud neruší hru.</li>
+        <li>Když míč vražený do sítě způsobí, že se síť dotkne soupeře, <strong>není to chyba</strong>.</li>
+        <li><strong>Středová čára:</strong> chodidlo smí zasáhnout do pole soupeře, pokud jeho část zůstane na čáře nebo přímo nad ní. Přešlap celým chodidlem je chyba. Jinými částmi těla se hráč pole soupeře dotknout smí, pokud ho neruší.</li>
+        <li>Hráč nesmí sahat na míč v prostoru soupeře <strong>před jeho útočným úderem</strong>.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="rotace-postaveni" class="rules-section">
+      <h2>Rotace a postavení</h2>
+      <p class="rule-ref">Pravidlo 7</p>
+      <ul>
+        <li>Na hřišti je za každý tým 6 hráčů: přední řada na pozicích 4, 3, 2 a zadní řada na pozicích 5, 6, 1. Podává hráč na pozici 1.</li>
+        <li>Pořadí hráčů určuje <strong>zápis o utkání</strong> (sestava, kterou trenér odevzdá před setem).</li>
+        <li>Když přijímající tým získá podání, jeho hráči se <strong>posunou o jednu pozici ve směru hodinových ručiček</strong>.</li>
+        <li><strong>Chyba rotace:</strong> podání neprovede hráč, který je na řadě. Soupeř získá bod a podání, pořadí se opraví a body, které chybující tým od chyby získal, se ruší.</li>
+        <li><strong>Chyba postavení:</strong> v okamžiku podání nestojí hráči správně vůči sobě. Po úderu podávajícího se už smějí volně pohybovat. Pravidla 2025–2028 v tomto bodě přinesla změny, proto přesné znění ověř v oficiálních pravidlech.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="stridani" class="rules-section">
+      <h2>Střídání a libero</h2>
+      <p class="rule-ref">Pravidla 15 a 19</p>
+      <h3>Střídání</h3>
+      <ul>
+        <li>Tým smí v setu provést nejvýše <strong>6 střídání</strong>.</li>
+        <li>Hráč základní sestavy smí v setu odejít jen jednou a jen jednou se vrátit, a to <strong>na své místo</strong> za hráče, který ho vystřídal.</li>
+        <li>Náhradník smí v setu nastoupit jen jednou a vystřídat ho smí jen hráč, za kterého přišel.</li>
+        <li>Zraněného hráče, kterého nelze vystřídat podle pravidel, lze nahradit <strong>výjimečným střídáním</strong>.</li>
+      </ul>
+      <h3>Libero</h3>
+      <ul>
+        <li>Libero je obranný specialista v odlišném dresu. Smí hrát <strong>jen v zadní řadě</strong>.</li>
+        <li>Nesmí podávat, blokovat ani se o blok pokoušet a nesmí dokončit útok nad horním okrajem sítě.</li>
+        <li><strong>Výměny libera nejsou střídání</strong>: jejich počet není omezený, ale mezi dvěma výměnami musí proběhnout dokončená rozehra.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="preruseni-hry" class="rules-section">
+      <h2>Přerušení a zdržování hry</h2>
+      <p class="rule-ref">Pravidla 15 a 16</p>
+      <ul>
+        <li>Každý tým má v setu <strong>2 oddechové časy po 30 sekundách</strong>.</li>
+        <li>Žádat o přerušení smí jen trenér (nebo kapitán ve hře), a to když je míč mimo hru, před hvizdem k podání.</li>
+        <li><strong>Neoprávněná žádost</strong> (během rozehry, po vyčerpání oddechových časů nebo střídání…): první v utkání se bez trestu odmítne, pokud nezdrží hru. Další už je zdržování.</li>
+        <li><strong>Zdržování</strong> se trestá postupně a tresty platí po celé utkání: první zdržení týmu je <em>napomenutí za zdržování</em> a každé další je <em>trest za zdržování</em>, tedy bod a podání pro soupeře.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="chovani" class="rules-section">
+      <h2>Chování a tresty</h2>
+      <p class="rule-ref">Pravidlo 21</p>
+      <ul>
+        <li><strong>Drobné nesportovní chování</strong> se nejdřív řeší ústním nebo gestem naznačeným upozorněním, při opakování žlutou kartou (napomenutí).</li>
+        <li><strong>Trest</strong> (červená karta): soupeř získá bod a podání.</li>
+        <li><strong>Vyloučení</strong> (červená a žlutá karta společně v jedné ruce): hráč musí do konce setu opustit hru.</li>
+        <li><strong>Diskvalifikace</strong> (červená a žlutá karta každá v jiné ruce): hráč musí opustit utkání.</li>
+      </ul>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="signalizace" class="rules-section">
+      <h2>Signalizace rozhodčích</h2>
+      <p class="rule-ref">Pravidlo 28</p>
+      <p>Rozhodčí musí každou chybu ukázat <strong>oficiálním gestem</strong>: kdo chybu udělal, co se stalo a kdo bude podávat. Nejčastější gesta:</p>
+      <h3>První rozhodčí</h3>
+      <dl class="signals">
+        <dt>Míč v poli</dt><dd>Paží a prsty ukáže na zem.</dd>
+        <dt>Míč v autu</dt><dd>Zvedne předloktí svisle vzhůru, dlaně otevřené a otočené k tělu.</dd>
+        <dt>Zadržený míč</dt><dd>Pomalu zvedne předloktí dlaní vzhůru.</dd>
+        <dt>Dvojí dotek</dt><dd>Zvedne dva roztažené prsty.</dd>
+        <dt>Čtyři odbití</dt><dd>Zvedne čtyři roztažené prsty.</dd>
+        <dt>Dotyk sítě</dt><dd>Ukáže rukou na příslušnou stranu sítě.</dd>
+        <dt>Přešlap středové čáry</dt><dd>Ukáže na středovou čáru.</dd>
+        <dt>Dotek míče (tečovaný míč)</dt><dd>Dlaní jedné ruky přejede po prstech druhé, svisle zvednuté ruky.</dd>
+        <dt>Zdržení podání (8 s)</dt><dd>Zvedne osm roztažených prstů.</dd>
+        <dt>Dvojitá chyba / opakování</dt><dd>Zvedne oba palce vzhůru.</dd>
+        <dt>Oddechový čas</dt><dd>Dlaní jedné ruky přiloží na prsty druhé ruky (tvar písmene T).</dd>
+        <dt>Střídání</dt><dd>Krouží předloktími kolem sebe.</dd>
+      </dl>
+      <h3>Čároví rozhodčí (praporek)</h3>
+      <dl class="signals">
+        <dt>Míč v poli</dt><dd>Praporek dolů.</dd>
+        <dt>Míč v autu</dt><dd>Praporek vzhůru.</dd>
+        <dt>Dotek míče</dt><dd>Praporek vzhůru a dlaní volné ruky se dotkne jeho horní části.</dd>
+        <dt>Přechod mimo antény, přešlap při podání</dt><dd>Mává praporkem nad hlavou a ukáže na anténu nebo čáru.</dd>
+        <dt>Nelze posoudit</dt><dd>Zkříží obě paže před hrudí.</dd>
+      </dl>
+    </section>
   </main>
 
   <footer class="site-footer">
