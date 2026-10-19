@@ -103,5 +103,5 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Aktuální stav
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL).
+- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček).
 - Čeká na uživatele: spustit SQL v Supabase, doplnit js/config.js, nastavit Auth (URL, Google), kontakt v ochrana-udaju.html.

@@ -6,6 +6,7 @@
   <meta name="description" content="Žebříček nejlepších výsledků v kvízu pro volejbalové rozhodčí.">
   <title>Žebříček – Volejbal: trénink rozhodčích</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/leaderboard.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -27,8 +28,29 @@
 
   <main id="obsah">
     <h1>Žebříček</h1>
-    <div class="card">
-      <p class="muted">Žebříček bude dostupný po přihlášení hráčů (fáze 4).</p>
+    <p>Nejlepší kolo každého hráče. Rozhoduje počet bodů, při shodě kratší čas.
+      Počítají se jen kola ze všech kategorií odehraná přihlášenými hráči.</p>
+
+    <p id="login-hint" class="muted small" hidden>
+      Chceš být v žebříčku? <a href="ucet.html">Přihlas se</a> a <a href="kviz.html">zahraj si kvíz</a>.
+    </p>
+
+    <p id="leaderboard-status" class="muted" aria-live="polite">Načítám…</p>
+
+    <div class="table-wrap">
+      <table id="leaderboard" class="leaderboard" hidden>
+        <caption class="visually-hidden">Žebříček hráčů</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="num">#</th>
+            <th scope="col">Hráč</th>
+            <th scope="col" class="num">Body</th>
+            <th scope="col" class="num">Čas</th>
+            <th scope="col" class="num hide-narrow">Datum</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
   </main>
 

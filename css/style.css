@@ -507,6 +507,67 @@ progress::-moz-progress-bar {
   color: var(--color-text-muted);
 }
 
+/* ---------- Žebříček ---------- */
+.table-wrap {
+  overflow-x: auto;   /* široká tabulka se na mobilu posouvá, ne celá stránka */
+}
+
+.leaderboard {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.leaderboard th,
+.leaderboard td {
+  padding: 0.6rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.leaderboard thead th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.leaderboard tbody th {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.leaderboard .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;   /* číslice stejně široké → sloupec zarovnaný */
+  white-space: nowrap;
+}
+
+.leaderboard tbody tr:nth-child(-n + 3) td:first-child {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.leaderboard .is-me {
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  vertical-align: middle;
+}
+
+.hide-narrow {
+  display: none;
+}
+
 /* ---------- Pravidla ---------- */
 .toc ol {
   margin: 0;
@@ -606,6 +667,10 @@ progress::-moz-progress-bar {
 @media (min-width: 40rem) {
   .main-nav a {
     padding: 0.4rem 0.75rem;
+  }
+
+  .hide-narrow {
+    display: table-cell;
   }
 
   .card-grid {
