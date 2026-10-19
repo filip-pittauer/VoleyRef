@@ -1,5 +1,6 @@
 // Stránka žebříčku: nejlepší kolo každého hráče (počítá server, viz sql/02_funkce.sql).
 import { el } from './dom.js';
+import { formatDuration } from './format.js';
 import { supabase, isConfigured, NOT_CONFIGURED_MESSAGE, getUser } from './supabase.js';
 
 const LIMIT = 50;
@@ -8,11 +9,6 @@ const status = document.getElementById('leaderboard-status');
 const table = document.getElementById('leaderboard');
 const tbody = table.querySelector('tbody');
 const loginHint = document.getElementById('login-hint');
-
-function formatDuration(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
-}
 
 // Intl.DateTimeFormat – formátování data podle češtiny (jako CultureInfo v C#)
 const dateFormat = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });

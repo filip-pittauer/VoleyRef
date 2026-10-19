@@ -107,6 +107,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Postupuj po malých krocích, které jde hned vyzkoušet v prohlížeči přes Live Server.
 - Před větší změnou (nová knihovna, změna struktury, změna DB schématu) se nejdřív zeptej.
 - SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
+- **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists` staré signatury). Změny se dělají přímo v nich a uživatel je po změně spustí znovu v pořadí 01, 02, 03… Před nasazením otestovat přechod ze stávající verze (git HEAD) na novou.
 
 ## Aktuální stav
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/

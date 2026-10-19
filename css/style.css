@@ -348,6 +348,22 @@ main.narrow {
 }
 
 /* ---------- Kvíz ---------- */
+/* výběr kategorie a obtížnosti: na mobilu pod sebou, na širší obrazovce vedle sebe */
+.filters {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 40rem) {
+  .filters {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card h2 {
+  margin-bottom: 0;
+}
+
 /* <progress> má v každém prohlížeči jiný vzhled – sjednotíme ho */
 progress {
   appearance: none;

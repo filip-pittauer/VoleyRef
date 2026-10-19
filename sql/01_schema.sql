@@ -64,6 +64,17 @@ create table if not exists public.kola (
   odpovedi     jsonb                      -- {"12": "B", …}
 );
 
+-- Sloupce doplněné později. "add column if not exists" → skript jde spustit
+-- znovu i nad tabulkou, která už existuje (a má data).
+alter table public.kola add column if not exists
+  obtiznost smallint check (obtiznost between 1 and 3);        -- null = všechny obtížnosti
+alter table public.kola add column if not exists
+  rezim text not null default 'bezne'
+  check (rezim in ('bezne', 'chyby', 'denni'));                -- běžné kolo / opakování chyb / denní výzva
+
+create index if not exists kola_uzivatel_idx
+  on public.kola (uzivatel_id, konec desc) where konec is not null;
+
 create index if not exists kola_zebricek_idx
   on public.kola (uzivatel_id, skore desc, (konec - zacatek))
   where konec is not null and uzivatel_id is not null and kategorie is null;

@@ -1,6 +1,7 @@
 // Stránka statistik přihlášeného hráče (data počítá server: moje_statistiky()).
 import { el } from './dom.js';
-import { CATEGORIES, categoryName, categoryRulesUrl } from './categories.js';
+import { formatDuration, plural } from './format.js';
+import { CATEGORIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
 import { supabase, isConfigured, NOT_CONFIGURED_MESSAGE, getUser } from './supabase.js';
 
 // Kategorie s menším počtem otázek nebereme jako „nejslabší“ – málo dat.
@@ -13,11 +14,6 @@ const dateFormat = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'nu
 
 function percent(correct, total) {
   return total > 0 ? Math.round((correct / total) * 100) : 0;
-}
-
-function formatDuration(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
 // ---------- Souhrn (dlaždice s čísly) ----------
@@ -62,12 +58,17 @@ function findWeakest(categories) {
     .sort((a, b) => a.spravne / a.otazek - b.spravne / b.otazek)[0] ?? null;
 }
 
-function renderCategories(categories) {
+function renderCategories(categories, mistakes) {
   const byId = new Map(categories.map(c => [c.kategorie, c]));
   const weakest = findWeakest(categories);
 
   return el('section', { class: 'stack' },
     el('h2', {}, 'Úspěšnost podle kategorií'),
+    mistakes > 0
+      ? el('p', { class: 'card' },
+          'K opakování máš ', el('strong', {}, plural(mistakes, 'otázku', 'otázky', 'otázek')),
+          ', ve kterých jsi naposledy chyboval. ', el('a', { href: 'kviz.html#opakovani' }, 'Opakovat chyby'), '.')
+      : null,
     weakest && weakest.spravne < weakest.otazek
       ? el('p', { class: 'card' },
           'Nejvíc chybuješ v kategorii ', el('strong', {}, categoryName(weakest.kategorie)), '. ',
@@ -79,6 +80,14 @@ function renderCategories(categories) {
 }
 
 // ---------- Poslední kola ----------
+/** Popis kola: „Opakování chyb“, „Všechny“, „Útok · Těžká“… */
+function roundLabel(round) {
+  if (round.rezim === 'chyby') return 'Opakování chyb';
+  if (round.rezim === 'denni') return 'Denní výzva';
+  return [round.kategorie ? categoryName(round.kategorie) : 'Všechny', difficultyName(round.obtiznost)]
+    .filter(Boolean).join(' · ');
+}
+
 function renderRecent(rounds) {
   if (rounds.length === 0) return null;
   return el('section', { class: 'stack' },
@@ -88,12 +97,12 @@ function renderRecent(rounds) {
         el('caption', { class: 'visually-hidden' }, 'Posledních 10 odehraných kol'),
         el('thead', {}, el('tr', {},
           el('th', { scope: 'col' }, 'Kdy'),
-          el('th', { scope: 'col' }, 'Kategorie'),
+          el('th', { scope: 'col' }, 'Kolo'),
           el('th', { scope: 'col', class: 'num' }, 'Body'),
           el('th', { scope: 'col', class: 'num' }, 'Čas'))),
         el('tbody', {}, ...rounds.map(r => el('tr', {},
           el('td', {}, dateFormat.format(new Date(r.datum))),
-          el('td', {}, r.kategorie ? categoryName(r.kategorie) : 'Všechny'),
+          el('td', {}, roundLabel(r)),
           el('td', { class: 'num' }, `${r.skore}/${r.pocet}`),
           el('td', { class: 'num' }, formatDuration(r.trvani_s))))))));
 }
@@ -112,7 +121,11 @@ async function load() {
     return;
   }
 
-  const { data, error } = await supabase.rpc('moje_statistiky');
+  // dva dotazy najednou (Promise.all – jako Task.WhenAll v C#)
+  const [{ data, error }, mistakes] = await Promise.all([
+    supabase.rpc('moje_statistiky'),
+    supabase.rpc('pocet_chyb').then(r => r.data ?? 0),
+  ]);
   if (error) {
     console.error(error);
     status.textContent = 'Statistiky se nepodařilo načíst. Zkus to prosím později.';
@@ -124,7 +137,7 @@ async function load() {
     return;
   }
 
-  content.replaceChildren(renderSummary(data), renderCategories(data.kategorie), renderRecent(data.posledni) ?? '');
+  content.replaceChildren(renderSummary(data), renderCategories(data.kategorie, mistakes), renderRecent(data.posledni) ?? '');
   status.hidden = true;
   content.hidden = false;
 }

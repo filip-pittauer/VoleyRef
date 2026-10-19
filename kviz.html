@@ -39,17 +39,38 @@
     <p id="quiz-error" class="alert alert--error" role="alert" hidden></p>
 
     <!-- 1) Start kola -->
-    <section id="quiz-start" class="card stack">
-      <p>Kolo má až 10 situací. U každé vyber, jak má rozhodčí postupovat. Správné odpovědi a vysvětlení uvidíš až na konci.</p>
-      <p id="player-info" class="muted small" aria-live="polite"></p>
-      <div class="field">
-        <label for="category">Kategorie</label>
-        <select id="category">
-          <option value="">Všechny kategorie</option>
-        </select>
+    <section id="quiz-start" class="stack">
+      <div class="card stack">
+        <h2>Nové kolo</h2>
+        <p>Kolo má až 10 situací. U každé vyber, jak má rozhodčí postupovat. Správné odpovědi a vysvětlení uvidíš až na konci.</p>
+        <p id="player-info" class="muted small" aria-live="polite"></p>
+        <div class="filters">
+          <div class="field">
+            <label for="category">Kategorie</label>
+            <select id="category">
+              <option value="">Všechny kategorie</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="difficulty">Obtížnost</label>
+            <select id="difficulty">
+              <option value="">Všechny obtížnosti</option>
+            </select>
+          </div>
+        </div>
+        <p id="filter-note" class="muted small" hidden>Kola s vybranou kategorií nebo obtížností se do žebříčku nepočítají.</p>
+        <div>
+          <button id="start-button" class="button" type="button">Začít kolo</button>
+        </div>
       </div>
-      <div>
-        <button id="start-button" class="button" type="button">Začít kolo</button>
+
+      <!-- Jen pro přihlášené: otázky, ve kterých hráč naposledy chyboval -->
+      <div id="opakovani" class="card stack" hidden>
+        <h2>Opakování chyb</h2>
+        <p id="mistakes-text"></p>
+        <div>
+          <button id="mistakes-button" class="button button--secondary" type="button" hidden>Opakovat chyby</button>
+        </div>
       </div>
     </section>
 

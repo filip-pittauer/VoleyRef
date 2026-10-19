@@ -1,8 +1,9 @@
 // Ovládání stránky kvízu: start → otázky → výsledek.
 import { el, showOnly } from './dom.js';
-import { CATEGORIES, categoryName, categoryRulesUrl } from './categories.js';
+import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
+import { formatDuration, plural } from './format.js';
 import { renderMedia } from './media.js';
-import { startRound, submitRound } from './quiz-api.js';
+import { startRound, submitRound, getMistakesCount } from './quiz-api.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -13,8 +14,14 @@ const sections = [startSection, questionSection, resultSection];
 
 const playerInfo = document.getElementById('player-info');
 const categorySelect = document.getElementById('category');
+const difficultySelect = document.getElementById('difficulty');
+const filterNote = document.getElementById('filter-note');
 const startButton = document.getElementById('start-button');
 const errorBox = document.getElementById('quiz-error');
+
+const mistakesCard = document.getElementById('opakovani');
+const mistakesText = document.getElementById('mistakes-text');
+const mistakesButton = document.getElementById('mistakes-button');
 
 const progressText = document.getElementById('quiz-progress');
 const progressBar = document.getElementById('quiz-progress-bar');
@@ -29,14 +36,14 @@ const resultSummary = document.getElementById('result-summary');
 const resultList = document.getElementById('result-list');
 const againButton = document.getElementById('again-button');
 
-// ---------- Stav kola ----------
+// ---------- Stav ----------
 // Jeden objekt se vším, co se během kola mění (podobně jako ViewModel v C#).
 let state = null;
 
-// ---------- Start ----------
 // Profil přihlášeného hráče (null = hraje bez přihlášení).
 let profile = null;
 
+// ---------- Start: hráč a filtry ----------
 async function renderPlayerInfo() {
   if (!isConfigured) {
     showError(NOT_CONFIGURED_MESSAGE);
@@ -48,31 +55,87 @@ async function renderPlayerInfo() {
     console.error(error);
   }
   playerInfo.replaceChildren(profile
-    ? el('span', {}, 'Hraješ jako ', el('strong', {}, profile.prezdivka),
-        '. Kola ze všech kategorií se počítají do ', el('a', { href: 'zebricek.html' }, 'žebříčku'), '.')
-    : el('span', {}, 'Nejsi přihlášený, výsledek se nezapíše do žebříčku. ',
+    ? el('span', {}, 'Hraješ jako ', el('strong', {}, profile.prezdivka), '.')
+    : el('span', {}, 'Nejsi přihlášený, výsledek se nezapíše do žebříčku ani statistik. ',
         el('a', { href: 'ucet.html' }, 'Přihlásit se')));
+  updateFilterNote();
+  renderMistakes();
 }
 
-function fillCategories() {
+function fillSelects() {
   for (const [id, name] of Object.entries(CATEGORIES)) {
     categorySelect.append(el('option', { value: id }, name));
+  }
+  for (const [level, name] of Object.entries(DIFFICULTIES)) {
+    difficultySelect.append(el('option', { value: level }, name));
   }
   // kviz.html?kategorie=blok → kategorie předvybraná (odkaz ze statistik)
   const fromUrl = new URLSearchParams(location.search).get('kategorie');
   if (fromUrl && CATEGORIES[fromUrl]) categorySelect.value = fromUrl;
 }
 
-async function handleStart() {
-  hideError();
-  startButton.disabled = true;
+function selectedFilters() {
+  return {
+    category: categorySelect.value || null,
+    difficulty: difficultySelect.value ? Number(difficultySelect.value) : null,
+  };
+}
+
+/** Upozornění, že kolo s filtrem se do žebříčku nepočítá (jen pro přihlášené). */
+function updateFilterNote() {
+  const { category, difficulty } = selectedFilters();
+  filterNote.hidden = !profile || (!category && !difficulty);
+}
+
+// ---------- Start: opakování chyb ----------
+async function renderMistakes() {
+  if (!profile) {
+    mistakesCard.hidden = true;
+    return;
+  }
+  let count;
   try {
-    const { roundId, questions } = await startRound({ category: categorySelect.value || null });
+    count = await getMistakesCount();
+  } catch (error) {
+    console.error(error);
+    mistakesCard.hidden = true;
+    return;
+  }
+
+  mistakesCard.hidden = false;
+  if (count === 0) {
+    mistakesText.textContent = 'Teď nemáš žádné chyby k opakování. 👍';
+    mistakesButton.hidden = true;
+    return;
+  }
+  mistakesText.textContent = `Máš ${plural(count, 'otázku', 'otázky', 'otázek')}, `
+    + 've kterých jsi naposledy chyboval. Když je zodpovíš správně, ze seznamu zmizí.';
+  mistakesButton.textContent = count > 10 ? 'Opakovat chyby (10 z nich)' : 'Opakovat chyby';
+  mistakesButton.hidden = false;
+
+  // Odkaz kviz.html#opakovani (ze statistik): karta byla při načtení skrytá,
+  // takže na ni prohlížeč sám neodroloval – uděláme to teď.
+  if (location.hash === '#opakovani') {
+    mistakesCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    mistakesButton.focus({ preventScroll: true });
+  }
+}
+
+// ---------- Začátek kola ----------
+async function begin(mode) {
+  hideError();
+  const filters = mode === 'chyby' ? { category: null, difficulty: null } : selectedFilters();
+  const button = mode === 'chyby' ? mistakesButton : startButton;
+  button.disabled = true;
+  try {
+    const { roundId, questions } = await startRound({ ...filters, mode });
     if (questions.length === 0) {
-      showError('V této kategorii zatím nejsou žádné otázky.');
+      showError(mode === 'chyby'
+        ? 'Nemáš žádné chyby k opakování.'
+        : 'Pro tento výběr kategorie a obtížnosti zatím nejsou žádné otázky.');
       return;
     }
-    state = { roundId, questions, category: categorySelect.value || null, index: 0, answers: {} };
+    state = { roundId, questions, mode, ...filters, index: 0, answers: {} };
     showOnly(questionSection, sections);
     renderQuestion();
   } catch (error) {
@@ -81,7 +144,7 @@ async function handleStart() {
       ? 'Kvíz se nepodařilo spustit. Zkontroluj připojení k internetu a zkus to znovu.'
       : NOT_CONFIGURED_MESSAGE);
   } finally {
-    startButton.disabled = false;
+    button.disabled = false;
   }
 }
 
@@ -91,7 +154,11 @@ function renderQuestion() {
   const number = state.index + 1;
   const total = state.questions.length;
 
-  progressText.textContent = `Otázka ${number} z ${total} · ${categoryName(question.kategorie)}`;
+  progressText.textContent = [
+    `Otázka ${number} z ${total}`,
+    categoryName(question.kategorie),
+    difficultyName(question.obtiznost),
+  ].filter(Boolean).join(' · ');
   progressBar.max = total;
   progressBar.value = state.index;
 
@@ -140,43 +207,47 @@ async function handleAnswer(event) {
 }
 
 // ---------- Výsledek ----------
-function formatDuration(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
-}
-
-function answerLine(label, question, key, className) {
+function answerLine(label, question, key) {
   const text = key ? `${key} – ${question.odpovedi[key]}` : 'bez odpovědi';
-  return el('p', { class: className }, el('strong', {}, `${label}: `), text);
+  return el('p', {}, el('strong', {}, `${label}: `), text);
 }
 
 function renderResultItem(question, result) {
   return el('li', { class: `result ${result.isCorrect ? 'result--ok' : 'result--wrong'}` },
     el('p', { class: 'result__status' }, result.isCorrect ? '✓ Správně' : '✗ Špatně'),
     el('p', {}, question.situace),
-    answerLine('Tvoje odpověď', question, result.answer, ''),
-    result.isCorrect ? null : answerLine('Správná odpověď', question, result.correctAnswer, ''),
+    answerLine('Tvoje odpověď', question, result.answer),
+    result.isCorrect ? null : answerLine('Správná odpověď', question, result.correctAnswer),
     result.explanation ? el('p', { class: 'result__explanation' }, result.explanation) : null,
     el('p', { class: 'result__rule' },
       question.pravidlo ? `Pravidlo ${question.pravidlo} · ` : '',
       el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))));
 }
 
-function leaderboardNote() {
-  if (!profile) return el('span', {}, 'Výsledek se nezapsal do žebříčku, protože nejsi přihlášený. ',
-    el('a', { href: 'ucet.html' }, 'Přihlásit se'));
-  if (state.category) return 'Kola z jedné kategorie se do žebříčku nepočítají.';
+/** Poznámka pod skóre: proč se (ne)zapsalo do žebříčku. */
+function leaderboardNote(round) {
+  if (!profile) {
+    return el('span', {}, 'Výsledek se nezapsal do žebříčku, protože nejsi přihlášený. ',
+      el('a', { href: 'ucet.html' }, 'Přihlásit se'));
+  }
+  if (round.mode === 'chyby') return 'Opakování chyb se do žebříčku nepočítá.';
+  if (round.category || round.difficulty) {
+    return 'Kola s vybranou kategorií nebo obtížností se do žebříčku nepočítají.';
+  }
   return el('span', {}, 'Výsledek je uložený. Pokud je to tvé nejlepší kolo, uvidíš ho v ',
     el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
 }
 
 function renderResult(result) {
-  const questionsById = new Map(state.questions.map(q => [q.id, q]));
+  const round = state;
+  const questionsById = new Map(round.questions.map(q => [q.id, q]));
+  const remaining = el('p', { class: 'muted small' });
 
   resultSummary.replaceChildren(
     el('p', { class: 'score' }, `${result.score} / ${result.total}`),
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
-    el('p', { class: 'muted small' }, leaderboardNote()));
+    el('p', { class: 'muted small' }, leaderboardNote(round)),
+    round.mode === 'chyby' ? remaining : '');
 
   resultList.replaceChildren(
     ...result.results.map(r => renderResultItem(questionsById.get(r.id), r)));
@@ -184,6 +255,17 @@ function renderResult(result) {
   showOnly(resultSection, sections);
   document.getElementById('result-heading').focus();
   state = null;
+
+  // Po kole chyb ukážeme, kolik jich ještě zbývá (načte se dodatečně).
+  if (round.mode === 'chyby') {
+    getMistakesCount()
+      .then(count => {
+        remaining.textContent = count === 0
+          ? 'Všechny chyby máš opravené! 🎉'
+          : `K opakování ti zbývá ${plural(count, 'otázka', 'otázky', 'otázek')}.`;
+      })
+      .catch(error => console.error(error));
+  }
 }
 
 // ---------- Chyby ----------
@@ -197,8 +279,15 @@ function hideError() {
 }
 
 // ---------- Inicializace ----------
-fillCategories();
+fillSelects();
 renderPlayerInfo();
-startButton.addEventListener('click', handleStart);
+categorySelect.addEventListener('change', updateFilterNote);
+difficultySelect.addEventListener('change', updateFilterNote);
+startButton.addEventListener('click', () => begin('bezne'));
+mistakesButton.addEventListener('click', () => begin('chyby'));
 questionForm.addEventListener('submit', handleAnswer);
-againButton.addEventListener('click', () => showOnly(startSection, sections));
+againButton.addEventListener('click', () => {
+  hideError();
+  showOnly(startSection, sections);
+  renderMistakes();   // počet chyb se po kole mohl změnit
+});

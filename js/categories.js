@@ -16,6 +16,17 @@ export function categoryName(id) {
   return CATEGORIES[id] ?? id;
 }
 
+// Obtížnost otázek (pole "obtiznost" v datech).
+export const DIFFICULTIES = {
+  1: 'Lehká',
+  2: 'Střední',
+  3: 'Těžká',
+};
+
+export function difficultyName(level) {
+  return DIFFICULTIES[level] ?? '';
+}
+
 /** Odkaz na kapitolu v knížce pravidel. */
 export function categoryRulesUrl(id) {
   return `pravidla.html#${id}`;

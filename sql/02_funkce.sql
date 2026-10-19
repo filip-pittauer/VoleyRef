@@ -9,12 +9,50 @@
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
--- zacni_kolo(kategorie) → { kolo_id, otazky: [...] }
+-- private.chybne_otazky(uzivatel) → id otázek, na které hráč NAPOSLEDY
+-- odpověděl špatně. Jakmile otázku v dalším kole zodpoví správně,
+-- ze seznamu zmizí. Pomocná funkce – z webu ji volat nejde.
+-- ---------------------------------------------------------------------
+create or replace function private.chybne_otazky(p_uzivatel uuid)
+returns setof integer
+language sql
+stable
+set search_path = ''
+as $$
+  select posledni.id
+  from (
+    -- distinct on: pro každou otázku jen nejnovější odpověď
+    select distinct on (u.id) u.id, k.odpovedi ->> u.id::text as odpoved
+    from public.kola k
+    cross join lateral unnest(k.otazky) as u (id)
+    where k.uzivatel_id = p_uzivatel and k.konec is not null
+    order by u.id, k.konec desc
+  ) as posledni
+  join private.otazky_reseni r on r.otazka_id = posledni.id
+  join public.otazky o on o.id = posledni.id
+  where o.aktivni
+    and posledni.odpoved is distinct from r.spravna;
+$$;
+
+revoke all on function private.chybne_otazky(uuid) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- zacni_kolo(kategorie, obtiznost, rezim) → { kolo_id, otazky: [...] }
 -- Vybere až 10 náhodných aktivních otázek, založí kolo a uloží čas
 -- startu (na serveru, takže ho hráč nemůže podvrhnout).
 -- Vrací otázky BEZ správných odpovědí.
+--   rezim 'bezne' = náhodné otázky (lze zúžit kategorií a obtížností)
+--   rezim 'chyby' = jen otázky, ve kterých hráč naposledy chyboval
 -- ---------------------------------------------------------------------
-create or replace function public.zacni_kolo(p_kategorie text default null)
+-- Starší verze měla jen jeden parametr. Bez smazání by vedle sebe
+-- existovaly dvě funkce stejného jména a API by nevědělo, kterou volat.
+drop function if exists public.zacni_kolo(text);
+
+create or replace function public.zacni_kolo(
+  p_kategorie text default null,
+  p_obtiznost integer default null,
+  p_rezim text default 'bezne'
+)
 returns jsonb
 language plpgsql
 security definer
@@ -23,7 +61,15 @@ as $$
 declare
   v_otazky  integer[];
   v_kolo_id uuid;
+  v_chyby   boolean := p_rezim = 'chyby';
 begin
+  if p_rezim is null or p_rezim not in ('bezne', 'chyby') then
+    raise exception 'Neznámý režim kola.';
+  end if;
+  if v_chyby and auth.uid() is null then
+    raise exception 'Pro opakování chyb se přihlas.';
+  end if;
+
   -- úklid: kola, která nikdo neodevzdal do 1 dne
   delete from public.kola
   where konec is null and zacatek < now() - interval '1 day';
@@ -34,8 +80,11 @@ begin
     select o.id
     from public.otazky o
     where o.aktivni
-      and (p_kategorie is null or o.kategorie = p_kategorie)
       and exists (select 1 from private.otazky_reseni r where r.otazka_id = o.id)
+      -- opakování chyb: jen chybné otázky, filtry kategorie a obtížnosti se ignorují
+      and (not v_chyby or o.id in (select private.chybne_otazky(auth.uid())))
+      and (v_chyby or p_kategorie is null or o.kategorie = p_kategorie)
+      and (v_chyby or p_obtiznost is null or o.obtiznost = p_obtiznost)
     order by random()
     limit 10
   ) as vyber;
@@ -44,8 +93,14 @@ begin
     return jsonb_build_object('kolo_id', null, 'otazky', '[]'::jsonb);
   end if;
 
-  insert into public.kola (uzivatel_id, kategorie, otazky, pocet)
-  values (auth.uid(), p_kategorie, v_otazky, cardinality(v_otazky))
+  insert into public.kola (uzivatel_id, kategorie, obtiznost, rezim, otazky, pocet)
+  values (
+    auth.uid(),
+    case when v_chyby then null else p_kategorie end,
+    case when v_chyby then null else p_obtiznost end,
+    p_rezim,
+    v_otazky,
+    cardinality(v_otazky))
   returning id into v_kolo_id;
 
   return jsonb_build_object(
@@ -133,8 +188,9 @@ $$;
 -- ---------------------------------------------------------------------
 -- zebricek(limit) → nejlepší kolo každého přihlášeného hráče
 -- Pořadí: více bodů, při shodě kratší čas.
--- Počítají se jen kola ze všech kategorií (ne vybraná kategorie)
--- a kola s rozumným časem (aspoň 3 s na otázku – ochrana proti botům).
+-- Počítají se jen běžná kola ze všech kategorií a obtížností (ne vybraná
+-- kategorie/obtížnost, opakování chyb ani denní výzva) a kola s rozumným
+-- časem (aspoň 3 s na otázku – ochrana proti botům).
 -- ---------------------------------------------------------------------
 create or replace function public.zebricek(p_limit integer default 50)
 returns table (
@@ -161,7 +217,9 @@ as $$
     from public.kola k
     where k.konec is not null
       and k.uzivatel_id is not null
+      and k.rezim = 'bezne'
       and k.kategorie is null
+      and k.obtiznost is null
       and k.konec - k.zacatek >= make_interval(secs => k.pocet * 3)
     order by k.uzivatel_id, k.skore desc, k.konec - k.zacatek asc
   )
@@ -177,6 +235,19 @@ as $$
   join public.profily p on p.id = n.uzivatel_id
   order by n.skore desc, n.trvani asc, n.konec asc
   limit least(greatest(p_limit, 1), 100);
+$$;
+
+-- ---------------------------------------------------------------------
+-- pocet_chyb() → kolik otázek má přihlášený hráč k opakování
+-- ---------------------------------------------------------------------
+create or replace function public.pocet_chyb()
+returns integer
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select count(*)::integer from private.chybne_otazky(auth.uid());
 $$;
 
 -- ---------------------------------------------------------------------
@@ -204,12 +275,14 @@ $$;
 --   anon          = nepřihlášený návštěvník
 --   authenticated = přihlášený hráč
 -- ---------------------------------------------------------------------
-revoke all on function public.zacni_kolo(text)           from public, anon, authenticated;
-revoke all on function public.odevzdej_kolo(uuid, jsonb) from public, anon, authenticated;
-revoke all on function public.zebricek(integer)          from public, anon, authenticated;
-revoke all on function public.smazat_ucet()              from public, anon, authenticated;
+revoke all on function public.zacni_kolo(text, integer, text) from public, anon, authenticated;
+revoke all on function public.odevzdej_kolo(uuid, jsonb)      from public, anon, authenticated;
+revoke all on function public.zebricek(integer)               from public, anon, authenticated;
+revoke all on function public.pocet_chyb()                    from public, anon, authenticated;
+revoke all on function public.smazat_ucet()                   from public, anon, authenticated;
 
-grant execute on function public.zacni_kolo(text)           to anon, authenticated;
-grant execute on function public.odevzdej_kolo(uuid, jsonb) to anon, authenticated;
-grant execute on function public.zebricek(integer)          to anon, authenticated;
-grant execute on function public.smazat_ucet()              to authenticated;
+grant execute on function public.zacni_kolo(text, integer, text) to anon, authenticated;
+grant execute on function public.odevzdej_kolo(uuid, jsonb)      to anon, authenticated;
+grant execute on function public.zebricek(integer)               to anon, authenticated;
+grant execute on function public.pocet_chyb()                    to authenticated;
+grant execute on function public.smazat_ucet()                   to authenticated;

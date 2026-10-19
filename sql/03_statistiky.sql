@@ -8,7 +8,8 @@
 -- moje_statistiky() → {
 --   souhrn:    { kol, otazek, spravne, nejlepsi_skore, nejlepsi_pocet, cas_s },
 --   kategorie: [{ kategorie, otazek, spravne }],
---   posledni:  [{ datum, kategorie, skore, pocet, trvani_s }]   (posledních 10 kol)
+--   nejlepsi:  { skore, pocet, trvani_s }                       (nejlepší běžné kolo)
+--   posledni:  [{ datum, kategorie, obtiznost, rezim, skore, pocet, trvani_s }]   (posledních 10 kol)
 -- }
 -- Úspěšnost v kategoriích se počítá ze správných odpovědí, které hráč
 -- nesmí vidět (private schéma) – proto to musí spočítat server.
@@ -40,11 +41,12 @@ begin
     ),
 
     -- nejlepší kolo = nejvyšší podíl správných, při shodě rychlejší
+    -- (jen běžná kola – opakování 2 chyb za 2/2 by jinak bylo „100 %“)
     'nejlepsi', (
       select jsonb_build_object('skore', k.skore, 'pocet', k.pocet,
                'trvani_s', round(extract(epoch from k.konec - k.zacatek))::integer)
       from public.kola k
-      where k.uzivatel_id = v_uzivatel and k.konec is not null
+      where k.uzivatel_id = v_uzivatel and k.konec is not null and k.rezim = 'bezne'
       order by k.skore::numeric / k.pocet desc, k.konec - k.zacatek asc
       limit 1
     ),
@@ -68,11 +70,11 @@ begin
 
     'posledni', (
       select coalesce(jsonb_agg(
-               jsonb_build_object('datum', p.konec, 'kategorie', p.kategorie, 'skore', p.skore,
-                                  'pocet', p.pocet, 'trvani_s', p.trvani_s)
+               jsonb_build_object('datum', p.konec, 'kategorie', p.kategorie, 'obtiznost', p.obtiznost,
+                                  'rezim', p.rezim, 'skore', p.skore, 'pocet', p.pocet, 'trvani_s', p.trvani_s)
                order by p.konec desc), '[]'::jsonb)
       from (
-        select k.konec, k.kategorie, k.skore, k.pocet,
+        select k.konec, k.kategorie, k.obtiznost, k.rezim, k.skore, k.pocet,
                round(extract(epoch from k.konec - k.zacatek))::integer as trvani_s
         from public.kola k
         where k.uzivatel_id = v_uzivatel and k.konec is not null

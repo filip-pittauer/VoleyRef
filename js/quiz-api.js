@@ -11,13 +11,27 @@ function requireSupabase() {
 
 /**
  * Začne nové kolo. Vrací { roundId, questions }.
- * category = id kategorie, nebo null pro všechny.
+ *   category   = id kategorie, nebo null pro všechny
+ *   difficulty = 1–3, nebo null pro všechny
+ *   mode       = 'bezne' | 'chyby' (opakování chyb – filtry se ignorují)
  */
-export async function startRound({ category = null } = {}) {
+export async function startRound({ category = null, difficulty = null, mode = 'bezne' } = {}) {
   requireSupabase();
-  const { data, error } = await supabase.rpc('zacni_kolo', { p_kategorie: category });
+  const { data, error } = await supabase.rpc('zacni_kolo', {
+    p_kategorie: category,
+    p_obtiznost: difficulty,
+    p_rezim: mode,
+  });
   if (error) throw error;
   return { roundId: data.kolo_id, questions: data.otazky };
+}
+
+/** Kolik otázek má přihlášený hráč k opakování (naposledy je měl špatně). */
+export async function getMistakesCount() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('pocet_chyb');
+  if (error) throw error;
+  return data;
 }
 
 /**
