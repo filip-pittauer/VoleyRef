@@ -113,10 +113,13 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 ## Aktuální stav (konec práce 20. 10. 2026)
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
 - Hotovo: fáze 1–6, knížka pravidel, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku).
-- Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva.
+- Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
+- V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026).
 
-### ⚠️ Rozpracované – první věc příště
-- **Odznaky jsou nasazené v kódu, ale uživatel ještě NESPUSTIL SQL** v Supabase. Spustit v pořadí: `01_schema.sql`, `02_funkce.sql`, `04_denni_vyzva.sql`, `05_odznaky.sql` (05 závisí na 02 a 04). Do té doby: kvíz funguje (odevzdej_kolo odznaky jen přeskočí), sekce odznaků ve Statistikách a karta na Účtu se nezobrazí, žebříček funguje jen bez ikon odznaků. Pak nechat uživatele odznaky vyzkoušet.
+### Jak s uživatelem pracujeme
+- Větší práci dělit do **balíčků**; po každém commit + push, zastavit se a nechat uživatele vyzkoušet na živém webu, než se jde dál.
+- Po změně SQL vždy přesně napsat, které soubory má spustit a v jakém pořadí.
+- Nezodpovězená otázka: limit **3 s na otázku** pro žebříček (ochrana proti botům) – nechat, nebo snížit na 2 s?
 
 ### Další krok: balíček 4 (schválený uživatelem)
 1. **Trenažér postavení** (bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. **Před psaním NEJDŘÍV ověřit aktuální znění pravidla 7.4/7.5 FIVB 2025–2028** (pravidlo o postavení se měnilo – nepsat z paměti).
@@ -129,10 +132,11 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Animace vs. video: formát otázky podporuje obojí (`media.typ`).
 - Vlastní doména (jméno zatím nevybrané).
 
-### Jak jsem testoval (testy nejsou v repu)
+### Jak jsem testoval (testy nejsou ve veřejném repu)
 - SQL: PGlite (Postgres ve WASM, npm `@electric-sql/pglite`) s napodobeným Supabase (role anon/authenticated/supabase_auth_admin, `auth.users`, `auth.uid()` z `request.jwt.claim.sub`). Vždy testovat i přechod ze stávající verze (`git show HEAD:sql/…`) a dvojí spuštění skriptů.
 - Prohlížeč: `playwright-core` + nainstalovaný Chrome (`C:/Program Files/Google/Chrome/Application/chrome.exe`), statický server `http-server`, Supabase API odchycené a obsloužené PGlite. **V testech blokovat service workery** (`serviceWorkers: 'block'`) a všechny požadavky na skutečný Supabase – jinak test sáhne na živou DB.
-- Nástroje byly v dočasné složce sezení; příště je případně nainstalovat znovu (mimo repo).
+- **Skripty jsou zkopírované v `private/testy/`** (jen na disku, ignorované Gitem): `fake-supabase.mjs` + `lib.mjs` (prostředí), `db.mjs` (bezpečnost, 45 kontrol), `*-db.mjs` (SQL po balíčcích), `e2e-*.mjs` (prohlížeč). Spuštění: zkopírovat složku do scratchpadu sezení (ne do repa), `npm install`, `node db.mjs` atd.
+- Cesty uvnitř jsou natvrdo: `ROOT` v `lib.mjs` (projekt) a `OLD` v `migrate-db.mjs`, `daily-db.mjs`, `badges-db.mjs` (složka se snímkem SQL z `git show HEAD:sql/…` – před testem přechodu ji znovu vytvořit).
 
 ### Před spuštěním pro veřejnost
 - Firemní e-mail (kontakt v ochrana-udaju.html je dočasný alias `raphael.silva955@flounderfantasy.com`) a převod Google Cloud projektu na firemní účet (IAM → Owner).
