@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "situace": "Hráč při podání přešlápne koncovou čáru v okamžiku úderu do míče.",
+    "obrazek": null,
+    "odpovedi": {
+      "A": "Hra pokračuje, přešlap se u podání netrestá.",
+      "B": "Chyba podávajícího, bod a podání získává soupeř.",
+      "C": "Podání se opakuje."
+    },
+    "spravna": "B",
+    "vysvetleni": "V okamžiku úderu při podání se podávající nesmí dotknout hřiště ani země mimo podávací zónu. Jde o chybu při podání.",
+    "pravidlo": "12.4.3"
+  }
+]

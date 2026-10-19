@@ -1,0 +1,209 @@
+/* =========================================================
+   Společné styly – mobile-first
+   Základní styly platí pro mobil, větší obrazovky řeší
+   @media (min-width: ...) dole v souboru.
+   ========================================================= */
+
+/* ---------- Barvy a rozměry (CSS proměnné) ---------- */
+:root {
+  --color-primary: #1d4ed8;       /* modrá – odkazy, tlačítka */
+  --color-primary-dark: #1e3a8a;
+  --color-accent: #f59e0b;        /* žlutooranžová – volejbalový míč */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;       /* karty, panely */
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-border: #e2e8f0;
+  --color-success: #15803d;
+  --color-error: #b91c1c;
+
+  --radius: 0.75rem;
+  --space: 1rem;
+  --max-width: 60rem;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Tmavý režim podle nastavení systému */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #60a5fa;
+    --color-primary-dark: #93c5fd;
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #f1f5f9;
+    --color-text-muted: #94a3b8;
+    --color-border: #334155;
+    --color-success: #4ade80;
+    --color-error: #f87171;
+  }
+}
+
+/* ---------- Základ ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  /* patička vždy dole i na krátké stránce */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+/* Viditelný fokus pro ovládání klávesnicí */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Odkaz „Přeskočit na obsah“ – viditelný jen při fokusu klávesnicí */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip-link:focus {
+  left: var(--space);
+  top: var(--space);
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface);
+}
+
+/* ---------- Hlavička a navigace ---------- */
+.site-header {
+  background: var(--color-primary-dark);
+  color: #fff;
+}
+
+.site-header__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0.75rem var(--space);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.logo {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.main-nav a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius);
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-nav a:hover {
+  background: rgb(255 255 255 / 0.15);
+}
+
+/* aktuální stránka – atribut aria-current čte i čtečka obrazovky */
+.main-nav a[aria-current="page"] {
+  background: var(--color-accent);
+  color: #111;
+  font-weight: 600;
+}
+
+/* ---------- Patička ---------- */
+.site-footer {
+  padding: var(--space);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- Komponenty ---------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.card-grid {
+  display: grid;
+  gap: var(--space);
+  /* mobil: jeden sloupec */
+  grid-template-columns: 1fr;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--color-primary-dark);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+/* ---------- Větší obrazovky ---------- */
+@media (min-width: 40rem) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
