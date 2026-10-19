@@ -34,7 +34,9 @@ js/config.js        Supabase URL + publishable klíč (veřejné)
 js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro přihlášení
 js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo
 js/                 další moduly (quiz.js, account.js, dom.js, …)
-img/                obrázky situací
+img/                obrázky situací, img/icons/ ikony aplikace (zdroj icon.svg)
+manifest.json       PWA manifest
+sw.js               service worker (mezipaměť, offline)
 animace/            SVG animace situací jako JSON (formát v animace/README.md)
 sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
 tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
@@ -89,6 +91,8 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Ukládáme co nejméně osobních údajů (přezdívka, e-mail pro přihlášení). Kvůli GDPR přidat stránku se zásadami ochrany osobních údajů.
 
 ## Konvence kódu
+- **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.**
+- Hlavička a navigace jsou v každém HTML souboru zvlášť (bez build kroku) – při změně upravit všechny stránky.
 - Texty v UI jsou česky. Názvy proměnných a funkcí v kódu anglicky, komentáře česky.
 - Sémantické HTML, přístupnost (alt texty, popisky formulářů, ovladatelnost klávesnicí).
 - Mobile-first CSS, CSS proměnné pro barvy.
@@ -104,5 +108,5 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Aktuální stav
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček), fáze 5 (animace + 3 ukázkové).
+- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL), fáze 4 (žebříček), fáze 5 (animace + 3 ukázkové), fáze 6 (PWA).
 - Čeká na uživatele: spustit SQL v Supabase, doplnit js/config.js, nastavit Auth (URL, Google), kontakt v ochrana-udaju.html.

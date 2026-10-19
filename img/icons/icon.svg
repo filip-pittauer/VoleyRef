@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Zdroj ikony aplikace. PNG verze (192, 512, maskable, apple) jsou z něj vyrenderované. -->
+  <rect width="512" height="512" rx="96" fill="#1e3a8a"/>
+  <defs>
+    <clipPath id="ball"><circle cx="256" cy="256" r="150"/></clipPath>
+  </defs>
+  <circle cx="256" cy="256" r="150" fill="#ffe14d"/>
+  <g clip-path="url(#ball)" fill="none" stroke="#1e3a8a" stroke-width="14" stroke-linecap="round">
+    <!-- tři švy ze středu stočené do „vrtule“ + souběžné švy u okraje -->
+    <path d="M256 256 C 250 190, 200 135, 130 120"/>
+    <path d="M256 256 C 315 225, 385 245, 420 300"/>
+    <path d="M256 256 C 230 320, 250 385, 300 420"/>
+    <path d="M200 110 C 270 130, 320 190, 330 250"/>
+    <path d="M405 360 C 350 380, 280 360, 230 320"/>
+    <path d="M150 380 C 120 320, 130 250, 180 200"/>
+  </g>
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#1e3a8a" stroke-width="14"/>
+  <path d="M352 120 l40 -40 M382 140 l46 -26" stroke="#f59e0b" stroke-width="16" stroke-linecap="round"/>
+</svg>
