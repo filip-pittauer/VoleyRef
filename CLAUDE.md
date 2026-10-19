@@ -116,7 +116,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva.
 
 ### ⚠️ Rozpracované – první věc příště
-- **Odznaky jsou nasazené v kódu, ale uživatel ještě NESPUSTIL SQL** v Supabase. Spustit v pořadí: `01_schema.sql`, `02_funkce.sql`, `04_denni_vyzva.sql`, `05_odznaky.sql` (05 závisí na 02 a 04). Do té doby: kvíz funguje (odevzdej_kolo odznaky jen přeskočí), sekce odznaků ve Statistikách a karta na Účtu se nezobrazí, žebříček může hlásit chybu (frontend čte sloupec `odznaky`). Pak nechat uživatele odznaky vyzkoušet.
+- **Odznaky jsou nasazené v kódu, ale uživatel ještě NESPUSTIL SQL** v Supabase. Spustit v pořadí: `01_schema.sql`, `02_funkce.sql`, `04_denni_vyzva.sql`, `05_odznaky.sql` (05 závisí na 02 a 04). Do té doby: kvíz funguje (odevzdej_kolo odznaky jen přeskočí), sekce odznaků ve Statistikách a karta na Účtu se nezobrazí, žebříček funguje jen bez ikon odznaků. Pak nechat uživatele odznaky vyzkoušet.
 
 ### Další krok: balíček 4 (schválený uživatelem)
 1. **Trenažér postavení** (bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. **Před psaním NEJDŘÍV ověřit aktuální znění pravidla 7.4/7.5 FIVB 2025–2028** (pravidlo o postavení se měnilo – nepsat z paměti).
