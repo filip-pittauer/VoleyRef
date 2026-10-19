@@ -3,6 +3,7 @@ import { el, showOnly } from './dom.js';
 import { CATEGORIES, categoryName, categoryRulesUrl } from './categories.js';
 import { renderMedia } from './media.js';
 import { startRound, submitRound } from './quiz-api.js';
+import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
 const startSection = document.getElementById('quiz-start');
@@ -10,6 +11,7 @@ const questionSection = document.getElementById('quiz-question');
 const resultSection = document.getElementById('quiz-result');
 const sections = [startSection, questionSection, resultSection];
 
+const playerInfo = document.getElementById('player-info');
 const categorySelect = document.getElementById('category');
 const startButton = document.getElementById('start-button');
 const errorBox = document.getElementById('quiz-error');
@@ -32,6 +34,26 @@ const againButton = document.getElementById('again-button');
 let state = null;
 
 // ---------- Start ----------
+// Profil přihlášeného hráče (null = hraje bez přihlášení).
+let profile = null;
+
+async function renderPlayerInfo() {
+  if (!isConfigured) {
+    showError(NOT_CONFIGURED_MESSAGE);
+    return;
+  }
+  try {
+    profile = await getProfile();
+  } catch (error) {
+    console.error(error);
+  }
+  playerInfo.replaceChildren(profile
+    ? el('span', {}, 'Hraješ jako ', el('strong', {}, profile.prezdivka),
+        '. Kola ze všech kategorií se počítají do ', el('a', { href: 'zebricek.html' }, 'žebříčku'), '.')
+    : el('span', {}, 'Nejsi přihlášený, výsledek se nezapíše do žebříčku. ',
+        el('a', { href: 'ucet.html' }, 'Přihlásit se')));
+}
+
 function fillCategories() {
   for (const [id, name] of Object.entries(CATEGORIES)) {
     categorySelect.append(el('option', { value: id }, name));
@@ -47,12 +69,14 @@ async function handleStart() {
       showError('V této kategorii zatím nejsou žádné otázky.');
       return;
     }
-    state = { roundId, questions, index: 0, answers: {} };
+    state = { roundId, questions, category: categorySelect.value || null, index: 0, answers: {} };
     showOnly(questionSection, sections);
     renderQuestion();
   } catch (error) {
     console.error(error);
-    showError('Kvíz se nepodařilo spustit. Zkus to prosím znovu.');
+    showError(isConfigured
+      ? 'Kvíz se nepodařilo spustit. Zkontroluj připojení k internetu a zkus to znovu.'
+      : NOT_CONFIGURED_MESSAGE);
   } finally {
     startButton.disabled = false;
   }
@@ -135,12 +159,21 @@ function renderResultItem(question, result) {
       el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))));
 }
 
+function leaderboardNote() {
+  if (!profile) return el('span', {}, 'Výsledek se nezapsal do žebříčku, protože nejsi přihlášený. ',
+    el('a', { href: 'ucet.html' }, 'Přihlásit se'));
+  if (state.category) return 'Kola z jedné kategorie se do žebříčku nepočítají.';
+  return el('span', {}, 'Výsledek je uložený. Pokud je to tvé nejlepší kolo, uvidíš ho v ',
+    el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
+}
+
 function renderResult(result) {
   const questionsById = new Map(state.questions.map(q => [q.id, q]));
 
   resultSummary.replaceChildren(
     el('p', { class: 'score' }, `${result.score} / ${result.total}`),
-    el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`));
+    el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
+    el('p', { class: 'muted small' }, leaderboardNote()));
 
   resultList.replaceChildren(
     ...result.results.map(r => renderResultItem(questionsById.get(r.id), r)));
@@ -162,6 +195,7 @@ function hideError() {
 
 // ---------- Inicializace ----------
 fillCategories();
+renderPlayerInfo();
 startButton.addEventListener('click', handleStart);
 questionForm.addEventListener('submit', handleAnswer);
 againButton.addEventListener('click', () => showOnly(startSection, sections));

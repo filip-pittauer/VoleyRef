@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Přihlášení a registrace hráčů.">
+  <title>Účet – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/account.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html">🏐 Trénink rozhodčích</a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="index.html">Úvod</a></li>
+          <li><a href="kviz.html">Kvíz</a></li>
+          <li><a href="pravidla.html">Pravidla</a></li>
+          <li><a href="zebricek.html">Žebříček</a></li>
+          <li><a href="ucet.html" aria-current="page">Účet</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="narrow">
+    <h1 id="page-heading" tabindex="-1">Účet</h1>
+
+    <!-- Hlášky (chyba / úspěch) – role="alert" je přečte čtečka obrazovky -->
+    <p id="message" class="alert" role="alert" hidden></p>
+
+    <p id="loading" class="muted">Načítám…</p>
+
+    <!-- ============ Nepřihlášený: přihlášení ============ -->
+    <section id="login-section" class="card stack" hidden>
+      <h2>Přihlášení</h2>
+      <form id="login-form" class="stack">
+        <div class="field">
+          <label for="login-email">E-mail</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="login-password">Heslo</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="actions">
+          <button class="button" type="submit">Přihlásit se</button>
+          <button class="link-button" type="button" data-show="reset-section">Zapomenuté heslo?</button>
+        </div>
+      </form>
+
+      <div class="divider"><span>nebo</span></div>
+      <button class="button button--secondary google-button" type="button" data-google>Přihlásit se přes Google</button>
+
+      <p>Nemáš účet? <button class="link-button" type="button" data-show="register-section">Zaregistruj se</button></p>
+    </section>
+
+    <!-- ============ Nepřihlášený: registrace ============ -->
+    <section id="register-section" class="card stack" hidden>
+      <h2>Registrace</h2>
+      <form id="register-form" class="stack">
+        <div class="field">
+          <label for="register-nickname">Přezdívka</label>
+          <input id="register-nickname" name="nickname" type="text" autocomplete="nickname"
+                 required minlength="3" maxlength="20" aria-describedby="nickname-hint">
+          <p id="nickname-hint" class="muted small">3–20 znaků. Uvidí ji ostatní v žebříčku, nepoužívej celé jméno.</p>
+        </div>
+        <div class="field">
+          <label for="register-email">E-mail</label>
+          <input id="register-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="register-password">Heslo</label>
+          <input id="register-password" name="password" type="password" autocomplete="new-password"
+                 required minlength="8" aria-describedby="password-hint">
+          <p id="password-hint" class="muted small">Aspoň 8 znaků.</p>
+        </div>
+        <div class="checkbox">
+          <input id="register-consent" name="consent" type="checkbox" required>
+          <label for="register-consent">Souhlasím se <a href="ochrana-udaju.html">zásadami ochrany osobních údajů</a>.</label>
+        </div>
+        <div>
+          <button class="button" type="submit">Vytvořit účet</button>
+        </div>
+      </form>
+
+      <div class="divider"><span>nebo</span></div>
+      <button class="button button--secondary google-button" type="button" data-google>Registrovat se přes Google</button>
+
+      <p>Už máš účet? <button class="link-button" type="button" data-show="login-section">Přihlas se</button></p>
+    </section>
+
+    <!-- ============ Zapomenuté heslo ============ -->
+    <section id="reset-section" class="card stack" hidden>
+      <h2>Zapomenuté heslo</h2>
+      <p>Pošleme ti e-mail s odkazem na nastavení nového hesla.</p>
+      <form id="reset-form" class="stack">
+        <div class="field">
+          <label for="reset-email">E-mail</label>
+          <input id="reset-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="actions">
+          <button class="button" type="submit">Poslat odkaz</button>
+          <button class="link-button" type="button" data-show="login-section">Zpět na přihlášení</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ Nové heslo (po kliknutí na odkaz z e-mailu) ============ -->
+    <section id="new-password-section" class="card stack" hidden>
+      <h2>Nové heslo</h2>
+      <form id="new-password-form" class="stack">
+        <div class="field">
+          <label for="new-password">Nové heslo</label>
+          <input id="new-password" name="password" type="password" autocomplete="new-password" required minlength="8">
+        </div>
+        <div>
+          <button class="button" type="submit">Uložit heslo</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ Přihlášený ============ -->
+    <section id="account-section" class="stack" hidden>
+      <div class="card stack">
+        <h2>Můj účet</h2>
+        <p>Přihlášen jako <strong id="account-nickname"></strong><br>
+          <span class="muted small" id="account-email"></span></p>
+        <div class="actions">
+          <a class="button" href="kviz.html">Hrát kvíz</a>
+          <button id="logout-button" class="button button--secondary" type="button">Odhlásit se</button>
+        </div>
+      </div>
+
+      <div class="card stack">
+        <h2>Změnit přezdívku</h2>
+        <form id="nickname-form" class="stack">
+          <div class="field">
+            <label for="nickname">Přezdívka</label>
+            <input id="nickname" name="nickname" type="text" autocomplete="nickname" required minlength="3" maxlength="20">
+          </div>
+          <div>
+            <button class="button" type="submit">Uložit</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card stack danger-zone">
+        <h2>Smazat účet</h2>
+        <p>Smaže účet, přezdívku i všechny výsledky. Tuto akci nejde vrátit.</p>
+        <div>
+          <button id="delete-button" class="button button--danger" type="button">Smazat účet</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

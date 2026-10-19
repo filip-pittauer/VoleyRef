@@ -23,18 +23,25 @@ Hlavní části:
 
 ## Struktura projektu
 ```
-index.html        úvodní stránka / rozcestník
-kviz.html         kvíz
-pravidla.html     knížka pravidel
-zebricek.html     žebříček
-css/style.css     společné styly
-js/               JavaScript (moduly)
-img/              obrázky situací
-data/otazky.json  otázky (jen v rané fázi, viz níže)
+index.html          úvodní stránka / rozcestník
+kviz.html           kvíz
+pravidla.html       knížka pravidel (kapitoly mají id = kategorie otázek)
+zebricek.html       žebříček
+ucet.html           přihlášení, registrace, profil, smazání účtu
+ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
+css/style.css       společné styly
+js/config.js        Supabase URL + publishable klíč (veřejné)
+js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro přihlášení
+js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo
+js/                 další moduly (quiz.js, account.js, dom.js, …)
+img/                obrázky situací
+sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
+tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
+private/            NENÍ v repu: otázky se správnými odpověďmi
 ```
 
 ## Formát otázky
-Platí pro `data/otazky.json` a později pro DB schéma.
+Platí pro `private/otazky.json` i DB (tabulky `public.otazky` + `private.otazky_reseni`).
 ```json
 {
   "id": 1,
@@ -61,7 +68,7 @@ Platí pro `data/otazky.json` a později pro DB schéma.
 
 ### Kde otázky leží
 - `private/otazky.json` – **plná sada se správnými odpověďmi**. Složka `private/` je v `.gitignore` a nesmí do veřejného repa. Je jen na disku autora (zálohovat!).
-- `data/otazky.json` – jen pár veřejných ukázek pro lokální fázi 2.
+- Databáze: `node tools/seed-otazky.mjs` zkontroluje JSON a vytvoří `private/seed-otazky.sql` (upsert), které se vloží do SQL editoru Supabase. Otázky se nemažou, jen se nastaví `aktivni: false`.
 
 ## Postup vývoje (fáze)
 Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
@@ -95,5 +102,6 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
 
 ## Aktuální stav
-- Supabase projekt je založený (zatím bez tabulek).
-- Repo na GitHubu: zakládá se, další krok je fáze 1 (kostra webu).
+- Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
+- Hotovo: fáze 1, 2, knížka pravidel, fáze 3 (kód + SQL).
+- Čeká na uživatele: spustit SQL v Supabase, doplnit js/config.js, nastavit Auth (URL, Google), kontakt v ochrana-udaju.html.
