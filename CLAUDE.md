@@ -33,6 +33,32 @@ img/              obrázky situací
 data/otazky.json  otázky (jen v rané fázi, viz níže)
 ```
 
+## Formát otázky
+Platí pro `data/otazky.json` a později pro DB schéma.
+```json
+{
+  "id": 1,
+  "aktivni": true,
+  "kategorie": "podani",
+  "obtiznost": 1,
+  "situace": "Popis situace…",
+  "media": { "typ": "obrazek", "soubor": "img/podani-01.png", "popis": "alt text" },
+  "odpovedi": { "A": "…", "B": "…", "C": "…" },
+  "spravna": "B",
+  "vysvetleni": "…",
+  "pravidlo": "12.4.3",
+  "verze_pravidel": "2025"
+}
+```
+- `aktivni`: koncept pro autora. Otázky s `false` se v kvízu nezobrazují (např. neověřená odpověď).
+- `kategorie`: jedna hlavní kategorie, identifikátor bez diakritiky (`podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `signalizace`). Český název se doplní až v UI.
+- `obtiznost`: 1–3.
+- `media`: `null`, nebo objekt s `typ` (`obrazek` | `video` | `animace`), `soubor` a `popis` (alt text).
+- `odpovedi`: 2–4 možnosti, klíče A–D. Právě jedna správná (`spravna`).
+- `verze_pravidel`: rok vydání pravidel, ke kterému se otázka vztahuje (při změně pravidel se otázky dají najít a zkontrolovat).
+- Správná odpověď se hráči ukazuje **až na konci kola**, ne po každé otázce.
+- Jen halový (šestkový) volejbal. Tlačítko „Nevím“ pro hráče nebudeme dělat.
+
 ## Postup vývoje (fáze)
 Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 1. **Kostra webu:** stránky, navigace, základní responzivní CSS (mobile-first).
