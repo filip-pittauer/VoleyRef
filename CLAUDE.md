@@ -24,6 +24,7 @@ Hlavní části:
 ## Struktura projektu
 Podrobná mapa modulů, závislostí, RPC a toků je v **CODEMAP.md**.
 ```
+README.md           představení projektu pro návštěvníky GitHubu (co to je, spuštění, Supabase)
 CODEMAP.md          mapa kódu (moduly, importy, RPC, kotvy, „kam sáhnout“)
 index.html          úvodní stránka / rozcestník
 kviz.html           kvíz
