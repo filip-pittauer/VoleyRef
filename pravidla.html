@@ -496,7 +496,7 @@
           <rect class="dg-floor" x="10" y="16" width="120" height="120" />
           <rect class="dg-line" x="10" y="16" width="120" height="120" />
           <line class="dg-line" x1="10" y1="56" x2="130" y2="56" />
-          <line class="dg-net" x1="4" y1="16" x2="136" y2="16" />
+          <line class="dg-net dg-net--edge" x1="4" y1="16" x2="136" y2="16" />
           <g class="dg-link">
             <line x1="34" y1="40" x2="30" y2="102" />
             <line x1="70" y1="40" x2="70" y2="102" />
@@ -518,46 +518,48 @@
           </g>
           <g class="dg-text"><text x="118" y="62" class="dg-small" text-anchor="end">útočná čára</text></g>
 
-          <!-- příklady chodidel: hranice = přední chodidlo hráče přední řady -->
-          <g transform="translate(150 16)">
-            <g class="dg-example" transform="translate(0 0)">
-              <rect class="dg-panel" x="0" y="0" width="58" height="74" />
-              <line class="dg-net" x1="0" y1="0" x2="58" y2="0" />
-              <line class="dg-ref" x1="0" y1="23.5" x2="58" y2="23.5" />
-              <ellipse class="dg-foot" cx="20" cy="31" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot" cx="31" cy="40" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot dg-foot--back" cx="24" cy="58" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot dg-foot--back" cx="35" cy="62" rx="3.6" ry="7.5" />
-              <text class="dg-verdict dg-verdict--ok" x="29" y="86">správně</text>
+          <!-- příklady chodidel: hranice = špička předního chodidla hráče přední řady -->
+          <defs><path id="dg4-foot" d="M0.6 -9.5 C4.4 -9.5 4.6 -4 3.9 -0.5 C3.4 2.5 3 5.2 2.7 7.2 C2.2 9.9 -2.2 9.9 -2.6 7.2 C-3 4.8 -4 2 -4 -1.8 C-4 -6.4 -2.8 -9.5 0.6 -9.5 Z" /></defs>
+          <g transform="translate(150 18)">
+            <g class="dg-note"><text x="93" y="-8">chodidla v okamžiku podání</text></g>
+            <g transform="translate(0 0)">
+              <rect class="dg-panel" x="0" y="0" width="58" height="80" />
+              <line class="dg-net dg-net--edge" x1="0" y1="0" x2="58" y2="0" />
+              <line class="dg-ref" x1="0" y1="22.5" x2="58" y2="22.5" />
+              <use href="#dg4-foot" class="dg-foot" transform="translate(19 32) scale(-1 1)" />
+              <use href="#dg4-foot" class="dg-foot" transform="translate(31 42)" />
+              <use href="#dg4-foot" class="dg-foot dg-foot--back" transform="translate(22 62) scale(-1 1)" />
+              <use href="#dg4-foot" class="dg-foot dg-foot--back" transform="translate(34 66)" />
+              <text class="dg-verdict dg-verdict--ok" x="29" y="92">správně</text>
             </g>
-            <g class="dg-example" transform="translate(64 0)">
-              <rect class="dg-panel" x="0" y="0" width="58" height="74" />
-              <line class="dg-net" x1="0" y1="0" x2="58" y2="0" />
-              <line class="dg-ref" x1="0" y1="23.5" x2="58" y2="23.5" />
-              <ellipse class="dg-foot" cx="20" cy="31" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot" cx="31" cy="40" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot dg-foot--back" cx="36" cy="21" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot dg-foot--back" cx="45" cy="15" rx="3.6" ry="7.5" />
-              <text class="dg-verdict dg-verdict--ok" x="29" y="86">správně</text>
+            <g transform="translate(64 0)">
+              <rect class="dg-panel" x="0" y="0" width="58" height="80" />
+              <line class="dg-net dg-net--edge" x1="0" y1="0" x2="58" y2="0" />
+              <line class="dg-ref" x1="0" y1="22.5" x2="58" y2="22.5" />
+              <use href="#dg4-foot" class="dg-foot" transform="translate(19 32) scale(-1 1)" />
+              <use href="#dg4-foot" class="dg-foot" transform="translate(31 42)" />
+              <use href="#dg4-foot" class="dg-foot dg-foot--back" transform="translate(36 24) scale(-1 1)" />
+              <use href="#dg4-foot" class="dg-foot dg-foot--back" transform="translate(47 17)" />
+              <text class="dg-verdict dg-verdict--ok" x="29" y="92">správně</text>
             </g>
-            <g class="dg-example" transform="translate(128 0)">
-              <rect class="dg-panel" x="0" y="0" width="58" height="74" />
-              <line class="dg-net" x1="0" y1="0" x2="58" y2="0" />
-              <line class="dg-ref" x1="0" y1="23.5" x2="58" y2="23.5" />
-              <ellipse class="dg-foot" cx="20" cy="31" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot" cx="31" cy="40" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot dg-foot--back" cx="36" cy="12" rx="3.6" ry="7.5" />
-              <ellipse class="dg-foot dg-foot--back" cx="45" cy="9" rx="3.6" ry="7.5" />
-              <text class="dg-verdict dg-verdict--bad" x="29" y="86">chyba</text>
+            <g transform="translate(128 0)">
+              <rect class="dg-panel" x="0" y="0" width="58" height="80" />
+              <line class="dg-net dg-net--edge" x1="0" y1="0" x2="58" y2="0" />
+              <line class="dg-ref" x1="0" y1="22.5" x2="58" y2="22.5" />
+              <use href="#dg4-foot" class="dg-foot" transform="translate(19 32) scale(-1 1)" />
+              <use href="#dg4-foot" class="dg-foot" transform="translate(31 42)" />
+              <use href="#dg4-foot" class="dg-foot dg-foot--back" transform="translate(36 11) scale(-1 1)" />
+              <use href="#dg4-foot" class="dg-foot dg-foot--back" transform="translate(47 12)" />
+              <text class="dg-verdict dg-verdict--bad" x="29" y="92">chyba</text>
             </g>
             <g class="dg-note">
-              <text x="93" y="100" class="dg-small">světlá = hráč přední řady, tmavá = hráč zadní řady,</text>
-              <text x="93" y="107" class="dg-small">čárkovaně = nejbližší bod předního chodidla k síti</text>
+              <text x="93" y="106" class="dg-small">bílá = hráč přední řady, modrá = hráč zadní řady,</text>
+              <text x="93" y="113" class="dg-small">čárkovaně = špička předního chodidla hráče přední řady</text>
             </g>
           </g>
         </svg>
       </div>
-      <figcaption><span class="diagram__num">Diagram 4</span> Postavení hráčů podle diagramu 4 FIVB. Rozhoduje poloha chodidel na podlaze. Zadnímu hráči stačí, aby měl za hranicí (dál od sítě) aspoň část jednoho chodidla. Od roku 2025 se postavení kontroluje jen u přijímajícího družstva.</figcaption>
+      <figcaption><span class="diagram__num">Diagram 4</span> Postavení hráčů podle diagramu 4 FIVB. Rozhoduje poloha chodidel na podlaze. Vpravo jsou chodidla dvou hráčů za sebou (síť nahoře): zadnímu hráči stačí, aby měl za hranicí (dál od sítě) aspoň část jednoho chodidla. Od roku 2025 se postavení kontroluje jen u přijímajícího družstva.</figcaption>
     </figure>
     <p class="sub sub--d3" id="p-7-4-1"><a class="sub__num" href="#p-7-4-1">7.4.1</a> Pozice hráčů se číslují takto:</p>
     <p class="sub sub--d4" id="p-7-4-1-1"><a class="sub__num" href="#p-7-4-1-1">7.4.1.1</a> tři hráči u sítě jsou hráči přední řady na pozicích 4 (vlevo vpředu), 3 (uprostřed vpředu) a 2 (vpravo vpředu);</p>

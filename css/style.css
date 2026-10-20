@@ -1888,6 +1888,7 @@ progress::-moz-progress-bar {
 .dg-line { fill: none; stroke: #fff; stroke-width: 1; }
 .dg-line--dash { stroke-dasharray: 1.5 1.5; }
 .dg-net { stroke: #fff; stroke-width: 2.2; stroke-dasharray: 2 1; }
+.dg-net--edge { stroke: var(--color-text); }   /* síť na okraji hřiště, mimo modrou volnou zónu */
 .dg-post { fill: #fff; }
 .dg-furniture { fill: var(--color-surface); stroke: var(--color-text-muted); stroke-width: 0.6; }
 .dg-ground { stroke: var(--color-text); stroke-width: 1.2; }
