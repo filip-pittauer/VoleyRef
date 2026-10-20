@@ -125,14 +125,20 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
 - **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists` staré signatury). Změny se dělají přímo v nich a uživatel je po změně spustí znovu v pořadí 01, 02, 03… Před nasazením otestovat přechod ze stávající verze (git HEAD) na novou.
 
-## Aktuální stav (konec práce 20. 10. 2026)
+## Aktuální stav (konec práce 21. 10. 2026)
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1–6, knížka pravidel, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), **gesta rozhodčích** (balíček 4 – čeká na vyzkoušení uživatelem).
+- Hotovo: fáze 1–6, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta rozhodčích (balíček 4), vzhled Svaz, úplná pravidla (balíček 5), animace (balíček 6), README.md a CODEMAP.md. Uživatel balíčky 4–6 průběžně prohlížel a schvaloval (diagramy, obsah, animace menu), celkové vyzkoušení na živém webu ještě nehlásil.
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
 - V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
 - **Vzhled „Svaz“** (dolní lišta, Profil = účet + statistiky, písmo Barlow) je od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem.
 - **Úplná pravidla** (balíček 5) jsou od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem. Uživatel má spustit `private/seed-otazky.sql` (otázky 26 a 27: pravidlo 28.x → 30.x); dokud to neudělá, vedou jejich odkazy na špatné pravidlo.
 - **Animace a detaily** (balíček 6, od 21. 10. 2026 na `main`, čeká na vyzkoušení): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
+- **Na příště – otevřené body:**
+  - Ověřit, jestli uživatel spustil `private/seed-otazky.sql` (připomínal jsem; nepotvrdil).
+  - Licence repa: zatím žádná (= všechna práva vyhrazena). Nabídl jsem MIT pro kód; uživatel nerozhodl.
+  - Text pravidel by měl před zveřejněním projít zkušený rozhodčí (doporučeno uživateli).
+  - Nápady odložené uživatelem: Playwright MCP („zatím ne, kdyžtak později“ – doporučil jsem zůstat u skriptů), Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
+  - Úvodní panel hráče s úrovní existuje jen ve větvi `styl-hala` – lze převzít do Svazu, pokud uživatel bude chtít.
 - Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
 
 ### Jak s uživatelem pracujeme
