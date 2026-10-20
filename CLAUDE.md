@@ -132,6 +132,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
 - **Vzhled „Svaz“** (dolní lišta, Profil = účet + statistiky, písmo Barlow) je od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem.
 - **Úplná pravidla** (balíček 5) jsou od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem. Uživatel má spustit `private/seed-otazky.sql` (otázky 26 a 27: pravidlo 28.x → 30.x); dokud to neudělá, vedou jejich odkazy na špatné pravidlo.
+- **Animace a detaily** (balíček 6, od 21. 10. 2026 na `main`, čeká na vyzkoušení): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
 - Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
 
 ### Jak s uživatelem pracujeme
