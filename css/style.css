@@ -1430,6 +1430,7 @@ progress::-moz-progress-bar {
 /* obsah: kapitoly a pod nimi čísla pravidel */
 .toc h2 {
   margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 .toc__list {
@@ -1443,30 +1444,33 @@ progress::-moz-progress-bar {
   font-weight: 600;
 }
 
-.toc__part {
-  margin-top: 1.25rem !important;
-  color: var(--color-text-muted);
+/* oddíl: barevný pruh jako oddíly v textu pravidel */
+.toc__list > .toc__part {
+  margin-top: 1.25rem;
+  padding: 0.4rem 0.7rem;
+  border-left: 4px solid var(--color-accent);
+  background: var(--color-primary-dark);
+  color: var(--color-on-dark);
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: 1.05rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
 }
 
-.toc__part:first-child {
-  margin-top: 0 !important;
+.toc__list > .toc__part:first-child {
+  margin-top: 0;
 }
 
+/* pravidla kapitoly vždy pod sebou (stejně v každé kapitole) */
 .toc__rules {
   margin: 0.3rem 0 0;
   padding: 0;
   list-style: none;
   font-weight: 400;
-  columns: 15rem auto;
-  column-gap: 1.5rem;
 }
 
 .toc__rules li {
-  break-inside: avoid;
   padding: 0.15rem 0;
 }
 
@@ -1474,6 +1478,38 @@ progress::-moz-progress-bar {
   display: inline-flex;
   gap: 0.5rem;
   align-items: baseline;
+}
+
+/* počítač: kapitoly jako karty v mřížce, oddíl přes celou šířku */
+@media (min-width: 48rem) {
+  .toc__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .toc__list > li {
+    margin-top: 0;
+  }
+
+  .toc__list > li:not(.toc__part) {
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+  }
+
+  .toc__list > .toc__part {
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
+  }
+
+  .toc__list > li > a:not(:only-child) {
+    display: block;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--color-border);
+  }
 }
 
 /* číslo pravidla jako „štítek“ (obsah i nadpis pravidla) */
