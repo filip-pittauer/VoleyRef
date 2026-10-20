@@ -69,7 +69,8 @@ při změně upravit všech 8 souborů. Ikony navigace: `img/ikony.svg` (symboly
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
 | `quiz-api.js` | `supabase.js` | `startRound`, `submitRound`, `getDailyStatus`, `getMistakesCount` – jediné místo volání RPC kvízu |
-| `quiz.js` | `dom`, `categories`, `format`, `badges`, `media`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
+| `quiz.js` | `dom`, `categories`, `format`, `badges`, `media`, `celebrate`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
+| `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu i kvízu gest |
 | `media.js` | `dom`, `animation` | `renderMedia` – obrázek / video / animace u otázky |
 | `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek` |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
@@ -96,7 +97,7 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 | `gesture-pose.js` | `BODY` (rozměry postavy), `createPoseSampler` (gesto → funkce čas → poloha paží) |
 | `referee-figure.js` | `createRefereeScene`, `createGesturePlayer` |
 | `gesture-data.js` | `loadGestures` (fetch jednou za návštěvu), `gestureSource`, `gestureDetails` |
-| `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení) |
+| `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení; výsledek přes `celebrate.js`) |
 | `gesture-atlas.js` | – (karty všech 32 gest, kotvy `#gesto-<id>`) ← `rules-page.js` |
 
 ### Pravidla

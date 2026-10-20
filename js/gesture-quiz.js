@@ -5,6 +5,7 @@ import { el, showOnly } from './dom.js';
 import { plural } from './format.js';
 import { loadGestures, gestureDetails } from './gesture-data.js';
 import { createGesturePlayer } from './referee-figure.js';
+import { createScore, celebrate } from './celebrate.js';
 
 const ROUND_SIZE = 10;
 const OPTION_COUNT = 4;
@@ -164,13 +165,15 @@ function renderMistake({ gesture, answer }) {
 
 function renderResult() {
   const total = state.questions.length;
-  scoreText.textContent = `${state.correct} / ${total}`;
+  const score = createScore(state.correct, total);
+  scoreText.replaceChildren(score);
   resultText.textContent = `${summary(state.correct, total)} (${plural(state.correct, 'správná odpověď', 'správné odpovědi', 'správných odpovědí')})`;
   mistakesList.replaceChildren(...state.mistakes.map(renderMistake));
   mistakesBox.hidden = state.mistakes.length === 0;
 
   showOnly(resultSection, sections);
   document.getElementById('gesture-result-heading').focus();
+  celebrate(score);
 }
 
 // ---------- Chyby ----------

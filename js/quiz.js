@@ -4,6 +4,7 @@ import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUr
 import { formatDuration, plural } from './format.js';
 import { badgeById } from './badges.js';
 import { renderMedia } from './media.js';
+import { createScore, celebrate } from './celebrate.js';
 import { startRound, submitRound, getMistakesCount, getDailyStatus } from './quiz-api.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
@@ -317,9 +318,10 @@ function renderResult(result) {
   const round = state;
   const questionsById = new Map(round.questions.map(q => [q.id, q]));
   const extra = el('p', { class: 'muted small' });
+  const score = createScore(result.score, result.total);
 
   resultSummary.replaceChildren(
-    el('p', { class: 'score' }, `${result.score} / ${result.total}`),
+    score,
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
     el('p', { class: 'muted small' }, leaderboardNote(round, result)),
     extra,
@@ -330,6 +332,7 @@ function renderResult(result) {
 
   showOnly(resultSection, sections);
   document.getElementById('result-heading').focus();
+  celebrate(score);
   state = null;
 
   // Doplňující informace se načtou dodatečně (další dotaz na server).
