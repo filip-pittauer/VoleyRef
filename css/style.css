@@ -1,19 +1,25 @@
 /* =========================================================
-   Společné styly – mobile-first
+   Společné styly – mobile-first. Vzhled „Svaz“: klasická sportovní
+   webovka (tmavě modrá + červená, úzké velké nadpisy), ale s herními prvky.
    Základní styly platí pro mobil, větší obrazovky řeší
    @media (min-width: ...) dole v souboru.
    ========================================================= */
 
 /* ---------- Barvy a rozměry (CSS proměnné) ---------- */
 :root {
-  --color-primary: #1d4ed8;       /* modrá – odkazy, tlačítka */
-  --color-primary-dark: #1e3a8a;
-  --color-accent: #f59e0b;        /* žlutooranžová – volejbalový míč */
-  --color-bg: #f8fafc;
+  --color-primary: #1a4fa0;       /* modrá – odkazy, vybraná odpověď */
+  --color-primary-dark: #0b2a5b;  /* tmavě modrá – hlavička, tabule, patička */
+  --color-accent: #d61f2c;        /* červená – hlavní tlačítka, proužky */
+  --color-accent-dark: #b01621;
+  --color-focus: #f59e0b;         /* obrys při ovládání klávesnicí */
+  --color-gold: #c08a12;          /* odznaky */
+  --color-on-dark: #ffffff;       /* text na tmavě modré */
+  --color-on-dark-muted: #c9d4e8;
+  --color-bg: #f2f4f7;
   --color-surface: #ffffff;       /* karty, panely */
-  --color-text: #0f172a;
-  --color-text-muted: #475569;
-  --color-border: #e2e8f0;
+  --color-text: #111827;
+  --color-text-muted: #5d6676;
+  --color-border: #dfe3ea;
   --color-success: #15803d;
   --color-error: #b91c1c;
 
@@ -29,22 +35,26 @@
   --stage-top: #e8f0fb;
   --stage-bottom: #c9daf2;
 
-  --radius: 0.75rem;
+  --radius: 4px;
   --space: 1rem;
-  --max-width: 60rem;
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --max-width: 62rem;
+  --font: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
 }
 
 /* Tmavý režim podle nastavení systému */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-primary: #60a5fa;
-    --color-primary-dark: #93c5fd;
-    --color-bg: #0f172a;
-    --color-surface: #1e293b;
-    --color-text: #f1f5f9;
-    --color-text-muted: #94a3b8;
-    --color-border: #334155;
+    --color-primary: #8db4ff;
+    --color-primary-dark: #0b2a5b;
+    --color-accent: #e63340;
+    --color-accent-dark: #d61f2c;
+    --color-gold: #e3b341;
+    --color-bg: #0b1322;
+    --color-surface: #131d30;
+    --color-text: #e8edf5;
+    --color-text-muted: #9aa6ba;
+    --color-border: #263451;
     --color-success: #4ade80;
     --color-error: #f87171;
     --ref-net: #e2e8f0;
@@ -91,13 +101,61 @@ a {
 
 h1,
 h2,
+h3,
+h4 {
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+/* Nadpisy úzkým písmem jako na sportovních webech */
+h1 {
+  margin: 0.5rem 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 7vw, 3rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* h2 s červeným proužkem vlevo */
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+h2::before {
+  content: "";
+  flex: none;
+  align-self: stretch;
+  width: 5px;
+  background: var(--color-accent);
+}
+
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
 h3 {
-  line-height: 1.2;
+  font-size: 1.3rem;
+}
+
+h4 {
+  font-size: 1.15rem;
 }
 
 /* Viditelný fokus pro ovládání klávesnicí */
 :focus-visible {
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
 
@@ -118,13 +176,14 @@ h3 {
 /* ---------- Hlavička a navigace ---------- */
 .site-header {
   background: var(--color-primary-dark);
-  color: #fff;
+  color: var(--color-on-dark);
+  border-bottom: 4px solid var(--color-accent);
 }
 
 .site-header__inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0.75rem var(--space);
+  padding: 0.7rem max(var(--space), env(safe-area-inset-right)) 0.7rem max(var(--space), env(safe-area-inset-left));
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -133,10 +192,28 @@ h3 {
 }
 
 .logo {
-  color: #fff;
-  font-weight: 700;
-  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-on-dark);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   text-decoration: none;
+}
+
+.logo span {
+  color: #ffb3b8;
+}
+
+.logo__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
 }
 
 /* Navigace: na mobilu dolní lišta s ikonami (jako v aplikaci), na širší
@@ -172,6 +249,7 @@ h3 {
 }
 
 .main-nav a {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -179,14 +257,27 @@ h3 {
   padding: 0.3rem 0.1rem;
   border-radius: var(--radius);
   color: var(--color-text-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   text-decoration: none;
 }
 
 /* aktuální stránka – atribut aria-current čte i čtečka obrazovky */
 .main-nav a[aria-current="page"] {
-  color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.main-nav a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: -0.3rem;
+  left: 22%;
+  right: 22%;
+  height: 3px;
+  background: var(--color-accent);
 }
 
 /* místo pro dolní lištu, aby nezakryla konec stránky */
@@ -214,20 +305,29 @@ body {
   .main-nav a {
     flex-direction: row;
     gap: 0.4rem;
-    padding: 0.4rem 0.75rem;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 400;
+    padding: 0.45rem 0.7rem;
+    color: var(--color-on-dark-muted);
+    font-size: 1.02rem;
+    letter-spacing: 0.06em;
   }
 
   .main-nav a:hover {
-    background: rgb(255 255 255 / 0.15);
+    color: var(--color-on-dark);
+    background: rgb(255 255 255 / 0.08);
   }
 
   .main-nav a[aria-current="page"] {
-    background: var(--color-accent);
-    color: #111;
-    font-weight: 600;
+    color: var(--color-on-dark);
+  }
+
+  /* aktivní položka: bílá čára dole, na okraji hlavičky */
+  .main-nav a[aria-current="page"]::before {
+    top: auto;
+    bottom: calc(-0.7rem - 4px);
+    left: 0.7rem;
+    right: 0.7rem;
+    height: 4px;
+    background: #fff;
   }
 
   .nav-icon {
@@ -238,11 +338,15 @@ body {
 
 /* ---------- Patička ---------- */
 .site-footer {
-  padding: var(--space);
+  padding: 1.25rem var(--space);
   text-align: center;
   font-size: 0.875rem;
-  color: var(--color-text-muted);
-  border-top: 1px solid var(--color-border);
+  color: var(--color-on-dark-muted);
+  background: var(--color-primary-dark);
+}
+
+.site-footer a {
+  color: var(--color-on-dark);
 }
 
 /* ---------- Komponenty ---------- */
@@ -253,32 +357,34 @@ body {
   padding: var(--space);
 }
 
-.card-grid {
-  display: grid;
-  gap: var(--space);
-  /* mobil: jeden sloupec */
-  grid-template-columns: 1fr;
-}
-
 .card h2 {
   margin-top: 0;
 }
 
 .button {
   display: inline-block;
-  padding: 0.75rem 1.25rem;
+  padding: 0.7rem 1.25rem;
   border: none;
-  border-radius: var(--radius);
-  background: var(--color-primary);
+  border-radius: 3px;
+  background: var(--color-accent);
   color: #fff;
-  font: inherit;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   text-decoration: none;
   cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
 }
 
 .button:hover {
-  background: var(--color-primary-dark);
+  background: var(--color-accent-dark);
+}
+
+.button:active {
+  transform: translateY(1px);
 }
 
 .button:disabled {
@@ -293,7 +399,18 @@ body {
 }
 
 .button--secondary:hover {
-  background: var(--color-bg);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+/* tlačítko na tmavě modrém podkladu (banner na úvodu) */
+.button--light {
+  background: transparent;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
+.button--light:hover {
+  background: rgb(255 255 255 / 0.12);
 }
 
 .muted {
@@ -429,8 +546,11 @@ main.narrow {
 }
 
 .profile-card__name strong {
-  font-size: 1.5rem;
-  line-height: 1.2;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .alert {
@@ -468,9 +588,9 @@ main.narrow {
 progress {
   appearance: none;
   width: 100%;
-  height: 0.5rem;
+  height: 0.4rem;
   border: none;
-  border-radius: 999px;
+  border-radius: 2px;
   background: var(--color-border);
   overflow: hidden;
 }
@@ -488,8 +608,56 @@ progress::-moz-progress-bar {
 }
 
 .situation {
-  font-size: 1.15rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* „Tabule“ nahoře v kartě otázky: pořadí otázky (a u gest skóre) jako na zápase */
+.board {
+  display: grid;
+  gap: 0.5rem;
+  margin: calc(-1 * var(--space)) calc(-1 * var(--space)) 0;
+  padding: 0.8rem var(--space);
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom: 4px solid var(--color-accent);
+  background: var(--color-primary-dark);
+  color: var(--color-on-dark);
+}
+
+.board__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.board p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-on-dark);
+}
+
+.board .board__score {
+  font-size: 1.6rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.board__score span {
+  color: #ffb3b8;
+}
+
+.board progress {
+  background: rgb(255 255 255 / 0.2);
+}
+
+.board progress::-webkit-progress-bar {
+  background: rgb(255 255 255 / 0.2);
 }
 
 .media {
@@ -520,11 +688,12 @@ progress::-moz-progress-bar {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.75rem;
+  padding: 0.7rem;
   border: 2px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
   cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
 }
 
 .answer:hover {
@@ -543,10 +712,12 @@ progress::-moz-progress-bar {
   place-items: center;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
+  border-radius: 3px;
   background: var(--color-bg);
   border: 2px solid var(--color-border);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
 }
 
 /* :has() – styluje label podle stavu radia uvnitř */
@@ -562,7 +733,7 @@ progress::-moz-progress-bar {
 }
 
 .answer:has(input:focus-visible) {
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
 
@@ -818,9 +989,12 @@ progress::-moz-progress-bar {
 
 /* ---------- Výsledek ---------- */
 .score {
-  font-size: 2.5rem;
-  font-weight: 700;
   margin: 0;
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .result-list {
@@ -851,7 +1025,11 @@ progress::-moz-progress-bar {
 }
 
 .result__status {
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .result--ok .result__status {
@@ -878,7 +1056,7 @@ progress::-moz-progress-bar {
   display: inline-flex;
   gap: 0.25rem;
   padding: 0.25rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   margin-bottom: var(--space);
@@ -887,23 +1065,46 @@ progress::-moz-progress-bar {
 .tab {
   padding: 0.45rem 1rem;
   border: none;
-  border-radius: 999px;
+  border-radius: 3px;
   background: transparent;
   color: var(--color-text);
-  font: inherit;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
 }
 
 .tab[aria-selected="true"] {
-  background: var(--color-primary);
+  background: var(--color-primary-dark);
   color: #fff;
+  box-shadow: inset 0 -3px 0 var(--color-accent);
 }
 
 /* ---------- Denní výzva (karta v kvízu) ---------- */
+/* tmavě modrý banner s červeným okrajem – hlavní akce dne */
 .daily-card {
-  border-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
-  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
+  border: 0;
+  border-left: 6px solid var(--color-accent);
+  background: var(--color-primary-dark);
+  color: var(--color-on-dark);
+}
+
+.daily-card h2 {
+  color: var(--color-on-dark);
+}
+
+.daily-card h2::before {
+  display: none;
+}
+
+.daily-card a {
+  color: var(--color-on-dark);
+}
+
+.daily-card .small {
+  color: var(--color-on-dark-muted);
 }
 
 /* ---------- Žebříček ---------- */
@@ -927,9 +1128,19 @@ progress::-moz-progress-bar {
 }
 
 .leaderboard thead th {
-  font-size: 0.8rem;
+  background: var(--color-primary-dark);
+  color: var(--color-on-dark);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  border-bottom: 3px solid var(--color-accent);
+}
+
+/* střídání barvy řádků jako ve výsledkových tabulkách */
+.leaderboard tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--color-bg) 70%, var(--color-surface));
 }
 
 .leaderboard tbody th {
@@ -945,7 +1156,9 @@ progress::-moz-progress-bar {
 
 /* první tři místa – jen v žebříčku (třída leaderboard--ranked) */
 .leaderboard--ranked tbody tr:nth-child(-n + 3) td:first-child {
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
   color: var(--color-accent);
 }
 
@@ -958,8 +1171,8 @@ progress::-moz-progress-bar {
   display: inline-block;
   margin-left: 0.4rem;
   padding: 0 0.4rem;
-  border-radius: 999px;
-  background: var(--color-primary);
+  border-radius: 2px;
+  background: var(--color-accent);
   color: #fff;
   font-size: 0.7rem;
   vertical-align: middle;
@@ -987,15 +1200,25 @@ progress::-moz-progress-bar {
   margin: 0;
 }
 
+.stat-tile {
+  border-top: 4px solid var(--color-primary-dark);
+}
+
 .stat-tile__value {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
 
 .stat-tile__label {
   color: var(--color-text-muted);
-  font-size: 0.875rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .stat-tile__note {
@@ -1031,7 +1254,7 @@ progress::-moz-progress-bar {
 .cat-row__bar {
   grid-column: 1 / -1;
   height: 0.5rem;
-  border-radius: 999px;
+  border-radius: 2px;
   background: var(--color-border);
   overflow: hidden;
 }
@@ -1039,7 +1262,7 @@ progress::-moz-progress-bar {
 .cat-row__bar span {
   display: block;
   height: 100%;
-  background: var(--color-accent);
+  background: var(--color-primary);
 }
 
 .cat-row--empty .cat-row__name {
@@ -1077,8 +1300,8 @@ progress::-moz-progress-bar {
 }
 
 .badge-card--earned {
-  border-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
-  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-gold) 60%, var(--color-border));
+  background: color-mix(in srgb, var(--color-gold) 9%, var(--color-surface));
 }
 
 .badge-card__icon {
@@ -1118,15 +1341,15 @@ progress::-moz-progress-bar {
 .mini-bar span {
   display: block;
   height: 100%;
-  background: var(--color-accent);
+  background: var(--color-gold);
 }
 
 /* nový odznak ve výsledku kola */
 .new-badges {
   padding: 0.75rem var(--space);
-  border: 2px solid var(--color-accent);
+  border: 2px solid var(--color-gold);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  background: color-mix(in srgb, var(--color-gold) 12%, var(--color-surface));
 }
 
 .new-badges__title {
@@ -1214,12 +1437,15 @@ progress::-moz-progress-bar {
 .rule-ref {
   display: inline-block;
   margin: 0;
-  padding: 0.1rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+  background: var(--color-primary-dark);
+  color: var(--color-on-dark);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 /* ---------- Hřiště (SVG) ---------- */
@@ -1277,14 +1503,159 @@ progress::-moz-progress-bar {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .card-grid {
+  .news-list {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* úvodní stránka: čtyři karty vedle sebe až na širokém displeji */
-@media (min-width: 60rem) {
-  .card-grid {
-    grid-template-columns: repeat(4, 1fr);
+/* ---------- Úvodní stránka ---------- */
+main.home {
+  max-width: none;
+  padding: 0;
+}
+
+.home__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space);
+}
+
+/* banner: tmavě modrý, šikmý spodní okraj, v pozadí čáry hřiště */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 2.25rem 0 4.5rem;
+  color: var(--color-on-dark);
+  background: linear-gradient(160deg, #143f7a, var(--color-primary-dark) 70%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), 0 100%);
+}
+
+.hero__inner {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-inline: var(--space);
+}
+
+.hero__eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #ffb3b8;
+}
+
+.hero h1 {
+  margin: 0;
+  color: var(--color-on-dark);
+  font-size: clamp(3rem, 13vw, 5rem);
+  line-height: 0.92;
+}
+
+.hero__text {
+  max-width: 32rem;
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-on-dark-muted);
+}
+
+.hero__court {
+  position: absolute;
+  top: 50%;
+  right: -5rem;
+  width: 28rem;
+  max-width: none;
+  opacity: 0.15;
+  transform: translateY(-50%) rotate(-8deg);
+  pointer-events: none;
+}
+
+/* jemný nájezd obsahu banneru po načtení */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__inner > * {
+    animation: rise-in 0.6s ease-out both;
+  }
+
+  .hero__inner > :nth-child(2) { animation-delay: 0.08s; }
+  .hero__inner > :nth-child(3) { animation-delay: 0.16s; }
+  .hero__inner > :nth-child(4) { animation-delay: 0.24s; }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* rozcestník jako seznam článků: štítek, titulek, krátký text */
+.news-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.news {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.news:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.news__thumb {
+  display: grid;
+  place-items: center;
+  background: var(--color-primary-dark);
+  color: var(--color-on-dark);
+}
+
+.news__thumb .nav-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.news__body {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem 0.9rem;
+}
+
+.news__label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+}
+
+.news__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.news__text {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .news,
+  .answer {
+    transition: none;
   }
 }

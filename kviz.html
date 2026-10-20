@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Kvíz pro volejbalové rozhodčí – rozhodni herní situace.">
   <title>Kvíz – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e3a8a">
+  <meta name="theme-color" content="#0b2a5b">
   <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
   <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
@@ -20,7 +21,7 @@
 
   <header class="site-header">
     <div class="site-header__inner">
-      <a class="logo" href="index.html">🏐 Trénink rozhodčích</a>
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
       <nav class="main-nav" aria-label="Hlavní navigace">
         <ul>
           <li><a href="kviz.html" aria-current="page"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg><span>Kvíz</span></a></li>
@@ -42,7 +43,7 @@
     <section id="quiz-start" class="stack">
       <!-- Denní výzva: 5 otázek, pro všechny ten den stejných -->
       <div id="denni" class="card stack daily-card">
-        <h2>🗓️ Denní výzva</h2>
+        <h2>Denní výzva</h2>
         <p>Dnešních 5 otázek je pro všechny hráče stejných. Přihlášený hráč má jeden pokus.</p>
         <p id="daily-text" class="small" aria-live="polite">Načítám…</p>
         <div class="actions">
@@ -86,7 +87,7 @@
 
       <!-- Samostatný trénink bez databáze (gesta.html) -->
       <div class="card stack">
-        <h2>🤚 Gesta rozhodčích</h2>
+        <h2>Gesta rozhodčích</h2>
         <p>Poznáš, co rozhodčí ukazuje? Uvidíš animaci gesta a vybereš jeho význam. Nepotřebuješ přihlášení, do žebříčku se nepočítá.</p>
         <div>
           <a class="button button--secondary" href="gesta.html">Kvíz gest</a>
@@ -96,8 +97,8 @@
 
     <!-- 2) Otázka -->
     <section id="quiz-question" class="card stack" hidden>
-      <div>
-        <p id="quiz-progress" class="muted small"></p>
+      <div class="board">
+        <p id="quiz-progress"></p>
         <progress id="quiz-progress-bar" value="0" max="10" aria-hidden="true"></progress>
       </div>
       <h2 id="question-heading" class="visually-hidden" tabindex="-1">Situace</h2>

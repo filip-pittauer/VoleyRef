@@ -21,6 +21,7 @@ const startButton = document.getElementById('gesture-start-button');
 
 const progressText = document.getElementById('gesture-progress');
 const progressBar = document.getElementById('gesture-progress-bar');
+const tally = document.getElementById('gesture-tally');
 const heading = document.getElementById('gesture-heading');
 const media = document.getElementById('gesture-media');
 const form = document.getElementById('gesture-form');
@@ -60,6 +61,13 @@ function pickOptions(gesture) {
   return shuffle([gesture, ...similar, ...others].slice(0, OPTION_COUNT));
 }
 
+/** Skóre na tabuli: správně : chybně (zatím zodpovězených otázek). */
+function renderTally(answered) {
+  const wrong = answered - state.correct;
+  tally.replaceChildren(String(state.correct), ' : ', el('span', {}, String(wrong)));
+  tally.setAttribute('aria-label', `Správně ${state.correct}, chybně ${wrong}`);
+}
+
 // ---------- Start ----------
 function begin() {
   hideError();
@@ -82,6 +90,7 @@ function renderQuestion() {
   progressText.textContent = `Gesto ${state.index + 1} z ${total}`;
   progressBar.max = total;
   progressBar.value = state.index;
+  renderTally(state.index);
 
   // Zrcadlově = stejné gesto pro tým na druhé straně, význam je stejný.
   media.replaceChildren(createGesturePlayer(gesture, data.pozy, { mirror: Math.random() < 0.5 }));
@@ -115,6 +124,7 @@ function handleAnswer(event) {
     label.classList.toggle('answer--wrong', value === answer && !isCorrect);
   }
   fieldset.disabled = true;
+  renderTally(state.index + 1);
 
   feedback.replaceChildren(el('div', { class: `result ${isCorrect ? 'result--ok' : 'result--wrong'}` },
     el('p', { class: 'result__status' }, isCorrect ? '✓ Správně' : '✗ Špatně'),

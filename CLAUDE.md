@@ -32,7 +32,8 @@ gesta.html          kvíz gest rozhodčích (jen v prohlížeči, bez DB; přís
 ucet.html           Profil: přihlášení, registrace, statistiky (js/stats.js, RPC moje_statistiky),
                     nastavení účtu, smazání účtu (adresa zůstává kvůli odkazům z Supabase)
 ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
-css/style.css       společné styly
+css/style.css       společné styly (vzhled „Svaz“: tmavě modrá + červená, úzké nadpisy)
+css/fonts.css       písma Barlow a Barlow Condensed uložená ve fonts/ (offline, bez Googlu kvůli GDPR)
 js/config.js        Supabase URL + publishable klíč (veřejné)
 js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro přihlášení
 js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo

@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Trénink volejbalových rozhodčích – kvíz z herních situací, přehled pravidel a žebříček.">
   <title>Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e3a8a">
+  <meta name="theme-color" content="#0b2a5b">
   <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
   <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
@@ -18,7 +19,7 @@
 
   <header class="site-header">
     <div class="site-header__inner">
-      <a class="logo" href="index.html">🏐 Trénink rozhodčích</a>
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
       <nav class="main-nav" aria-label="Hlavní navigace">
         <ul>
           <li><a href="kviz.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg><span>Kvíz</span></a></li>
@@ -31,36 +32,63 @@
     </div>
   </header>
 
-  <main id="obsah">
-    <h1>Pískej správně</h1>
-    <p>Uvidíš herní situaci, rozhodneš, jak má rozhodčí postupovat, a na konci kola zjistíš, jak ti to šlo.</p>
-    <p><button id="install-button" class="button button--secondary" type="button" hidden>📲 Nainstalovat jako aplikaci</button></p>
+  <main id="obsah" class="home">
+    <section class="hero">
+      <!-- čáry hřiště v pozadí (jen ozdoba) -->
+      <svg class="hero__court" viewBox="0 0 200 110" aria-hidden="true" fill="none" stroke="#fff">
+        <rect x="5" y="5" width="190" height="100" stroke-width="2.5"/>
+        <line x1="100" y1="0" x2="100" y2="110" stroke-width="4"/>
+        <line x1="68" y1="5" x2="68" y2="105" stroke-width="1.5"/>
+        <line x1="132" y1="5" x2="132" y2="105" stroke-width="1.5"/>
+      </svg>
+      <div class="hero__inner">
+        <p class="hero__eyebrow">Trénink volejbalových rozhodčích</p>
+        <h1>Pískej správně</h1>
+        <p class="hero__text">Rozhodni herní situace, nauč se oficiální gesta a porovnej se s ostatními v žebříčku.</p>
+        <div class="actions">
+          <a class="button" href="kviz.html">Spustit kvíz</a>
+          <a class="button button--light" href="kviz.html#denni">Denní výzva</a>
+          <button id="install-button" class="button button--light" type="button" hidden>Nainstalovat aplikaci</button>
+        </div>
+      </div>
+    </section>
 
-    <div class="card-grid">
-      <section class="card">
-        <h2>Kvíz</h2>
-
-        <p>Kolo má 10 situací, u každé vyber odpověď. Každý den navíc denní výzva: 5 otázek, pro všechny stejných.</p>
-        <a class="button" href="kviz.html">Spustit kvíz</a>
-      </section>
-
-      <section class="card">
-        <h2>Gesta rozhodčích</h2>
-        <p>Animace oficiálních gest a kvíz: poznáš, co rozhodčí ukazuje?</p>
-        <a class="button" href="gesta.html">Kvíz gest</a>
-      </section>
-
-      <section class="card">
-        <h2>Pravidla</h2>
-        <p>Pravidla volejbalu vysvětlená vlastními slovy, s obrázky.</p>
-        <a class="button" href="pravidla.html">Otevřít pravidla</a>
-      </section>
-
-      <section class="card">
-        <h2>Žebříček</h2>
-        <p>Podívej se, kdo má nejlepší skóre.</p>
-        <a class="button" href="zebricek.html">Zobrazit žebříček</a>
-      </section>
+    <div class="home__inner stack">
+      <h2>Trénink</h2>
+      <div class="news-list">
+        <a class="news" href="kviz.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Kvíz</span>
+            <span class="news__title">10 herních situací v jednom kole</span>
+            <span class="news__text">Rozhodni, jak má rozhodčí postupovat. Vysvětlení uvidíš na konci kola.</span>
+          </span>
+        </a>
+        <a class="news" href="gesta.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Gesta</span>
+            <span class="news__title">Poznáš 32 oficiálních gest?</span>
+            <span class="news__text">Animace podle pravidel FIVB 2025–2028 a kvíz s okamžitým vyhodnocením.</span>
+          </span>
+        </a>
+        <a class="news" href="pravidla.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Pravidla</span>
+            <span class="news__title">Pravidla volejbalu vlastními slovy</span>
+            <span class="news__text">S obrázky a odkazy na oficiální znění ČVS a FIVB.</span>
+          </span>
+        </a>
+        <a class="news" href="zebricek.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Žebříček</span>
+            <span class="news__title">Kdo píská nejlépe?</span>
+            <span class="news__text">Nejlepší výsledky přihlášených hráčů a denní žebříček.</span>
+          </span>
+        </a>
+      </div>
     </div>
   </main>
 
