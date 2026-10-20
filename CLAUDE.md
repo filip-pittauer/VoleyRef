@@ -127,7 +127,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
 - V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
 - **Vzhled „Svaz“** (dolní lišta, Profil = účet + statistiky, písmo Barlow) je od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem.
-- **Úplná pravidla** (balíček 5) jsou v lokální větvi `pravidla` – uživatel si je chce nejdřív prohlédnout lokálně, **nepushovat, dokud to neschválí**. Po sloučení do `main` musí uživatel spustit `private/seed-otazky.sql` (otázky 26 a 27 měly číslo pravidla 28.x podle staré edice → opraveno na 30.x).
+- **Úplná pravidla** (balíček 5) jsou od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem. Uživatel má spustit `private/seed-otazky.sql` (otázky 26 a 27: pravidlo 28.x → 30.x); dokud to neudělá, vedou jejich odkazy na špatné pravidlo.
 - Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
 
 ### Jak s uživatelem pracujeme
@@ -142,7 +142,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Postava: jednoduchý 3D model (paže = inverzní kinematika, ruka s prsty a dlaní), promítnutý do SVG; kreslí se podle hloubky (ruka za zády je schovaná). Gesta jsou jen data – nové gesto = záznam v `gesta/gesta.json`.
 - Možná vylepšení podle zpětné vazby: zpomalené přehrávání, smyčka, odznaky za gesta (chtělo by ukládání na server).
 
-### Balíček 5: úplná pravidla (hotovo 20. 10. 2026, čeká na prohlédnutí ve větvi `pravidla`)
+### Balíček 5: úplná pravidla (hotovo 20. 10. 2026, na main, čeká na vyzkoušení)
 - Všech 30 pravidel FIVB 2025–2028 včetně podbodů, vlastními slovy; české názvy kapitol a pravidel podle staršího oficiálního překladu ČVS (2009, sites.google.com/site/volejbalopava/pravidla), novinky přeložené po vzoru. Body „Soutěže FIVB“ jsou odlišené poznámkou.
 - Číslování 2025–2028 se od pravidla 25 liší od edice 2021: přibyl **25 rozhodčí pro video challenge** a **26 rezervní rozhodčí**, takže zapisovatel = 27, pomocný zapisovatel = 28, čároví = 29, znamení = 30. Hlídat u čísel pravidel v otázkách.
 - Novinky 2025 zapsané v textu: postavení jen přijímajícího družstva (7.4), zákaz zvedat ruce nad hlavu při podání (12.5.3), prodloužený kontakt nad sítí (9.1.2.3), blok „bez ohledu na výšku doteku“ (14.1.1), nové sankce (urážlivé chování = rovnou vyloučení, agrese = diskvalifikace, vyloučený jde do šatny).
