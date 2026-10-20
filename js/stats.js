@@ -1,4 +1,5 @@
-// Stránka statistik přihlášeného hráče (data počítá server: moje_statistiky()).
+// Statistiky přihlášeného hráče v Profilu (data počítá server: moje_statistiky()).
+// Načtení spouští account.js, až je hráč přihlášený.
 import { el } from './dom.js';
 import { formatDuration, plural } from './format.js';
 import { CATEGORIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
@@ -27,7 +28,7 @@ function tile(label, value, note = null) {
 
 function renderSummary({ souhrn, nejlepsi }) {
   return el('section', { class: 'stack' },
-    el('h2', {}, 'Souhrn'),
+    el('h3', {}, 'Souhrn'),
     el('div', { class: 'stat-tiles' },
       tile('odehraných kol', souhrn.kol),
       tile('zodpovězených otázek', souhrn.otazek),
@@ -64,7 +65,7 @@ function renderCategories(categories, mistakes) {
   const weakest = findWeakest(categories);
 
   return el('section', { class: 'stack' },
-    el('h2', {}, 'Úspěšnost podle kategorií'),
+    el('h3', {}, 'Úspěšnost podle kategorií'),
     mistakes > 0
       ? el('p', { class: 'card' },
           'K opakování máš ', el('strong', {}, plural(mistakes, 'otázku', 'otázky', 'otázek')),
@@ -92,7 +93,7 @@ function roundLabel(round) {
 function renderRecent(rounds) {
   if (rounds.length === 0) return null;
   return el('section', { class: 'stack' },
-    el('h2', {}, 'Poslední kola'),
+    el('h3', {}, 'Poslední kola'),
     el('div', { class: 'table-wrap' },
       el('table', { class: 'leaderboard' },
         el('caption', { class: 'visually-hidden' }, 'Posledních 10 odehraných kol'),
@@ -134,11 +135,11 @@ function renderBadges(data) {
   const earned = data.odznaky.filter(o => o.ziskano).length;
 
   return el('section', { id: 'odznaky', class: 'stack' },
-    el('h2', {}, 'Odznaky'),
+    el('h3', {}, 'Odznaky'),
     el('p', {}, `Získáno ${earned} z ${total}. `,
-      'Až 3 z nich si můžeš vybrat do žebříčku na stránce ', el('a', { href: 'ucet.html#odznaky-zebricek' }, 'Účet'), '.'),
+      'Až 3 z nich si můžeš vybrat do žebříčku níže v ', el('a', { href: '#odznaky-zebricek' }, 'nastavení účtu'), '.'),
     ...BADGE_GROUPS.flatMap(group => [
-      el('h3', {}, group.name),
+      el('h4', {}, group.name),
       el('ul', { class: 'badge-grid' },
         ...Object.entries(group.badges).map(([id, badge]) => badgeCard(id, badge, byId.get(id)))),
     ]),
@@ -188,13 +189,19 @@ async function load() {
   status.hidden = true;
   content.hidden = false;
 
-  // odkaz statistiky.html#odznaky – sekce vznikla až teď, prohlížeč na ni sám neodroloval
+  // odkaz ucet.html#odznaky – sekce vznikla až teď, prohlížeč na ni sám neodroloval
   if (location.hash === '#odznaky') document.getElementById('odznaky')?.scrollIntoView();
 }
 
-load().catch(error => {
-  // neočekávaná chyba (např. výpadek sítě) – raději hláška než věčné „Načítám…“
-  console.error(error);
+/** Načte a vykreslí statistiky (volá Profil po přihlášení). */
+export function loadStats() {
   status.hidden = false;
-  status.textContent = 'Statistiky se nepodařilo načíst. Zkus obnovit stránku.';
-});
+  status.textContent = 'Načítám…';
+  content.hidden = true;
+  return load().catch(error => {
+    // neočekávaná chyba (např. výpadek sítě) – raději hláška než věčné „Načítám…“
+    console.error(error);
+    status.hidden = false;
+    status.textContent = 'Statistiky se nepodařilo načíst. Zkus obnovit stránku.';
+  });
+}

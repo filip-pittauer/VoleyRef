@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v6';
+const CACHE = 'voleyref-v7';
 
 const APP_SHELL = [
   './',
@@ -51,6 +51,7 @@ const APP_SHELL = [
   'animace/mic-antena.json',
   'gesta/gesta.json',
   'manifest.json',
+  'img/ikony.svg',
   'img/icons/icon.svg',
   'img/icons/icon-192.png',
   'img/icons/favicon-32.png',

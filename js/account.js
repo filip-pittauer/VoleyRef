@@ -1,6 +1,8 @@
-// Stránka účtu: přihlášení, registrace, obnova hesla, profil.
+// Stránka Profil (ucet.html): přihlášení, registrace, obnova hesla,
+// po přihlášení statistiky (stats.js) a nastavení účtu.
 import { el, showOnly } from './dom.js';
 import { BADGE_GROUPS } from './badges.js';
+import { loadStats } from './stats.js';
 import {
   supabase, isConfigured, NOT_CONFIGURED_MESSAGE,
   getProfile, pageUrl, errorMessage,
@@ -111,6 +113,9 @@ async function renderLoggedIn(user) {
   $('account-email').textContent = user.email ?? '';
   $('nickname').value = profile?.prezdivka ?? '';
   showSection('account-section');
+  // odkaz ucet.html#statistiky / #nastaveni – sekce byla skrytá, prohlížeč na ni nedoskočil
+  if (['#statistiky', '#nastaveni'].includes(location.hash)) $(location.hash.slice(1)).scrollIntoView();
+  loadStats();
   renderBadgePicker().catch(error => console.error(error));
 }
 

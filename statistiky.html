@@ -2,45 +2,18 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Statistiky hráče: odehraná kola a úspěšnost podle kategorií.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Statistiky – Volejbal: trénink rozhodčích</title>
+  <!-- Statistiky jsou teď součástí Profilu (ucet.html). Stránka zůstává kvůli
+       starým odkazům a záložkám: přesměruje a zachová kotvu (např. #odznaky). -->
+  <meta http-equiv="refresh" content="0; url=ucet.html#statistiky">
+  <script>location.replace('ucet.html' + (location.hash || '#statistiky'));</script>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e3a8a">
   <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
-  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
-  <script type="module" src="js/pwa.js"></script>
-  <script type="module" src="js/stats.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
-
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a class="logo" href="index.html">🏐 Trénink rozhodčích</a>
-      <nav class="main-nav" aria-label="Hlavní navigace">
-        <ul>
-          <li><a href="kviz.html">Kvíz</a></li>
-          <li><a href="pravidla.html">Pravidla</a></li>
-          <li><a href="zebricek.html">Žebříček</a></li>
-          <li><a href="statistiky.html" aria-current="page">Statistiky</a></li>
-          <li><a href="ucet.html">Účet</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
   <main id="obsah">
-    <h1>Statistiky</h1>
-    <p id="stats-status" class="muted" aria-live="polite">Načítám…</p>
-    <div id="stats-content" class="stack" hidden></div>
+    <p>Statistiky najdeš v <a href="ucet.html#statistiky">Profilu</a>.</p>
   </main>
-
-  <footer class="site-footer">
-    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
-      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
-  </footer>
 </body>
 </html>

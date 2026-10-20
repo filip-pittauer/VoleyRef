@@ -27,9 +27,10 @@ index.html          úvodní stránka / rozcestník
 kviz.html           kvíz
 pravidla.html       knížka pravidel (kapitoly mají id = kategorie otázek)
 zebricek.html       žebříček
-statistiky.html     statistiky přihlášeného hráče (RPC moje_statistiky)
+statistiky.html     jen přesměrování na Profil (staré odkazy a záložky)
 gesta.html          kvíz gest rozhodčích (jen v prohlížeči, bez DB; přístup z kviz.html a úvodu)
-ucet.html           přihlášení, registrace, profil, smazání účtu
+ucet.html           Profil: přihlášení, registrace, statistiky (js/stats.js, RPC moje_statistiky),
+                    nastavení účtu, smazání účtu (adresa zůstává kvůli odkazům z Supabase)
 ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
 css/style.css       společné styly
 js/config.js        Supabase URL + publishable klíč (veřejné)
@@ -40,7 +41,8 @@ js/player.js        přehrávač animací (play/pauza, posuvník) – pro situac
 js/referee-figure.js  postava rozhodčího v SVG (3D model promítnutý do 2D); gesture-pose.js
                     počítá polohu paží z dat, math3d.js vektory/IK/interpolace
 js/                 další moduly (quiz.js, gesture-quiz.js, gesture-atlas.js, account.js, dom.js, …)
-img/                obrázky situací, img/icons/ ikony aplikace (zdroj icon.svg)
+img/                obrázky situací, img/icons/ ikony aplikace (zdroj icon.svg),
+                    img/ikony.svg ikony navigace (symboly pro <use>)
 manifest.json       PWA manifest
 sw.js               service worker (mezipaměť, offline)
 animace/            SVG animace situací jako JSON (formát v animace/README.md)
@@ -99,7 +101,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Konvence kódu
 - **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.**
-- Navigace: Kvíz, Pravidla, Žebříček, Statistiky, Účet (úvod přes logo). Víc položek se na 375 px nevejde na řádek.
+- Navigace: Kvíz, Gesta, Pravidla, Žebříček, Profil (úvod přes logo). Na mobilu dolní lišta s ikonami, od 48rem řádek v hlavičce. Víc než 5 položek se do lišty nevejde.
 - Hlavička a navigace jsou v každém HTML souboru zvlášť (bez build kroku) – při změně upravit všechny stránky.
 - Texty v UI jsou česky. Názvy proměnných a funkcí v kódu anglicky, komentáře česky.
 - Sémantické HTML, přístupnost (alt texty, popisky formulářů, ovladatelnost klávesnicí).

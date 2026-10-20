@@ -310,7 +310,7 @@ function renderNewBadges(ids) {
         el('span', { class: 'new-badges__icon', 'aria-hidden': 'true' }, badge.icon), ' ',
         el('strong', {}, badge.name), ' – ', badge.description);
     })),
-    el('a', { href: 'statistiky.html#odznaky' }, 'Všechny odznaky'));
+    el('a', { href: 'ucet.html#odznaky' }, 'Všechny odznaky'));
 }
 
 function renderResult(result) {

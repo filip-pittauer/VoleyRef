@@ -139,32 +139,101 @@ h3 {
   text-decoration: none;
 }
 
+/* Navigace: na mobilu dolní lišta s ikonami (jako v aplikaci), na širší
+   obrazovce řádek v hlavičce. */
+.nav-icon {
+  flex: none;
+  width: 1.45rem;
+  height: 1.45rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.main-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 0.3rem max(0.25rem, env(safe-area-inset-right)) calc(0.3rem + env(safe-area-inset-bottom)) max(0.25rem, env(safe-area-inset-left));
+}
+
 .main-nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .main-nav a {
-  display: block;
-  padding: 0.4rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.3rem 0.1rem;
   border-radius: var(--radius);
-  color: #fff;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
   text-decoration: none;
-}
-
-.main-nav a:hover {
-  background: rgb(255 255 255 / 0.15);
 }
 
 /* aktuální stránka – atribut aria-current čte i čtečka obrazovky */
 .main-nav a[aria-current="page"] {
-  background: var(--color-accent);
-  color: #111;
-  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* místo pro dolní lištu, aby nezakryla konec stránky */
+body {
+  padding-bottom: calc(4.3rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 48rem) {
+  body {
+    padding-bottom: 0;
+  }
+
+  .main-nav {
+    position: static;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .main-nav ul {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .main-nav a {
+    flex-direction: row;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .main-nav a:hover {
+    background: rgb(255 255 255 / 0.15);
+  }
+
+  .main-nav a[aria-current="page"] {
+    background: var(--color-accent);
+    color: #111;
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
 }
 
 /* ---------- Patička ---------- */
@@ -346,6 +415,22 @@ select {
 
 main.narrow {
   max-width: 34rem;
+}
+
+/* přihlášení a registrace v Profilu: úzké karty */
+.auth-card {
+  max-width: 34rem;
+}
+
+/* Profil: přezdívka a e-mail přihlášeného hráče */
+.profile-card__name {
+  display: grid;
+  margin: 0;
+}
+
+.profile-card__name strong {
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
 
 .alert {
@@ -1184,10 +1269,6 @@ progress::-moz-progress-bar {
 
 /* ---------- Větší obrazovky ---------- */
 @media (min-width: 40rem) {
-  .main-nav a {
-    padding: 0.4rem 0.75rem;
-  }
-
   .hide-narrow {
     display: table-cell;
   }

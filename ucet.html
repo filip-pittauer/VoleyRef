@@ -2,9 +2,9 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Přihlášení a registrace hráčů.">
-  <title>Účet – Volejbal: trénink rozhodčích</title>
+  <title>Profil – Volejbal: trénink rozhodčích</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e3a8a">
@@ -22,18 +22,18 @@
       <a class="logo" href="index.html">🏐 Trénink rozhodčích</a>
       <nav class="main-nav" aria-label="Hlavní navigace">
         <ul>
-          <li><a href="kviz.html">Kvíz</a></li>
-          <li><a href="pravidla.html">Pravidla</a></li>
-          <li><a href="zebricek.html">Žebříček</a></li>
-          <li><a href="statistiky.html">Statistiky</a></li>
-          <li><a href="ucet.html" aria-current="page">Účet</a></li>
+          <li><a href="kviz.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg><span>Kvíz</span></a></li>
+          <li><a href="gesta.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg><span>Gesta</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html" aria-current="page"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main id="obsah" class="narrow">
-    <h1 id="page-heading" tabindex="-1">Účet</h1>
+  <main id="obsah">
+    <h1 id="page-heading" tabindex="-1">Profil</h1>
 
     <!-- Hlášky (chyba / úspěch) – role="alert" je přečte čtečka obrazovky -->
     <p id="message" class="alert" role="alert" hidden></p>
@@ -41,7 +41,7 @@
     <p id="loading" class="muted">Načítám…</p>
 
     <!-- ============ Nepřihlášený: přihlášení ============ -->
-    <section id="login-section" class="card stack" hidden>
+    <section id="login-section" class="card stack auth-card" hidden>
       <h2>Přihlášení</h2>
       <form id="login-form" class="stack">
         <div class="field">
@@ -65,7 +65,7 @@
     </section>
 
     <!-- ============ Nepřihlášený: registrace ============ -->
-    <section id="register-section" class="card stack" hidden>
+    <section id="register-section" class="card stack auth-card" hidden>
       <h2>Registrace</h2>
       <form id="register-form" class="stack">
         <div class="field">
@@ -100,7 +100,7 @@
     </section>
 
     <!-- ============ Zapomenuté heslo ============ -->
-    <section id="reset-section" class="card stack" hidden>
+    <section id="reset-section" class="card stack auth-card" hidden>
       <h2>Zapomenuté heslo</h2>
       <p>Pošleme ti e-mail s odkazem na nastavení nového hesla.</p>
       <form id="reset-form" class="stack">
@@ -116,7 +116,7 @@
     </section>
 
     <!-- ============ Nové heslo (po kliknutí na odkaz z e-mailu) ============ -->
-    <section id="new-password-section" class="card stack" hidden>
+    <section id="new-password-section" class="card stack auth-card" hidden>
       <h2>Nové heslo</h2>
       <form id="new-password-form" class="stack">
         <div class="field">
@@ -131,15 +131,23 @@
 
     <!-- ============ Přihlášený ============ -->
     <section id="account-section" class="stack" hidden>
-      <div class="card stack">
-        <h2>Můj účet</h2>
-        <p>Přihlášen jako <strong id="account-nickname"></strong><br>
+      <div class="card stack profile-card">
+        <p class="profile-card__name"><strong id="account-nickname"></strong>
           <span class="muted small" id="account-email"></span></p>
         <div class="actions">
           <a class="button" href="kviz.html">Hrát kvíz</a>
           <button id="logout-button" class="button button--secondary" type="button">Odhlásit se</button>
         </div>
       </div>
+
+      <!-- Statistiky hráče (js/stats.js, data z RPC moje_statistiky) -->
+      <section id="statistiky" class="stack" aria-labelledby="stats-heading">
+        <h2 id="stats-heading">Statistiky</h2>
+        <p id="stats-status" class="muted" aria-live="polite">Načítám…</p>
+        <div id="stats-content" class="stack" hidden></div>
+      </section>
+
+      <h2 id="nastaveni">Nastavení účtu</h2>
 
       <div class="card stack">
         <h2>Změnit přezdívku</h2>
@@ -166,7 +174,7 @@
             <button class="button" type="submit">Uložit výběr</button>
           </div>
         </form>
-        <p id="badges-empty" hidden>Zatím nemáš žádné odznaky. Získáš je hraním, přehled je ve <a href="statistiky.html#odznaky">Statistikách</a>.</p>
+        <p id="badges-empty" hidden>Zatím nemáš žádné odznaky. Získáš je hraním, přehled je výše ve <a href="#odznaky">statistikách</a>.</p>
       </div>
 
       <div class="card stack danger-zone">
