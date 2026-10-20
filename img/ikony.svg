@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-  <!-- Ikony navigace. Použití: <svg><use href="img/ikony.svg#kviz"></use></svg>
-       Barvu bere z CSS (currentColor), tloušťku čáry nastavuje .nav-icon. -->
+  <!-- Ikony navigace. Použití v HTML: prvek svg s vnořeným use href="img/ikony.svg#kviz".
+       Barvu bere z CSS (currentColor), tloušťku čáry nastavuje .nav-icon.
+       Pozor: v tomto komentáři nesmí být uzavírací značka svg – Live Server
+       před ni vkládá svůj skript a soubor by se rozbil (ikony by zmizely). -->
   <symbol id="kviz" viewBox="0 0 24 24">
     <circle cx="12" cy="12" r="9"/>
     <path d="M12 3c-1 4 0 8 4.5 10.5M3.6 9.5C7.5 9 11 10.5 12 15M8.5 20.3c2-3.3 5-5 11-3.8"/>
