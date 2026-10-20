@@ -22,7 +22,9 @@ Hlavní části:
 - **Vývoj:** VS Code + rozšíření Live Server (Ritwick Dey), Git + GitHub.
 
 ## Struktura projektu
+Podrobná mapa modulů, závislostí, RPC a toků je v **CODEMAP.md**.
 ```
+CODEMAP.md          mapa kódu (moduly, importy, RPC, kotvy, „kam sáhnout“)
 index.html          úvodní stránka / rozcestník
 kviz.html           kvíz
 pravidla.html       úplná pravidla: 30 pravidel v <details class="rule"> (kotvy #pravidlo-12, body #p-12-4-3),
@@ -105,6 +107,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Konvence kódu
 - **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.**
+- **CODEMAP.md držet aktuální**: při přidání/smazání/přejmenování souboru, modulu, exportu, RPC funkce nebo tabulky upravit mapu ve stejném commitu.
 - Navigace: Kvíz, Gesta, Pravidla, Žebříček, Profil (úvod přes logo). Na mobilu dolní lišta s ikonami, od 48rem řádek v hlavičce. Víc než 5 položek se do lišty nevejde.
 - Hlavička a navigace jsou v každém HTML souboru zvlášť (bez build kroku) – při změně upravit všechny stránky.
 - Texty v UI jsou česky. Názvy proměnných a funkcí v kódu anglicky, komentáře česky.
