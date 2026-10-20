@@ -1913,7 +1913,7 @@ progress::-moz-progress-bar {
 .dg-player-num text,
 .dg-official-text text,
 .dg-lj-text text { fill: #fff; font-size: 8px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
-.dg-lj-text text { font-size: 5px; fill: #111827; }
+.dg-lj-text text { font-size: 6.5px; fill: #111827; }
 .dg-foot { fill: #fff; stroke: #111827; stroke-width: 0.6; }
 .dg-foot--back { fill: #1a4fa0; }
 .dg-foot--bad { fill: #dc2626; stroke: #fff; }
@@ -1934,8 +1934,7 @@ progress::-moz-progress-bar {
 .dg-jump--bad { stroke: var(--color-error); }
 .dg-attack-line { fill: var(--color-accent); }
 .dg-net-side { stroke: var(--color-text); stroke-width: 1.5; }
-.dg-arm { fill: none; stroke: var(--color-text); stroke-width: 2.4; stroke-linecap: round; }
-.dg-hand { fill: none; stroke: var(--color-text); stroke-width: 2; stroke-linecap: round; }
+.dg-arm { fill: none; stroke: var(--color-text); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .dg-official rect { fill: #0b2a5b; stroke: #fff; stroke-width: 0.8; }
 .dg-lj path { fill: #facc15; stroke: #111827; stroke-width: 0.5; }
 .dg-watch line { stroke: #fff; stroke-width: 0.6; stroke-dasharray: 1.5 1; }
