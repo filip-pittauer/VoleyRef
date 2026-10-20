@@ -23,6 +23,16 @@ export function el(tag, attrs = {}, ...children) {
   return element;
 }
 
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/** Vytvoří SVG prvek (SVG potřebuje createElementNS, ne createElement). */
+export function svgEl(tag, attrs = {}, ...children) {
+  const element = document.createElementNS(SVG_NS, tag);
+  for (const [name, value] of Object.entries(attrs)) element.setAttribute(name, value);
+  element.append(...children);
+  return element;
+}
+
 /** Zobrazí jednu sekci a ostatní ze seznamu skryje. */
 export function showOnly(visible, all) {
   for (const section of all) {

@@ -17,6 +17,18 @@
   --color-success: #15803d;
   --color-error: #b91c1c;
 
+  /* postava rozhodčího (gesta) */
+  --ref-skin: #f0c19c;
+  --ref-palm: #f8dcc6;
+  --ref-line: #1e293b;
+  --ref-shirt: #2563eb;
+  --ref-collar: #f8fafc;
+  --ref-trousers: #1f2937;
+  --ref-hair: #4a3426;
+  --ref-net: #1e293b;
+  --stage-top: #e8f0fb;
+  --stage-bottom: #c9daf2;
+
   --radius: 0.75rem;
   --space: 1rem;
   --max-width: 60rem;
@@ -35,6 +47,9 @@
     --color-border: #334155;
     --color-success: #4ade80;
     --color-error: #f87171;
+    --ref-net: #e2e8f0;
+    --stage-top: #415476;
+    --stage-bottom: #2c3b5a;
   }
 }
 
@@ -466,6 +481,36 @@ progress::-moz-progress-bar {
   outline-offset: 2px;
 }
 
+/* vyhodnocená otázka (kvíz gest): správná zeleně, špatně zvolená červeně */
+.answers:disabled .answer {
+  cursor: default;
+}
+
+/* .answers navíc zvyšuje specificitu nad .answer:has(input:checked) */
+.answers .answer.answer--correct {
+  border-color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
+}
+
+.answers .answer.answer--wrong {
+  border-color: var(--color-error);
+  background: color-mix(in srgb, var(--color-error) 8%, var(--color-surface));
+}
+
+.answers .answer.answer--correct .answer__key,
+.answers .answer.answer--wrong .answer__key {
+  color: #fff;
+  border-color: transparent;
+}
+
+.answers .answer.answer--correct .answer__key {
+  background: var(--color-success);
+}
+
+.answers .answer.answer--wrong .answer__key {
+  background: var(--color-error);
+}
+
 /* ---------- Animace (SVG, jednotky = metry) ---------- */
 .anim svg {
   background: #2f6f9f;
@@ -567,6 +612,123 @@ progress::-moz-progress-bar {
   padding: 0.4rem 0.8rem;
   font-size: 0.875rem;
   white-space: nowrap;
+}
+
+/* ---------- Gesta rozhodčích (SVG postava, jednotky = metry) ---------- */
+.gesture {
+  max-width: 26rem;
+  margin-inline: auto;
+}
+
+.gesture svg {
+  background: linear-gradient(var(--stage-top), var(--stage-bottom));
+}
+
+.gesture .anim__controls {
+  margin-top: 0.5rem;
+}
+
+/* čáry s obrysem: tmavá spodní čára + barevná vrchní */
+.ref-outline,
+.ref-limb-skin,
+.ref-limb-shirt,
+.ref-digit,
+.ref-stick {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ref-outline {
+  stroke: var(--ref-line);
+}
+
+.ref-limb-skin,
+.ref-digit {
+  stroke: var(--ref-skin);
+}
+
+.ref-limb-shirt {
+  stroke: var(--ref-shirt);
+}
+
+/* plochy (trup, hlava, dlaň, karta…) mají obrys přímo */
+.ref-skin,
+.ref-palm,
+.ref-shirt,
+.ref-collar,
+.ref-trousers,
+.ref-hair,
+.ref-card,
+.ref-flag {
+  stroke: var(--ref-line);
+  stroke-width: 0.018;
+  stroke-linejoin: round;
+}
+
+.ref-skin { fill: var(--ref-skin); }
+.ref-palm { fill: var(--ref-palm); }
+.ref-shirt { fill: var(--ref-shirt); }
+.ref-collar { fill: var(--ref-collar); }
+.ref-trousers { fill: var(--ref-trousers); }
+.ref-hair { fill: var(--ref-hair); }
+.ref-eye { fill: var(--ref-line); }
+.ref-card--zluta { fill: #facc15; }
+.ref-card--cervena { fill: #dc2626; }
+.ref-flag { fill: #e11d48; }
+.ref-stick { stroke: #475569; }
+
+.ref-mouth {
+  fill: none;
+  stroke: var(--ref-line);
+  stroke-width: 0.012;
+  stroke-linecap: round;
+}
+
+.ref-net__mesh {
+  fill: none;
+  stroke: var(--ref-net);
+  stroke-width: 0.008;
+  opacity: 0.45;
+}
+
+.ref-net__band,
+.ref-net__antenna {
+  stroke: #f8fafc;
+}
+
+.ref-net__stripes {
+  stroke: #dc2626;
+  stroke-dasharray: 0.1 0.1;
+}
+
+/* přehled gest v pravidlech: karty v mřížce */
+.gesture-grid {
+  display: grid;
+  gap: var(--space);
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+
+.gesture-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  scroll-margin-top: 1rem;
+}
+
+.gesture-card h4 {
+  margin: 0.75rem 0 0.25rem;
+}
+
+.gesture-card p {
+  margin: 0.25rem 0;
+}
+
+/* karta, na kterou vede odkaz (např. z kvízu gest) */
+.gesture-card:target {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 /* ---------- Výsledek ---------- */
@@ -975,20 +1137,6 @@ progress::-moz-progress-bar {
   color: var(--color-text-muted);
 }
 
-.signals {
-  display: grid;
-  gap: 0.25rem 1rem;
-  margin: 0;
-}
-
-.signals dt {
-  font-weight: 600;
-}
-
-.signals dd {
-  margin: 0 0 0.5rem;
-}
-
 /* ---------- Hřiště (SVG) ---------- */
 .court-figure {
   margin: 1rem 0;
@@ -1049,14 +1197,13 @@ progress::-moz-progress-bar {
   }
 
   .card-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  .signals {
-    grid-template-columns: max-content 1fr;
-  }
-
-  .signals dd {
-    margin-bottom: 0;
+/* úvodní stránka: čtyři karty vedle sebe až na širokém displeji */
+@media (min-width: 60rem) {
+  .card-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }

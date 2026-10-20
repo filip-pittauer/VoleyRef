@@ -12,6 +12,7 @@
   <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
   <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/gesture-atlas.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -239,31 +240,14 @@
     <!-- ===================================================== -->
     <section id="signalizace" class="rules-section">
       <h2>Signalizace rozhodčích</h2>
-      <p class="rule-ref">Pravidlo 28</p>
-      <p>Rozhodčí musí každou chybu ukázat <strong>oficiálním gestem</strong>: kdo chybu udělal, co se stalo a kdo bude podávat. Nejčastější gesta:</p>
-      <h3>První rozhodčí</h3>
-      <dl class="signals">
-        <dt>Míč v poli</dt><dd>Paží a prsty ukáže na zem.</dd>
-        <dt>Míč v autu</dt><dd>Zvedne předloktí svisle vzhůru, dlaně otevřené a otočené k tělu.</dd>
-        <dt>Zadržený míč</dt><dd>Pomalu zvedne předloktí dlaní vzhůru.</dd>
-        <dt>Dvojí dotek</dt><dd>Zvedne dva roztažené prsty.</dd>
-        <dt>Čtyři odbití</dt><dd>Zvedne čtyři roztažené prsty.</dd>
-        <dt>Dotyk sítě</dt><dd>Ukáže rukou na příslušnou stranu sítě.</dd>
-        <dt>Přešlap středové čáry</dt><dd>Ukáže na středovou čáru.</dd>
-        <dt>Dotek míče (tečovaný míč)</dt><dd>Dlaní jedné ruky přejede po prstech druhé, svisle zvednuté ruky.</dd>
-        <dt>Zdržení podání (8 s)</dt><dd>Zvedne osm roztažených prstů.</dd>
-        <dt>Dvojitá chyba / opakování</dt><dd>Zvedne oba palce vzhůru.</dd>
-        <dt>Oddechový čas</dt><dd>Dlaní jedné ruky přiloží na prsty druhé ruky (tvar písmene T).</dd>
-        <dt>Střídání</dt><dd>Krouží předloktími kolem sebe.</dd>
-      </dl>
-      <h3>Čároví rozhodčí (praporek)</h3>
-      <dl class="signals">
-        <dt>Míč v poli</dt><dd>Praporek dolů.</dd>
-        <dt>Míč v autu</dt><dd>Praporek vzhůru.</dd>
-        <dt>Dotek míče</dt><dd>Praporek vzhůru a dlaní volné ruky se dotkne jeho horní části.</dd>
-        <dt>Přechod mimo antény, přešlap při podání</dt><dd>Mává praporkem nad hlavou a ukáže na anténu nebo čáru.</dd>
-        <dt>Nelze posoudit</dt><dd>Zkříží obě paže před hrudí.</dd>
-      </dl>
+      <p class="rule-ref">Pravidlo 30</p>
+      <p>Rozhodčí musí každou chybu ukázat <strong>oficiálním gestem</strong>: kdo chybu udělal, co se stalo a kdo bude podávat. Ukazuje-li gesto jednou rukou, použije ruku na straně týmu, který chyboval nebo o něco žádá.</p>
+      <p>Animace vychází z oficiálních pravidel FIVB 2025–2028 (diagramy 11 a 12). Gesto přehraješ tlačítkem ▶.</p>
+      <p><a class="button button--secondary" href="gesta.html">🤚 Vyzkoušej se v kvízu gest</a></p>
+      <div id="gesture-atlas" class="stack">
+        <p class="muted">Načítám gesta…</p>
+      </div>
+      <noscript><p>Animace gest potřebují zapnutý JavaScript. Gesta najdeš také v <a href="https://www.fivb.com/volleyball/the-game/official-volleyball-rules/" rel="noopener">oficiálních pravidlech FIVB</a>.</p></noscript>
     </section>
   </main>
 

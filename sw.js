@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v5';
+const CACHE = 'voleyref-v6';
 
 const APP_SHELL = [
   './',
@@ -23,6 +23,7 @@ const APP_SHELL = [
   'ucet.html',
   'ochrana-udaju.html',
   'statistiky.html',
+  'gesta.html',
   'css/style.css',
   'js/account.js',
   'js/animation.js',
@@ -31,16 +32,24 @@ const APP_SHELL = [
   'js/config.js',
   'js/dom.js',
   'js/format.js',
+  'js/gesture-atlas.js',
+  'js/gesture-data.js',
+  'js/gesture-pose.js',
+  'js/gesture-quiz.js',
   'js/leaderboard.js',
+  'js/math3d.js',
   'js/media.js',
+  'js/player.js',
   'js/pwa.js',
   'js/quiz-api.js',
   'js/quiz.js',
+  'js/referee-figure.js',
   'js/stats.js',
   'js/supabase.js',
   'animace/podani-preslap.json',
   'animace/utok-zadni-rada.json',
   'animace/mic-antena.json',
+  'gesta/gesta.json',
   'manifest.json',
   'img/icons/icon.svg',
   'img/icons/icon-192.png',

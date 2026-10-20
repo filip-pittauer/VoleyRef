@@ -3,18 +3,8 @@
 // Souřadnice jsou v metrech: x = 0–18 po délce hřiště (síť na x = 9),
 // y = 0–9 po šířce, z = výška nad zemí (míč, výskok hráče).
 // SVG má viewBox přímo v metrech, takže data není potřeba přepočítávat.
-import { el } from './dom.js';
-
-const SVG_NS = 'http://www.w3.org/2000/svg';
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** Vytvoří SVG prvek (SVG potřebuje createElementNS, ne createElement). */
-function svgEl(tag, attrs = {}, ...children) {
-  const element = document.createElementNS(SVG_NS, tag);
-  for (const [name, value] of Object.entries(attrs)) element.setAttribute(name, value);
-  element.append(...children);
-  return element;
-}
+import { svgEl } from './dom.js';
+import { createPlayer } from './player.js';
 
 // ---------- Výpočet polohy v čase ----------
 /**
@@ -100,74 +90,10 @@ function captionAt(data, t) {
   return (data.texty ?? []).find(c => t >= c.od && t <= c.do)?.text ?? '';
 }
 
-// ---------- Přehrávač s ovládáním ----------
-/**
- * Vytvoří přehrávač animace. data = obsah JSON souboru, description = alt text.
- * Respektuje nastavení „omezit pohyb“ – pak se nespouští sám.
- */
+// ---------- Přehrávač ----------
+/** Vytvoří přehrávač animace. data = obsah JSON souboru, description = alt text. */
 export function createAnimationPlayer(data, description) {
-  const duration = data.delka;
   const scene = createScene(data);
   scene.svg.setAttribute('aria-label', description ?? 'Animace herní situace');
-
-  const caption = el('p', { class: 'anim__caption', 'aria-live': 'polite' });
-  const playButton = el('button', { class: 'button button--small', type: 'button' });
-  const slider = el('input', {
-    type: 'range', min: 0, max: duration, step: 0.05, value: 0,
-    'aria-label': 'Čas animace', class: 'anim__slider',
-  });
-
-  let time = 0;
-  let playing = false;
-  let lastFrame = null;
-
-  function update() {
-    scene.render(time);
-    slider.value = time;
-    const text = captionAt(data, time);
-    if (caption.textContent !== text) caption.textContent = text;
-    playButton.textContent = playing ? '⏸ Pauza' : time >= duration ? '↺ Znovu' : '▶ Přehrát';
-  }
-
-  // requestAnimationFrame: prohlížeč zavolá funkci před dalším vykreslením
-  // (cca 60× za sekundu) – plynulejší a úspornější než setInterval.
-  function frame(now) {
-    if (!playing) return;
-    if (!scene.svg.isConnected && lastFrame !== null) {   // prvek zmizel ze stránky → konec
-      playing = false;
-      return;
-    }
-    if (lastFrame !== null) time = Math.min(duration, time + (now - lastFrame) / 1000);
-    lastFrame = now;
-    if (time >= duration) playing = false;
-    update();
-    if (playing) requestAnimationFrame(frame);
-  }
-
-  function play() {
-    if (time >= duration) time = 0;
-    playing = true;
-    lastFrame = null;
-    requestAnimationFrame(frame);
-  }
-
-  function pause() {
-    playing = false;
-    update();
-  }
-
-  playButton.addEventListener('click', () => (playing ? pause() : play()));
-  slider.addEventListener('input', () => {
-    playing = false;
-    time = Number(slider.value);
-    update();
-  });
-
-  update();
-  if (!reduceMotion) play();
-
-  return el('figure', { class: 'media anim' },
-    scene.svg,
-    caption,
-    el('div', { class: 'anim__controls' }, playButton, slider));
+  return createPlayer(scene, { duration: data.delka, className: 'anim', captionAt: t => captionAt(data, t) });
 }

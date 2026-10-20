@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kvíz gest volejbalových rozhodčích s animacemi – poznáš, co rozhodčí ukazuje?">
+  <title>Gesta rozhodčích – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e3a8a">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/gesture-quiz.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html">🏐 Trénink rozhodčích</a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="kviz.html" aria-current="page">Kvíz</a></li>
+          <li><a href="pravidla.html">Pravidla</a></li>
+          <li><a href="zebricek.html">Žebříček</a></li>
+          <li><a href="statistiky.html">Statistiky</a></li>
+          <li><a href="ucet.html">Účet</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <h1>Gesta rozhodčích</h1>
+
+    <p id="gesture-error" class="alert alert--error" role="alert" hidden></p>
+
+    <!-- 1) Start -->
+    <section id="gesture-start" class="card stack">
+      <h2>Co znamená toto gesto?</h2>
+      <p>Uvidíš animaci gesta rozhodčího a vybereš, co znamená. Hned po odpovědi zjistíš, jestli máš pravdu, a dozvíš se, jak se gesto správně ukazuje.</p>
+      <p class="muted small">Kvíz běží jen v tvém prohlížeči – nepotřebuje přihlášení a nepočítá se do žebříčku.</p>
+      <div class="field">
+        <label for="gesture-set">Gesta</label>
+        <select id="gesture-set">
+          <option value="">Všechna gesta</option>
+          <option value="rozhodci">1. a 2. rozhodčí</option>
+          <option value="carovi">Čároví rozhodčí (praporek)</option>
+        </select>
+      </div>
+      <div>
+        <button id="gesture-start-button" class="button" type="button" disabled>Začít</button>
+      </div>
+      <p class="small">Všechna gesta s animacemi a popisem najdeš v <a href="pravidla.html#signalizace">pravidlech</a>.</p>
+    </section>
+
+    <!-- 2) Otázka -->
+    <section id="gesture-question" class="card stack" hidden>
+      <div>
+        <p id="gesture-progress" class="muted small"></p>
+        <progress id="gesture-progress-bar" value="0" max="10" aria-hidden="true"></progress>
+      </div>
+      <h2 id="gesture-heading" tabindex="-1">Co znamená toto gesto?</h2>
+      <div id="gesture-media"></div>
+      <form id="gesture-form" class="stack">
+        <fieldset id="gesture-fieldset" class="answers">
+          <legend class="visually-hidden">Význam gesta</legend>
+          <div id="gesture-answers" class="stack"></div>
+        </fieldset>
+        <div id="gesture-feedback" role="status"></div>
+        <div>
+          <button id="gesture-submit" class="button" type="submit">Odpovědět</button>
+          <button id="gesture-next" class="button" type="button" hidden>Další gesto</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 3) Výsledek -->
+    <section id="gesture-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="gesture-result-heading" tabindex="-1">Výsledek</h2>
+        <p id="gesture-score" class="score"></p>
+        <p id="gesture-result-text"></p>
+        <div class="actions">
+          <button id="gesture-again" class="button" type="button">Hrát znovu</button>
+          <a href="pravidla.html#signalizace">Přehled všech gest</a>
+        </div>
+      </div>
+      <div id="gesture-mistakes-box" class="stack" hidden>
+        <h2>Na tahle gesta se podívej znovu</h2>
+        <ol id="gesture-mistakes" class="result-list"></ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

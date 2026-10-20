@@ -28,6 +28,7 @@ kviz.html           kvíz
 pravidla.html       knížka pravidel (kapitoly mají id = kategorie otázek)
 zebricek.html       žebříček
 statistiky.html     statistiky přihlášeného hráče (RPC moje_statistiky)
+gesta.html          kvíz gest rozhodčích (jen v prohlížeči, bez DB; přístup z kviz.html a úvodu)
 ucet.html           přihlášení, registrace, profil, smazání účtu
 ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
 css/style.css       společné styly
@@ -35,11 +36,15 @@ js/config.js        Supabase URL + publishable klíč (veřejné)
 js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro přihlášení
 js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo
 js/badges.js        názvy a ikony odznaků (podmínky jsou v sql/05_odznaky.sql)
-js/                 další moduly (quiz.js, account.js, dom.js, …)
+js/player.js        přehrávač animací (play/pauza, posuvník) – pro situace i gesta
+js/referee-figure.js  postava rozhodčího v SVG (3D model promítnutý do 2D); gesture-pose.js
+                    počítá polohu paží z dat, math3d.js vektory/IK/interpolace
+js/                 další moduly (quiz.js, gesture-quiz.js, gesture-atlas.js, account.js, dom.js, …)
 img/                obrázky situací, img/icons/ ikony aplikace (zdroj icon.svg)
 manifest.json       PWA manifest
 sw.js               service worker (mezipaměť, offline)
 animace/            SVG animace situací jako JSON (formát v animace/README.md)
+gesta/              gesta rozhodčích jako data (gesta.json, formát v gesta/README.md)
 sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
 tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
 private/            NENÍ v repu: otázky se správnými odpověďmi
@@ -112,22 +117,25 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 
 ## Aktuální stav (konec práce 20. 10. 2026)
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1–6, knížka pravidel, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku).
+- Hotovo: fáze 1–6, knížka pravidel, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), **gesta rozhodčích** (balíček 4 – čeká na vyzkoušení uživatelem).
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
-- V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026).
+- V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
 
 ### Jak s uživatelem pracujeme
 - Větší práci dělit do **balíčků**; po každém commit + push, zastavit se a nechat uživatele vyzkoušet na živém webu, než se jde dál.
 - Po změně SQL vždy přesně napsat, které soubory má spustit a v jakém pořadí.
 - Nezodpovězená otázka: limit **3 s na otázku** pro žebříček (ochrana proti botům) – nechat, nebo snížit na 2 s?
 
-### Další krok: balíček 4 (schválený uživatelem)
-1. **Trenažér postavení** (bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. **Před psaním NEJDŘÍV ověřit aktuální znění pravidla 7.4/7.5 FIVB 2025–2028** (pravidlo o postavení se měnilo – nepsat z paměti).
-2. **Gesta rozhodčích:** nakreslit a animovat gesta v SVG (postava rozhodčího, gesta jako data – klíčové polohy rukou), kvíz „co znamená toto gesto“ (lokálně, bez DB) a gesta i v pravidla.html#signalizace. Uživatel chce, aby se na tom nespěchalo. Seznam gest ověřit proti oficiálním (FIVB Diagram 11).
-3. Oba režimy přístupné z kvíz.html (karty) a z úvodní stránky; navigace se už nerozšiřuje (5 položek je maximum na mobilu).
-- Odznaky pro trenažér/gesta až později (vyžadují ukládání výsledků na server).
+### Balíček 4: gesta rozhodčích (hotovo 20. 10. 2026, čeká na vyzkoušení)
+- `gesta.html`: kvíz „Co znamená toto gesto?“ – 10 gest (nebo 5 u čárových), 4 možnosti ze stejné skupiny (přednostně gesta z pole `zamena`), **vyhodnocení hned po každé odpovědi** (nic se neukládá, takže na rozdíl od hlavního kvízu není co prozradit). Jednoruká gesta se náhodně zrcadlí. Výsledek: skóre + chybná gesta s animací.
+- `pravidla.html#signalizace`: přehled všech 32 gest s animacemi (kotvy `#gesto-<id>`), nahradil textový seznam. Signalizace je v pravidlech 2025–2028 **pravidlo 30** (dřív 28).
+- Seznam a popisy ověřené proti PDF FIVB 2025–2028 (Diagram 11: 26 gest, 6a/6b a 25 rozdělené na napomenutí/trest; Diagram 12: 5 signálů praporkem). Oficiální český překlad pravidel 2025–2028 jsem nenašel – názvy jsou vlastní, navazují na knížku pravidel.
+- Postava: jednoduchý 3D model (paže = inverzní kinematika, ruka s prsty a dlaní), promítnutý do SVG; kreslí se podle hloubky (ruka za zády je schovaná). Gesta jsou jen data – nové gesto = záznam v `gesta/gesta.json`.
+- Možná vylepšení podle zpětné vazby: zpomalené přehrávání, smyčka, odznaky za gesta (chtělo by ukládání na server).
 
 ### Odložené / nápady
+- **Trenažér postavení** (uživatel ho chce, ale později; bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. Přístup z kviz.html (karta) a z úvodu; navigace se nerozšiřuje.
+  - Zjištěno 20. 10. 2026: od pravidel 2025–2028 **podávající tým chybu postavení nemá** (hráči podávajícího týmu smějí stát kdekoli), v pořadí musí být jen přijímající tým; po úderu podávajícího se smějí volně pohybovat oba týmy (7.4, 7.4.4). Trenažér proto jen pro přijímající tým. **Před psaním ověřit přesné znění 7.4.3 a 7.5** v anglickém PDF (`https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf`).
 - Editor animací s „developer módem“ (jen pro vybrané editory, animace by se přesunuly do DB) – uživatel zatím neví, jestli animace, nebo videa (rozhodne s kamarádem, jehož je to nápad).
 - Animace vs. video: formát otázky podporuje obojí (`media.typ`).
 - Vlastní doména (jméno zatím nevybrané).
@@ -137,6 +145,8 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Prohlížeč: `playwright-core` + nainstalovaný Chrome (`C:/Program Files/Google/Chrome/Application/chrome.exe`), statický server `http-server`, Supabase API odchycené a obsloužené PGlite. **V testech blokovat service workery** (`serviceWorkers: 'block'`) a všechny požadavky na skutečný Supabase – jinak test sáhne na živou DB.
 - **Skripty jsou zkopírované v `private/testy/`** (jen na disku, ignorované Gitem): `fake-supabase.mjs` + `lib.mjs` (prostředí), `db.mjs` (bezpečnost, 45 kontrol), `*-db.mjs` (SQL po balíčcích), `e2e-*.mjs` (prohlížeč). Spuštění: zkopírovat složku do scratchpadu sezení (ne do repa), `npm install`, `node db.mjs` atd.
 - Cesty uvnitř jsou natvrdo: `ROOT` v `lib.mjs` (projekt) a `OLD` v `migrate-db.mjs`, `daily-db.mjs`, `badges-db.mjs` (složka se snímkem SQL z `git show HEAD:sql/…` – před testem přechodu ji znovu vytvořit).
+- Gesta: `e2e-gesta.mjs` (kvíz gest, přehled v pravidlech, omezený pohyb), `pwa-gesta.mjs` (mezipaměť v6, gesta offline), `gesta-atlas.mjs` / `gesta-shots.mjs` / `gesto-detail.mjs <id>` (snímky gest do `shots/` – na kontrolu vzhledu animací očima).
+- Zastaralé testy (selhávají i bez změn): `e2e.mjs` krok 1 čeká „Supabase není propojený“ (config.js už propojený je), `pwa.mjs` počítá soubory v mezipaměti `voleyref-v4` (natvrdo).
 
 ### Před spuštěním pro veřejnost
 - Firemní e-mail (kontakt v ochrana-udaju.html je dočasný alias `raphael.silva955@flounderfantasy.com`) a převod Google Cloud projektu na firemní účet (IAM → Owner).

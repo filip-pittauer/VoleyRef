@@ -1,0 +1,796 @@
+{
+  "zdroj": "FIVB Official Volleyball Rules 2025–2028, Diagram 11 (rozhodčí) a Diagram 12 (čároví rozhodčí)",
+  "verze_pravidel": "2025",
+  "skupiny": {
+    "rozhodci": { "nazev": "1. a 2. rozhodčí", "diagram": "11" },
+    "carovi": { "nazev": "Čároví rozhodčí", "diagram": "12" }
+  },
+  "pozy": {
+    "klid": { "ruka": [0.06, -0.54, 0.05], "loket": [0.35, -1, -0.25], "prsty": "predlokti", "dlan": "dovnitr" },
+    "zvednuta": { "ruka": [0.2, 0.36, 0.1], "loket": [1, -0.3, -0.1], "prsty": "nahoru", "dlan": "vpred" },
+    "do-strany": { "ruka": [0.55, 0.05, 0.08], "loket": [0, -1, -0.3], "prsty": "predlokti", "dlan": "vpred", "tvar": "otevrena" }
+  },
+  "gesta": [
+    {
+      "id": "povoleni-podani",
+      "cislo": "1",
+      "skupina": "rozhodci",
+      "nazev": "Povolení k podání",
+      "pohyb": "Pohybem ruky ukáže směr podání – paži napřímí ke straně podávajícího týmu a máchne jí přes tělo směrem k soupeři.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "12.3, 22.2.1.1",
+      "zamena": ["tym-podava", "oddech", "chyba-utoku"],
+      "kamera": { "otoceni": 15 },
+      "delka": 2.6,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.25 },
+        { "t": 0.85, "ruka": [0.54, 0.02, 0.12], "dlan": "vpred" },
+        { "t": 1.15 },
+        { "t": 1.5, "ruka": [0.26, -0.36, 0.32] },
+        { "t": 1.85, "ruka": [-0.14, -0.29, 0.26], "dlan": "nahoru+vpred" },
+        { "t": 2.6 }
+      ]
+    },
+    {
+      "id": "tym-podava",
+      "cislo": "2",
+      "skupina": "rozhodci",
+      "nazev": "Tým, který bude podávat",
+      "pohyb": "Natáhne paži do strany k týmu, který bude podávat.",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "22.2.3.1, 22.2.3.2, 22.2.3.4",
+      "zamena": ["povoleni-podani", "mic-v-poli", "oddech"],
+      "delka": 2.2,
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.25 },
+        { "t": 0.9, "poza": "do-strany" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "vymena-stran",
+      "cislo": "3",
+      "skupina": "rozhodci",
+      "nazev": "Výměna stran",
+      "pohyb": "Zvedne předloktí – jedno před tělem, druhé za zády – a otočí je kolem těla.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "18.2",
+      "zamena": ["stridani", "postaveni-rotace", "konec-setu"],
+      "delka": 3.4,
+      "nahled": 0.95,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.7, "ruka": [-0.12, -0.28, 0.24], "tvar": "pest", "dlan": "nahoru" },
+        { "t": 0.95 },
+        { "t": 1.35, "ruka": [0.06, -0.28, 0] },
+        { "t": 1.75, "ruka": [-0.1, -0.28, -0.2] },
+        { "t": 2 },
+        { "t": 2.4, "ruka": [0.06, -0.28, 0] },
+        { "t": 2.8, "ruka": [-0.12, -0.28, 0.24] },
+        { "t": 3.4 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.7, "ruka": [-0.1, -0.28, -0.2], "tvar": "pest", "dlan": "nahoru" },
+        { "t": 0.95 },
+        { "t": 1.35, "ruka": [0.06, -0.28, 0] },
+        { "t": 1.75, "ruka": [-0.12, -0.28, 0.24] },
+        { "t": 2 },
+        { "t": 2.4, "ruka": [0.06, -0.28, 0] },
+        { "t": 2.8, "ruka": [-0.1, -0.28, -0.2] },
+        { "t": 3.4 }
+      ],
+      "telo": [
+        { "t": 0, "otoceni": 0 },
+        { "t": 0.95, "otoceni": 0 },
+        { "t": 1.75, "otoceni": -40 },
+        { "t": 2, "otoceni": -40 },
+        { "t": 2.8, "otoceni": 0 },
+        { "t": 3.4, "otoceni": 0 }
+      ],
+      "kamera": { "otoceni": 10, "naklon": 18 }
+    },
+    {
+      "id": "oddech",
+      "cislo": "4",
+      "skupina": "rozhodci",
+      "nazev": "Oddechový čas",
+      "pohyb": "Dlaň jedné ruky položí na prsty druhé, svisle zvednuté ruky (tvar písmene T). Potom ukáže na tým, který o oddech žádá.",
+      "kdo": "2. rozhodčí (1. rozhodčí ve zvláštních situacích)",
+      "pravidla": "15.4.1",
+      "zamena": ["dotek-mice", "tym-podava", "konec-setu"],
+      "delka": 3.2,
+      "nahled": 1.5,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.75, "ruka": [-0.07, 0.13, 0.31], "loket": [1, 0, -0.2], "prsty": "dovnitr", "dlan": "dolu" },
+        { "t": 1.7 },
+        { "t": 2.2, "poza": "klid" },
+        { "t": 3.2 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.75, "ruka": [-0.19, -0.1, 0.3], "loket": [1, -1, 0], "prsty": "nahoru", "dlan": "dovnitr+vpred" },
+        { "t": 1.7 },
+        { "t": 2.2, "poza": "do-strany" },
+        { "t": 3.2 }
+      ]
+    },
+    {
+      "id": "stridani",
+      "cislo": "5",
+      "skupina": "rozhodci",
+      "nazev": "Střídání",
+      "pohyb": "Krouží předloktími kolem sebe před hrudí.",
+      "kdo": "1. i 2. rozhodčí, jen ve zvláštních situacích",
+      "pravidla": "15.5.1, 15.5.2, 15.8",
+      "zamena": ["vymena-stran", "postaveni-rotace", "konec-setu"],
+      "delka": 2.9,
+      "nahled": 1.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.75,
+          "tvar": "pest",
+          "dlan": "vzad",
+          "loket": [1, -0.4, -0.2],
+          "kruh": { "stred": [-0.22, -0.2, 0.28], "polomer": 0.07, "rovina": "bok", "otacky": 3, "doba": 1.8, "faze": 90 }
+        },
+        { "t": 2.9 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.75,
+          "tvar": "pest",
+          "dlan": "vzad",
+          "loket": [1, -0.4, -0.2],
+          "kruh": { "stred": [-0.22, -0.2, 0.28], "polomer": 0.07, "rovina": "bok", "otacky": 3, "doba": 1.8, "faze": 270 }
+        },
+        { "t": 2.9 }
+      ]
+    },
+    {
+      "id": "napomenuti",
+      "cislo": "6a",
+      "skupina": "rozhodci",
+      "nazev": "Napomenutí za nevhodné chování",
+      "pohyb": "Ukáže žlutou kartu.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "21.1, 21.6, 23.3.2.2",
+      "zamena": ["trest", "vylouceni", "zdrzovani-napomenuti"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "zluta" },
+        { "t": 0.25 },
+        { "t": 0.95, "poza": "zvednuta" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "trest",
+      "cislo": "6b",
+      "skupina": "rozhodci",
+      "nazev": "Trest za nevhodné chování",
+      "vyznam": "Soupeř získá bod a podání.",
+      "pohyb": "Ukáže červenou kartu.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "21.3.1, 21.6, 23.3.2.2",
+      "zamena": ["napomenuti", "vylouceni", "diskvalifikace", "zdrzovani-trest"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "cervena" },
+        { "t": 0.25 },
+        { "t": 0.95, "poza": "zvednuta" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "vylouceni",
+      "cislo": "7",
+      "skupina": "rozhodci",
+      "nazev": "Vyloučení",
+      "vyznam": "Hráč nesmí do konce setu hrát.",
+      "pohyb": "Ukáže žlutou a červenou kartu společně v jedné ruce.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "21.3.2, 21.6, 23.3.2.2",
+      "zamena": ["diskvalifikace", "trest", "napomenuti"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "obe" },
+        { "t": 0.25 },
+        { "t": 0.95, "poza": "zvednuta" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "diskvalifikace",
+      "cislo": "8",
+      "skupina": "rozhodci",
+      "nazev": "Diskvalifikace",
+      "vyznam": "Hráč musí do konce utkání opustit soutěžní prostor.",
+      "pohyb": "Ukáže žlutou a červenou kartu odděleně – každou v jedné ruce.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "21.3.3, 21.6, 23.3.2.2",
+      "zamena": ["vylouceni", "trest", "zdrzovani-trest"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "zluta" },
+        { "t": 0.25 },
+        { "t": 0.95, "poza": "zvednuta" },
+        { "t": 2.2 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "cervena" },
+        { "t": 0.25 },
+        { "t": 0.95, "poza": "zvednuta" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "konec-setu",
+      "cislo": "9",
+      "skupina": "rozhodci",
+      "nazev": "Konec setu (nebo utkání)",
+      "pohyb": "Zkříží předloktí před hrudí, ruce má otevřené.",
+      "kdo": "1. rozhodčí (2. rozhodčí ve zvláštních situacích)",
+      "pravidla": "6.2, 6.3",
+      "zamena": ["stridani", "mic-v-autu", "vymena-stran"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "ruka": [-0.25, -0.1, 0.17], "loket": [0.6, -1, 0.3], "dlan": "vzad" },
+        { "t": 2.2 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "ruka": [-0.25, -0.1, 0.21], "loket": [0.6, -1, 0.3], "dlan": "vzad" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "nadhoz",
+      "cislo": "10",
+      "skupina": "rozhodci",
+      "nazev": "Míč nebyl při podání nadhozen ani puštěn",
+      "pohyb": "Zvedne nataženou paži dlaní vzhůru.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "12.4.1",
+      "zamena": ["zadrzeny-mic", "zdrzeni-podani", "tym-podava"],
+      "kamera": { "otoceni": 55, "naklon": 18 },
+      "delka": 2.6,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.6, "ruka": [0.05, -0.5, 0.2], "dlan": "nahoru" },
+        { "t": 1.05, "ruka": [0.05, -0.38, 0.4] },
+        { "t": 1.5, "ruka": [0.05, -0.02, 0.555] },
+        { "t": 2.6 }
+      ]
+    },
+    {
+      "id": "zdrzeni-podani",
+      "cislo": "11",
+      "skupina": "rozhodci",
+      "nazev": "Zdržení podání",
+      "vyznam": "Podávající neudeřil míč do 8 sekund od hvizdu.",
+      "pohyb": "Zvedne osm roztažených prstů (čtyři na každé ruce).",
+      "kdo": "1. rozhodčí",
+      "pravidla": "12.4.4",
+      "zamena": ["ctyri-odbiti", "dvoji-dotek", "blok-cloneni"],
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.9,
+          "ruka": [0.12, 0.36, 0.1],
+          "loket": [1, -0.4, 0],
+          "prsty": [0.3, 1, 0],
+          "dlan": "vpred",
+          "tvar": "ctyri"
+        },
+        { "t": 2.4 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.9,
+          "ruka": [0.12, 0.36, 0.1],
+          "loket": [1, -0.4, 0],
+          "prsty": [0.3, 1, 0],
+          "dlan": "vpred",
+          "tvar": "ctyri"
+        },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "blok-cloneni",
+      "cislo": "12",
+      "skupina": "rozhodci",
+      "nazev": "Chyba při bloku nebo clonění",
+      "pohyb": "Zvedne obě paže svisle vzhůru, dlaně dopředu.",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "12.5, 12.6.2.3, 14.6.3, 19.3.1.3, 23.3.2.3a, 23.3.2.3g, 24.3.2.4",
+      "zamena": ["mic-v-autu", "zdrzeni-podani", "chyba-utoku"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.6, "ruka": [0.08, 0, 0.5], "dlan": "nahoru" },
+        { "t": 1, "ruka": [0.04, 0.555, 0.04], "dlan": "vpred" },
+        { "t": 2.2 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.6, "ruka": [0.08, 0, 0.5], "dlan": "nahoru" },
+        { "t": 1, "ruka": [0.04, 0.555, 0.04], "dlan": "vpred" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "postaveni-rotace",
+      "cislo": "13",
+      "skupina": "rozhodci",
+      "nazev": "Chyba postavení nebo rotace",
+      "pohyb": "Ukazováčkem opíše kruh.",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "7.5, 7.7, 23.3.2.3a, 24.3.2.2",
+      "zamena": ["stridani", "vymena-stran", "prusnik-cara"],
+      "kamera": { "otoceni": 15, "naklon": 20 },
+      "delka": 2.9,
+      "nahled": 1.5,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.75,
+          "prsty": "dolu",
+          "dlan": "vzad",
+          "tvar": "ukazovak",
+          "loket": [0.6, -1, -0.2],
+          "kruh": {
+            "stred": [-0.16, -0.33, 0.22],
+            "polomer": 0.08,
+            "rovina": "vodorovna",
+            "otacky": 3,
+            "doba": 1.8,
+            "faze": 90
+          }
+        },
+        { "t": 2.9 }
+      ]
+    },
+    {
+      "id": "mic-v-poli",
+      "cislo": "14",
+      "skupina": "rozhodci",
+      "nazev": "Míč v poli",
+      "pohyb": "Paží a prsty ukáže šikmo dolů na zem.",
+      "kdo": "1. rozhodčí (2. rozhodčí ve zvláštních situacích)",
+      "pravidla": "8.3",
+      "zamena": ["prusnik-cara", "tym-podava", "mic-v-autu"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.8, "ruka": [0.35, -0.42, 0.14], "dlan": "vpred" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "mic-v-autu",
+      "cislo": "15",
+      "skupina": "rozhodci",
+      "nazev": "Míč v autu",
+      "vyznam": "Míč dopadl mimo hřiště, dotkl se antény nebo předmětu mimo hřiště, případně přešel na druhou stranu mimo prostor přechodu.",
+      "pohyb": "Zvedne předloktí svisle vzhůru, ruce otevřené, dlaně otočené k sobě (k tělu).",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "8.4.1, 8.4.2, 8.4.3, 8.4.4, 24.3.2.5, 24.3.2.7, 24.3.2.8",
+      "zamena": ["blok-cloneni", "dotek-mice", "konec-setu"],
+      "kamera": { "otoceni": 25 },
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.6, "ruka": [0.02, -0.15, 0.52], "loket": [0.1, -1, 0.3], "dlan": "nahoru" },
+        { "t": 0.85, "ruka": [0.02, 0.04, 0.44] },
+        { "t": 1.1, "ruka": [0.01, 0.12, 0.25], "dlan": "vzad" },
+        { "t": 2.4 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.6, "ruka": [0.02, -0.15, 0.52], "loket": [0.1, -1, 0.3], "dlan": "nahoru" },
+        { "t": 0.85, "ruka": [0.02, 0.04, 0.44] },
+        { "t": 1.1, "ruka": [0.01, 0.12, 0.25], "dlan": "vzad" },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "zadrzeny-mic",
+      "cislo": "16",
+      "skupina": "rozhodci",
+      "nazev": "Zadržený míč (chycení)",
+      "pohyb": "Pomalu zvedne předloktí dlaní vzhůru.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "9.2.2, 9.3.3, 23.3.2.3b",
+      "zamena": ["nadhoz", "dvoji-dotek", "chyba-utoku"],
+      "kamera": { "otoceni": 55, "naklon": 18 },
+      "delka": 3,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.65, "ruka": [0.02, -0.49, 0.21], "loket": [0, -1, -0.6], "dlan": "nahoru" },
+        { "t": 1.5, "ruka": [0.02, -0.33, 0.306] },
+        { "t": 2.35, "ruka": [0.02, -0.15, 0.27] },
+        { "t": 3 }
+      ]
+    },
+    {
+      "id": "dvoji-dotek",
+      "cislo": "17",
+      "skupina": "rozhodci",
+      "nazev": "Dvojí dotek",
+      "pohyb": "Zvedne dva roztažené prsty.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "9.3.4, 23.3.2.3b",
+      "zamena": ["ctyri-odbiti", "zdrzeni-podani", "zadrzeny-mic"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "poza": "zvednuta", "tvar": "dva" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "ctyri-odbiti",
+      "cislo": "18",
+      "skupina": "rozhodci",
+      "nazev": "Čtyři odbití",
+      "pohyb": "Zvedne čtyři roztažené prsty.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "9.3.1, 23.3.2.3b",
+      "zamena": ["dvoji-dotek", "zdrzeni-podani", "zadrzeny-mic"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "poza": "zvednuta", "tvar": "ctyri" },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "dotek-site",
+      "cislo": "19",
+      "skupina": "rozhodci",
+      "nazev": "Dotek sítě",
+      "vyznam": "Hráč se dotkl sítě, nebo se podaný míč dotkl sítě a nepřešel na druhou stranu.",
+      "pohyb": "Rukou na straně týmu, který chyboval, ukáže na jeho stranu sítě.",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "11.4.4, 12.6.2.1",
+      "zamena": ["presah", "prusnik-cara", "mic-v-poli"],
+      "sit": true,
+      "kamera": { "otoceni": 35, "naklon": 8 },
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.25 },
+        { "t": 0.95, "ruka": [-0.14, -0.18, 0.48], "prsty": "vpred", "dlan": "dovnitr" },
+        { "t": 1.2 },
+        { "t": 1.4, "ruka": [-0.14, -0.14, 0.48] },
+        { "t": 1.6, "ruka": [-0.14, -0.18, 0.48] },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "presah",
+      "cislo": "20",
+      "skupina": "rozhodci",
+      "nazev": "Zásah nad sítí do prostoru soupeře",
+      "vyznam": "Hráč odbil míč nebo rušil soupeře v jeho prostoru nad sítí (např. útok nebo blok přes síť dřív, než soupeř zaútočil).",
+      "pohyb": "Položí ruku nad síť dlaní dolů.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "11.4.1, 13.3.1, 14.3, 14.6.1, 23.3.2.3c",
+      "zamena": ["dotek-site", "chyba-utoku", "blok-cloneni"],
+      "sit": true,
+      "kamera": { "otoceni": 35, "naklon": 14 },
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.25 },
+        { "t": 0.85, "ruka": [-0.13, -0.06, 0.42], "prsty": "vpred+dovnitr", "dlan": "dolu" },
+        { "t": 1.3, "ruka": [-0.25, -0.06, 0.42] },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "chyba-utoku",
+      "cislo": "21",
+      "skupina": "rozhodci",
+      "nazev": "Chyba při útočném úderu",
+      "vyznam": "Útočný úder hráče zadní řady nebo libera, útok přímo na podání soupeře, nebo útok z prstové nahrávky libera v přední zóně.",
+      "pohyb": "Předloktím s otevřenou dlaní pohne shora dolů.",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "13.3.3, 13.3.4, 13.3.5, 13.3.6, 23.3.2.3d, 23.3.2.3e, 24.3.2.4",
+      "zamena": ["presah", "blok-cloneni", "povoleni-podani"],
+      "delka": 2.5,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.5, "ruka": [0.4, 0, 0.15], "loket": [1, 0.3, 0], "dlan": "vpred" },
+        { "t": 0.85, "ruka": [0.145, 0.52, 0.05] },
+        { "t": 1.1 },
+        { "t": 1.32, "ruka": [-0.015, 0.48, 0.15] },
+        { "t": 1.5, "ruka": [-0.085, 0.35, 0.2], "dlan": "dolu" },
+        { "t": 2.5 }
+      ]
+    },
+    {
+      "id": "prusnik-cara",
+      "cislo": "22",
+      "skupina": "rozhodci",
+      "nazev": "Přešlap čáry nebo průnik pod sítí",
+      "vyznam": "Hráč pronikl pod sítí do pole soupeře, míč prošel pod sítí, podávající se při podání dotkl hřiště (koncové čáry), nebo hráč nebyl při podání ve svém poli.",
+      "pohyb": "Ukáže prstem na středovou čáru nebo na příslušnou čáru.",
+      "kdo": "1. i 2. rozhodčí",
+      "pravidla": "8.4.5, 11.2.2, 12.4.3, 23.3.2.3a, 23.3.2.3f, 24.3.2.1",
+      "zamena": ["mic-v-poli", "dotek-site", "postaveni-rotace"],
+      "sit": true,
+      "kamera": { "otoceni": 35, "naklon": 8 },
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.25 },
+        { "t": 0.85, "ruka": [-0.09, -0.42, 0.26], "prsty": [-0.1, -1, 0.5], "dlan": "vzad", "tvar": "ukazovak" },
+        { "t": 1.1 },
+        { "t": 1.25, "ruka": [-0.09, -0.45, 0.28] },
+        { "t": 1.4, "ruka": [-0.09, -0.42, 0.26] },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "dvojita-chyba",
+      "cislo": "23",
+      "skupina": "rozhodci",
+      "nazev": "Dvojitá chyba a opakování",
+      "vyznam": "Rozehra se opakuje – např. oba týmy chybovaly současně nebo do hry zasáhla vnější překážka.",
+      "pohyb": "Zvedne oba palce svisle vzhůru.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "6.1.2.2, 17.2, 22.2.3.4",
+      "zamena": ["konec-setu", "zdrzeni-podani", "dvoji-dotek"],
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.9,
+          "ruka": [0.15, 0.2, 0.1],
+          "loket": [0.6, -1, 0],
+          "prsty": "nahoru",
+          "dlan": "vpred",
+          "tvar": "palec"
+        },
+        { "t": 2.2 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        {
+          "t": 0.9,
+          "ruka": [0.15, 0.2, 0.1],
+          "loket": [0.6, -1, 0],
+          "prsty": "nahoru",
+          "dlan": "vpred",
+          "tvar": "palec"
+        },
+        { "t": 2.2 }
+      ]
+    },
+    {
+      "id": "dotek-mice",
+      "cislo": "24",
+      "skupina": "rozhodci",
+      "nazev": "Dotek míče (tečovaný míč)",
+      "vyznam": "Míč se před dopadem mimo hřiště dotkl hráče – chybu udělal tým, který se míče dotkl naposledy.",
+      "pohyb": "Dlaní jedné ruky přejede po prstech druhé, svisle zvednuté ruky.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "23.3.2.3b, 24.2.2",
+      "zamena": ["oddech", "mic-v-autu", "blok-cloneni"],
+      "delka": 2.9,
+      "nahled": 1.4,
+      "prava": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.8, "ruka": [0.02, 0.14, 0.17], "loket": [1, -0.6, 0], "prsty": "nahoru", "dlan": "vpred" },
+        { "t": 2.9 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.85, "ruka": [-0.19, 0.38, 0.2], "loket": [1, -0.3, 0], "prsty": "dovnitr", "dlan": "dolu" },
+        { "t": 1.05 },
+        { "t": 1.4, "ruka": [-0.31, 0.38, 0.2] },
+        { "t": 1.75, "ruka": [-0.19, 0.38, 0.2] },
+        { "t": 2.1, "ruka": [-0.31, 0.38, 0.2] },
+        { "t": 2.9 }
+      ]
+    },
+    {
+      "id": "zdrzovani-napomenuti",
+      "cislo": "25",
+      "skupina": "rozhodci",
+      "nazev": "Napomenutí za zdržování",
+      "pohyb": "Žlutou kartou zakryje zápěstí druhé, zvednuté ruky.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "15.11.3, 16.2.2, 23.3.2.2",
+      "zamena": ["napomenuti", "zdrzovani-trest", "zdrzeni-podani"],
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "zluta" },
+        { "t": 0.2 },
+        { "t": 1, "ruka": [-0.33, 0.27, 0.24], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 2.4 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "ruka": [0.02, 0.36, 0.16], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "zdrzovani-trest",
+      "cislo": "25",
+      "skupina": "rozhodci",
+      "nazev": "Trest za zdržování",
+      "vyznam": "Soupeř získá bod a podání.",
+      "pohyb": "Červenou kartou zakryje zápěstí druhé, zvednuté ruky.",
+      "kdo": "1. rozhodčí",
+      "pravidla": "15.11.3, 16.2.3, 23.3.2.2",
+      "zamena": ["trest", "zdrzovani-napomenuti", "diskvalifikace"],
+      "delka": 2.4,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "cervena" },
+        { "t": 0.2 },
+        { "t": 1, "ruka": [-0.33, 0.27, 0.24], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 2.4 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "ruka": [0.02, 0.36, 0.16], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 2.4 }
+      ]
+    },
+    {
+      "id": "carovy-v-poli",
+      "cislo": "1",
+      "skupina": "carovi",
+      "nazev": "Míč v poli",
+      "pohyb": "Ukáže praporkem dolů k zemi.",
+      "kdo": "čárový rozhodčí",
+      "pravidla": "8.3, 29.2.1.1",
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
+        { "t": 0.2 },
+        { "t": 0.85, "ruka": [-0.04, -0.3, 0.45], "prsty": "vpred", "dlan": "ven" },
+        { "t": 2.2 }
+      ],
+      "vyrez": [-1.15, -1.66, 2.3, 2.04]
+    },
+    {
+      "id": "carovy-v-autu",
+      "cislo": "2",
+      "skupina": "carovi",
+      "nazev": "Míč v autu",
+      "pohyb": "Zvedne praporek svisle vzhůru.",
+      "kdo": "čárový rozhodčí",
+      "pravidla": "8.4.1, 29.2.1.1",
+      "delka": 2.3,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
+        { "t": 0.2 },
+        { "t": 0.55, "ruka": [0.35, 0.05, 0.25] },
+        { "t": 0.95, "ruka": [0.04, 0.55, 0.05], "prsty": "vpred", "dlan": "dovnitr" },
+        { "t": 2.3 }
+      ],
+      "vyrez": [-1.15, -1.66, 2.3, 2.04]
+    },
+    {
+      "id": "carovy-dotek",
+      "cislo": "3",
+      "skupina": "carovi",
+      "nazev": "Dotek míče",
+      "vyznam": "Míč se před dopadem mimo hřiště dotkl hráče přijímajícího týmu.",
+      "pohyb": "Zvedne praporek a dlaní volné ruky se dotkne jeho horního konce.",
+      "kdo": "čárový rozhodčí",
+      "pravidla": "29.2.1.2",
+      "delka": 2.6,
+      "nahled": 1.3,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
+        { "t": 0.2 },
+        { "t": 0.85, "ruka": [-0.13, -0.42, 0.3], "prsty": "vpred", "dlan": "dovnitr" },
+        { "t": 2.6 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.95, "ruka": [-0.17, 0.13, 0.365], "loket": [1, -0.5, 0], "prsty": "dovnitr", "dlan": "dolu" },
+        { "t": 1.15, "ruka": [-0.17, 0.09, 0.365] },
+        { "t": 1.35, "ruka": [-0.17, 0.13, 0.365] },
+        { "t": 1.55, "ruka": [-0.17, 0.09, 0.365] },
+        { "t": 2.6 }
+      ],
+      "vyrez": [-1.15, -1.66, 2.3, 2.04]
+    },
+    {
+      "id": "carovy-prostor",
+      "cislo": "4",
+      "skupina": "carovi",
+      "nazev": "Míč mimo prostor přechodu nebo přešlap při podání",
+      "vyznam": "Míč se dotkl antény nebo předmětu mimo hřiště, přešel na druhou stranu mimo prostor přechodu, nebo hráč při podání přešlápl či stál mimo své pole.",
+      "pohyb": "Mává praporkem nad hlavou a ukáže na anténu nebo na příslušnou čáru.",
+      "kdo": "čárový rozhodčí",
+      "pravidla": "8.4.2, 8.4.3, 8.4.4, 12.4.3, 29.2.1.3, 29.2.1.4, 29.2.1.6, 29.2.1.7",
+      "delka": 3,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
+        { "t": 0.2 },
+        { "t": 0.55, "ruka": [0.35, 0.05, 0.2] },
+        { "t": 0.9, "ruka": [0.1, 0.5, 0.08], "prsty": "vpred", "dlan": "dovnitr" },
+        { "t": 1.2, "ruka": [-0.1, 0.48, 0.1] },
+        { "t": 1.5, "ruka": [0.12, 0.5, 0.08] },
+        { "t": 1.8, "ruka": [-0.1, 0.48, 0.1] },
+        { "t": 2.1, "ruka": [0.1, 0.5, 0.08] },
+        { "t": 3 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.6 },
+        { "t": 1.2, "ruka": [0.54, 0.08, 0.12], "tvar": "ukazovak", "dlan": "dolu" },
+        { "t": 3 }
+      ],
+      "vyrez": [-1.15, -1.66, 2.3, 2.04]
+    },
+    {
+      "id": "carovy-nelze",
+      "cislo": "5",
+      "skupina": "carovi",
+      "nazev": "Nelze posoudit",
+      "pohyb": "Zvedne a zkříží obě paže a ruce před hrudí.",
+      "kdo": "čárový rozhodčí",
+      "pravidla": null,
+      "delka": 2.2,
+      "prava": [
+        { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
+        { "t": 0.2 },
+        { "t": 0.9, "ruka": [-0.25, -0.08, 0.2], "loket": [0.6, -1, 0.3], "dlan": "dovnitr", "prsty": "vpred" },
+        { "t": 2.2 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid" },
+        { "t": 0.2 },
+        { "t": 0.9, "ruka": [-0.25, -0.08, 0.17], "loket": [0.6, -1, 0.3], "dlan": "vzad" },
+        { "t": 2.2 }
+      ],
+      "vyrez": [-1.15, -1.66, 2.3, 2.04]
+    }
+  ]
+}
