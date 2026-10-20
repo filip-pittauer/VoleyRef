@@ -1,6 +1,6 @@
 // Statistiky přihlášeného hráče v Profilu (data počítá server: moje_statistiky()).
 // Načtení spouští account.js, až je hráč přihlášený.
-import { el } from './dom.js';
+import { el, loadingPlaceholder } from './dom.js';
 import { formatDuration, plural } from './format.js';
 import { CATEGORIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
 import { BADGE_GROUPS } from './badges.js';
@@ -196,7 +196,7 @@ async function load() {
 /** Načte a vykreslí statistiky (volá Profil po přihlášení). */
 export function loadStats() {
   status.hidden = false;
-  status.textContent = 'Načítám…';
+  status.replaceChildren(...loadingPlaceholder(4));
   content.hidden = true;
   return load().catch(error => {
     // neočekávaná chyba (např. výpadek sítě) – raději hláška než věčné „Načítám…“

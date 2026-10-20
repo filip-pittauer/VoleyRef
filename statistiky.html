@@ -7,10 +7,11 @@
   <!-- Statistiky jsou teď součástí Profilu (ucet.html). Stránka zůstává kvůli
        starým odkazům a záložkám: přesměruje a zachová kotvu (např. #odznaky). -->
   <meta http-equiv="refresh" content="0; url=ucet.html#statistiky">
-  <script>location.replace('ucet.html' + (location.hash || '#statistiky'));</script>
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <!-- skript až za styly: prohlížeč tak ví, že stránka má zapnuté plynulé přechody -->
+  <script>location.replace('ucet.html' + (location.hash || '#statistiky'));</script>
 </head>
 <body>
   <main id="obsah">

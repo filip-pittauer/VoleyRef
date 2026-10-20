@@ -1,7 +1,7 @@
 // Kvíz „Co znamená toto gesto?“ – běží jen v prohlížeči, bez databáze.
 // Na rozdíl od hlavního kvízu ukazuje správnou odpověď hned po každé
 // otázce: nic se neukládá, takže není co prozradit, a hráč se rychleji učí.
-import { el, showOnly } from './dom.js';
+import { el, showOnly, replayAnimation } from './dom.js';
 import { plural } from './format.js';
 import { loadGestures, gestureDetails } from './gesture-data.js';
 import { createGesturePlayer } from './referee-figure.js';
@@ -62,10 +62,16 @@ function pickOptions(gesture) {
   return shuffle([gesture, ...similar, ...others].slice(0, OPTION_COUNT));
 }
 
-/** Skóre na tabuli: správně : chybně (zatím zodpovězených otázek). */
-function renderTally(answered) {
+/**
+ * Skóre na tabuli: správně : chybně (zatím zodpovězených otázek).
+ * changed = 'good' / 'bad' – číslo, které se právě změnilo, krátce poskočí.
+ */
+function renderTally(answered, changed = null) {
   const wrong = answered - state.correct;
-  tally.replaceChildren(String(state.correct), ' : ', el('span', {}, String(wrong)));
+  const good = el('b', { class: 'board__good' }, String(state.correct));
+  const bad = el('span', { class: 'board__bad' }, String(wrong));
+  tally.replaceChildren(good, ' : ', bad);
+  if (changed) replayAnimation(changed === 'good' ? good : bad, 'board__bump');
   tally.setAttribute('aria-label', `Správně ${state.correct}, chybně ${wrong}`);
 }
 
@@ -96,6 +102,9 @@ function renderQuestion() {
   // Zrcadlově = stejné gesto pro tým na druhé straně, význam je stejný.
   media.replaceChildren(createGesturePlayer(gesture, data.pozy, { mirror: Math.random() < 0.5 }));
 
+  // nové gesto „přijede“ zprava (CSS třída .q-enter)
+  for (const part of [media, form]) replayAnimation(part, 'q-enter');
+
   answersBox.replaceChildren(...pickOptions(gesture).map((option, i) =>
     el('label', { class: 'answer' },
       el('input', { type: 'radio', name: 'answer', value: option.id, required: true }),
@@ -125,7 +134,7 @@ function handleAnswer(event) {
     label.classList.toggle('answer--wrong', value === answer && !isCorrect);
   }
   fieldset.disabled = true;
-  renderTally(state.index + 1);
+  renderTally(state.index + 1, isCorrect ? 'good' : 'bad');
 
   feedback.replaceChildren(el('div', { class: `result ${isCorrect ? 'result--ok' : 'result--wrong'}` },
     el('p', { class: 'result__status' }, isCorrect ? '✓ Správně' : '✗ Špatně'),

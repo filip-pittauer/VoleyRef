@@ -33,6 +33,29 @@ export function svgEl(tag, attrs = {}, ...children) {
   return element;
 }
 
+/**
+ * Znovu spustí CSS animaci dané třídy (např. příjezd další otázky).
+ * Samotné přidání třídy, kterou prvek už má, by animaci nespustilo.
+ */
+export function replayAnimation(element, className) {
+  element.classList.remove(className);
+  void element.offsetWidth;   // vynutí přepočet stylu, jinak by prohlížeč odebrání „nezaznamenal“
+  element.classList.add(className);
+}
+
+/**
+ * Zástupný obsah při načítání: šedé „blikající“ řádky místo textu Načítám….
+ * Čtečka obrazovky dostane text, řádky jsou jen vizuální. Vkládá se do <p>,
+ * proto jen <span> (CSS z nich dělá bloky).
+ */
+export function loadingPlaceholder(lines = 3) {
+  return [
+    el('span', { class: 'visually-hidden' }, 'Načítám…'),
+    el('span', { class: 'skeleton', 'aria-hidden': 'true' },
+      ...Array.from({ length: lines }, () => el('span', { class: 'skeleton__line' }))),
+  ];
+}
+
 /** Zobrazí jednu sekci a ostatní ze seznamu skryje. */
 export function showOnly(visible, all) {
   for (const section of all) {

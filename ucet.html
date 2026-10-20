@@ -39,7 +39,7 @@
     <!-- Hlášky (chyba / úspěch) – role="alert" je přečte čtečka obrazovky -->
     <p id="message" class="alert" role="alert" hidden></p>
 
-    <p id="loading" class="muted">Načítám…</p>
+    <p id="loading" class="muted"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
 
     <!-- ============ Nepřihlášený: přihlášení ============ -->
     <section id="login-section" class="card stack auth-card" hidden>
@@ -140,7 +140,7 @@
       <!-- Statistiky hráče (js/stats.js, data z RPC moje_statistiky) -->
       <section id="statistiky" class="stack" aria-labelledby="stats-heading">
         <h2 id="stats-heading">Statistiky</h2>
-        <p id="stats-status" class="muted" aria-live="polite">Načítám…</p>
+        <p id="stats-status" class="muted" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
         <div id="stats-content" class="stack" hidden></div>
       </section>
 

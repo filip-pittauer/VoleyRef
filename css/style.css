@@ -2306,3 +2306,206 @@ main.home {
     transition: none;
   }
 }
+
+/* ---------- Detaily (statické) ---------- */
+/* medaile pro první tři místa v žebříčku */
+.medal {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  color: #1f2937;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.18), 0 1px 2px rgb(0 0 0 / 0.2);
+}
+
+.medal--1 { background: linear-gradient(145deg, #f7d774, #d4a017); }
+.medal--2 { background: linear-gradient(145deg, #eef1f5, #a9b2bf); }
+.medal--3 { background: linear-gradient(145deg, #e9b07f, #b06d34); }
+
+/* zástupné řádky při načítání (skeleton) */
+.skeleton {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.25rem 0;
+}
+
+.skeleton__line {
+  display: block;
+  height: 0.9rem;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-text-muted) 18%, transparent);
+}
+
+.skeleton__line:nth-child(3n + 2) { width: 85%; }
+.skeleton__line:nth-child(3n) { width: 65%; }
+
+.board .board__good {
+  font-weight: inherit;
+}
+
+/* ---------- Animace stránek a detailů ----------
+   Vše jen bez „omezeného pohybu“ v nastavení systému. */
+@media (prefers-reduced-motion: no-preference) {
+  /* 1) plynulý přechod mezi stránkami (Chrome/Edge; jinde se jen nepoužije).
+     Hlavička a menu mají vlastní jméno, takže při přechodu stojí na místě. */
+  @view-transition {
+    navigation: auto;
+  }
+
+  .site-header { view-transition-name: site-header; }
+  .main-nav { view-transition-name: main-nav; }
+
+  ::view-transition-old(root) {
+    animation: page-out 0.16s ease-in both;
+  }
+
+  ::view-transition-new(root) {
+    animation: page-in 0.28s ease-out both;
+  }
+
+  /* 2) další otázka (a gesto) přijede zprava; postup se plynule doplní */
+  .q-enter {
+    animation: q-enter 0.35s ease-out both;
+  }
+
+  #question-media.q-enter,
+  #gesture-media.q-enter { animation-delay: 0.04s; }
+  #question-form.q-enter,
+  #gesture-form.q-enter { animation-delay: 0.08s; }
+
+  progress::-webkit-progress-value {
+    transition: inline-size 0.4s ease-out;
+  }
+
+  /* 3) kvíz gest: správná odpověď krátce zazáří, špatná se zatřese,
+     změněné číslo na tabuli poskočí */
+  .answers .answer.answer--correct {
+    animation: answer-ok 0.5s ease-out;
+  }
+
+  .answers .answer.answer--wrong {
+    animation: answer-shake 0.4s ease-in-out;
+  }
+
+  .board__bump {
+    display: inline-block;
+    animation: board-bump 0.45s ease-out;
+  }
+
+  /* 5) žebříček: řádky se postupně naskládají, vlastní řádek jemně pulzne */
+  .leaderboard tbody tr {
+    animation: row-in 0.35s ease-out both;
+    animation-delay: calc(min(var(--i, 0), 15) * 35ms);
+  }
+
+  .leaderboard tbody tr.is-me {
+    animation: row-in 0.35s ease-out both, me-pulse 1.4s ease-out 0.7s 2;
+    animation-delay: calc(min(var(--i, 0), 15) * 35ms), 0.7s;
+  }
+
+  /* 6) pravidla: plynulé rozbalení (Chrome 131+, Safari 18.4+; jinde skokem) */
+  .rule {
+    interpolate-size: allow-keywords;
+  }
+
+  .rule::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete;
+  }
+
+  .rule[open]::details-content {
+    block-size: auto;
+  }
+
+  .rule--instant::details-content {
+    transition: none;
+  }
+
+  /* zvýraznění bodu, na který vedl odkaz, po chvíli vybledne */
+  .sub:target,
+  .sub-heading:target,
+  .rule-brief:target,
+  .definitions dt:target {
+    animation: target-fade 1.5s ease-out 2.5s forwards;
+  }
+
+  /* 7) úvod: čáry hřiště v banneru se „nakreslí“ */
+  .hero__court > * {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-line 1.2s ease-out 0.2s forwards;
+  }
+
+  .hero__court > :nth-child(2) { animation-delay: 0.5s; }
+  .hero__court > :nth-child(3) { animation-delay: 0.75s; }
+  .hero__court > :nth-child(4) { animation-delay: 0.9s; }
+
+  /* 8a) skeleton jemně „bliká“ */
+  .skeleton__line {
+    animation: skeleton-pulse 1.2s ease-in-out infinite alternate;
+  }
+
+  /* 8c) stisk tlačítka */
+  .button:active {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes page-out {
+  to { opacity: 0; }
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes q-enter {
+  from { opacity: 0; transform: translateX(24px); }
+}
+
+@keyframes answer-ok {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.025); box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-success) 35%, transparent); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes answer-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes board-bump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+@keyframes me-pulse {
+  0%, 100% { background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)); }
+  40% { background-color: color-mix(in srgb, var(--color-primary) 32%, var(--color-surface)); }
+}
+
+@keyframes target-fade {
+  to { background-color: transparent; outline-color: transparent; }
+}
+
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes skeleton-pulse {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}

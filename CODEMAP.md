@@ -57,8 +57,8 @@ při změně upravit všech 8 souborů. Ikony navigace: `img/ikony.svg` (symboly
 ### Společné pomůcky
 | Modul | Exporty | Poznámka |
 |---|---|---|
-| `dom.js` | `el`, `svgEl`, `showOnly` | tvorba prvků (text vždy jako `textContent` – ochrana XSS) |
-| `format.js` | `formatDuration`, `plural` | české tvary („1 bod / 2 body / 5 bodů“) |
+| `dom.js` | `el`, `svgEl`, `showOnly`, `replayAnimation`, `loadingPlaceholder` | tvorba prvků (text vždy jako `textContent` – ochrana XSS); znovuspuštění CSS animace; skeleton při načítání |
+| `format.js` | `formatDuration`, `plural`, `secondsUntilNextDay`, `formatCountdown` | české tvary („1 bod / 2 body / 5 bodů“); odpočet do půlnoci českého času (denní výzva) |
 | `categories.js` | `CATEGORIES`, `categoryName`, `DIFFICULTIES`, `difficultyName`, `categoryRulesUrl`, `ruleUrl` | kategorie otázek; odkazy do pravidel (`#podani`, `#p-12-4-3`) |
 | `badges.js` | `BADGE_GROUPS`, `BADGES`, `badgeById` | názvy/ikony odznaků (podmínky jsou v SQL) |
 | `config.js` | `SUPABASE_URL`, `SUPABASE_KEY` | jen veřejná URL + publishable klíč |
@@ -72,7 +72,7 @@ při změně upravit všech 8 souborů. Ikony navigace: `img/ikony.svg` (symboly
 | `quiz.js` | `dom`, `categories`, `format`, `badges`, `media`, `celebrate`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu i kvízu gest |
 | `media.js` | `dom`, `animation` | `renderMedia` – obrázek / video / animace u otázky |
-| `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek` |
+| `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek`; medaile pro 1.–3. místo |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
 | `stats.js` | `dom`, `format`, `categories`, `badges`, `supabase` | `loadStats` – statistiky a odznaky v Profilu |
 
@@ -128,7 +128,9 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 ### CSS (`css/style.css`, jeden soubor, sekce podle komentářů)
 Barvy a rozměry (proměnné, tmavý režim) · Základ · Hlavička a navigace (dolní lišta na mobilu) · Patička ·
 Komponenty · Formuláře · Kvíz · Animace · Gesta · Výsledek · Záložky · Denní výzva · Žebříček · Statistiky ·
-Odznaky · Pravidla · Diagramy (SVG, třídy `dg-*`) · Větší obrazovky · Úvodní stránka.
+Odznaky · Pravidla · Diagramy (SVG, třídy `dg-*`) · Větší obrazovky · Úvodní stránka · Detaily (medaile, skeleton) ·
+Animace stránek a detailů (přechody mezi stránkami, příjezd otázky, žebříček, pravidla, úvod – vše jen bez „omezeného pohybu“).
+Animace menu jsou v sekci „Animace navigace“ hned za navigací.
 
 ### Service worker (`sw.js`)
 `APP_SHELL` = seznam všech souborů webu (offline). Vlastní soubory: síť napřed (`no-cache`), bez sítě mezipaměť;

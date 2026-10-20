@@ -41,9 +41,16 @@ function renderBadgeIcons(ids) {
     }))];
 }
 
-function renderRow(row, withDate) {
-  return el('tr', { class: row.je_moje ? 'is-me' : null },
-    el('td', { class: 'num' }, `${row.poradi}.`),
+/** Pořadí: první tři místa jako medaile (zlato, stříbro, bronz), ostatní číslem. */
+function renderRank(rank) {
+  if (rank > 3) return `${rank}.`;
+  return el('span', { class: `medal medal--${rank}` }, String(rank));
+}
+
+/** index = pořadí řádku v tabulce – řádky se „naskládají“ postupně (CSS proměnná --i). */
+function renderRow(row, withDate, index) {
+  return el('tr', { class: row.je_moje ? 'is-me' : null, style: `--i: ${index}` },
+    el('td', { class: 'num' }, renderRank(row.poradi)),
     el('th', { scope: 'row' },
       row.prezdivka,
       renderBadgeIcons(row.odznaky),
@@ -64,7 +71,7 @@ async function loadBoard(board) {
     board.status.textContent = board.empty;
     return;
   }
-  board.table.querySelector('tbody').replaceChildren(...data.map(row => renderRow(row, board.withDate)));
+  board.table.querySelector('tbody').replaceChildren(...data.map((row, i) => renderRow(row, board.withDate, i)));
   board.status.hidden = true;
   board.table.hidden = false;
 }

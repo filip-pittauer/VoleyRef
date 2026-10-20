@@ -36,10 +36,11 @@
     <section class="hero">
       <!-- čáry hřiště v pozadí (jen ozdoba) -->
       <svg class="hero__court" viewBox="0 0 200 110" aria-hidden="true" fill="none" stroke="#fff">
-        <rect x="5" y="5" width="190" height="100" stroke-width="2.5"/>
-        <line x1="100" y1="0" x2="100" y2="110" stroke-width="4"/>
-        <line x1="68" y1="5" x2="68" y2="105" stroke-width="1.5"/>
-        <line x1="132" y1="5" x2="132" y2="105" stroke-width="1.5"/>
+        <!-- pathLength="1": délka každé čáry = 1, animace „nakreslení“ je pak stejná pro všechny -->
+        <rect x="5" y="5" width="190" height="100" stroke-width="2.5" pathLength="1"/>
+        <line x1="100" y1="0" x2="100" y2="110" stroke-width="4" pathLength="1"/>
+        <line x1="68" y1="5" x2="68" y2="105" stroke-width="1.5" pathLength="1"/>
+        <line x1="132" y1="5" x2="132" y2="105" stroke-width="1.5" pathLength="1"/>
       </svg>
       <div class="hero__inner">
         <p class="hero__eyebrow">Trénink volejbalových rozhodčích</p>

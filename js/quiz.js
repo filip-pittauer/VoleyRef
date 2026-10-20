@@ -1,7 +1,7 @@
 // Ovládání stránky kvízu: start → otázky → výsledek.
-import { el, showOnly } from './dom.js';
+import { el, showOnly, replayAnimation } from './dom.js';
 import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl, ruleUrl } from './categories.js';
-import { formatDuration, plural } from './format.js';
+import { formatDuration, plural, secondsUntilNextDay, formatCountdown } from './format.js';
 import { badgeById } from './badges.js';
 import { renderMedia } from './media.js';
 import { createScore, celebrate } from './celebrate.js';
@@ -100,6 +100,25 @@ function streakText(serie) {
   return `🔥 Série: ${plural(serie.aktualni, 'den', 'dny', 'dní')} v řadě`;
 }
 
+let countdownTimer = null;
+
+/** Odpočet do nové denní výzvy (o půlnoci českého času), obnovuje se každých 20 s. */
+function renderCountdown() {
+  const line = el('span', { class: 'countdown' });
+  const update = () => {
+    const seconds = secondsUntilNextDay();
+    line.textContent = `Další výzva za ${formatCountdown(seconds)}.`;
+    if (seconds < 30) {
+      clearInterval(countdownTimer);
+      setTimeout(renderDaily, seconds * 1000 + 2000);   // po půlnoci načíst novou výzvu
+    }
+  };
+  clearInterval(countdownTimer);
+  countdownTimer = setInterval(update, 20000);
+  update();
+  return line;
+}
+
 async function renderDaily() {
   let status;
   try {
@@ -128,7 +147,7 @@ async function renderDaily() {
     lines.push(`Dnes: ${status.skore}/${status.pocet} za ${formatDuration(status.trvani_s)}`
       + (status.poradi ? ` · ${status.poradi}. místo z ${status.hracu}.` : ' · do žebříčku se nezapočítalo (moc rychlé).'));
     if (streakText(status.serie)) lines.push(streakText(status.serie));
-    lines.push('Další výzva bude zítra.');
+    lines.push(renderCountdown());
   }
   dailyText.replaceChildren(...lines.filter(Boolean).flatMap((line, i) => (i ? [el('br'), line] : [line])));
 }
@@ -228,6 +247,9 @@ function renderQuestion() {
   );
 
   nextButton.textContent = number === total ? 'Vyhodnotit' : 'Další otázka';
+
+  // nová otázka „přijede“ zprava (CSS třída .q-enter)
+  for (const part of [questionText, questionMedia, questionForm]) replayAnimation(part, 'q-enter');
 
   // Fokus na nadpis otázky – čtečka obrazovky přečte novou otázku
   // a uživatel klávesnice nezačíná znovu od začátku stránky.

@@ -5,7 +5,12 @@
 /** Rozbalí všechna <details>, ve kterých prvek leží (podobně jako rozbalení uzlů stromu k vybranému uzlu). */
 export function reveal(element) {
   for (let details = element.closest('details'); details; details = details.parentElement.closest('details')) {
+    // Bez plynulého rozbalení: hned potom se skáče na cíl a během animace by
+    // pravidlo ještě nemělo výslednou výšku. Platí i pro už otevřené pravidlo –
+    // Chrome ho při skoku na kotvu otevře sám a animace by právě běžela.
+    details.classList.add('rule--instant');
     details.open = true;
+    requestAnimationFrame(() => requestAnimationFrame(() => details.classList.remove('rule--instant')));
   }
 }
 
