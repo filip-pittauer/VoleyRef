@@ -5,7 +5,7 @@ Webová aplikace pro lidi, kteří se učí na volejbalové rozhodčí. Uživate
 
 Hlavní části:
 - **Kvíz:** kolo má ~10 otázek. Každá otázka ukazuje situaci jako animaci, video nebo obrázek s popisem a nabízí odpovědi A/B/C. Na konci se zobrazí skóre a vysvětlení správných odpovědí.
-- **Pravidla („knížka“):** přehled pravidel volejbalu s vlastním vysvětlením a obrázky. Oficiální text pravidel nekopírujeme celý (autorská práva, změny). Píšeme vlastní vysvětlení a odkazujeme na oficiální pravidla (ČVS/FIVB).
+- **Pravidla („knížka“):** úplná pravidla volejbalu (FIVB 2025–2028) s oficiálním číslováním a členěním, ale **vlastními slovy** – oficiální text nekopírujeme ani doslova nepřekládáme (autorská práva). Odkazujeme na oficiální pravidla (ČVS/FIVB). Diagramy jsou vlastní SVG nákresy.
 - **Přihlášení:** registrace a přihlášení hráčů.
 - **Žebříček:** nejlepší skóre přihlášených hráčů.
 - **PWA:** web půjde nainstalovat na mobil jako aplikace.
@@ -25,7 +25,10 @@ Hlavní části:
 ```
 index.html          úvodní stránka / rozcestník
 kviz.html           kvíz
-pravidla.html       knížka pravidel (kapitoly mají id = kategorie otázek)
+pravidla.html       úplná pravidla: 30 pravidel v <details class="rule"> (kotvy #pravidlo-12, body #p-12-4-3),
+                    shrnutí „Ve zkratce“ mají id = kategorie otázek (#podani…), definice #def-…, diagramy
+                    #diagram-N (inline SVG); js/rules-page.js rozbalí pravidlo, na které vede odkaz.
+                    Obsah mezi značkami PRAVIDLA/OBSAH generuje private/pravidla-zdroj/build.mjs
 zebricek.html       žebříček
 statistiky.html     jen přesměrování na Profil (staré odkazy a záložky)
 gesta.html          kvíz gest rozhodčích (jen v prohlížeči, bez DB; přístup z kviz.html a úvodu)
@@ -50,7 +53,7 @@ animace/            SVG animace situací jako JSON (formát v animace/README.md)
 gesta/              gesta rozhodčích jako data (gesta.json, formát v gesta/README.md)
 sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
 tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
-private/            NENÍ v repu: otázky se správnými odpověďmi
+private/            NENÍ v repu: otázky se správnými odpověďmi, testy (testy/), zdroj pravidel (pravidla-zdroj/)
 ```
 
 ## Formát otázky
@@ -124,6 +127,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
 - V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
 - **Vzhled „Svaz“** (dolní lišta, Profil = účet + statistiky, písmo Barlow) je od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem.
+- **Úplná pravidla** (balíček 5) jsou v lokální větvi `pravidla` – uživatel si je chce nejdřív prohlédnout lokálně, **nepushovat, dokud to neschválí**. Po sloučení do `main` musí uživatel spustit `private/seed-otazky.sql` (otázky 26 a 27 měly číslo pravidla 28.x podle staré edice → opraveno na 30.x).
 - Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
 
 ### Jak s uživatelem pracujeme
@@ -137,6 +141,14 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Seznam a popisy ověřené proti PDF FIVB 2025–2028 (Diagram 11: 26 gest, 6a/6b a 25 rozdělené na napomenutí/trest; Diagram 12: 5 signálů praporkem). Oficiální český překlad pravidel 2025–2028 jsem nenašel – názvy jsou vlastní, navazují na knížku pravidel.
 - Postava: jednoduchý 3D model (paže = inverzní kinematika, ruka s prsty a dlaní), promítnutý do SVG; kreslí se podle hloubky (ruka za zády je schovaná). Gesta jsou jen data – nové gesto = záznam v `gesta/gesta.json`.
 - Možná vylepšení podle zpětné vazby: zpomalené přehrávání, smyčka, odznaky za gesta (chtělo by ukládání na server).
+
+### Balíček 5: úplná pravidla (hotovo 20. 10. 2026, čeká na prohlédnutí ve větvi `pravidla`)
+- Všech 30 pravidel FIVB 2025–2028 včetně podbodů, vlastními slovy; české názvy kapitol a pravidel podle staršího oficiálního překladu ČVS (2009, sites.google.com/site/volejbalopava/pravidla), novinky přeložené po vzoru. Body „Soutěže FIVB“ jsou odlišené poznámkou.
+- Číslování 2025–2028 se od pravidla 25 liší od edice 2021: přibyl **25 rozhodčí pro video challenge** a **26 rezervní rozhodčí**, takže zapisovatel = 27, pomocný zapisovatel = 28, čároví = 29, znamení = 30. Hlídat u čísel pravidel v otázkách.
+- Novinky 2025 zapsané v textu: postavení jen přijímajícího družstva (7.4), zákaz zvedat ruce nad hlavu při podání (12.5.3), prodloužený kontakt nad sítí (9.1.2.3), blok „bez ohledu na výšku doteku“ (14.1.1), nové sankce (urážlivé chování = rovnou vyloučení, agrese = diskvalifikace, vyloučený jde do šatny).
+- Zdroj: `private/pravidla-zdroj/src/*.txt` (jednoduchý řádkový formát popsaný v hlavičce build.mjs), `diagramy/*.html`; `node private/pravidla-zdroj/build.mjs pravidla.html` přepíše obsah mezi značkami a zkontroluje, že všechny odkazy [[12.4.3]] mají cíl. Drobné opravy jdou dělat i přímo v HTML (pak ale zdroj zastará).
+- Výsledky kvízu odkazují číslem pravidla přímo na bod (`ruleUrl` v js/categories.js).
+- Testy: `e2e-pravidla.mjs` (kotvy do sbalených pravidel, staré odkazy kategorií, atlas gest, rozbalit/sbalit vše), `pravidla-diagramy.mjs` (snímky diagramů).
 
 ### Odložené / nápady
 - **Trenažér postavení** (uživatel ho chce, ale později; bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. Přístup z kviz.html (karta) a z úvodu; navigace se nerozšiřuje.

@@ -27,7 +27,12 @@ export function difficultyName(level) {
   return DIFFICULTIES[level] ?? '';
 }
 
-/** Odkaz na kapitolu v knížce pravidel. */
+/** Odkaz na kapitolu v knížce pravidel (shrnutí „Ve zkratce“). */
 export function categoryRulesUrl(id) {
   return `pravidla.html#${id}`;
+}
+
+/** Odkaz na konkrétní bod pravidel: „12.4.3“ → pravidla.html#p-12-4-3, „15“ → #pravidlo-15. */
+export function ruleUrl(number) {
+  return `pravidla.html#${number.includes('.') ? `p-${number.replaceAll('.', '-')}` : `pravidlo-${number}`}`;
 }

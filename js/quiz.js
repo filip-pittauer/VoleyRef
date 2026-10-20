@@ -1,6 +1,6 @@
 // Ovládání stránky kvízu: start → otázky → výsledek.
 import { el, showOnly } from './dom.js';
-import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl } from './categories.js';
+import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl, ruleUrl } from './categories.js';
 import { formatDuration, plural } from './format.js';
 import { badgeById } from './badges.js';
 import { renderMedia } from './media.js';
@@ -272,7 +272,7 @@ function renderResultItem(question, result) {
     result.isCorrect ? null : answerLine('Správná odpověď', question, result.correctAnswer),
     result.explanation ? el('p', { class: 'result__explanation' }, result.explanation) : null,
     el('p', { class: 'result__rule' },
-      question.pravidlo ? `Pravidlo ${question.pravidlo} · ` : '',
+      question.pravidlo ? [el('a', { href: ruleUrl(question.pravidlo) }, `Pravidlo ${question.pravidlo}`), ' · '] : '',
       el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))));
 }
 

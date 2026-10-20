@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Pravidla volejbalu vysvětlená pro začínající rozhodčí.">
+  <meta name="description" content="Úplná pravidla halového volejbalu 2025–2028 vlastními slovy, s oficiálním číslováním, diagramy a animacemi gest.">
   <title>Pravidla – Volejbal: trénink rozhodčích</title>
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
@@ -13,6 +13,7 @@
   <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
   <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/rules-page.js"></script>
   <script type="module" src="js/gesture-atlas.js"></script>
 </head>
 <body>
@@ -35,221 +36,1570 @@
 
   <main id="obsah" class="rules">
     <h1>Pravidla</h1>
-    <p>Pravidla halového volejbalu vysvětlená vlastními slovy pro začínající rozhodčí. Nejde o úplné ani závazné znění.
-      U každé části je číslo pravidla, podle kterého najdeš přesný text v oficiálních pravidlech
-      <a href="https://www.cvf.cz/" rel="noopener">ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
-      Vycházíme z pravidel FIVB 2025–2028.</p>
+    <p class="rules-intro">Úplná pravidla halového volejbalu podle oficiálních pravidel FIVB 2025–2028, napsaná <strong>vlastními slovy</strong>.
+      Číslování a členění odpovídá oficiálnímu znění, takže přesný text každého bodu dohledáš v pravidlech
+      <a href="https://www.cvf.cz/" rel="noopener">ČVS</a> a <a href="https://www.fivb.com/volleyball/the-game/official-volleyball-rules/" rel="noopener">FIVB</a>.
+      Závazné je jen oficiální znění. U vybraných pravidel najdeš shrnutí <em>Ve zkratce</em>.</p>
+    <p class="rules-intro small muted">Části označené <span class="fivb-note__label">Soutěže FIVB</span> platí jen pro mezinárodní soutěže FIVB; v českých soutěžích se řiď soutěžním řádem ČVS.</p>
 
     <nav class="toc card" aria-labelledby="toc-heading">
       <h2 id="toc-heading">Obsah</h2>
-      <ol>
-        <li><a href="#hriste">Hřiště, síť a míč</a></li>
-        <li><a href="#body">Body, sety a utkání</a></li>
-        <li><a href="#podani">Podání</a></li>
-        <li><a href="#prijem-nahravka">Příjem a nahrávka</a></li>
-        <li><a href="#utok">Útok</a></li>
-        <li><a href="#blok">Blok</a></li>
-        <li><a href="#dotyky-chyby">Dotyky, síť a chyby ve hře</a></li>
-        <li><a href="#rotace-postaveni">Rotace a postavení</a></li>
-        <li><a href="#stridani">Střídání a libero</a></li>
-        <li><a href="#preruseni-hry">Přerušení a zdržování hry</a></li>
-        <li><a href="#chovani">Chování a tresty</a></li>
-        <li><a href="#signalizace">Signalizace rozhodčích</a></li>
+      <ol class="toc__list">
+        <!-- OBSAH:START -->
+        <li class="toc__part">Oddíl 1 · Hra</li>
+        <li><a href="#kapitola-1">Kapitola 1: Zařízení a vybavení</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-1"><span class="rule__num">1</span> Hrací plocha</a></li>
+        <li><a href="#pravidlo-2"><span class="rule__num">2</span> Síť a sloupky</a></li>
+        <li><a href="#pravidlo-3"><span class="rule__num">3</span> Míče</a></li>
+        </ol>
+        </li>
+        <li><a href="#kapitola-2">Kapitola 2: Účastníci</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-4"><span class="rule__num">4</span> Družstva</a></li>
+        <li><a href="#pravidlo-5"><span class="rule__num">5</span> Vedení družstva</a></li>
+        </ol>
+        </li>
+        <li><a href="#kapitola-3">Kapitola 3: Uspořádání hry</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-6"><span class="rule__num">6</span> Zisk bodu, vítězství v setu a v utkání</a></li>
+        <li><a href="#pravidlo-7"><span class="rule__num">7</span> Struktura hry</a></li>
+        </ol>
+        </li>
+        <li><a href="#kapitola-4">Kapitola 4: Činnosti ve hře</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-8"><span class="rule__num">8</span> Situace ve hře</a></li>
+        <li><a href="#pravidlo-9"><span class="rule__num">9</span> Hra míčem</a></li>
+        <li><a href="#pravidlo-10"><span class="rule__num">10</span> Míč na síti</a></li>
+        <li><a href="#pravidlo-11"><span class="rule__num">11</span> Hráč u sítě</a></li>
+        <li><a href="#pravidlo-12"><span class="rule__num">12</span> Podání</a></li>
+        <li><a href="#pravidlo-13"><span class="rule__num">13</span> Útočný úder</a></li>
+        <li><a href="#pravidlo-14"><span class="rule__num">14</span> Blok</a></li>
+        </ol>
+        </li>
+        <li><a href="#kapitola-5">Kapitola 5: Přerušení, přestávky a zdržování</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-15"><span class="rule__num">15</span> Řádná přerušení hry</a></li>
+        <li><a href="#pravidlo-16"><span class="rule__num">16</span> Zdržování hry</a></li>
+        <li><a href="#pravidlo-17"><span class="rule__num">17</span> Výjimečná přerušení hry</a></li>
+        <li><a href="#pravidlo-18"><span class="rule__num">18</span> Přestávky a výměna polí</a></li>
+        </ol>
+        </li>
+        <li><a href="#kapitola-6">Kapitola 6: Hráč libero</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-19"><span class="rule__num">19</span> Hráč libero</a></li>
+        </ol>
+        </li>
+        <li><a href="#kapitola-7">Kapitola 7: Chování účastníků</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-20"><span class="rule__num">20</span> Požadavky na chování</a></li>
+        <li><a href="#pravidlo-21"><span class="rule__num">21</span> Nevhodné chování a sankce</a></li>
+        </ol>
+        </li>
+        <li class="toc__part">Oddíl 2 · Rozhodčí, jejich povinnosti a oficiální znamení</li>
+        <li><a href="#kapitola-8">Kapitola 8: Rozhodčí</a>
+        <ol class="toc__rules">
+        <li><a href="#pravidlo-22"><span class="rule__num">22</span> Rozhodčí sbor a postupy</a></li>
+        <li><a href="#pravidlo-23"><span class="rule__num">23</span> První rozhodčí</a></li>
+        <li><a href="#pravidlo-24"><span class="rule__num">24</span> Druhý rozhodčí</a></li>
+        <li><a href="#pravidlo-25"><span class="rule__num">25</span> Rozhodčí pro video challenge</a></li>
+        <li><a href="#pravidlo-26"><span class="rule__num">26</span> Rezervní rozhodčí</a></li>
+        <li><a href="#pravidlo-27"><span class="rule__num">27</span> Zapisovatel</a></li>
+        <li><a href="#pravidlo-28"><span class="rule__num">28</span> Pomocný zapisovatel</a></li>
+        <li><a href="#pravidlo-29"><span class="rule__num">29</span> Čároví rozhodčí</a></li>
+        <li><a href="#pravidlo-30"><span class="rule__num">30</span> Oficiální znamení</a></li>
+        </ol>
+        </li>
+        <li class="toc__part">Část 3 · Definice a diagramy</li>
+        <li><a href="#definice">Definice pojmů</a>
+        </li>
+        <li><a href="#diagramy">Přehled diagramů</a>
+        </li>
+        <!-- OBSAH:END -->
       </ol>
     </nav>
 
-    <!-- ===================================================== -->
-    <section id="hriste" class="rules-section">
-      <h2>Hřiště, síť a míč</h2>
-      <p class="rule-ref">Pravidla 1–3</p>
+    <div class="rules-tools" hidden>
+      <button class="button button--secondary" type="button" data-rules-toggle="open">Rozbalit vše</button>
+      <button class="button button--secondary" type="button" data-rules-toggle="close">Sbalit vše</button>
+    </div>
 
-      <figure class="court-figure">
-        <svg viewBox="0 0 220 120" role="img" aria-labelledby="court-title court-desc">
-          <title id="court-title">Hřiště při pohledu shora</title>
-          <desc id="court-desc">Hřiště 18 × 9 metrů rozdělené sítí na dvě poloviny. V každé polovině je 3 metry od sítě útočná čára, která odděluje přední a zadní zónu. Na levé polovině jsou čísla pozic: vpředu 4, 3, 2, vzadu 5, 6, 1.</desc>
-          <rect class="court-free" x="0" y="0" width="220" height="120" rx="6" />
-          <rect class="court-floor" x="20" y="15" width="180" height="90" />
-          <line class="court-attack" x1="80" y1="15" x2="80" y2="105" />
-          <line class="court-attack" x1="140" y1="15" x2="140" y2="105" />
-          <line class="court-net" x1="110" y1="8" x2="110" y2="112" />
-          <g class="court-label">
-            <text x="95" y="33">4</text>
-            <text x="95" y="63">3</text>
-            <text x="95" y="93">2</text>
-            <text x="50" y="33">5</text>
-            <text x="50" y="63">6</text>
-            <text x="50" y="93">1</text>
-            <text class="court-small" x="80" y="113">útočná čára</text>
-            <text class="court-small" x="110" y="6">síť</text>
-          </g>
-        </svg>
-        <figcaption>Hřiště shora. Čísla ukazují pozice hráčů jednoho týmu (podává hráč na pozici 1).</figcaption>
-      </figure>
+    <!-- Šipka pro diagramy (sdílená, odkazují na ni přes url(#dg-arrow)) -->
+    <svg class="visually-hidden" width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <marker id="dg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path class="dg-arrowhead" d="M0 0L10 5L0 10z" />
+        </marker>
+      </defs>
+    </svg>
 
+    <!-- Obsah mezi značkami vytváří generátor ze zdrojových textů – při úpravách ručně
+         drž stejnou strukturu (details.rule, id="p-12-4-3" u bodů pravidel). -->
+    <!-- PRAVIDLA:START -->
+    <p class="rules-part">Oddíl 1 · Hra</p>
+    <section class="rules-chapter" id="kapitola-1" aria-labelledby="kapitola-1-nadpis">
+    <h2 id="kapitola-1-nadpis"><span class="rules-chapter__label">Kapitola 1</span> Zařízení a vybavení</h2>
+    <details class="rule" id="pravidlo-1">
+    <summary><h3><span class="rule__num">1</span> Hrací plocha</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="hriste" aria-label="Ve zkratce: hřiště, síť a míč">
+      <p class="rule-brief__label">Ve zkratce · pravidla 1–3</p>
       <ul>
         <li><strong>Hřiště</strong> měří 18 × 9 m a kolem něj je volná zóna (alespoň 3 m).</li>
         <li><strong>Čáry patří k hřišti.</strong> Míč, který dopadne na čáru, je v poli.</li>
-        <li><strong>Útočná čára</strong> je 3 m od středové čáry. Odděluje přední zónu (u sítě) a zadní zónu.</li>
+        <li><strong>Útočná čára</strong> je 3 m od osy střední čáry. Odděluje přední zónu (u sítě) a zadní část pole.</li>
         <li><strong>Výška sítě</strong> je pro muže 2,43 m a pro ženy 2,24 m. U mládeže je síť nižší podle soutěžního řádu.</li>
-        <li><strong>Antény</strong> jsou na síti nad postranními čarami. Ohraničují prostor, kterým musí míč přejít na druhou stranu.</li>
+        <li><strong>Anténky</strong> jsou na síti nad postranními čarami. Ohraničují prostor, kterým musí míč přejít na druhou stranu.</li>
       </ul>
+    </aside>
+    <p>Hrací plocha je hřiště spolu s volnou zónou kolem něj. Musí mít tvar obdélníku a být souměrná.</p>
+    <figure class="diagram" id="diagram-2">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 260 182" role="img" aria-labelledby="dg2-title dg2-desc">
+          <title id="dg2-title">Hřiště a zóny při pohledu shora</title>
+          <desc id="dg2-desc">Hřiště 18 × 9 metrů se sítí uprostřed a volnou zónou kolem. Útočné čáry jsou 3 metry od sítě a ohraničují přední zóny. Za koncovými čarami jsou zóny podání. Na straně lavic je mezi prodlouženými útočnými čarami zóna střídání a mezi útočnou a koncovou čarou zóny výměny libera. Pod volnou zónou jsou lavice družstev a stolek zapisovatele.</desc>
+          <rect class="dg-free" x="10" y="10" width="240" height="150" rx="3" />
+          <rect class="dg-floor" x="40" y="40" width="180" height="90" />
+          <!-- zóny podání, střídání a výměny libera -->
+          <rect class="dg-zone" x="10" y="40" width="30" height="90" />
+          <rect class="dg-zone" x="220" y="40" width="30" height="90" />
+          <rect class="dg-zone" x="100" y="130" width="60" height="30" />
+          <rect class="dg-zone dg-zone--alt" x="40" y="130" width="60" height="30" />
+          <rect class="dg-zone dg-zone--alt" x="160" y="130" width="60" height="30" />
+          <!-- čáry hřiště -->
+          <rect class="dg-line" x="40" y="40" width="180" height="90" />
+          <line class="dg-line" x1="100" y1="40" x2="100" y2="130" />
+          <line class="dg-line" x1="160" y1="40" x2="160" y2="130" />
+          <line class="dg-line dg-line--dash" x1="100" y1="22.5" x2="100" y2="40" />
+          <line class="dg-line dg-line--dash" x1="160" y1="22.5" x2="160" y2="40" />
+          <line class="dg-line dg-line--dash" x1="100" y1="130" x2="100" y2="147.5" />
+          <line class="dg-line dg-line--dash" x1="160" y1="130" x2="160" y2="147.5" />
+          <!-- síť a sloupky -->
+          <line class="dg-net" x1="130" y1="30" x2="130" y2="140" />
+          <circle class="dg-post" cx="130" cy="30" r="2" />
+          <circle class="dg-post" cx="130" cy="140" r="2" />
+          <g class="dg-text">
+            <text x="130" y="24">síť</text>
+            <text x="52" y="25">volná zóna (min. 3 m)</text>
+            <text x="246" y="18" class="dg-small" text-anchor="end">hřiště 18 × 9 m</text>
+            <text x="163" y="27" class="dg-small" text-anchor="start">trenérská čára (1,75 m)</text>
+            <text x="70" y="85">zadní zóna</text>
+            <text x="190" y="85">zadní zóna</text>
+            <text x="115" y="85" transform="rotate(-90 115 85)">přední zóna</text>
+            <text x="145" y="85" transform="rotate(90 145 85)">přední zóna</text>
+            <text x="115" y="124" class="dg-small">3 m</text>
+            <text x="145" y="124" class="dg-small">3 m</text>
+            <text x="25" y="85" transform="rotate(-90 25 85)">zóna podání</text>
+            <text x="235" y="85" transform="rotate(90 235 85)">zóna podání</text>
+            <text x="130" y="145" class="dg-small">zóna</text>
+            <text x="130" y="152" class="dg-small">střídání</text>
+            <text x="70" y="145" class="dg-small">zóna výměny</text>
+            <text x="70" y="152" class="dg-small">libera</text>
+            <text x="190" y="145" class="dg-small">zóna výměny</text>
+            <text x="190" y="152" class="dg-small">libera</text>
+          </g>
+          <!-- lavice a stolek zapisovatele mimo volnou zónu -->
+          <rect class="dg-furniture" x="52" y="166" width="36" height="9" rx="1.5" />
+          <rect class="dg-furniture" x="172" y="166" width="36" height="9" rx="1.5" />
+          <rect class="dg-furniture" x="110" y="166" width="40" height="13" rx="1.5" />
+          <g class="dg-note">
+            <text x="70" y="172.5">lavice</text>
+            <text x="190" y="172.5">lavice</text>
+            <text x="130" y="174.5">zapisovatel</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 2</span> Hřiště a zóny podle diagramů 1b a 2 FIVB. Čárkovaně je prodloužení útočné čáry (trenérská čára). Čáry patří k hřišti.</figcaption>
+    </figure>
+    <h4 class="sub-heading" id="p-1-1"><a class="sub__num" href="#p-1-1">1.1</a> Rozměry</h4>
+    <p>Hřiště je obdélník 18 × 9 m. Kolem něj je na všech stranách volná zóna široká nejméně 3 m.</p>
+    <p>Nad hrací plochou musí být volný hrací prostor bez jakýchkoli překážek, vysoký nejméně 7 m od podlahy.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Volná zóna má od postranních čar 5 m a od koncových čar 6,5 m, volný hrací prostor je vysoký nejméně 12,5 m.</p>
+    <h4 class="sub-heading" id="p-1-2"><a class="sub__num" href="#p-1-2">1.2</a> Povrch hrací plochy</h4>
+    <p class="sub sub--d3" id="p-1-2-1"><a class="sub__num" href="#p-1-2-1">1.2.1</a> Povrch musí být rovný, vodorovný a stejnorodý a nesmí hráče ohrožovat zraněním. Na drsném nebo kluzkém povrchu se hrát nesmí.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Povolený je jen dřevěný nebo syntetický povrch, který FIVB předem schválí.</p>
+    <p class="sub sub--d3" id="p-1-2-2"><a class="sub__num" href="#p-1-2-2">1.2.2</a> V hale musí být povrch hřiště světlý.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Čáry jsou bílé. Hřiště a volná zóna mají každé jinou barvu (odlišnou od sebe navzájem); přední zóna a zbytek pole mohou být barevně odlišené.</p>
+    <p class="sub sub--d3" id="p-1-2-3"><a class="sub__num" href="#p-1-2-3">1.2.3</a> Venku smí mít hřiště kvůli odtoku vody sklon nejvýše 5 mm na metr. Čáry z pevného materiálu (lišty apod.) jsou zakázané.</p>
+    <h4 class="sub-heading" id="p-1-3"><a class="sub__num" href="#p-1-3">1.3</a> Čáry na hřišti</h4>
+    <p class="sub sub--d3" id="p-1-3-1"><a class="sub__num" href="#p-1-3-1">1.3.1</a> Všechny čáry jsou široké 5 cm. Musí být světlé a barvou se lišit od podlahy i od jiných čar, které na podlaze jsou.</p>
+    <p class="sub sub--d3" id="p-1-3-2"><a class="sub__num" href="#p-1-3-2">1.3.2</a> <strong>Čáry vymezující hřiště.</strong> Hřiště ohraničují dvě postranní a dvě koncové čáry. Jsou nakreslené <strong>uvnitř</strong> rozměru 18 × 9 m, takže čára je součástí hřiště.</p>
+    <p class="sub sub--d3" id="p-1-3-3"><a class="sub__num" href="#p-1-3-3">1.3.3</a> <strong>Střední čára.</strong> Osa střední čáry dělí hřiště na dvě poloviny 9 × 9 m. Celá šířka čáry ale patří oběma polovinám stejně. Čára vede pod sítí od jedné postranní čáry ke druhé.</p>
+    <p class="sub sub--d3" id="p-1-3-4"><a class="sub__num" href="#p-1-3-4">1.3.4</a> <strong>Útočná čára.</strong> V každé polovině vymezuje přední zónu útočná čára. Její zadní okraj je 3 m od osy střední čáry.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Útočná čára se za postranními čarami prodlužuje přerušovanou čárou (trenérská čára): pět úseků 15 × 5 cm s mezerami 20 cm, celkem 1,75 m.</p>
+    <h4 class="sub-heading" id="p-1-4"><a class="sub__num" href="#p-1-4">1.4</a> Zóny a prostory</h4>
+    <p class="sub sub--d3" id="p-1-4-1"><a class="sub__num" href="#p-1-4-1">1.4.1</a> <strong>Přední zóna.</strong> Přední zóna je v každé polovině mezi osou střední čáry a zadním okrajem útočné čáry. Za postranními čarami pokračuje až na konec volné zóny.</p>
+    <p class="sub sub--d3" id="p-1-4-2"><a class="sub__num" href="#p-1-4-2">1.4.2</a> <strong>Zóna podání.</strong> Zóna podání je pás široký 9 m za každou koncovou čarou. Do stran ji vymezují dvě krátké čárky (15 cm), nakreslené 20 cm za koncovou čarou v prodloužení postranních čar; obě čárky do zóny patří. Do hloubky sahá až na konec volné zóny.</p>
+    <p class="sub sub--d3" id="p-1-4-3"><a class="sub__num" href="#p-1-4-3">1.4.3</a> <strong>Zóna střídání.</strong> Zóna střídání leží mezi prodlouženými útočnými čarami až ke stolku zapisovatele.</p>
+    <p class="sub sub--d3" id="p-1-4-4"><a class="sub__num" href="#p-1-4-4">1.4.4</a> <strong>Zóna výměny libera.</strong> Část volné zóny na straně lavic družstev mezi prodloužením útočné čáry a koncovou čarou. Tady se libero vyměňuje s hráči v poli (<a href="#p-19-3-2-7">19.3.2.7</a>).</p>
+    <p class="sub sub--d3" id="p-1-4-5"><a class="sub__num" href="#p-1-4-5">1.4.5</a> <strong>Prostor pro rozcvičení.</strong> Hráči mimo hru se rozcvičují v prostoru pro rozcvičení (<a href="#p-4-2-3">4.2.3</a>).</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Prostory pro rozcvičení mají asi 3 × 3 m a jsou v rozích u lavic mimo volnou zónu (nebo za lavicí, pokud tribuna začíná výš než 2,5 m).</p>
+    <h4 class="sub-heading" id="p-1-5"><a class="sub__num" href="#p-1-5">1.5</a> Teplota</h4>
+    <p>Nejnižší přípustná teplota je 10 °C.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Nejvyšší teplotu určuje technický delegát FIVB.</p>
+    <h4 class="sub-heading" id="p-1-6"><a class="sub__num" href="#p-1-6">1.6</a> Osvětlení</h4>
+    <p>Osvětlení hrací plochy má být nejméně 300 luxů.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Nejméně 2000 luxů, měřeno 1 m nad podlahou.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-2">
+    <summary><h3><span class="rule__num">2</span> Síť a sloupky</h3></summary>
+    <div class="rule__body">
+    <figure class="diagram" id="diagram-3">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 280 112" role="img" aria-labelledby="dg3-title dg3-desc">
+          <title id="dg3-title">Síť z boku</title>
+          <desc id="dg3-desc">Síť je natažená mezi dvěma sloupky vysokými 2,55 metru, které stojí 0,5 až 1 metr za postranními čarami. Horní okraj sítě je 2,43 metru nad podlahou pro muže a 2,24 metru pro ženy. Síť je široká 1 metr a dlouhá 9,5 až 10 metrů. Nad postranními čarami jsou postranní pásky a na nich anténky, které přečnívají 80 centimetrů nad síť a jsou pruhované červeně a bíle.</desc>
+          <defs>
+            <pattern id="dg3-mesh" width="5" height="5" patternUnits="userSpaceOnUse">
+              <path d="M5 0H0V5" class="dg-mesh" />
+            </pattern>
+          </defs>
+          <!-- podlaha a postranní čáry -->
+          <line class="dg-ground" x1="5" y1="95" x2="275" y2="95" />
+          <rect class="dg-sideline" x="49" y="94" width="2" height="3" />
+          <rect class="dg-sideline" x="229" y="94" width="2" height="3" />
+          <!-- sloupky (2,55 m) -->
+          <rect class="dg-pole" x="28" y="44" width="3" height="51" />
+          <rect class="dg-pole" x="249" y="44" width="3" height="51" />
+          <!-- síť: horní okraj 2,43 m (y = 95 − 48,6), šířka 1 m -->
+          <rect x="45" y="46.4" width="190" height="20" fill="url(#dg3-mesh)" />
+          <line class="dg-cord" x1="31" y1="47" x2="45" y2="47" />
+          <line class="dg-cord" x1="31" y1="66" x2="45" y2="66" />
+          <line class="dg-cord" x1="235" y1="47" x2="249" y2="47" />
+          <line class="dg-cord" x1="235" y1="66" x2="249" y2="66" />
+          <rect class="dg-band" x="45" y="45.4" width="190" height="2.4" />
+          <rect class="dg-band" x="45" y="65.6" width="190" height="1.6" />
+          <rect class="dg-band" x="49" y="46.4" width="2" height="20" />
+          <rect class="dg-band" x="229" y="46.4" width="2" height="20" />
+          <!-- anténky: 1,8 m, 80 cm nad sítí -->
+          <line class="dg-antenna" x1="48.5" y1="66.4" x2="48.5" y2="30.4" />
+          <line class="dg-antenna dg-antenna--stripes" x1="48.5" y1="46.4" x2="48.5" y2="30.4" />
+          <line class="dg-antenna" x1="231.5" y1="66.4" x2="231.5" y2="30.4" />
+          <line class="dg-antenna dg-antenna--stripes" x1="231.5" y1="46.4" x2="231.5" y2="30.4" />
+          <!-- kóty -->
+          <g class="dg-dim">
+            <line x1="140" y1="47.8" x2="140" y2="95" marker-start="url(#dg-arrow)" marker-end="url(#dg-arrow)" />
+            <line x1="50" y1="103" x2="230" y2="103" marker-start="url(#dg-arrow)" marker-end="url(#dg-arrow)" />
+            <line x1="20" y1="44" x2="20" y2="95" marker-start="url(#dg-arrow)" marker-end="url(#dg-arrow)" />
+            <line x1="242" y1="46.4" x2="242" y2="66.4" marker-start="url(#dg-arrow)" marker-end="url(#dg-arrow)" />
+            <line x1="61" y1="30.4" x2="61" y2="46.4" marker-start="url(#dg-arrow)" marker-end="url(#dg-arrow)" />
+          </g>
+          <g class="dg-note">
+            <text x="143" y="76" text-anchor="start">2,43 m muži</text>
+            <text x="143" y="84" text-anchor="start">2,24 m ženy</text>
+            <text x="140" y="110">9 m mezi postranními čarami (síť 9,5–10 m)</text>
+            <text x="17" y="70" transform="rotate(-90 17 70)">sloupek 2,55 m</text>
+            <text x="246" y="58" text-anchor="start" class="dg-small">1 m</text>
+            <text x="64" y="40" text-anchor="start" class="dg-small">80 cm</text>
+            <text x="48.5" y="26">anténka</text>
+            <text x="231.5" y="26">anténka</text>
+            <text x="140" y="41">horní páska (7 cm)</text>
+            <text x="80" y="76" class="dg-small">postranní páska</text>
+            <text x="80" y="83" class="dg-small">nad postranní čarou</text>
+            <text x="36" y="102" class="dg-small">0,5–1 m</text>
+          </g>
+          <line class="dg-pointer" x1="62" y1="73" x2="52" y2="62" />
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 3</span> Síť podle diagramu 3 FIVB. Postranní pásky i anténky jsou součástí sítě.</figcaption>
+    </figure>
+    <h4 class="sub-heading" id="p-2-1"><a class="sub__num" href="#p-2-1">2.1</a> Výška sítě</h4>
+    <p class="sub sub--d3" id="p-2-1-1"><a class="sub__num" href="#p-2-1-1">2.1.1</a> Síť je natažená svisle nad střední čárou. Horní okraj je pro muže ve výšce <strong>2,43 m</strong> a pro ženy <strong>2,24 m</strong>.</p>
+    <p class="sub sub--d3" id="p-2-1-2"><a class="sub__num" href="#p-2-1-2">2.1.2</a> Výška se měří uprostřed hřiště. Nad oběma postranními čarami musí být výška sítě stejná a nesmí přesáhnout oficiální výšku o víc než 2 cm.</p>
+    <ul class="rule-list">
+    <li>U mládeže a v nižších soutěžích určuje výšku sítě soutěžní řád (ČVS).</li>
+    </ul>
+    <h4 class="sub-heading" id="p-2-2"><a class="sub__num" href="#p-2-2">2.2</a> Struktura</h4>
+    <p>Síť je široká 1 m (± 3 cm) a dlouhá 9,5–10 m (za každou postranní páskou přesahuje o 25–50 cm). Je z černých čtvercových ok o straně 10 cm.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Podle předpisů soutěže lze oka upravit kvůli reklamě.</p>
+    <p>Nahoře je po celé délce našitá bílá páska široká 7 cm ze dvojitého plátna. Na obou koncích má otvor pro šňůru, kterou se páska připevní ke sloupkům a napne. Uvnitř pásky vede pružné lanko, které drží horní okraj sítě napnutý.</p>
+    <p>Dole je podobná páska široká 5 cm, kterou prochází šňůra; ta připevňuje spodní část sítě ke sloupkům a napíná ji.</p>
+    <h4 class="sub-heading" id="p-2-3"><a class="sub__num" href="#p-2-3">2.3</a> Postranní pásky</h4>
+    <p>Svisle na síti jsou dvě bílé pásky přesně nad postranními čarami. Jsou široké 5 cm, dlouhé 1 m a <strong>jsou součástí sítě</strong>.</p>
+    <h4 class="sub-heading" id="p-2-4"><a class="sub__num" href="#p-2-4">2.4</a> Anténky</h4>
+    <p>Anténka je pružná tyčka dlouhá 1,8 m o průměru 10 mm ze skelného vlákna nebo podobného materiálu.</p>
+    <p>Je připevněná na vnějším okraji každé postranní pásky; obě anténky jsou na protilehlých stranách sítě.</p>
+    <p>Horních 80 cm přečnívá nad síť a je pruhované po 10 cm kontrastními barvami, nejčastěji červenou a bílou.</p>
+    <p>Anténky <strong>jsou součástí sítě</strong> a do stran ohraničují prostor přeletu (<a href="#p-10-1-1">10.1.1</a>, <a href="#diagram-5">diagram 5</a>).</p>
+    <h4 class="sub-heading" id="p-2-5"><a class="sub__num" href="#p-2-5">2.5</a> Sloupky</h4>
+    <p class="sub sub--d3" id="p-2-5-1"><a class="sub__num" href="#p-2-5-1">2.5.1</a> Sloupky držící síť stojí 0,5–1 m za postranními čarami. Jsou vysoké 2,55 m, nejlépe nastavitelné.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Sloupky stojí přesně 1 m za postranními čarami a musí být obalené.</p>
+    <p class="sub sub--d3" id="p-2-5-2"><a class="sub__num" href="#p-2-5-2">2.5.2</a> Sloupky jsou kulaté a hladké, připevněné k podlaze bez lan. Nesmí na nich být nic nebezpečného nebo překážejícího.</p>
+    <h4 class="sub-heading" id="p-2-6"><a class="sub__num" href="#p-2-6">2.6</a> Doplňkové vybavení</h4>
+    <p>Ostatní vybavení určují předpisy FIVB.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-3">
+    <summary><h3><span class="rule__num">3</span> Míče</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-3-1"><a class="sub__num" href="#p-3-1">3.1</a> Parametry</h4>
+    <p>Míč je kulatý, s pružným obalem z kůže nebo syntetické kůže a s duší z gumy nebo podobného materiálu.</p>
+    <p>Může být jednobarevný světlý nebo kombinací barev. Materiál a barvy míčů pro mezinárodní soutěže mají odpovídat normám FIVB.</p>
+    <ul class="rule-list">
+    <li>obvod 65–67 cm,</li>
+    <li>hmotnost 260–280 g,</li>
+    <li>vnitřní tlak 0,30–0,325 kg/cm² (294,3–318,82 hPa).</li>
+    </ul>
+    <h4 class="sub-heading" id="p-3-2"><a class="sub__num" href="#p-3-2">3.2</a> Jednotnost míčů</h4>
+    <p>Všechny míče v utkání musí mít stejné parametry: obvod, hmotnost, tlak, typ, barvu atd.</p>
+    <p>Soutěže FIVB i národní soutěže a ligy se hrají míči schválenými FIVB, pokud FIVB nepovolí jinak.</p>
+    <h4 class="sub-heading" id="p-3-3"><a class="sub__num" href="#p-3-3">3.3</a> Systém pěti míčů</h4>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Hraje se s pěti míči. Šest sběračů míčů stojí v každém rohu volné zóny a za každým rozhodčím (<a href="#diagram-10">diagram 10</a>).</p>
+    </div></details>
     </section>
-
-    <!-- ===================================================== -->
-    <section id="body" class="rules-section">
-      <h2>Body, sety a utkání</h2>
-      <p class="rule-ref">Pravidlo 6</p>
+    <section class="rules-chapter" id="kapitola-2" aria-labelledby="kapitola-2-nadpis">
+    <h2 id="kapitola-2-nadpis"><span class="rules-chapter__label">Kapitola 2</span> Účastníci</h2>
+    <details class="rule" id="pravidlo-4">
+    <summary><h3><span class="rule__num">4</span> Družstva</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-4-1"><a class="sub__num" href="#p-4-1">4.1</a> Složení družstva</h4>
+    <p class="sub sub--d3" id="p-4-1-1"><a class="sub__num" href="#p-4-1-1">4.1.1</a> K utkání smí družstvo nastoupit s nejvýše <strong>12 hráči</strong>. K tomu má realizační tým: trenéra, nejvýše dva asistenty trenéra, jednoho terapeuta (fyzioterapeuta) a jednoho lékaře. Do soutěžního prostoru, k oficiálnímu rozcvičení a do utkání smějí normálně jen ti, kdo jsou zapsaní v zápisu o utkání.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> U dospělých smí být v zápisu a hrát až 14 hráčů. Na lavici sedí nejvýše pět členů realizačního týmu včetně trenéra; vybírá je trenér, ale musí být zapsaní v zápisu. Manažer a novinář družstva na lavici ani za ní sedět nesmějí. Lékař a terapeut musí být akreditovaní u FIVB; když nejsou na lavici, sedí u hrazení soutěžního prostoru a zasáhnou jen na pozvání rozhodčích. Terapeut smí pomáhat s rozcvičením až do začátku oficiálního rozcvičení u sítě.</p>
+    <p class="sub sub--d3" id="p-4-1-2"><a class="sub__num" href="#p-4-1-2">4.1.2</a> Jeden z hráčů je <strong>kapitán družstva</strong> a musí být vyznačený v zápisu o utkání.</p>
+    <p class="sub sub--d3" id="p-4-1-3"><a class="sub__num" href="#p-4-1-3">4.1.3</a> Hrát smějí jen hráči zapsaní v zápisu. Jakmile trenér a kapitán zápis podepíšou (u elektronického zápisu potvrdí soupisku), už se zapsaní hráči nesmějí měnit.</p>
+    <h4 class="sub-heading" id="p-4-2"><a class="sub__num" href="#p-4-2">4.2</a> Umístění družstva</h4>
+    <p class="sub sub--d3" id="p-4-2-1"><a class="sub__num" href="#p-4-2-1">4.2.1</a> Hráči, kteří právě nehrají, sedí na lavici svého družstva nebo jsou v prostoru pro rozcvičení. Trenér a ostatní členové družstva sedí na lavici, ale smějí ji na chvíli opustit. Lavice družstev stojí vedle stolku zapisovatele, mimo volnou zónu.</p>
+    <p class="sub sub--d3" id="p-4-2-2"><a class="sub__num" href="#p-4-2-2">4.2.2</a> Na hrací plochu, na lavici a k oficiálnímu rozcvičení smějí jen členové družstva podle <a href="#p-4-1-1">4.1.1</a>.</p>
+    <p class="sub sub--d3" id="p-4-2-3"><a class="sub__num" href="#p-4-2-3">4.2.3</a> Hráči mimo hru se smějí rozcvičovat <strong>bez míčů</strong>:</p>
+    <p class="sub sub--d4" id="p-4-2-3-1"><a class="sub__num" href="#p-4-2-3-1">4.2.3.1</a> během hry v prostoru pro rozcvičení;</p>
+    <p class="sub sub--d4" id="p-4-2-3-2"><a class="sub__num" href="#p-4-2-3-2">4.2.3.2</a> během oddechových časů ve volné zóně za svou polovinou hřiště.</p>
+    <p class="sub sub--d3" id="p-4-2-4"><a class="sub__num" href="#p-4-2-4">4.2.4</a> O přestávkách mezi sety se hráči smějí rozcvičovat s míči ve své volné zóně.</p>
+    <h4 class="sub-heading" id="p-4-3"><a class="sub__num" href="#p-4-3">4.3</a> Výstroj</h4>
+    <p>Výstroj hráče tvoří dres, trenýrky, ponožky (to je úbor) a sportovní obuv.</p>
+    <p class="sub sub--d3" id="p-4-3-1"><a class="sub__num" href="#p-4-3-1">4.3.1</a> Barva a provedení dresů, trenýrek a ponožek musí být v družstvu jednotné (kromě libera). Úbor musí být čistý.</p>
+    <p class="sub sub--d3" id="p-4-3-2"><a class="sub__num" href="#p-4-3-2">4.3.2</a> Obuv musí být lehká a ohebná, s gumovou nebo kompozitní podrážkou bez podpatku.</p>
+    <p class="sub sub--d3" id="p-4-3-3"><a class="sub__num" href="#p-4-3-3">4.3.3</a> Dresy hráčů jsou očíslované od 1 do 20.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> U dospělých s většími soupiskami smějí být čísla vyšší.</p>
+    <p class="sub sub--d4" id="p-4-3-3-1"><a class="sub__num" href="#p-4-3-3-1">4.3.3.1</a> Číslo je uprostřed na hrudi i na zádech. Barvou i jasem musí s dresem kontrastovat.</p>
+    <p class="sub sub--d4" id="p-4-3-3-2"><a class="sub__num" href="#p-4-3-3-2">4.3.3.2</a> Číslo je na hrudi vysoké nejméně 15 cm a na zádech nejméně 20 cm. Tah číslice je široký nejméně 2 cm.</p>
+    <p class="sub sub--d3" id="p-4-3-4"><a class="sub__num" href="#p-4-3-4">4.3.4</a> Kapitán družstva má na dresu pod číslem na hrudi pásek 8 × 2 cm.</p>
+    <p class="sub sub--d3" id="p-4-3-5"><a class="sub__num" href="#p-4-3-5">4.3.5</a> Je zakázané hrát v úboru jiné barvy než ostatní hráči (kromě liber) nebo bez předepsaného čísla.</p>
+    <h4 class="sub-heading" id="p-4-4"><a class="sub__num" href="#p-4-4">4.4</a> Změny ve výstroji</h4>
+    <p>První rozhodčí může jednomu nebo více hráčům povolit:</p>
+    <p class="sub sub--d3" id="p-4-4-1"><a class="sub__num" href="#p-4-4-1">4.4.1</a> hrát bosí;</p>
+    <p class="sub sub--d3" id="p-4-4-2"><a class="sub__num" href="#p-4-4-2">4.4.2</a> vyměnit mokrý nebo poškozený úbor mezi sety nebo po střídání, pokud má nový úbor stejnou barvu, provedení a číslo;</p>
+    <p class="sub sub--d3" id="p-4-4-3"><a class="sub__num" href="#p-4-4-3">4.4.3</a> hrát v chladu v teplákových soupravách, pokud jsou pro celé družstvo (kromě liber) stejné barvy a provedení a očíslované podle <a href="#p-4-3-3">4.3.3</a>.</p>
+    <h4 class="sub-heading" id="p-4-5"><a class="sub__num" href="#p-4-5">4.5</a> Zakázané předměty</h4>
+    <p class="sub sub--d3" id="p-4-5-1"><a class="sub__num" href="#p-4-5-1">4.5.1</a> Hráč nesmí mít na sobě nic, co by mohlo způsobit zranění nebo mu dát nepřirozenou výhodu (např. prstýnky, řetízky, hodinky).</p>
+    <p class="sub sub--d3" id="p-4-5-2"><a class="sub__num" href="#p-4-5-2">4.5.2</a> Brýle nebo kontaktní čočky smí hráč nosit na vlastní riziko.</p>
+    <p class="sub sub--d3" id="p-4-5-3"><a class="sub__num" href="#p-4-5-3">4.5.3</a> Kompresní a polstrované chrániče smějí hráči nosit na ochranu nebo podporu.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Chrániče musí mít barvu odpovídající části úboru; povolená je i černá, bílá nebo neutrální barva, pokud ji mají všichni hráči, kteří chrániče nosí.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-5">
+    <summary><h3><span class="rule__num">5</span> Vedení družstva</h3></summary>
+    <div class="rule__body">
+    <p>Za chování a disciplínu členů družstva odpovídají <strong>kapitán i trenér</strong> (<a href="#pravidlo-20">20</a>). Kapitánem družstva i kapitánem ve hře může být i libero.</p>
+    <h4 class="sub-heading" id="p-5-1"><a class="sub__num" href="#p-5-1">5.1</a> Kapitán</h4>
+    <p class="sub sub--d3" id="p-5-1-1"><a class="sub__num" href="#p-5-1-1">5.1.1</a> <strong>Před utkáním.</strong> Kapitán zastupuje družstvo při losování (<a href="#p-7-1">7.1</a>) a podepisuje zápis o utkání.</p>
+    <p class="sub sub--d3" id="p-5-1-2"><a class="sub__num" href="#p-5-1-2">5.1.2</a> <strong>Během utkání.</strong> Když je kapitán družstva na hřišti, je zároveň <strong>kapitánem ve hře</strong>. Když na hřišti není, trenér nebo kapitán určí jiného hráče na hřišti, který bude kapitánem ve hře, dokud ho nevystřídají, dokud se kapitán družstva nevrátí do hry nebo do konce setu.</p>
+    <p>Když je míč mimo hru, smí s rozhodčími mluvit <strong>jen kapitán ve hře</strong>, a to:</p>
+    <p class="sub sub--d4" id="p-5-1-2-1"><a class="sub__num" href="#p-5-1-2-1">5.1.2.1</a> aby požádal o vysvětlení, jak bylo pravidlo použito nebo vyloženo, nebo přednesl žádosti a otázky spoluhráčů. Když s vysvětlením prvního rozhodčího nesouhlasí, může proti rozhodnutí protestovat: hned prvnímu rozhodčímu oznámí, že si vyhrazuje právo zapsat po utkání do zápisu oficiální protest;</p>
+    <p class="sub sub--d4" id="p-5-1-2-2"><a class="sub__num" href="#p-5-1-2-2">5.1.2.2</a> aby požádal o povolení: a) vyměnit celou výstroj nebo její část, b) ověřit postavení družstev, c) zkontrolovat podlahu, síť, míč apod.;</p>
+    <p class="sub sub--d4" id="p-5-1-2-3"><a class="sub__num" href="#p-5-1-2-3">5.1.2.3</a> aby v nepřítomnosti trenéra požádal o oddechový čas a střídání (pokud funkci trenéra nepřevzal asistent trenéra).</p>
+    <p class="sub sub--d3" id="p-5-1-3"><a class="sub__num" href="#p-5-1-3">5.1.3</a> <strong>Po utkání.</strong> Kapitán družstva:</p>
+    <p class="sub sub--d4" id="p-5-1-3-1"><a class="sub__num" href="#p-5-1-3-1">5.1.3.1</a> poděkuje rozhodčím a podpisem zápisu potvrdí výsledek;</p>
+    <p class="sub sub--d4" id="p-5-1-3-2"><a class="sub__num" href="#p-5-1-3-2">5.1.3.2</a> pokud to včas oznámil prvnímu rozhodčímu (<a href="#p-5-1-2-1">5.1.2.1</a>), může potvrdit a zapsat do zápisu oficiální protest proti tomu, jak rozhodčí použil nebo vyložil pravidla.</p>
+    <h4 class="sub-heading" id="p-5-2"><a class="sub__num" href="#p-5-2">5.2</a> Trenér</h4>
+    <p class="sub sub--d3" id="p-5-2-1"><a class="sub__num" href="#p-5-2-1">5.2.1</a> Trenér po celé utkání řídí hru družstva zvenčí hřiště. Určuje základní sestavy a náhradníky a bere oddechové časy. V těchto věcech jedná s <strong>druhým rozhodčím</strong>.</p>
+    <p class="sub sub--d3" id="p-5-2-2"><a class="sub__num" href="#p-5-2-2">5.2.2</a> <strong>Před utkáním.</strong> Trenér zapíše nebo zkontroluje jména a čísla hráčů v zápisu a podepíše ho.</p>
+    <p class="sub sub--d3" id="p-5-2-3"><a class="sub__num" href="#p-5-2-3">5.2.3</a> <strong>Během utkání.</strong> Trenér:</p>
+    <p class="sub sub--d4" id="p-5-2-3-1"><a class="sub__num" href="#p-5-2-3-1">5.2.3.1</a> před každým setem odevzdá druhému rozhodčímu nebo zapisovateli vyplněný a podepsaný list se sestavou (při použití tabletu platí elektronicky odeslaná sestava);</p>
+    <p class="sub sub--d4" id="p-5-2-3-2"><a class="sub__num" href="#p-5-2-3-2">5.2.3.2</a> sedí na lavici nejblíže zapisovateli, ale smí z ní odejít;</p>
+    <p class="sub sub--d4" id="p-5-2-3-3"><a class="sub__num" href="#p-5-2-3-3">5.2.3.3</a> žádá o oddechové časy a střídání;</p>
+    <p class="sub sub--d4" id="p-5-2-3-4"><a class="sub__num" href="#p-5-2-3-4">5.2.3.4</a> smí stejně jako ostatní členové družstva dávat hráčům na hřišti pokyny. Přitom smí stát nebo chodit ve volné zóně před svou lavicí, od prodloužení útočné čáry po prostor pro rozcvičení, pokud neruší ani nezdržuje hru. Je-li prostor pro rozcvičení za lavicí, smí se pohybovat od prodloužení útočné čáry ke konci své poloviny, ale nesmí zakrývat výhled čárovým rozhodčím.</p>
+    <h4 class="sub-heading" id="p-5-3"><a class="sub__num" href="#p-5-3">5.3</a> Asistent trenéra</h4>
+    <p class="sub sub--d3" id="p-5-3-1"><a class="sub__num" href="#p-5-3-1">5.3.1</a> Asistent trenéra sedí na lavici, ale do hry zasahovat nesmí.</p>
+    <p class="sub sub--d3" id="p-5-3-2"><a class="sub__num" href="#p-5-3-2">5.3.2</a> Když trenér musí družstvo z jakéhokoli důvodu opustit (i kvůli trestu, ale ne proto, že jde hrát jako hráč), může jeho funkce po dobu nepřítomnosti převzít asistent trenéra. Kapitán ve hře to musí rozhodčímu potvrdit.</p>
+    </div></details>
+    </section>
+    <section class="rules-chapter" id="kapitola-3" aria-labelledby="kapitola-3-nadpis">
+    <h2 id="kapitola-3-nadpis"><span class="rules-chapter__label">Kapitola 3</span> Uspořádání hry</h2>
+    <details class="rule" id="pravidlo-6">
+    <summary><h3><span class="rule__num">6</span> Zisk bodu, vítězství v setu a v utkání</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="body" aria-label="Ve zkratce: body, sety a utkání">
+      <p class="rule-brief__label">Ve zkratce</p>
       <ul>
-        <li>Každá rozehra končí bodem. Tým, který rozehru vyhraje, získá bod. Pokud nepodával, získá i podání a jeho hráči se otočí o jednu pozici.</li>
-        <li><strong>Set</strong> vyhrává tým, který první dosáhne 25 bodů s rozdílem alespoň 2 bodů. Při stavu 24:24 se hraje, dokud jeden tým nevede o 2 body.</li>
+        <li>Každá rozehra končí bodem. Družstvo, které rozehru vyhraje, získá bod. Pokud nepodávalo, získá i podání a jeho hráči se posunou o jednu pozici.</li>
+        <li><strong>Set</strong> vyhrává družstvo, které první dosáhne 25 bodů s rozdílem alespoň 2 bodů. Při stavu 24:24 se hraje, dokud jedno družstvo nevede o 2 body.</li>
         <li><strong>Rozhodující 5. set</strong> se hraje do 15 bodů, také s rozdílem 2 bodů.</li>
-        <li><strong>Utkání</strong> vyhrává tým, který první vyhraje 3 sety.</li>
-        <li>Když chybu udělají oba týmy současně (<em>dvojitá chyba</em>), rozehra se opakuje.</li>
+        <li><strong>Utkání</strong> vyhrává družstvo, které první vyhraje 3 sety.</li>
+        <li>Když chybu udělají obě družstva současně (<em>oboustranná chyba</em>), rozehra se opakuje.</li>
       </ul>
-    </section>
+    </aside>
+    <h4 class="sub-heading" id="p-6-1"><a class="sub__num" href="#p-6-1">6.1</a> Zisk bodu</h4>
+    <p class="sub sub--d3" id="p-6-1-1"><a class="sub__num" href="#p-6-1-1">6.1.1</a> <strong>Bod.</strong> Družstvo získá bod:</p>
+    <p class="sub sub--d4" id="p-6-1-1-1"><a class="sub__num" href="#p-6-1-1-1">6.1.1.1</a> když míč úspěšně dopadne do pole soupeře;</p>
+    <p class="sub sub--d4" id="p-6-1-1-2"><a class="sub__num" href="#p-6-1-1-2">6.1.1.2</a> když soupeř udělá chybu;</p>
+    <p class="sub sub--d4" id="p-6-1-1-3"><a class="sub__num" href="#p-6-1-1-3">6.1.1.3</a> když soupeř dostane trest (<a href="#p-16-2-3">16.2.3</a>, <a href="#p-21-3-1">21.3.1</a>).</p>
+    <p class="sub sub--d3" id="p-6-1-2"><a class="sub__num" href="#p-6-1-2">6.1.2</a> <strong>Chyba.</strong> Chybou je herní činnost v rozporu s pravidly (nebo jiné porušení pravidel). Chyby posuzují rozhodčí a podle pravidel určují jejich důsledky:</p>
+    <p class="sub sub--d4" id="p-6-1-2-1"><a class="sub__num" href="#p-6-1-2-1">6.1.2.1</a> když dojde k několika chybám po sobě, počítá se jen ta první;</p>
+    <p class="sub sub--d4" id="p-6-1-2-2"><a class="sub__num" href="#p-6-1-2-2">6.1.2.2</a> když soupeři udělají dvě nebo víc chyb současně, jde o <strong>oboustrannou chybu</strong> a rozehra se opakuje.</p>
+    <p class="sub sub--d3" id="p-6-1-3"><a class="sub__num" href="#p-6-1-3">6.1.3</a> <strong>Rozehra a dokončená rozehra.</strong> Rozehra je sled herních činností od úderu podávajícího do míče až do chvíle, kdy je míč mimo hru. <strong>Dokončená rozehra</strong> je taková, která skončí přidělením bodu. Patří sem i udělení trestu a ztráta podání za to, že podávající nestihl podat v časovém limitu (<a href="#p-12-4-4">12.4.4</a>).</p>
+    <p class="sub sub--d4" id="p-6-1-3-1"><a class="sub__num" href="#p-6-1-3-1">6.1.3.1</a> Když rozehru vyhraje podávající družstvo, získá bod a podává dál.</p>
+    <p class="sub sub--d4" id="p-6-1-3-2"><a class="sub__num" href="#p-6-1-3-2">6.1.3.2</a> Když rozehru vyhraje přijímající družstvo, získá bod a příští podání je jeho.</p>
+    <h4 class="sub-heading" id="p-6-2"><a class="sub__num" href="#p-6-2">6.2</a> Vítězství v setu</h4>
+    <p>Set (kromě rozhodujícího pátého) vyhrává družstvo, které jako první získá <strong>25 bodů</strong> a vede alespoň o dva body. Při stavu 24:24 se hraje, dokud jedno družstvo nevede o dva body (26:24, 27:25 atd.).</p>
+    <h4 class="sub-heading" id="p-6-3"><a class="sub__num" href="#p-6-3">6.3</a> Vítězství v utkání</h4>
+    <p class="sub sub--d3" id="p-6-3-1"><a class="sub__num" href="#p-6-3-1">6.3.1</a> Utkání vyhrává družstvo, které vyhraje <strong>tři sety</strong>.</p>
+    <p class="sub sub--d3" id="p-6-3-2"><a class="sub__num" href="#p-6-3-2">6.3.2</a> Při stavu 2:2 na sety se hraje rozhodující pátý set do <strong>15 bodů</strong>, opět s rozdílem alespoň dvou bodů.</p>
+    <h4 class="sub-heading" id="p-6-4"><a class="sub__num" href="#p-6-4">6.4</a> Nenastoupení a neúplné družstvo</h4>
+    <p class="sub sub--d3" id="p-6-4-1"><a class="sub__num" href="#p-6-4-1">6.4.1</a> Když družstvo po vyzvání odmítne hrát, prohlásí se, že k utkání nenastoupilo, a prohrává utkání 0:3 a každý set 0:25.</p>
+    <p class="sub sub--d3" id="p-6-4-2"><a class="sub__num" href="#p-6-4-2">6.4.2</a> Družstvo, které se bez omluvitelného důvodu nedostaví včas na hřiště, nenastoupilo se stejným výsledkem jako v <a href="#p-6-4-1">6.4.1</a>.</p>
+    <p class="sub sub--d3" id="p-6-4-3"><a class="sub__num" href="#p-6-4-3">6.4.3</a> Družstvo, které je pro set nebo utkání prohlášeno za <strong>neúplné</strong> (nemůže mít na hřišti šest hráčů), prohrává set nebo utkání. Soupeř dostane body, případně body a sety, které mu k vítězství chybějí. Neúplné družstvo si ponechá body a sety, které už získalo.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-7">
+    <summary><h3><span class="rule__num">7</span> Struktura hry</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="rotace-postaveni" aria-label="Ve zkratce: pořadí postupu a postavení">
+      <p class="rule-brief__label">Ve zkratce · rotace a postavení</p>
+      <ul>
+        <li>Za každé družstvo hraje 6 hráčů: přední řada na pozicích 4, 3, 2 a zadní řada na pozicích 5, 6, 1. Podává hráč na pozici 1.</li>
+        <li>Pořadí hráčů (pořadí postupu, „rotaci“) určuje <strong>sestava</strong>, kterou trenér odevzdá před setem.</li>
+        <li>Když přijímající družstvo získá podání, jeho hráči se <strong>posunou o jednu pozici ve směru hodinových ručiček</strong>.</li>
+        <li><strong>Chyba v postavení:</strong> od pravidel 2025 ji může udělat <strong>jen přijímající družstvo</strong>. V okamžiku úderu podávajícího musí jeho hráči stát ve správném pořadí. Hráči podávajícího družstva smějí stát kdekoli ve svém poli. Po úderu se hráči obou družstev pohybují volně.</li>
+        <li><strong>Chyba v pořadí postupu:</strong> podává hráč, který není na řadě. Soupeř získá bod a podání, pořadí se opraví a body, které chybující družstvo od chyby získalo, se ruší.</li>
+      </ul>
+    </aside>
+    <h4 class="sub-heading" id="p-7-1"><a class="sub__num" href="#p-7-1">7.1</a> Losování</h4>
+    <p>Před utkáním provede první rozhodčí losování, které určí, kdo bude v prvním setu podávat a kdo bude na které straně. Před rozhodujícím setem se losuje znovu.</p>
+    <p class="sub sub--d3" id="p-7-1-1"><a class="sub__num" href="#p-7-1-1">7.1.1</a> Losování probíhá za přítomnosti obou kapitánů.</p>
+    <p class="sub sub--d3" id="p-7-1-2"><a class="sub__num" href="#p-7-1-2">7.1.2</a> Vítěz losování si vybere <strong>buď</strong>:</p>
+    <p class="sub sub--d4" id="p-7-1-2-1"><a class="sub__num" href="#p-7-1-2-1">7.1.2.1</a> právo podávat, nebo přijímat podání,</p>
+    <p class="sub sub--d4" id="p-7-1-2-2"><a class="sub__num" href="#p-7-1-2-2">7.1.2.2</a> <strong>nebo</strong> stranu hřiště.</p>
+    <p>Poražený dostane zbývající volbu.</p>
+    <h4 class="sub-heading" id="p-7-2"><a class="sub__num" href="#p-7-2">7.2</a> Oficiální rozcvičení</h4>
+    <p class="sub sub--d3" id="p-7-2-1"><a class="sub__num" href="#p-7-2-1">7.2.1</a> Pokud družstva měla před utkáním k dispozici samostatné hřiště, mají společné oficiální rozcvičení u sítě <strong>6 minut</strong>; pokud ne, mohou mít 10 minut.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Společné rozcvičení u sítě trvá vždy 10 minut.</p>
+    <p class="sub sub--d3" id="p-7-2-2"><a class="sub__num" href="#p-7-2-2">7.2.2</a> Když některý z kapitánů požádá o oddělené rozcvičení u sítě (družstva po sobě), má každé družstvo 3, nebo 5 minut.</p>
+    <p class="sub sub--d3" id="p-7-2-3"><a class="sub__num" href="#p-7-2-3">7.2.3</a> Při odděleném rozcvičení jde k síti první družstvo, které bude první podávat.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Všichni hráči musí mít po celou dobu protokolu a rozcvičení hrací úbor.</p>
+    <h4 class="sub-heading" id="p-7-3"><a class="sub__num" href="#p-7-3">7.3</a> Sestava družstva</h4>
+    <p class="sub sub--d3" id="p-7-3-1"><a class="sub__num" href="#p-7-3-1">7.3.1</a> Za každé družstvo musí být ve hře vždy <strong>šest hráčů</strong>. Základní sestava určuje pořadí postupu hráčů na hřišti a toto pořadí musí platit po celý set.</p>
+    <p class="sub sub--d3" id="p-7-3-2"><a class="sub__num" href="#p-7-3-2">7.3.2</a> Před každým setem musí trenér odevzdat základní sestavu na listu se sestavou (nebo elektronicky). Vyplněný a podepsaný list předá druhému rozhodčímu nebo zapisovateli, nebo ho elektronicky pošle přímo do elektronického zápisu.</p>
+    <p class="sub sub--d3" id="p-7-3-3"><a class="sub__num" href="#p-7-3-3">7.3.3</a> Hráči, kteří nejsou v základní sestavě, jsou pro daný set <strong>náhradníci</strong> (kromě liber).</p>
+    <p class="sub sub--d3" id="p-7-3-4"><a class="sub__num" href="#p-7-3-4">7.3.4</a> Jakmile je list se sestavou odevzdaný, sestavu už nelze změnit jinak než řádným střídáním.</p>
+    <p class="sub sub--d3" id="p-7-3-5"><a class="sub__num" href="#p-7-3-5">7.3.5</a> Nesoulad mezi postavením hráčů na hřišti a listem se sestavou se řeší takto:</p>
+    <p class="sub sub--d4" id="p-7-3-5-1"><a class="sub__num" href="#p-7-3-5-1">7.3.5.1</a> když se zjistí před začátkem setu, hráči se postaví podle listu se sestavou, <strong>bez trestu</strong>;</p>
+    <p class="sub sub--d4" id="p-7-3-5-2"><a class="sub__num" href="#p-7-3-5-2">7.3.5.2</a> když se před začátkem setu zjistí, že na hřišti je hráč, který na listu se sestavou není, musí ho družstvo vyměnit podle listu, <strong>bez trestu</strong>;</p>
+    <p class="sub sub--d4" id="p-7-3-5-3"><a class="sub__num" href="#p-7-3-5-3">7.3.5.3</a> pokud ale trenér chce takového hráče nechat na hřišti, musí si o řádné střídání požádat gestem; střídání se zapíše do zápisu.</p>
+    <p>Když se nesoulad zjistí až později, chybující družstvo se musí vrátit do správného postavení. Body soupeře zůstávají, soupeř navíc získá bod a podání. Všechny body, které chybující družstvo získalo od okamžiku chyby do jejího zjištění, se ruší.</p>
+    <p class="sub sub--d4" id="p-7-3-5-4"><a class="sub__num" href="#p-7-3-5-4">7.3.5.4</a> Když se zjistí, že na hřišti hraje hráč, který vůbec není na soupisce (v zápisu), body soupeře zůstávají a soupeř navíc získá bod a podání. Chybující družstvo ztrácí všechny body a případně sety (v nejhorším 0:25) získané od chvíle, kdy hráč nastoupil. Musí odevzdat opravený list se sestavou a na místo nezapsaného hráče poslat zapsaného hráče.</p>
+    <h4 class="sub-heading" id="p-7-4"><a class="sub__num" href="#p-7-4">7.4</a> Postavení</h4>
+    <p>V okamžiku úderu podávajícího do míče musí být obě družstva ve svém poli (kromě podávajícího). Hráči <strong>přijímajícího</strong> družstva musí v okamžiku podání stát ve správném pořadí postupu.</p>
+    <p>Hráči <strong>podávajícího</strong> družstva smějí v okamžiku podání stát kdekoli ve svém poli. <em>(Novinka pravidel 2025–2028.)</em></p>
+    <figure class="diagram" id="diagram-4">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 300 150" role="img" aria-labelledby="dg4-title dg4-desc">
+          <title id="dg4-title">Postavení hráčů přijímajícího družstva v okamžiku podání</title>
+          <desc id="dg4-desc">Vlevo polovina hřiště se sítí nahoře: vpředu zleva pozice 4, 3 a 2, vzadu 5, 6 a 1. Svislé čárkované spojnice ukazují dvojice vpředu a vzadu, které musí stát za sebou, vodorovné spojnice hráče téže řady, kteří musí stát v pořadí zleva doprava. Vpravo tři příklady chodidel: zadní hráč stojí celým chodidlem za předním chodidlem předního hráče (správně), zadní hráč má za touto hranicí jen část chodidla (správně), zadní hráč má obě chodidla před touto hranicí (chyba).</desc>
+          <!-- polovina hřiště, síť nahoře -->
+          <rect class="dg-floor" x="10" y="16" width="120" height="120" />
+          <rect class="dg-line" x="10" y="16" width="120" height="120" />
+          <line class="dg-line" x1="10" y1="56" x2="130" y2="56" />
+          <line class="dg-net" x1="4" y1="16" x2="136" y2="16" />
+          <g class="dg-link">
+            <line x1="34" y1="40" x2="30" y2="102" />
+            <line x1="70" y1="40" x2="70" y2="102" />
+            <line x1="106" y1="40" x2="110" y2="102" />
+            <line x1="34" y1="40" x2="106" y2="40" />
+            <line x1="30" y1="102" x2="110" y2="102" />
+          </g>
+          <g class="dg-player">
+            <circle cx="34" cy="40" r="9" /><circle cx="70" cy="40" r="9" /><circle cx="106" cy="40" r="9" />
+            <circle cx="30" cy="102" r="9" /><circle cx="70" cy="102" r="9" /><circle cx="110" cy="102" r="9" />
+          </g>
+          <g class="dg-player-num">
+            <text x="34" y="40">4</text><text x="70" y="40">3</text><text x="106" y="40">2</text>
+            <text x="30" y="102">5</text><text x="70" y="102">6</text><text x="110" y="102">1</text>
+          </g>
+          <g class="dg-note">
+            <text x="70" y="9">síť</text>
+            <text x="70" y="146" class="dg-small">pohled zezadu: vlevo = pozice 4 a 5</text>
+          </g>
+          <g class="dg-text"><text x="118" y="62" class="dg-small" text-anchor="end">útočná čára</text></g>
 
-    <!-- ===================================================== -->
-    <section id="podani" class="rules-section">
-      <h2>Podání</h2>
-      <p class="rule-ref">Pravidlo 12</p>
+          <!-- příklady chodidel: hranice = přední chodidlo hráče přední řady -->
+          <g transform="translate(150 16)">
+            <g class="dg-example">
+              <rect class="dg-panel" x="0" y="0" width="44" height="100" />
+              <line class="dg-net" x1="0" y1="0" x2="44" y2="0" />
+              <line class="dg-ref" x1="0" y1="27" x2="44" y2="27" />
+              <ellipse class="dg-foot" cx="14" cy="34" rx="3.2" ry="7" />
+              <ellipse class="dg-foot" cx="24" cy="44" rx="3.2" ry="7" />
+              <ellipse class="dg-foot dg-foot--back" cx="18" cy="70" rx="3.2" ry="7" />
+              <ellipse class="dg-foot dg-foot--back" cx="28" cy="74" rx="3.2" ry="7" />
+              <text class="dg-verdict dg-verdict--ok" x="22" y="112">správně</text>
+            </g>
+            <g class="dg-example" transform="translate(50 0)">
+              <rect class="dg-panel" x="0" y="0" width="44" height="100" />
+              <line class="dg-net" x1="0" y1="0" x2="44" y2="0" />
+              <line class="dg-ref" x1="0" y1="27" x2="44" y2="27" />
+              <ellipse class="dg-foot" cx="14" cy="34" rx="3.2" ry="7" />
+              <ellipse class="dg-foot" cx="24" cy="44" rx="3.2" ry="7" />
+              <ellipse class="dg-foot dg-foot--back" cx="30" cy="24" rx="3.2" ry="7" />
+              <ellipse class="dg-foot dg-foot--back" cx="38" cy="19" rx="3.2" ry="7" />
+              <text class="dg-verdict dg-verdict--ok" x="22" y="112">správně</text>
+            </g>
+            <g class="dg-example" transform="translate(100 0)">
+              <rect class="dg-panel" x="0" y="0" width="44" height="100" />
+              <line class="dg-net" x1="0" y1="0" x2="44" y2="0" />
+              <line class="dg-ref" x1="0" y1="27" x2="44" y2="27" />
+              <ellipse class="dg-foot" cx="14" cy="34" rx="3.2" ry="7" />
+              <ellipse class="dg-foot" cx="24" cy="44" rx="3.2" ry="7" />
+              <ellipse class="dg-foot dg-foot--back" cx="30" cy="14" rx="3.2" ry="7" />
+              <ellipse class="dg-foot dg-foot--back" cx="38" cy="11" rx="3.2" ry="7" />
+              <text class="dg-verdict dg-verdict--bad" x="22" y="112">chyba</text>
+            </g>
+            <g class="dg-note">
+              <text x="72" y="124" class="dg-small">světlá = hráč přední řady, tmavá = hráč zadní řady,</text>
+              <text x="72" y="131" class="dg-small">čárkovaně = nejbližší bod předního chodidla k síti</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 4</span> Postavení hráčů podle diagramu 4 FIVB. Rozhoduje poloha chodidel na podlaze. Zadnímu hráči stačí, aby měl za hranicí (dál od sítě) aspoň část jednoho chodidla. Od roku 2025 se postavení kontroluje jen u přijímajícího družstva.</figcaption>
+    </figure>
+    <p class="sub sub--d3" id="p-7-4-1"><a class="sub__num" href="#p-7-4-1">7.4.1</a> Pozice hráčů se číslují takto:</p>
+    <p class="sub sub--d4" id="p-7-4-1-1"><a class="sub__num" href="#p-7-4-1-1">7.4.1.1</a> tři hráči u sítě jsou hráči přední řady na pozicích 4 (vlevo vpředu), 3 (uprostřed vpředu) a 2 (vpravo vpředu);</p>
+    <p class="sub sub--d4" id="p-7-4-1-2"><a class="sub__num" href="#p-7-4-1-2">7.4.1.2</a> zbylí tři jsou hráči zadní řady na pozicích 5 (vlevo vzadu), 6 (uprostřed vzadu) a 1 (vpravo vzadu).</p>
+    <p class="sub sub--d3" id="p-7-4-2"><a class="sub__num" href="#p-7-4-2">7.4.2</a> Vzájemné postavení hráčů:</p>
+    <p class="sub sub--d4" id="p-7-4-2-1"><a class="sub__num" href="#p-7-4-2-1">7.4.2.1</a> každý hráč zadní řady musí stát dál od střední čáry než jeho odpovídající hráč přední řady (5 za 4, 6 za 3, 1 za 2);</p>
+    <p class="sub sub--d4" id="p-7-4-2-2"><a class="sub__num" href="#p-7-4-2-2">7.4.2.2</a> hráči přední i zadní řady musí stát do stran v pořadí podle <a href="#p-7-4-1">7.4.1</a> (4–3–2 a 5–6–1 zleva doprava).</p>
+    <p class="sub sub--d3" id="p-7-4-3"><a class="sub__num" href="#p-7-4-3">7.4.3</a> Postavení hráčů se posuzuje podle chodidel, která se dotýkají podlahy (rozhoduje poslední dotek s podlahou):</p>
+    <p class="sub sub--d4" id="p-7-4-3-1"><a class="sub__num" href="#p-7-4-3-1">7.4.3.1</a> každý hráč zadní řady musí mít alespoň část jednoho chodidla stejně daleko nebo dál od střední čáry než přední chodidlo odpovídajícího hráče přední řady;</p>
+    <p class="sub sub--d4" id="p-7-4-3-2"><a class="sub__num" href="#p-7-4-3-2">7.4.3.2</a> každý hráč na pravé (levé) straně musí mít alespoň část jednoho chodidla stejně blízko nebo blíž k pravé (levé) postranní čáře než ostatní hráči téže řady své chodidlo, které je od této postranní čáry vzdálenější.</p>
+    <p class="sub sub--d3" id="p-7-4-4"><a class="sub__num" href="#p-7-4-4">7.4.4</a> Po úderu podávajícího se hráči obou družstev smějí volně pohybovat a zaujmout jakékoli místo ve svém poli i ve volné zóně.</p>
+    <h4 class="sub-heading" id="p-7-5"><a class="sub__num" href="#p-7-5">7.5</a> Chyby v postavení</h4>
+    <p class="sub sub--d3" id="p-7-5-1"><a class="sub__num" href="#p-7-5-1">7.5.1</a> Družstvo udělá chybu v postavení, když některý hráč v okamžiku úderu podávajícího nestojí na správném místě. Pokud je hráč na hřišti kvůli neoprávněnému střídání a hra pokračuje, počítá se to jako chyba v postavení s důsledky neoprávněného střídání (<a href="#p-15-9">15.9</a>).</p>
+    <p class="sub sub--d3" id="p-7-5-2"><a class="sub__num" href="#p-7-5-2">7.5.2</a> Když podávající udělá chybu podání v okamžiku úderu, počítá se jeho chyba dřív než chyba v postavení.</p>
+    <p class="sub sub--d3" id="p-7-5-3"><a class="sub__num" href="#p-7-5-3">7.5.3</a> Když se podání stane chybným až po úderu (např. míč letí do autu), počítá se chyba v postavení.</p>
+    <p class="sub sub--d3" id="p-7-5-4"><a class="sub__num" href="#p-7-5-4">7.5.4</a> Chyba v postavení má tyto důsledky:</p>
+    <p class="sub sub--d4" id="p-7-5-4-1"><a class="sub__num" href="#p-7-5-4-1">7.5.4.1</a> soupeř získá bod a podání;</p>
+    <p class="sub sub--d4" id="p-7-5-4-2"><a class="sub__num" href="#p-7-5-4-2">7.5.4.2</a> hráči se musí postavit správně.</p>
+    <h4 class="sub-heading" id="p-7-6"><a class="sub__num" href="#p-7-6">7.6</a> Pořadí postupu (rotace)</h4>
+    <p class="sub sub--d3" id="p-7-6-1"><a class="sub__num" href="#p-7-6-1">7.6.1</a> Pořadí postupu určuje základní sestava družstva. Po celý set se kontroluje podle pořadí podání a postavení hráčů.</p>
+    <p class="sub sub--d3" id="p-7-6-2"><a class="sub__num" href="#p-7-6-2">7.6.2</a> Když přijímající družstvo získá právo podávat, jeho hráči se posunou o jednu pozici <strong>ve směru hodinových ručiček</strong>: hráč z pozice 2 přejde na pozici 1 a podává, hráč z pozice 1 přejde na pozici 6 atd.</p>
+    <h4 class="sub-heading" id="p-7-7"><a class="sub__num" href="#p-7-7">7.7</a> Chyba v pořadí postupu</h4>
+    <p class="sub sub--d3" id="p-7-7-1"><a class="sub__num" href="#p-7-7-1">7.7.1</a> Chyba v pořadí postupu nastane, když <strong>podání</strong> neprovede hráč, který je podle pořadí postupu na řadě. Důsledky v tomto pořadí:</p>
+    <p class="sub sub--d4" id="p-7-7-1-1"><a class="sub__num" href="#p-7-7-1-1">7.7.1.1</a> zapisovatel přeruší hru zvukovým signálem a soupeř získá bod a podání. Když se chyba zjistí až po skončení rozehry, která chybným podáním začala, dostane soupeř jen jeden bod bez ohledu na výsledek rozehry;</p>
+    <p class="sub sub--d4" id="p-7-7-1-2"><a class="sub__num" href="#p-7-7-1-2">7.7.1.2</a> pořadí postupu chybujícího družstva se opraví.</p>
+    <p class="sub sub--d3" id="p-7-7-2"><a class="sub__num" href="#p-7-7-2">7.7.2</a> Zapisovatel navíc zjistí přesný okamžik, kdy k chybě došlo, a všechny body, které chybující družstvo od té doby získalo, se ruší. Body soupeře zůstávají. Když tento okamžik zjistit nelze, body se neruší a jediným důsledkem je bod a podání pro soupeře.</p>
+    </div></details>
+    </section>
+    <section class="rules-chapter" id="kapitola-4" aria-labelledby="kapitola-4-nadpis">
+    <h2 id="kapitola-4-nadpis"><span class="rules-chapter__label">Kapitola 4</span> Činnosti ve hře</h2>
+    <details class="rule" id="pravidlo-8">
+    <summary><h3><span class="rule__num">8</span> Situace ve hře</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="dotyky-chyby" aria-label="Ve zkratce: míč v poli a v autu">
+      <p class="rule-brief__label">Ve zkratce · míč v poli a v autu</p>
+      <ul>
+        <li>Míč je <strong>v poli</strong>, když se dotkne hřiště včetně čar.</li>
+        <li>Míč je <strong>v autu</strong>, když dopadne celý mimo čáry, dotkne se předmětu mimo hřiště, stropu nebo osoby mimo hru, dotkne se anténky, lan, sloupků nebo sítě mimo postranní pásky, přejde na druhou stranu mimo prostor přeletu nebo celý proletí pod sítí.</li>
+        <li>Míč, který po prvním odbití přeletí mimo anténku do volné zóny soupeře, smí družstvo vrátit (také mimo anténky) a hrát dál, pokud ještě má odbití.</li>
+        <li>Pravidla o síti a střední čáře najdeš ve <a href="#sit-hrac">zkratce u pravidla 11</a>.</li>
+      </ul>
+    </aside>
+    <h4 class="sub-heading" id="p-8-1"><a class="sub__num" href="#p-8-1">8.1</a> Míč ve hře</h4>
+    <p>Míč je ve hře od okamžiku úderu při podání, které povolil první rozhodčí.</p>
+    <h4 class="sub-heading" id="p-8-2"><a class="sub__num" href="#p-8-2">8.2</a> Míč mimo hru</h4>
+    <p>Míč je mimo hru od okamžiku chyby, kterou odpíská některý z rozhodčích. Když chyba nenastala, je mimo hru od okamžiku hvizdu.</p>
+    <h4 class="sub-heading" id="p-8-3"><a class="sub__num" href="#p-8-3">8.3</a> Míč v poli</h4>
+    <p>Míč je v poli, když se kdykoli během dotyku s podlahou dotkne nějakou svou částí hřiště, <strong>včetně čar</strong>.</p>
+    <h4 class="sub-heading" id="p-8-4"><a class="sub__num" href="#p-8-4">8.4</a> Míč mimo (v autu)</h4>
+    <p>Míč je v autu, když:</p>
+    <p class="sub sub--d3" id="p-8-4-1"><a class="sub__num" href="#p-8-4-1">8.4.1</a> všechny části míče, které se dotknou podlahy, jsou celé mimo čáry hřiště;</p>
+    <p class="sub sub--d3" id="p-8-4-2"><a class="sub__num" href="#p-8-4-2">8.4.2</a> dotkne se předmětu mimo hřiště, stropu nebo osoby mimo hru;</p>
+    <p class="sub sub--d3" id="p-8-4-3"><a class="sub__num" href="#p-8-4-3">8.4.3</a> dotkne se anténky, lan, sloupků nebo sítě samotné mimo postranní pásky;</p>
+    <p class="sub sub--d3" id="p-8-4-4"><a class="sub__num" href="#p-8-4-4">8.4.4</a> přejde svislou rovinu sítě zčásti nebo celý mimo prostor přeletu (s výjimkou <a href="#p-10-1-2">10.1.2</a>);</p>
+    <p class="sub sub--d3" id="p-8-4-5"><a class="sub__num" href="#p-8-4-5">8.4.5</a> celý proletí spodním prostorem pod sítí.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-9">
+    <summary><h3><span class="rule__num">9</span> Hra míčem</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="prijem-nahravka" aria-label="Ve zkratce: příjem a nahrávka">
+      <p class="rule-brief__label">Ve zkratce · příjem a nahrávka</p>
+      <ul>
+        <li>Družstvo má na vrácení míče přes síť nejvýše <strong>3 odbití</strong>. Dotek při bloku se do nich nepočítá.</li>
+        <li>Stejný hráč nesmí odbít míč dvakrát po sobě (výjimkou je blok a první odbití družstva).</li>
+        <li>Míč se smí dotknout <strong>jakékoli části těla</strong>, i nohy.</li>
+        <li>Míč se musí odrazit, nesmí se <strong>chytit ani hodit</strong> (chycení).</li>
+        <li><strong>První odbití družstva</strong> (typicky příjem): míč se smí postupně dotknout více částí těla, pokud jde o jednu akci. U dalších odbití je takový postupný dotek <strong>dvojdotek</strong>, tedy chyba.</li>
+      </ul>
+    </aside>
+    <p>Každé družstvo musí hrát ve svém hracím prostoru (s výjimkou <a href="#p-10-1-2">10.1.2</a>). Pro míč ale smí hráč doběhnout i za vlastní volnou zónu a hrát ho třeba i nad stolkem zapisovatele.</p>
+    <h4 class="sub-heading" id="p-9-1"><a class="sub__num" href="#p-9-1">9.1</a> Odbití družstva</h4>
+    <p>Odbitím je každý dotek míče hráčem, který je ve hře.</p>
+    <p>Družstvo má na vrácení míče nejvýše <strong>tři odbití</strong> (blok se nepočítá). Když jich použije víc, udělá chybu <strong>čtyři odbití</strong>.</p>
+    <p class="sub sub--d3" id="p-9-1-1"><a class="sub__num" href="#p-9-1-1">9.1.1</a> <strong>Následné doteky.</strong> Hráč nesmí odbít míč dvakrát po sobě (výjimky: <a href="#p-9-2-3">9.2.3</a>, <a href="#p-14-2">14.2</a>, <a href="#p-14-4-2">14.4.2</a>).</p>
+    <p class="sub sub--d3" id="p-9-1-2"><a class="sub__num" href="#p-9-1-2">9.1.2</a> <strong>Současné doteky.</strong> Míče se mohou ve stejném okamžiku dotknout dva nebo tři hráči.</p>
+    <p class="sub sub--d4" id="p-9-1-2-1"><a class="sub__num" href="#p-9-1-2-1">9.1.2.1</a> Když se míče současně dotknou dva (tři) spoluhráči, počítají se dvě (tři) odbití (kromě bloku). Když se po míči natáhnou oba, ale dotkne se ho jen jeden, počítá se jedno odbití. Srážka hráčů není chyba.</p>
+    <p class="sub sub--d4" id="p-9-1-2-2"><a class="sub__num" href="#p-9-1-2-2">9.1.2.2</a> Když se míče současně nad sítí dotknou dva soupeři a míč zůstane ve hře, má družstvo, na jehož stranu míč spadne, nová tři odbití. Když takový míč skončí v autu, je to chyba družstva na opačné straně.</p>
+    <p class="sub sub--d4" id="p-9-1-2-3"><a class="sub__num" href="#p-9-1-2-3">9.1.2.3</a> Když současný dotek dvou soupeřů nad sítí přejde v delší (prodloužený) kontakt s míčem, hraje se dál, i když kontakt skončí nad polem soupeře.</p>
+    <p class="sub sub--d3" id="p-9-1-3"><a class="sub__num" href="#p-9-1-3">9.1.3</a> <strong>Odbití s dopomocí.</strong> Na hrací ploše se hráč nesmí při odbití opřít o spoluhráče ani o jakoukoli konstrukci či předmět. Hráče, který se chystá udělat chybu (dotknout se sítě, přešlápnout střední čáru apod.), ale smí spoluhráč zastavit nebo přidržet.</p>
+    <h4 class="sub-heading" id="p-9-2"><a class="sub__num" href="#p-9-2">9.2</a> Charakteristiky odbití</h4>
+    <p class="sub sub--d3" id="p-9-2-1"><a class="sub__num" href="#p-9-2-1">9.2.1</a> Míč se smí dotknout jakékoli části těla.</p>
+    <p class="sub sub--d3" id="p-9-2-2"><a class="sub__num" href="#p-9-2-2">9.2.2</a> Míč se nesmí chytit ani hodit. Odrazit se smí jakýmkoli směrem.</p>
+    <p class="sub sub--d3" id="p-9-2-3"><a class="sub__num" href="#p-9-2-3">9.2.3</a> Míč se smí dotknout více částí těla, pokud se ho dotknou současně. Výjimky:</p>
+    <p class="sub sub--d4" id="p-9-2-3-1"><a class="sub__num" href="#p-9-2-3-1">9.2.3.1</a> při bloku smějí jeden nebo více hráčů míč zasáhnout několikrát po sobě, pokud je to během jedné akce;</p>
+    <p class="sub sub--d4" id="p-9-2-3-2"><a class="sub__num" href="#p-9-2-3-2">9.2.3.2</a> při <strong>prvním odbití družstva</strong> se míč smí postupně dotknout více částí těla, pokud je to během jedné akce.</p>
+    <h4 class="sub-heading" id="p-9-3"><a class="sub__num" href="#p-9-3">9.3</a> Chyby při hře míčem</h4>
+    <p class="sub sub--d3" id="p-9-3-1"><a class="sub__num" href="#p-9-3-1">9.3.1</a> <strong>Čtyři odbití.</strong> Družstvo odbije míč čtyřikrát, než ho vrátí přes síť.</p>
+    <p class="sub sub--d3" id="p-9-3-2"><a class="sub__num" href="#p-9-3-2">9.3.2</a> <strong>Odbití s dopomocí.</strong> Hráč se při odbití na hrací ploše opře o spoluhráče nebo o konstrukci či předmět.</p>
+    <p class="sub sub--d3" id="p-9-3-3"><a class="sub__num" href="#p-9-3-3">9.3.3</a> <strong>Chycení.</strong> Míč se chytí nebo hodí, neodrazí se od úderu.</p>
+    <p class="sub sub--d3" id="p-9-3-4"><a class="sub__num" href="#p-9-3-4">9.3.4</a> <strong>Dvojdotek.</strong> Hráč odbije míč dvakrát po sobě nebo se míč postupně dotkne různých částí jeho těla (mimo výjimky v <a href="#p-9-2-3">9.2.3</a>).</p>
+    </div></details>
+    <details class="rule" id="pravidlo-10">
+    <summary><h3><span class="rule__num">10</span> Míč na síti</h3></summary>
+    <div class="rule__body">
+    <figure class="diagram" id="diagram-5">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 300 140" role="img" aria-labelledby="dg5-title dg5-desc">
+          <title id="dg5-title">Svislá rovina sítě: prostor přeletu, vnější a spodní prostor</title>
+          <desc id="dg5-desc">Pohled na síť zepředu. Nad sítí mezi anténkami a jejich pomyslným prodloužením až ke stropu je prostor přeletu; míč, který jím přeletí, je v pořádku. Vlevo a vpravo za anténkami je vnější prostor a pod sítí spodní prostor. Míč, který přeletí do pole soupeře vnějším prostorem, dotkne se anténky nebo celý proletí spodním prostorem, je chyba.</desc>
+          <rect class="dg-space-out" x="5" y="5" width="55" height="115" />
+          <rect class="dg-space-out" x="240" y="5" width="55" height="115" />
+          <rect class="dg-space-low" x="40" y="80" width="220" height="40" />
+          <line class="dg-ground" x1="5" y1="120" x2="295" y2="120" />
+          <!-- síť a sloupky -->
+          <rect class="dg-pole" x="38" y="58" width="3" height="62" />
+          <rect class="dg-pole" x="259" y="58" width="3" height="62" />
+          <rect x="55" y="60" width="190" height="20" fill="url(#dg3-mesh)" />
+          <rect class="dg-band" x="55" y="59" width="190" height="2.4" />
+          <line class="dg-cord" x1="41" y1="60" x2="55" y2="60" />
+          <line class="dg-cord" x1="41" y1="80" x2="55" y2="80" />
+          <line class="dg-cord" x1="245" y1="60" x2="259" y2="60" />
+          <line class="dg-cord" x1="245" y1="80" x2="259" y2="80" />
+          <line class="dg-antenna" x1="60" y1="80" x2="60" y2="44" />
+          <line class="dg-antenna dg-antenna--stripes" x1="60" y1="60" x2="60" y2="44" />
+          <line class="dg-antenna" x1="240" y1="80" x2="240" y2="44" />
+          <line class="dg-antenna dg-antenna--stripes" x1="240" y1="60" x2="240" y2="44" />
+          <line class="dg-ref" x1="60" y1="5" x2="60" y2="44" />
+          <line class="dg-ref" x1="240" y1="5" x2="240" y2="44" />
+          <!-- míče: kroužek = správně, plný s křížkem = chyba -->
+          <g class="dg-ball-ok">
+            <circle cx="150" cy="25" r="5" /><circle cx="105" cy="50" r="5" /><circle cx="200" cy="54" r="5" />
+          </g>
+          <g class="dg-ball-bad">
+            <circle cx="30" cy="30" r="5" /><circle cx="270" cy="70" r="5" /><circle cx="60" cy="50" r="5" /><circle cx="150" cy="103" r="5" />
+          </g>
+          <g class="dg-cross">
+            <path d="M26 26l8 8M34 26l-8 8" /><path d="M266 66l8 8M274 66l-8 8" /><path d="M56 46l8 8M64 46l-8 8" /><path d="M146 99l8 8M154 99l-8 8" />
+          </g>
+          <g class="dg-note">
+            <text x="150" y="12">prostor přeletu (až ke stropu)</text>
+            <text x="32" y="12">vnější</text><text x="32" y="19">prostor</text>
+            <text x="268" y="12">vnější</text><text x="268" y="19">prostor</text>
+            <text x="150" y="91">spodní prostor</text>
+            <text x="150" y="134" class="dg-small">○ správný přelet   ● chyba (vnější prostor, anténka, celý pod sítí)</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 5</span> Přelet míče svislou rovinou sítě podle diagramu 5a FIVB. Výjimka: míč z <strong>prvního odbití</strong>, který přeletí vnějším prostorem do volné zóny soupeře, smí družstvo vrátit zpět – ale znovu vnějším prostorem na stejné straně (<a href="#p-10-1-2">10.1.2</a>, diagram 5b FIVB).</figcaption>
+    </figure>
+    <h4 class="sub-heading" id="p-10-1"><a class="sub__num" href="#p-10-1">10.1</a> Přelet míče přes síť</h4>
+    <p class="sub sub--d3" id="p-10-1-1"><a class="sub__num" href="#p-10-1-1">10.1.1</a> Míč poslaný do pole soupeře musí přejít přes síť <strong>prostorem přeletu</strong>. Prostor přeletu je část svislé roviny sítě ohraničená:</p>
+    <p class="sub sub--d4" id="p-10-1-1-1"><a class="sub__num" href="#p-10-1-1-1">10.1.1.1</a> dole horním okrajem sítě;</p>
+    <p class="sub sub--d4" id="p-10-1-1-2"><a class="sub__num" href="#p-10-1-1-2">10.1.1.2</a> po stranách anténkami a jejich pomyslným prodloužením;</p>
+    <p class="sub sub--d4" id="p-10-1-1-3"><a class="sub__num" href="#p-10-1-1-3">10.1.1.3</a> nahoře stropem.</p>
+    <p class="sub sub--d3" id="p-10-1-2"><a class="sub__num" href="#p-10-1-2">10.1.2</a> Míč z <strong>prvního odbití</strong> družstva, který přešel rovinu sítě do volné zóny soupeře celý nebo zčásti <strong>vnějším prostorem</strong> (mimo anténky), smí družstvo vrátit zpět v rámci svých odbití, pokud:</p>
+    <p class="sub sub--d4" id="p-10-1-2-1"><a class="sub__num" href="#p-10-1-2-1">10.1.2.1</a> se hráč nedotkne pole soupeře (kromě <a href="#p-11-2-2-1">11.2.2.1</a>);</p>
+    <p class="sub sub--d4" id="p-10-1-2-2"><a class="sub__num" href="#p-10-1-2-2">10.1.2.2</a> vrácený míč přejde rovinu sítě znovu celý nebo zčásti vnějším prostorem na <strong>stejné straně</strong> hřiště, jinak je v autu. Soupeř tomu nesmí bránit.</p>
+    <p class="sub sub--d4" id="p-10-1-2-3"><a class="sub__num" href="#p-10-1-2-3">10.1.2.3</a> Míč, který do volné zóny soupeře vnějším prostorem poslalo <strong>druhé nebo třetí</strong> odbití, už vrátit nelze; je v autu v okamžiku, kdy přejde rovinu sítě.</p>
+    <p class="sub sub--d3" id="p-10-1-3"><a class="sub__num" href="#p-10-1-3">10.1.3</a> Míč, který míří do pole soupeře spodním prostorem (pod sítí), je ve hře, dokud celý nepřejde svislou rovinu sítě.</p>
+    <h4 class="sub-heading" id="p-10-2"><a class="sub__num" href="#p-10-2">10.2</a> Míč, který se dotkne sítě</h4>
+    <p>Při přeletu přes síť se míč smí sítě dotknout.</p>
+    <h4 class="sub-heading" id="p-10-3"><a class="sub__num" href="#p-10-3">10.3</a> Míč v síti</h4>
+    <p class="sub sub--d3" id="p-10-3-1"><a class="sub__num" href="#p-10-3-1">10.3.1</a> Míč zahraný do sítě smí družstvo dohrát, pokud nevyčerpalo tři odbití.</p>
+    <p class="sub sub--d3" id="p-10-3-2"><a class="sub__num" href="#p-10-3-2">10.3.2</a> Když míč protrhne oka sítě nebo síť strhne, rozehra se ruší a opakuje.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-11">
+    <summary><h3><span class="rule__num">11</span> Hráč u sítě</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="sit-hrac" aria-label="Ve zkratce: síť a střední čára">
+      <p class="rule-brief__label">Ve zkratce · síť a střední čára</p>
+      <ul>
+        <li><strong>Dotek sítě mezi anténkami</strong> během hraní míče (odraz, úder i bezpečné doskočení) je chyba. Chybou je také opřít se o síť, chytit se jí nebo si dotekem sítě získat výhodu. Dotek sítě mimo anténky je povolený, pokud neruší hru.</li>
+        <li>Když míč vražený do sítě způsobí, že se síť dotkne soupeře, <strong>není to chyba</strong>.</li>
+        <li><strong>Střední čára:</strong> chodidlo smí zasáhnout do pole soupeře, pokud jeho část zůstane na čáře nebo přímo nad ní. Přešlap celým chodidlem je chyba. Jinými částmi těla se hráč pole soupeře dotknout smí, pokud ho neruší.</li>
+        <li>Hráč nesmí sahat na míč v prostoru soupeře <strong>před jeho útočným úderem</strong>.</li>
+      </ul>
+    </aside>
+    <h4 class="sub-heading" id="p-11-1"><a class="sub__num" href="#p-11-1">11.1</a> Přesáhnutí přes síť</h4>
+    <p class="sub sub--d3" id="p-11-1-1"><a class="sub__num" href="#p-11-1-1">11.1.1</a> Při bloku se hráč smí dotknout míče za sítí, pokud soupeři nebrání ve hře před jeho útočným úderem.</p>
+    <p class="sub sub--d3" id="p-11-1-2"><a class="sub__num" href="#p-11-1-2">11.1.2</a> Po útočném úderu smí hráč přenést ruku přes síť, pokud se míče dotkl ve svém hracím prostoru a míč nechytil ani nehodil.</p>
+    <h4 class="sub-heading" id="p-11-2"><a class="sub__num" href="#p-11-2">11.2</a> Proniknutí pod sítí</h4>
+    <p class="sub sub--d3" id="p-11-2-1"><a class="sub__num" href="#p-11-2-1">11.2.1</a> Hráč smí proniknout pod sítí do prostoru soupeře, pokud tím soupeři nebrání ve hře.</p>
+    <p class="sub sub--d3" id="p-11-2-2"><a class="sub__num" href="#p-11-2-2">11.2.2</a> Proniknutí do pole soupeře za střední čáru:</p>
+    <p class="sub sub--d4" id="p-11-2-2-1"><a class="sub__num" href="#p-11-2-2-1">11.2.2.1</a> dotknout se pole soupeře chodidlem (chodidly) je povoleno, pokud část pronikajícího chodidla zůstane v kontaktu se střední čárou nebo přímo nad ní a soupeři to nebrání ve hře;</p>
+    <p class="sub sub--d4" id="p-11-2-2-2"><a class="sub__num" href="#p-11-2-2-2">11.2.2.2</a> dotknout se pole soupeře kteroukoli částí těla nad chodidly je povoleno, pokud to soupeři nebrání ve hře.</p>
+    <p class="sub sub--d3" id="p-11-2-3"><a class="sub__num" href="#p-11-2-3">11.2.3</a> Hráč smí vstoupit do pole soupeře, když je míč mimo hru.</p>
+    <p class="sub sub--d3" id="p-11-2-4"><a class="sub__num" href="#p-11-2-4">11.2.4</a> Hráč smí vběhnout do volné zóny soupeře, pokud mu nebrání ve hře.</p>
+    <h4 class="sub-heading" id="p-11-3"><a class="sub__num" href="#p-11-3">11.3</a> Dotek sítě</h4>
+    <p class="sub sub--d3" id="p-11-3-1"><a class="sub__num" href="#p-11-3-1">11.3.1</a> Dotek sítě mezi anténkami hráčem <strong>během hraní míče</strong> je chyba. Hraní míče zahrnuje mimo jiné odraz, úder (nebo pokus o něj) a bezpečné doskočení do pozice připravené na další akci.</p>
+    <p class="sub sub--d3" id="p-11-3-2"><a class="sub__num" href="#p-11-3-2">11.3.2</a> Hráči se smějí dotknout sloupku, lan nebo čehokoli mimo anténky včetně sítě samotné, pokud to neruší hru (kromě <a href="#p-9-1-3">9.1.3</a>).</p>
+    <p class="sub sub--d3" id="p-11-3-3"><a class="sub__num" href="#p-11-3-3">11.3.3</a> Když míč zahraný do sítě způsobí, že se síť dotkne soupeře, není to chyba.</p>
+    <h4 class="sub-heading" id="p-11-4"><a class="sub__num" href="#p-11-4">11.4</a> Chyby hráče u sítě</h4>
+    <p class="sub sub--d3" id="p-11-4-1"><a class="sub__num" href="#p-11-4-1">11.4.1</a> Hráč se dotkne míče nebo soupeře v prostoru soupeře před jeho útočným úderem.</p>
+    <p class="sub sub--d3" id="p-11-4-2"><a class="sub__num" href="#p-11-4-2">11.4.2</a> Hráč při proniknutí pod sítí brání soupeři ve hře.</p>
+    <p class="sub sub--d3" id="p-11-4-3"><a class="sub__num" href="#p-11-4-3">11.4.3</a> Chodidlo (chodidla) hráče pronikne celé do pole soupeře.</p>
+    <p class="sub sub--d3" id="p-11-4-4"><a class="sub__num" href="#p-11-4-4">11.4.4</a> Hráč ruší hru, mimo jiné tím, že:</p>
+    <ul class="rule-list">
+    <li>se během hraní míče dotkne sítě mezi anténkami nebo anténky samotné,</li>
+    <li>použije síť mezi anténkami jako oporu nebo k udržení rovnováhy,</li>
+    <li>si dotekem sítě vytvoří nedovolenou výhodu nad soupeřem,</li>
+    <li>svou činností brání soupeři v regulérním pokusu hrát míč,</li>
+    <li>se chytí sítě nebo se jí drží.</li>
+    </ul>
+    <p>Hráč, který je blízko míče ve chvíli, kdy se hraje, a sám se ho snaží zahrát, se považuje za hráče, který hraje míč, i když se ho nedotkne.</p>
+    <p>Dotek sítě mimo anténku ale chybou není (kromě <a href="#p-9-1-3">9.1.3</a>).</p>
+    </div></details>
+    <details class="rule" id="pravidlo-12">
+    <summary><h3><span class="rule__num">12</span> Podání</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="podani" aria-label="Ve zkratce: podání">
+      <p class="rule-brief__label">Ve zkratce</p>
       <ul>
         <li>Podávající má na úder <strong>8 sekund</strong> od hvizdu prvního rozhodčího.</li>
         <li>Míč musí <strong>nadhodit nebo pustit z ruky</strong> a udeřit jednou rukou nebo paží. Nadhoz smí být jen jeden. Předtím si ale míč smí pohazovat nebo s ním driblovat.</li>
         <li>V okamžiku úderu (u podání ve výskoku v okamžiku odrazu) <strong>nesmí šlápnout na hřiště ani mimo zónu podání</strong>. Koncová čára patří k hřišti, takže dotyk čáry je přešlap. Po úderu už do hřiště vstoupit smí.</li>
-        <li>Podaný míč se <strong>smí dotknout sítě</strong>. Pokud přejde na druhou stranu prostorem mezi anténami, hraje se dál.</li>
-        <li><strong>Clonění</strong> je zakázané: hráči podávajícího týmu nesmějí soupeři zakrývat výhled na podávajícího a let míče (mávat rukama, poskakovat, stát ve skupině, nad kterou míč letí).</li>
-        <li>Podávat se musí v pořadí podle rotace. Podání mimo pořadí je chyba rotace (viz <a href="#rotace-postaveni">Rotace a postavení</a>).</li>
+        <li>Podaný míč se <strong>smí dotknout sítě</strong>. Pokud přejde na druhou stranu prostorem přeletu, hraje se dál.</li>
+        <li><strong>Clonění</strong> je zakázané: hráči podávajícího družstva nesmějí soupeři zakrývat výhled na podávajícího a let míče (mávat rukama, poskakovat, stát ve skupině, nad kterou míč letí). Od roku 2025 nesmějí během podání zvedat ruce nad hlavu.</li>
+        <li>Podávat se musí v pořadí podle sestavy. Podání mimo pořadí je chyba v pořadí postupu (viz <a href="#pravidlo-7">pravidlo 7</a>).</li>
       </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="prijem-nahravka" class="rules-section">
-      <h2>Příjem a nahrávka</h2>
-      <p class="rule-ref">Pravidlo 9</p>
-      <ul>
-        <li>Tým má na vrácení míče přes síť nejvýše <strong>3 odbití</strong>. Dotek při bloku se do nich nepočítá.</li>
-        <li>Stejný hráč nesmí odbít míč dvakrát po sobě (výjimkou je blok a první odbití týmu).</li>
-        <li>Míč se smí dotknout <strong>jakékoli části těla</strong>, i nohy.</li>
-        <li>Míč se musí odrazit, nesmí se <strong>chytit ani hodit</strong> (zadržený míč).</li>
-        <li><strong>První odbití týmu</strong> (typicky příjem): míč se smí postupně dotknout více částí těla, pokud jde o jednu akci. U dalších odbití je takový postupný dotek <strong>dvojí dotek</strong>, tedy chyba.</li>
-      </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="utok" class="rules-section">
-      <h2>Útok</h2>
-      <p class="rule-ref">Pravidla 8.4 a 13</p>
+    </aside>
+    <p>Podání je uvedení míče do hry hráčem na pozici vpravo vzadu (pozice 1), který stojí v zóně podání.</p>
+    <h4 class="sub-heading" id="p-12-1"><a class="sub__num" href="#p-12-1">12.1</a> První podání v setu</h4>
+    <p class="sub sub--d3" id="p-12-1-1"><a class="sub__num" href="#p-12-1-1">12.1.1</a> V prvním a v rozhodujícím pátém setu podává první družstvo určené losováním.</p>
+    <p class="sub sub--d3" id="p-12-1-2"><a class="sub__num" href="#p-12-1-2">12.1.2</a> Ostatní sety začíná podáním družstvo, které v předchozím setu nepodávalo jako první.</p>
+    <h4 class="sub-heading" id="p-12-2"><a class="sub__num" href="#p-12-2">12.2</a> Pořadí podání</h4>
+    <p class="sub sub--d3" id="p-12-2-1"><a class="sub__num" href="#p-12-2-1">12.2.1</a> Hráči musí podávat v pořadí zapsaném na listu se sestavou.</p>
+    <p class="sub sub--d3" id="p-12-2-2"><a class="sub__num" href="#p-12-2-2">12.2.2</a> Po prvním podání v setu se podávající určuje takto:</p>
+    <p class="sub sub--d4" id="p-12-2-2-1"><a class="sub__num" href="#p-12-2-2-1">12.2.2.1</a> když podávající družstvo vyhraje rozehru, podává znovu stejný hráč (nebo jeho náhradník);</p>
+    <p class="sub sub--d4" id="p-12-2-2-2"><a class="sub__num" href="#p-12-2-2-2">12.2.2.2</a> když rozehru vyhraje přijímající družstvo, získá právo podávat a před podáním se posune o jednu pozici. Podává hráč, který přešel z pozice vpravo vpředu na pozici vpravo vzadu.</p>
+    <h4 class="sub-heading" id="p-12-3"><a class="sub__num" href="#p-12-3">12.3</a> Povolení podání</h4>
+    <p>První rozhodčí povolí podání (hvizdem), když zkontroloval, že obě družstva jsou připravená hrát a podávající má míč.</p>
+    <h4 class="sub-heading" id="p-12-4"><a class="sub__num" href="#p-12-4">12.4</a> Provedení podání</h4>
+    <p class="sub sub--d3" id="p-12-4-1"><a class="sub__num" href="#p-12-4-1">12.4.1</a> Míč se musí udeřit jednou rukou nebo kteroukoli částí paže poté, co ho podávající nadhodil nebo pustil z ruky (rukou).</p>
+    <p class="sub sub--d3" id="p-12-4-2"><a class="sub__num" href="#p-12-4-2">12.4.2</a> Povolený je jen jeden nadhoz nebo puštění míče. Driblovat nebo míčem v rukou pohybovat se smí.</p>
+    <p class="sub sub--d3" id="p-12-4-3"><a class="sub__num" href="#p-12-4-3">12.4.3</a> V okamžiku úderu nebo odrazu při podání ve výskoku se podávající nesmí dotknout hřiště (ani koncové čáry) ani podlahy mimo zónu podání. Po úderu smí vkročit nebo doskočit mimo zónu podání i do hřiště.</p>
+    <p class="sub sub--d3" id="p-12-4-4"><a class="sub__num" href="#p-12-4-4">12.4.4</a> Podávající musí udeřit do míče do <strong>8 sekund</strong> po hvizdu prvního rozhodčího.</p>
+    <p class="sub sub--d3" id="p-12-4-5"><a class="sub__num" href="#p-12-4-5">12.4.5</a> Podání provedené před hvizdem rozhodčího se ruší a opakuje.</p>
+    <h4 class="sub-heading" id="p-12-5"><a class="sub__num" href="#p-12-5">12.5</a> Clonění</h4>
+    <figure class="diagram" id="diagram-6">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 300 120" role="img" aria-labelledby="dg6-title dg6-desc">
+          <title id="dg6-title">Kolektivní clona při podání</title>
+          <desc id="dg6-desc">Hřiště shora, podávající vlevo za koncovou čarou. Hráči podávajícího družstva stojí u sítě ve skupině. Míč, který letí nad touto skupinou, takže přijímající hráč nevidí úder ani let míče, je chyba (clona). Míč, který letí mimo skupinu a je vidět, je v pořádku.</desc>
+          <rect class="dg-free" x="5" y="10" width="290" height="95" rx="3" />
+          <rect class="dg-floor" x="40" y="20" width="220" height="75" />
+          <rect class="dg-line" x="40" y="20" width="220" height="75" />
+          <line class="dg-line" x1="113" y1="20" x2="113" y2="95" />
+          <line class="dg-line" x1="187" y1="20" x2="187" y2="95" />
+          <line class="dg-net" x1="150" y1="14" x2="150" y2="101" />
+          <!-- zakrytý výhled: světlý klín od skupiny za síť -->
+          <path class="dg-shadow" d="M120 46 L270 30 L270 72 L120 62 Z" />
+          <!-- podávající a skupina hráčů podávajícího družstva s rukama nahoře -->
+          <g class="dg-player dg-player--serve">
+            <circle cx="22" cy="54" r="6" />
+            <circle cx="122" cy="47" r="6" /><circle cx="128" cy="56" r="6" /><circle cx="134" cy="64" r="6" />
+          </g>
+          <g class="dg-player dg-player--receive"><circle cx="232" cy="52" r="6" /></g>
+          <!-- dráhy míče -->
+          <path class="dg-path dg-path--bad" d="M28 54 Q120 40 225 50" marker-end="url(#dg-arrow)" />
+          <path class="dg-path dg-path--ok" d="M28 56 Q100 92 225 84" marker-end="url(#dg-arrow)" />
+          <g class="dg-ball-bad"><circle cx="128" cy="44" r="4" /></g>
+          <g class="dg-cross"><path d="M124.5 40.5l7 7M131.5 40.5l-7 7" /></g>
+          <g class="dg-ball-ok"><circle cx="128" cy="82" r="4" /></g>
+          <g class="dg-note">
+            <text x="22" y="66" class="dg-small">podávající</text>
+            <text x="128" y="114" class="dg-small">skupina hráčů podávajícího družstva u sítě</text>
+            <text x="232" y="16" class="dg-small">přijímající hráč</text>
+          </g>
+          <g class="dg-text">
+            <text x="200" y="40" class="dg-small">míč skrytý za skupinou = clona</text>
+            <text x="190" y="92" class="dg-small">míč je vidět = v pořádku</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 6</span> Kolektivní clona podle diagramu 6 FIVB. Clona je jen tehdy, když přijímající družstvo nevidí <strong>ani</strong> úder podávajícího, <strong>ani</strong> let míče. Od roku 2025 nesmějí hráči podávajícího družstva během podání zvedat ruce nad hlavu.</figcaption>
+    </figure>
+    <p class="sub sub--d3" id="p-12-5-1"><a class="sub__num" href="#p-12-5-1">12.5.1</a> Hráči podávajícího družstva nesmějí soupeři jednotlivě ani skupinově (kolektivní clonou) bránit ve výhledu na úder podávajícího a na let míče.</p>
+    <p class="sub sub--d3" id="p-12-5-2"><a class="sub__num" href="#p-12-5-2">12.5.2</a> Clonu tvoří hráč nebo skupina hráčů podávajícího družstva, když během podání mávají pažemi, poskakují, přesouvají se do stran nebo stojí ve skupině tak, že úder i let míče zůstanou skryté, dokud míč nedoletí ke svislé rovině sítě. Když přijímající družstvo vidí úder nebo let míče, o clonu nejde.</p>
+    <p class="sub sub--d3" id="p-12-5-3"><a class="sub__num" href="#p-12-5-3">12.5.3</a> Žádný hráč podávajícího družstva nesmí během podání zvednout ruce nad hlavu, dokud míč nepřeletí síť. <em>(Novinka pravidel 2025–2028.)</em></p>
+    <p>Když má první rozhodčí podezření, že družstvo cloní úmyslně, smí ho přes kapitána ve hře upozornit.</p>
+    <h4 class="sub-heading" id="p-12-6"><a class="sub__num" href="#p-12-6">12.6</a> Chyby uskutečněné v průběhu podání</h4>
+    <p class="sub sub--d3" id="p-12-6-1"><a class="sub__num" href="#p-12-6-1">12.6.1</a> <strong>Chyby při podání.</strong> Tyto chyby znamenají změnu podání, i když soupeř stojí v chybném postavení. Podávající:</p>
+    <p class="sub sub--d4" id="p-12-6-1-1"><a class="sub__num" href="#p-12-6-1-1">12.6.1.1</a> poruší pořadí podání;</p>
+    <p class="sub sub--d4" id="p-12-6-1-2"><a class="sub__num" href="#p-12-6-1-2">12.6.1.2</a> neprovede podání správně.</p>
+    <p class="sub sub--d3" id="p-12-6-2"><a class="sub__num" href="#p-12-6-2">12.6.2</a> <strong>Chyby po úderu do míče při podání.</strong> Po správném úderu se podání stane chybou (pokud soupeř nestojí v chybném postavení), když míč:</p>
+    <p class="sub sub--d4" id="p-12-6-2-1"><a class="sub__num" href="#p-12-6-2-1">12.6.2.1</a> se dotkne hráče podávajícího družstva nebo celý nepřejde svislou rovinu sítě prostorem přeletu;</p>
+    <p class="sub sub--d4" id="p-12-6-2-2"><a class="sub__num" href="#p-12-6-2-2">12.6.2.2</a> skončí v autu;</p>
+    <p class="sub sub--d4" id="p-12-6-2-3"><a class="sub__num" href="#p-12-6-2-3">12.6.2.3</a> přeletí nad clonou.</p>
+    <h4 class="sub-heading" id="p-12-7"><a class="sub__num" href="#p-12-7">12.7</a> Chyby podání a chyby v postavení</h4>
+    <p class="sub sub--d3" id="p-12-7-1"><a class="sub__num" href="#p-12-7-1">12.7.1</a> Když podávající udělá chybu v okamžiku úderu (špatné provedení, chybné pořadí apod.) a soupeř stojí v chybném postavení, trestá se <strong>chyba podání</strong>.</p>
+    <p class="sub sub--d3" id="p-12-7-2"><a class="sub__num" href="#p-12-7-2">12.7.2</a> Když bylo podání provedené správně, ale potom se stalo chybným (míč v autu, přelet nad clonou apod.), nastala dřív <strong>chyba v postavení</strong> a trestá se ta.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-13">
+    <summary><h3><span class="rule__num">13</span> Útočný úder</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="utok" aria-label="Ve zkratce: útok">
+      <p class="rule-brief__label">Ve zkratce · útok</p>
       <ul>
         <li><strong>Útočný úder</strong> je každé odbití směrem k soupeři kromě podání a bloku. Dokončený je ve chvíli, kdy míč celý přejde rovinu sítě nebo se ho dotkne soupeř.</li>
         <li><strong>Hráč přední řady</strong> smí útočit z jakékoli výšky.</li>
         <li><strong>Hráč zadní řady</strong> smí útočit nad horním okrajem sítě jen tehdy, když se odrazí zpoza útočné čáry (čáry se při odrazu nesmí dotknout). Doskočit pak smí i do přední zóny. Z přední zóny smí útočit jen na míč, který je alespoň zčásti pod horním okrajem sítě.</li>
         <li><strong>Libero</strong> nesmí dokončit útok na míč, který je celý nad horním okrajem sítě.</li>
-        <li>Když libero nahraje <strong>prsty vrchem v přední zóně</strong>, nesmí spoluhráč takový míč zakončit útokem nad horním okrajem sítě. Ze zadní zóny libero nahrávat smí bez omezení.</li>
+        <li>Když libero nahraje <strong>prsty vrchem v přední zóně</strong>, nesmí spoluhráč takový míč zakončit útokem nad horním okrajem sítě. Ze zadní části pole libero nahrávat smí bez omezení.</li>
         <li>Na <strong>podání soupeře</strong> se nesmí útočit, pokud je míč v přední zóně a celý nad horním okrajem sítě.</li>
-        <li>Míč, který se dotkne <strong>antény</strong>, je v autu.</li>
       </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="blok" class="rules-section">
-      <h2>Blok</h2>
-      <p class="rule-ref">Pravidlo 14</p>
+    </aside>
+    <h4 class="sub-heading" id="p-13-1"><a class="sub__num" href="#p-13-1">13.1</a> Charakteristiky útočného úderu</h4>
+    <p class="sub sub--d3" id="p-13-1-1"><a class="sub__num" href="#p-13-1-1">13.1.1</a> Útočným úderem je každá činnost, která posílá míč směrem k soupeři, kromě podání a bloku.</p>
+    <p class="sub sub--d3" id="p-13-1-2"><a class="sub__num" href="#p-13-1-2">13.1.2</a> Ulitím (tečí) se útočit smí, pokud je míč čistě odbitý, ne chycený nebo hozený.</p>
+    <p class="sub sub--d3" id="p-13-1-3"><a class="sub__num" href="#p-13-1-3">13.1.3</a> Útočný úder je dokončený v okamžiku, kdy míč celý přejde svislou rovinu sítě nebo se ho dotkne soupeř.</p>
+    <h4 class="sub-heading" id="p-13-2"><a class="sub__num" href="#p-13-2">13.2</a> Omezení útočného úderu</h4>
+    <p class="sub sub--d3" id="p-13-2-1"><a class="sub__num" href="#p-13-2-1">13.2.1</a> Hráč přední řady smí dokončit útočný úder z jakékoli výšky, pokud se míče dotkl ve svém hracím prostoru (kromě <a href="#p-13-2-4">13.2.4</a> a <a href="#p-13-3-6">13.3.6</a>).</p>
+    <p class="sub sub--d3" id="p-13-2-2"><a class="sub__num" href="#p-13-2-2">13.2.2</a> Hráč zadní řady smí dokončit útočný úder z jakékoli výšky, když útočí zpoza přední zóny:</p>
+    <figure class="diagram" id="diagram-8">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 300 130" role="img" aria-labelledby="dg8-title dg8-desc">
+          <title id="dg8-title">Útočný úder hráče zadní řady</title>
+          <desc id="dg8-desc">Vlevo pohled z boku: síť vpravo, útočná čára 3 metry před ní. Hráč A se odrazí zpoza útočné čáry, udeří míč nad sítí a doskočí do přední zóny – správně. Hráč B se při odrazu dotkne útočné čáry – chyba. Hráč C se odrazí v přední zóně a udeří míč celý nad horním okrajem sítě – chyba. Vpravo: hráč zadní řady v přední zóně smí útočit jen na míč, který je alespoň zčásti pod horním okrajem sítě (A správně), na míč celý nad okrajem ne (B chyba).</desc>
+          <!-- levý panel: odraz -->
+          <line class="dg-ground" x1="5" y1="110" x2="175" y2="110" />
+          <rect class="dg-attack-line" x="88" y="109" width="5" height="3" />
+          <line class="dg-net-side" x1="165" y1="62" x2="165" y2="110" />
+          <rect class="dg-band" x="163.5" y="60" width="3" height="3" />
+          <line class="dg-ref" x1="5" y1="61.5" x2="175" y2="61.5" />
+          <!-- A: odraz za čarou -->
+          <ellipse class="dg-foot" cx="60" cy="108" rx="6" ry="2" />
+          <path class="dg-jump dg-jump--ok" d="M60 106 Q100 30 130 106" />
+          <circle class="dg-ball dg-ball--ok" cx="100" cy="50" r="5" />
+          <!-- B: odraz na čáře -->
+          <ellipse class="dg-foot dg-foot--bad" cx="90" cy="108" rx="6" ry="2" />
+          <path class="dg-jump dg-jump--bad" d="M90 106 Q122 40 148 106" />
+          <circle class="dg-ball dg-ball--bad" cx="125" cy="52" r="5" />
+          <!-- C: odraz v přední zóně -->
+          <ellipse class="dg-foot dg-foot--bad" cx="120" cy="108" rx="6" ry="2" />
+          <path class="dg-jump dg-jump--bad" d="M120 106 Q142 46 160 106" />
+          <circle class="dg-ball dg-ball--bad" cx="150" cy="54" r="5" />
+          <g class="dg-note">
+            <text x="60" y="122">A</text><text x="90" y="122">B</text><text x="120" y="122">C</text>
+            <text x="90" y="128" class="dg-small">útočná čára</text>
+            <text x="165" y="56">síť</text>
+            <text x="40" y="58" class="dg-small">horní okraj sítě</text>
+            <text x="45" y="20" class="dg-small">A správně · B a C chyba</text>
+          </g>
+          <!-- pravý panel: výška míče v přední zóně -->
+          <g transform="translate(185 0)">
+            <line class="dg-ground" x1="0" y1="110" x2="110" y2="110" />
+            <line class="dg-net-side" x1="95" y1="62" x2="95" y2="110" />
+            <rect class="dg-band" x="93.5" y="60" width="3" height="3" />
+            <line class="dg-ref" x1="0" y1="61.5" x2="110" y2="61.5" />
+            <circle class="dg-ball dg-ball--ok" cx="70" cy="63" r="6" />
+            <circle class="dg-ball dg-ball--bad" cx="40" cy="48" r="6" />
+            <g class="dg-note">
+              <text x="70" y="78">A</text><text x="40" y="35">B</text>
+              <text x="55" y="20" class="dg-small">hráč zadní řady v přední zóně:</text>
+              <text x="55" y="27" class="dg-small">A část míče pod okrajem = správně</text>
+              <text x="55" y="92" class="dg-small">B míč celý nad okrajem = chyba</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 8</span> Útočný úder hráče zadní řady podle diagramu 8 FIVB. Rozhoduje místo odrazu (chodidla se nesmí dotknout útočné čáry) a výška míče v okamžiku úderu.</figcaption>
+    </figure>
+    <p class="sub sub--d4" id="p-13-2-2-1"><a class="sub__num" href="#p-13-2-2-1">13.2.2.1</a> při odrazu se jeho chodidlo (chodidla) nesmí dotknout útočné čáry ani ji překročit;</p>
+    <p class="sub sub--d4" id="p-13-2-2-2"><a class="sub__num" href="#p-13-2-2-2">13.2.2.2</a> po úderu smí doskočit do přední zóny.</p>
+    <p class="sub sub--d3" id="p-13-2-3"><a class="sub__num" href="#p-13-2-3">13.2.3</a> Hráč zadní řady smí dokončit útočný úder i z přední zóny, pokud je v okamžiku dotyku část míče níž než horní okraj sítě.</p>
+    <p class="sub sub--d3" id="p-13-2-4"><a class="sub__num" href="#p-13-2-4">13.2.4</a> Žádný hráč nesmí dokončit útočný úder na <strong>podání soupeře</strong>, když je míč v přední zóně a celý výš než horní okraj sítě.</p>
+    <h4 class="sub-heading" id="p-13-3"><a class="sub__num" href="#p-13-3">13.3</a> Chyby při útočném úderu</h4>
+    <p class="sub sub--d3" id="p-13-3-1"><a class="sub__num" href="#p-13-3-1">13.3.1</a> Hráč udeří do míče v hracím prostoru soupeře.</p>
+    <p class="sub sub--d3" id="p-13-3-2"><a class="sub__num" href="#p-13-3-2">13.3.2</a> Hráč zahraje míč do autu.</p>
+    <p class="sub sub--d3" id="p-13-3-3"><a class="sub__num" href="#p-13-3-3">13.3.3</a> Hráč zadní řady dokončí útočný úder z přední zóny, když je míč v okamžiku úderu celý výš než horní okraj sítě.</p>
+    <p class="sub sub--d3" id="p-13-3-4"><a class="sub__num" href="#p-13-3-4">13.3.4</a> Hráč dokončí útočný úder na podání soupeře, když je míč v přední zóně a celý výš než horní okraj sítě.</p>
+    <p class="sub sub--d3" id="p-13-3-5"><a class="sub__num" href="#p-13-3-5">13.3.5</a> Libero dokončí útočný úder, když je míč v okamžiku úderu celý výš než horní okraj sítě.</p>
+    <p class="sub sub--d3" id="p-13-3-6"><a class="sub__num" href="#p-13-3-6">13.3.6</a> Hráč dokončí útočný úder výš než horní okraj sítě na míč, který mu libero nahrálo prsty vrchem ve své přední zóně.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-14">
+    <summary><h3><span class="rule__num">14</span> Blok</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="blok" aria-label="Ve zkratce: blok">
+      <p class="rule-brief__label">Ve zkratce</p>
       <ul>
-        <li>Blok je snaha hráčů u sítě zastavit míč od soupeře rukama nad horním okrajem sítě.</li>
+        <li>Blok je snaha hráčů u sítě zachytit míč od soupeře tím, že se dostanou výš než horní okraj sítě.</li>
         <li>Blokovat smějí <strong>jen hráči přední řady</strong>. Hráč zadní řady ani libero se dokončeného bloku nesmí účastnit. Skupinový blok je dokončený, jakmile se míče dotkne kterýkoli z blokařů.</li>
         <li>Dotek bloku se <strong>nepočítá do tří odbití</strong>. První odbití po bloku smí provést kdokoli, i hráč, který blokoval.</li>
         <li>Při bloku se smí ruce dostat nad síť na stranu soupeře, ale míče se smí dotknout až <strong>při útočném úderu soupeře nebo po něm</strong>.</li>
         <li><strong>Blokovat podání</strong> je chyba.</li>
       </ul>
+    </aside>
+    <h4 class="sub-heading" id="p-14-1"><a class="sub__num" href="#p-14-1">14.1</a> Blokování</h4>
+    <p class="sub sub--d3" id="p-14-1-1"><a class="sub__num" href="#p-14-1-1">14.1.1</a> <strong>Blokování.</strong> Blok je činnost hráčů u sítě, kteří se snaží zachytit míč přicházející od soupeře tím, že se dostanou výš než horní okraj sítě, bez ohledu na to, v jaké výšce se míče dotknou. Dokončit blok smějí <strong>jen hráči přední řady</strong>; v okamžiku dotyku s míčem ale musí mít část těla výš než horní okraj sítě.</p>
+    <p class="sub sub--d3" id="p-14-1-2"><a class="sub__num" href="#p-14-1-2">14.1.2</a> <strong>Pokus o blok.</strong> Pokus o blok je blokování bez doteku míče.</p>
+    <p class="sub sub--d3" id="p-14-1-3"><a class="sub__num" href="#p-14-1-3">14.1.3</a> <strong>Dokončený blok.</strong> Blok je dokončený, kdykoli se míče dotkne blokující hráč (<a href="#diagram-7">diagram 7</a>).</p>
+    <p class="sub sub--d3" id="p-14-1-4"><a class="sub__num" href="#p-14-1-4">14.1.4</a> <strong>Skupinový blok.</strong> Skupinový blok provádějí dva nebo tři hráči blízko sebe a je dokončený, jakmile se míče dotkne jeden z nich.</p>
+    <figure class="diagram" id="diagram-7">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 300 110" role="img" aria-labelledby="dg7-title dg7-desc">
+          <title id="dg7-title">Dokončený blok – čtyři případy</title>
+          <desc id="dg7-desc">Čtyři pohledy z boku na blokaře u sítě, jehož ruce sahají nad horní okraj sítě. Ve všech případech jde o dokončený blok: míč je nad sítí; míč je níž než horní okraj sítě; míč se dotkne ruky blokaře a sítě; míč se odrazí od sítě do ruky blokaře.</desc>
+          <defs>
+            <g id="dg7-blocker">
+              <!-- síť z boku: svislá čára, horní okraj označený -->
+              <line class="dg-net-side" x1="40" y1="30" x2="40" y2="92" />
+              <rect class="dg-band" x="38.5" y="29" width="3" height="3" />
+              <!-- paže blokaře (vlevo od sítě) sahající přes horní okraj -->
+              <path class="dg-arm" d="M22 92 C24 60 28 34 35 23" />
+              <path class="dg-hand" d="M33 25 q8 -9 15 3" />
+            </g>
+          </defs>
+          <g transform="translate(0 0)">
+            <use href="#dg7-blocker" />
+            <circle class="dg-ball" cx="43" cy="14" r="6" />
+            <path class="dg-path" d="M70 14 H51" marker-end="url(#dg-arrow)" />
+          </g>
+          <g transform="translate(75 0)">
+            <use href="#dg7-blocker" />
+            <circle class="dg-ball" cx="53" cy="34" r="6" />
+            <path class="dg-path" d="M76 34 H61" marker-end="url(#dg-arrow)" />
+          </g>
+          <g transform="translate(150 0)">
+            <use href="#dg7-blocker" />
+            <circle class="dg-ball" cx="46.5" cy="34" r="6" />
+            <path class="dg-path" d="M70 14 L53 28" marker-end="url(#dg-arrow)" />
+            <path class="dg-path" d="M50 41 L60 56" marker-end="url(#dg-arrow)" />
+          </g>
+          <g transform="translate(225 0)">
+            <use href="#dg7-blocker" />
+            <circle class="dg-ball" cx="50" cy="52" r="6" />
+            <path class="dg-path" d="M70 14 L46 28" marker-end="url(#dg-arrow)" />
+            <path class="dg-path" d="M44 32 L49 44" marker-end="url(#dg-arrow)" />
+          </g>
+          <g class="dg-note">
+            <text x="37" y="102" class="dg-small">míč nad sítí</text>
+            <text x="112" y="102" class="dg-small">míč níž než okraj sítě</text>
+            <text x="187" y="102" class="dg-small">míč se dotkne sítě</text>
+            <text x="262" y="102" class="dg-small">míč se odrazí od sítě</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 7</span> Dokončený blok podle diagramu 7 FIVB. Ve všech čtyřech případech se míče dotkl blokař, jehož ruce sahají nad horní okraj sítě, takže blok je dokončený (a nepočítá se do tří odbití).</figcaption>
+    </figure>
+    <h4 class="sub-heading" id="p-14-2"><a class="sub__num" href="#p-14-2">14.2</a> Dotek bloku</h4>
+    <p>Jeden nebo více blokařů se smí míče dotknout několikrát rychle po sobě, pokud je to během jedné akce.</p>
+    <h4 class="sub-heading" id="p-14-3"><a class="sub__num" href="#p-14-3">14.3</a> Blokování v prostoru soupeře</h4>
+    <p>Při bloku smí hráč přenést ruce a paže přes síť, pokud tím nebrání soupeři ve hře. Míče za sítí se tedy nesmí dotknout dřív, než soupeř provede útočný úder.</p>
+    <h4 class="sub-heading" id="p-14-4"><a class="sub__num" href="#p-14-4">14.4</a> Blok a odbití družstva</h4>
+    <p class="sub sub--d3" id="p-14-4-1"><a class="sub__num" href="#p-14-4-1">14.4.1</a> Dotek bloku se <strong>nepočítá</strong> jako odbití družstva. Po doteku bloku má proto družstvo na vrácení míče tři odbití.</p>
+    <p class="sub sub--d3" id="p-14-4-2"><a class="sub__num" href="#p-14-4-2">14.4.2</a> První odbití po bloku smí provést kterýkoli hráč, i ten, který se míče dotkl při bloku.</p>
+    <h4 class="sub-heading" id="p-14-5"><a class="sub__num" href="#p-14-5">14.5</a> Blokování podání</h4>
+    <p>Blokovat podání soupeře je zakázané.</p>
+    <h4 class="sub-heading" id="p-14-6"><a class="sub__num" href="#p-14-6">14.6</a> Chyby při blokování</h4>
+    <p class="sub sub--d3" id="p-14-6-1"><a class="sub__num" href="#p-14-6-1">14.6.1</a> Blokař se dotkne míče v prostoru soupeře před jeho útočným úderem.</p>
+    <p class="sub sub--d3" id="p-14-6-2"><a class="sub__num" href="#p-14-6-2">14.6.2</a> Hráč zadní řady nebo libero dokončí blok nebo se účastní dokončeného bloku.</p>
+    <p class="sub sub--d3" id="p-14-6-3"><a class="sub__num" href="#p-14-6-3">14.6.3</a> Blokování podání soupeře.</p>
+    <p class="sub sub--d3" id="p-14-6-4"><a class="sub__num" href="#p-14-6-4">14.6.4</a> Míč se od bloku odrazí do autu.</p>
+    <p class="sub sub--d3" id="p-14-6-5"><a class="sub__num" href="#p-14-6-5">14.6.5</a> Blokování míče v prostoru soupeře mimo anténku.</p>
+    <p class="sub sub--d3" id="p-14-6-6"><a class="sub__num" href="#p-14-6-6">14.6.6</a> Libero se pokusí o blok, sám nebo ve skupině.</p>
+    </div></details>
     </section>
-
-    <!-- ===================================================== -->
-    <section id="dotyky-chyby" class="rules-section">
-      <h2>Dotyky, síť a chyby ve hře</h2>
-      <p class="rule-ref">Pravidla 8, 10 a 11</p>
-      <h3>Míč v poli a v autu</h3>
+    <section class="rules-chapter" id="kapitola-5" aria-labelledby="kapitola-5-nadpis">
+    <h2 id="kapitola-5-nadpis"><span class="rules-chapter__label">Kapitola 5</span> Přerušení, přestávky a zdržování</h2>
+    <details class="rule" id="pravidlo-15">
+    <summary><h3><span class="rule__num">15</span> Řádná přerušení hry</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="preruseni-hry" aria-label="Ve zkratce: přerušení a zdržování hry">
+      <p class="rule-brief__label">Ve zkratce · přerušení a zdržování</p>
       <ul>
-        <li>Míč je <strong>v poli</strong>, když se dotkne hřiště včetně čar.</li>
-        <li>Míč je <strong>v autu</strong>, když dopadne celý mimo čáry, dotkne se předmětu mimo hřiště, stropu nebo osoby mimo hru, dotkne se antény, lan nebo sloupků, přejde na druhou stranu mimo prostor mezi anténami nebo celý proletí pod sítí.</li>
-        <li>Míč, který přeletí mimo anténu do volné zóny soupeře, smí tým vrátit (také mimo antény) a hrát dál, pokud ještě má odbití.</li>
+        <li>Každé družstvo má v setu <strong>2 oddechové časy po 30 sekundách</strong> a nejvýše <strong>6 střídání</strong>.</li>
+        <li>Žádat o přerušení smí jen trenér (v jeho nepřítomnosti asistent trenéra nebo kapitán ve hře), a to když je míč mimo hru, před hvizdem k podání.</li>
+        <li><strong>Neoprávněná žádost</strong> (během rozehry, po vyčerpání oddechových časů nebo střídání…): první v utkání se bez trestu odmítne, pokud nezdrží hru. Další už je zdržování.</li>
+        <li><strong>Zdržování</strong> se trestá postupně a tresty platí po celé utkání: první zdržení družstva je <em>napomenutí za zdržování</em> a každé další je <em>trest za zdržování</em>, tedy bod a podání pro soupeře (<a href="#pravidlo-16">pravidlo 16</a>).</li>
       </ul>
-      <h3>Síť a středová čára</h3>
+    </aside>
+    <aside class="rule-brief" id="stridani" aria-label="Ve zkratce: střídání">
+      <p class="rule-brief__label">Ve zkratce · střídání</p>
       <ul>
-        <li><strong>Dotyk sítě mezi anténami</strong> během hraní míče (odraz, úder i doskok) je chyba. Dotyk sítě mimo antény nebo mimo akci je povolený, pokud neruší hru.</li>
-        <li>Když míč vražený do sítě způsobí, že se síť dotkne soupeře, <strong>není to chyba</strong>.</li>
-        <li><strong>Středová čára:</strong> chodidlo smí zasáhnout do pole soupeře, pokud jeho část zůstane na čáře nebo přímo nad ní. Přešlap celým chodidlem je chyba. Jinými částmi těla se hráč pole soupeře dotknout smí, pokud ho neruší.</li>
-        <li>Hráč nesmí sahat na míč v prostoru soupeře <strong>před jeho útočným úderem</strong>.</li>
-      </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="rotace-postaveni" class="rules-section">
-      <h2>Rotace a postavení</h2>
-      <p class="rule-ref">Pravidlo 7</p>
-      <ul>
-        <li>Na hřišti je za každý tým 6 hráčů: přední řada na pozicích 4, 3, 2 a zadní řada na pozicích 5, 6, 1. Podává hráč na pozici 1.</li>
-        <li>Pořadí hráčů určuje <strong>zápis o utkání</strong> (sestava, kterou trenér odevzdá před setem).</li>
-        <li>Když přijímající tým získá podání, jeho hráči se <strong>posunou o jednu pozici ve směru hodinových ručiček</strong>.</li>
-        <li><strong>Chyba rotace:</strong> podání neprovede hráč, který je na řadě. Soupeř získá bod a podání, pořadí se opraví a body, které chybující tým od chyby získal, se ruší.</li>
-        <li><strong>Chyba postavení:</strong> v okamžiku podání nestojí hráči správně vůči sobě. Po úderu podávajícího se už smějí volně pohybovat. Pravidla 2025–2028 v tomto bodě přinesla změny, proto přesné znění ověř v oficiálních pravidlech.</li>
-      </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="stridani" class="rules-section">
-      <h2>Střídání a libero</h2>
-      <p class="rule-ref">Pravidla 15 a 19</p>
-      <h3>Střídání</h3>
-      <ul>
-        <li>Tým smí v setu provést nejvýše <strong>6 střídání</strong>.</li>
+        <li>Družstvo smí v setu provést nejvýše <strong>6 střídání</strong>.</li>
         <li>Hráč základní sestavy smí v setu odejít jen jednou a jen jednou se vrátit, a to <strong>na své místo</strong> za hráče, který ho vystřídal.</li>
         <li>Náhradník smí v setu nastoupit jen jednou a vystřídat ho smí jen hráč, za kterého přišel.</li>
         <li>Zraněného hráče, kterého nelze vystřídat podle pravidel, lze nahradit <strong>výjimečným střídáním</strong>.</li>
+        <li>O liberu, jehož výměny nejsou střídání, je <a href="#libero">pravidlo 19</a>.</li>
       </ul>
-      <h3>Libero</h3>
-      <ul>
-        <li>Libero je obranný specialista v odlišném dresu. Smí hrát <strong>jen v zadní řadě</strong>.</li>
-        <li>Nesmí podávat, blokovat ani se o blok pokoušet a nesmí dokončit útok nad horním okrajem sítě.</li>
-        <li><strong>Výměny libera nejsou střídání</strong>: jejich počet není omezený, ale mezi dvěma výměnami musí proběhnout dokončená rozehra.</li>
-      </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="preruseni-hry" class="rules-section">
-      <h2>Přerušení a zdržování hry</h2>
-      <p class="rule-ref">Pravidla 15 a 16</p>
-      <ul>
-        <li>Každý tým má v setu <strong>2 oddechové časy po 30 sekundách</strong>.</li>
-        <li>Žádat o přerušení smí jen trenér (nebo kapitán ve hře), a to když je míč mimo hru, před hvizdem k podání.</li>
-        <li><strong>Neoprávněná žádost</strong> (během rozehry, po vyčerpání oddechových časů nebo střídání…): první v utkání se bez trestu odmítne, pokud nezdrží hru. Další už je zdržování.</li>
-        <li><strong>Zdržování</strong> se trestá postupně a tresty platí po celé utkání: první zdržení týmu je <em>napomenutí za zdržování</em> a každé další je <em>trest za zdržování</em>, tedy bod a podání pro soupeře.</li>
-      </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="chovani" class="rules-section">
-      <h2>Chování a tresty</h2>
-      <p class="rule-ref">Pravidlo 21</p>
-      <ul>
-        <li><strong>Drobné nesportovní chování</strong> se nejdřív řeší ústním nebo gestem naznačeným upozorněním, při opakování žlutou kartou (napomenutí).</li>
-        <li><strong>Trest</strong> (červená karta): soupeř získá bod a podání.</li>
-        <li><strong>Vyloučení</strong> (červená a žlutá karta společně v jedné ruce): hráč musí do konce setu opustit hru.</li>
-        <li><strong>Diskvalifikace</strong> (červená a žlutá karta každá v jiné ruce): hráč musí opustit utkání.</li>
-      </ul>
-    </section>
-
-    <!-- ===================================================== -->
-    <section id="signalizace" class="rules-section">
-      <h2>Signalizace rozhodčích</h2>
-      <p class="rule-ref">Pravidlo 30</p>
-      <p>Rozhodčí musí každou chybu ukázat <strong>oficiálním gestem</strong>: kdo chybu udělal, co se stalo a kdo bude podávat. Ukazuje-li gesto jednou rukou, použije ruku na straně týmu, který chyboval nebo o něco žádá.</p>
-      <p>Animace vychází z oficiálních pravidel FIVB 2025–2028 (diagramy 11 a 12). Gesto přehraješ tlačítkem ▶.</p>
-      <p><a class="button button--secondary" href="gesta.html">Vyzkoušej se v kvízu gest</a></p>
-      <div id="gesture-atlas" class="stack">
-        <p class="muted">Načítám gesta…</p>
+    </aside>
+    <p>Přerušení je doba mezi dokončenou rozehrou a hvizdem prvního rozhodčího k dalšímu podání. Jediná řádná přerušení hry jsou <strong>oddechové časy</strong> a <strong>střídání</strong>.</p>
+    <h4 class="sub-heading" id="p-15-1"><a class="sub__num" href="#p-15-1">15.1</a> Počet řádných přerušení</h4>
+    <p>Každé družstvo smí v setu požádat nejvýše o <strong>dva oddechové časy</strong> a <strong>šest střídání</strong>.</p>
+    <h4 class="sub-heading" id="p-15-2"><a class="sub__num" href="#p-15-2">15.2</a> Posloupnost řádných přerušení</h4>
+    <p class="sub sub--d3" id="p-15-2-1"><a class="sub__num" href="#p-15-2-1">15.2.1</a> V jednom přerušení mohou po sobě následovat žádost o jeden nebo dva oddechové časy a jedna žádost o střídání, a to od kteréhokoli družstva.</p>
+    <p class="sub sub--d3" id="p-15-2-2"><a class="sub__num" href="#p-15-2-2">15.2.2</a> Družstvo ale nesmí v témže přerušení žádat o střídání dvakrát po sobě. V rámci jedné žádosti smí vystřídat dva nebo víc hráčů najednou.</p>
+    <p class="sub sub--d3" id="p-15-2-3"><a class="sub__num" href="#p-15-2-3">15.2.3</a> Mezi dvěma samostatnými žádostmi stejného družstva o střídání musí proběhnout dokončená rozehra. Výjimkou je vynucené střídání kvůli zranění, vyloučení nebo diskvalifikaci (<a href="#p-15-5-2">15.5.2</a>, <a href="#p-15-7">15.7</a>, <a href="#p-15-8">15.8</a>).</p>
+    <p class="sub sub--d3" id="p-15-2-4"><a class="sub__num" href="#p-15-2-4">15.2.4</a> Když bylo družstvu v přerušení odmítnuto a napomenutím za zdržování potrestáno nějaké přerušení, nesmí už v tomtéž přerušení (tj. do konce příští dokončené rozehry) žádat o žádné další řádné přerušení.</p>
+    <h4 class="sub-heading" id="p-15-3"><a class="sub__num" href="#p-15-3">15.3</a> Žádost o řádná přerušení hry</h4>
+    <p class="sub sub--d3" id="p-15-3-1"><a class="sub__num" href="#p-15-3-1">15.3.1</a> O řádná přerušení smí žádat <strong>trenér</strong>, v jeho nepřítomnosti asistent trenéra nebo kapitán ve hře, a nikdo jiný.</p>
+    <p class="sub sub--d3" id="p-15-3-2"><a class="sub__num" href="#p-15-3-2">15.3.2</a> Střídání před začátkem setu je povolené a zapíše se jako řádné střídání v tomto setu.</p>
+    <h4 class="sub-heading" id="p-15-4"><a class="sub__num" href="#p-15-4">15.4</a> Oddechové časy</h4>
+    <p class="sub sub--d3" id="p-15-4-1"><a class="sub__num" href="#p-15-4-1">15.4.1</a> O oddechový čas se žádá příslušným gestem, když je míč mimo hru a před hvizdem k podání. Každý oddechový čas trvá <strong>30 sekund</strong>.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Délku oddechových časů může FIVB na žádost pořadatele upravit. O oddechový čas se žádá nejdřív bzučákem a pak gestem.</p>
+    <p class="sub sub--d3" id="p-15-4-2"><a class="sub__num" href="#p-15-4-2">15.4.2</a> Během oddechových časů musí hráči ve hře odejít do volné zóny u své lavice.</p>
+    <h4 class="sub-heading" id="p-15-5"><a class="sub__num" href="#p-15-5">15.5</a> Střídání hráčů</h4>
+    <p class="sub sub--d3" id="p-15-5-1"><a class="sub__num" href="#p-15-5-1">15.5.1</a> Střídání je úkon, při kterém hráč (kromě libera a hráče, za kterého se libero vyměňuje) poté, co ho zapisovatel zapíše, vstoupí do hry na místo jiného hráče, který musí v tu chvíli hřiště opustit.</p>
+    <p class="sub sub--d3" id="p-15-5-2"><a class="sub__num" href="#p-15-5-2">15.5.2</a> Když je střídání vynucené zraněním hráče ve hře, může ho trenér (nebo kapitán ve hře) doprovodit příslušným gestem.</p>
+    <h4 class="sub-heading" id="p-15-6"><a class="sub__num" href="#p-15-6">15.6</a> Omezení střídání</h4>
+    <p class="sub sub--d3" id="p-15-6-1"><a class="sub__num" href="#p-15-6-1">15.6.1</a> Hráč základní sestavy smí v setu hru opustit <strong>jen jednou</strong> a <strong>jen jednou</strong> se do ní vrátit, a to jen na své původní místo v sestavě.</p>
+    <p class="sub sub--d3" id="p-15-6-2"><a class="sub__num" href="#p-15-6-2">15.6.2</a> Náhradník smí v setu nastoupit za hráče základní sestavy <strong>jen jednou</strong> a vystřídat ho smí jen tentýž hráč základní sestavy.</p>
+    <h4 class="sub-heading" id="p-15-7"><a class="sub__num" href="#p-15-7">15.7</a> Výjimečné střídání</h4>
+    <p>Hráče (kromě libera), který nemůže pokračovat kvůli zranění, nemoci, vyloučení nebo diskvalifikaci, je třeba vystřídat podle pravidel. Když to nejde, má družstvo právo na <strong>výjimečné střídání</strong> nad rámec omezení v <a href="#p-15-6">15.6</a>.</p>
+    <p>Při výjimečném střídání smí za zraněného, nemocného, vyloučeného nebo diskvalifikovaného hráče nastoupit kterýkoli hráč, který v tu chvíli není na hřišti, kromě obou liber a hráče, za kterého se libero pravidelně vyměňuje. Hráč vystřídaný výjimečným střídáním se do utkání už nesmí vrátit.</p>
+    <p>Výjimečné střídání se nikdy nepočítá jako řádné, ale zapisuje se do celkového počtu střídání v setu a v utkání.</p>
+    <h4 class="sub-heading" id="p-15-8"><a class="sub__num" href="#p-15-8">15.8</a> Střídání při vyloučení nebo diskvalifikaci</h4>
+    <p>Vyloučený nebo diskvalifikovaný hráč musí být okamžitě vystřídán řádným střídáním. Když to nejde, má družstvo právo na výjimečné střídání. Když nejde ani to, je družstvo prohlášeno za <strong>neúplné</strong> (<a href="#p-6-4-3">6.4.3</a>).</p>
+    <h4 class="sub-heading" id="p-15-9"><a class="sub__num" href="#p-15-9">15.9</a> Neoprávněné střídání</h4>
+    <p class="sub sub--d3" id="p-15-9-1"><a class="sub__num" href="#p-15-9-1">15.9.1</a> Střídání je neoprávněné, když překročí omezení v <a href="#p-15-6">15.6</a> (kromě případu <a href="#p-15-7">15.7</a>) nebo když se ho účastní nezapsaný hráč.</p>
+    <p class="sub sub--d3" id="p-15-9-2"><a class="sub__num" href="#p-15-9-2">15.9.2</a> Když družstvo provedlo neoprávněné střídání a hra už pokračovala, postupuje se v tomto pořadí:</p>
+    <p class="sub sub--d4" id="p-15-9-2-1"><a class="sub__num" href="#p-15-9-2-1">15.9.2.1</a> soupeř získá bod a podání;</p>
+    <p class="sub sub--d4" id="p-15-9-2-2"><a class="sub__num" href="#p-15-9-2-2">15.9.2.2</a> střídání se opraví;</p>
+    <p class="sub sub--d4" id="p-15-9-2-3"><a class="sub__num" href="#p-15-9-2-3">15.9.2.3</a> body, které chybující družstvo získalo od okamžiku chyby, se ruší; body soupeře zůstávají.</p>
+    <h4 class="sub-heading" id="p-15-10"><a class="sub__num" href="#p-15-10">15.10</a> Postup při střídání</h4>
+    <p class="sub sub--d3" id="p-15-10-1"><a class="sub__num" href="#p-15-10-1">15.10.1</a> Střídání se provádí v zóně střídání.</p>
+    <p class="sub sub--d3" id="p-15-10-2"><a class="sub__num" href="#p-15-10-2">15.10.2</a> Střídání smí trvat jen tak dlouho, kolik je třeba na zápis do zápisu o utkání a na odchod a příchod hráčů.</p>
+    <p class="sub sub--d3" id="p-15-10-3"><a class="sub__num" href="#p-15-10-3">15.10.3</a> <strong>Žádost o střídání.</strong> </p>
+    <p class="sub sub--d4" id="p-15-10-3-1"><a class="sub__num" href="#p-15-10-3-1">15.10.3.1</a> Skutečnou žádostí o střídání je okamžik, kdy náhradník (náhradníci) připravený ke hře vstoupí během přerušení do zóny střídání. Trenér nemusí ukazovat gesto střídání, kromě střídání kvůli zranění nebo před začátkem setu.</p>
+    <p class="sub sub--d4" id="p-15-10-3-2"><a class="sub__num" href="#p-15-10-3-2">15.10.3.2</a> Když hráč v okamžiku žádosti není připravený ke hře, střídání se nepovolí a družstvo je potrestáno za zdržování.</p>
+    <p class="sub sub--d4" id="p-15-10-3-3"><a class="sub__num" href="#p-15-10-3-3">15.10.3.3</a> Žádost o střídání potvrdí a ohlásí zapisovatel bzučákem nebo druhý rozhodčí hvizdem. Střídání povoluje druhý rozhodčí.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Ke střídání se používají číslované tabulky (pokud se data nepředávají zapisovateli elektronicky).</p>
+    <p class="sub sub--d3" id="p-15-10-4"><a class="sub__num" href="#p-15-10-4">15.10.4</a> Když chce družstvo vystřídat víc hráčů najednou, musí všichni náhradníci vstoupit do zóny střídání současně, aby šlo o jednu žádost. Střídá se pak postupně, jedna dvojice po druhé. Když je jedno ze střídání neoprávněné, oprávněná se povolí a neoprávněné se odmítne a potrestá za zdržování.</p>
+    <h4 class="sub-heading" id="p-15-11"><a class="sub__num" href="#p-15-11">15.11</a> Neoprávněné žádosti</h4>
+    <p class="sub sub--d3" id="p-15-11-1"><a class="sub__num" href="#p-15-11-1">15.11.1</a> Neoprávněné je žádat o řádné přerušení hry:</p>
+    <p class="sub sub--d4" id="p-15-11-1-1"><a class="sub__num" href="#p-15-11-1-1">15.11.1.1</a> během rozehry, v okamžiku hvizdu k podání nebo po něm;</p>
+    <p class="sub sub--d4" id="p-15-11-1-2"><a class="sub__num" href="#p-15-11-1-2">15.11.1.2</a> členem družstva, který k tomu nemá právo;</p>
+    <p class="sub sub--d4" id="p-15-11-1-3"><a class="sub__num" href="#p-15-11-1-3">15.11.1.3</a> o druhé střídání stejného družstva v tomtéž přerušení (tj. před koncem příští dokončené rozehry), kromě zranění, nemoci, vyloučení nebo diskvalifikace hráče ve hře;</p>
+    <p class="sub sub--d4" id="p-15-11-1-4"><a class="sub__num" href="#p-15-11-1-4">15.11.1.4</a> po vyčerpání povolených oddechových časů a střídání.</p>
+    <p class="sub sub--d3" id="p-15-11-2"><a class="sub__num" href="#p-15-11-2">15.11.2</a> První neoprávněná žádost družstva v utkání, která neovlivní ani nezdrží hru, se odmítne a zapíše do zápisu bez dalších důsledků.</p>
+    <p class="sub sub--d3" id="p-15-11-3"><a class="sub__num" href="#p-15-11-3">15.11.3</a> Každá další neoprávněná žádost stejného družstva v utkání je <strong>zdržování</strong>.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-16">
+    <summary><h3><span class="rule__num">16</span> Zdržování hry</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-16-1"><a class="sub__num" href="#p-16-1">16.1</a> Způsoby zdržování</h4>
+    <p>Zdržováním je nevhodné jednání družstva, které oddaluje pokračování hry. Patří k němu mimo jiné:</p>
+    <p class="sub sub--d3" id="p-16-1-1"><a class="sub__num" href="#p-16-1-1">16.1.1</a> protahování řádných přerušení;</p>
+    <p class="sub sub--d3" id="p-16-1-2"><a class="sub__num" href="#p-16-1-2">16.1.2</a> prodlužování přerušení poté, co byl dán pokyn pokračovat ve hře;</p>
+    <p class="sub sub--d3" id="p-16-1-3"><a class="sub__num" href="#p-16-1-3">16.1.3</a> žádost o neoprávněné střídání;</p>
+    <p class="sub sub--d3" id="p-16-1-4"><a class="sub__num" href="#p-16-1-4">16.1.4</a> opakovaná neoprávněná žádost;</p>
+    <p class="sub sub--d3" id="p-16-1-5"><a class="sub__num" href="#p-16-1-5">16.1.5</a> zdržování hry členem družstva.</p>
+    <h4 class="sub-heading" id="p-16-2"><a class="sub__num" href="#p-16-2">16.2</a> Sankce za zdržování</h4>
+    <figure class="diagram diagram--table" id="diagram-9b">
+      <div class="diagram__scroll">
+        <table class="rule-table">
+          <thead>
+            <tr><th scope="col">Kolikáté zdržení</th><th scope="col">Kdo</th><th scope="col">Sankce</th><th scope="col">Znamení</th><th scope="col">Důsledek</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">první</th><td>kterýkoli člen družstva</td><td>napomenutí za zdržování</td><td><a href="#gesto-zdrzovani-napomenuti">gesto 25</a> se <span class="card-chip card-chip--yellow">žlutou</span> kartou</td><td>jen prevence, bez trestu</td></tr>
+            <tr><th scope="row">druhé a další</th><td>kterýkoli člen družstva</td><td>trest za zdržování</td><td><a href="#gesto-zdrzovani-trest">gesto 25</a> s <span class="card-chip card-chip--red">červenou</span> kartou</td><td>bod a podání soupeři</td></tr>
+          </tbody>
+        </table>
       </div>
-      <noscript><p>Animace gest potřebují zapnutý JavaScript. Gesta najdeš také v <a href="https://www.fivb.com/volleyball/the-game/official-volleyball-rules/" rel="noopener">oficiálních pravidlech FIVB</a>.</p></noscript>
+      <figcaption><span class="diagram__num">Diagram 9b</span> Sankce za zdržování podle diagramu 9b FIVB. Jde o sankce pro celé družstvo, platí po celé utkání.</figcaption>
+    </figure>
+    <p class="sub sub--d3" id="p-16-2-1"><a class="sub__num" href="#p-16-2-1">16.2.1</a> „Napomenutí za zdržování“ a „trest za zdržování“ jsou sankce pro <strong>celé družstvo</strong>.</p>
+    <p class="sub sub--d4" id="p-16-2-1-1"><a class="sub__num" href="#p-16-2-1-1">16.2.1.1</a> Sankce za zdržování platí po celé utkání.</p>
+    <p class="sub sub--d4" id="p-16-2-1-2"><a class="sub__num" href="#p-16-2-1-2">16.2.1.2</a> Všechny sankce za zdržování se zapisují do zápisu o utkání.</p>
+    <p class="sub sub--d3" id="p-16-2-2"><a class="sub__num" href="#p-16-2-2">16.2.2</a> Za první zdržování v utkání dostane družstvo <strong>napomenutí za zdržování</strong> (bez ztráty bodu).</p>
+    <p class="sub sub--d3" id="p-16-2-3"><a class="sub__num" href="#p-16-2-3">16.2.3</a> Druhé a každé další zdržování jakéhokoli druhu kterýmkoli členem stejného družstva v témže utkání je chyba a trestá se <strong>trestem za zdržování</strong>: soupeř získá bod a podání.</p>
+    <p class="sub sub--d3" id="p-16-2-4"><a class="sub__num" href="#p-16-2-4">16.2.4</a> Sankce za zdržování udělené před setem nebo mezi sety se uplatní v následujícím setu.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-17">
+    <summary><h3><span class="rule__num">17</span> Výjimečná přerušení hry</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-17-1"><a class="sub__num" href="#p-17-1">17.1</a> Zranění a nemoc</h4>
+    <p class="sub sub--d3" id="p-17-1-1"><a class="sub__num" href="#p-17-1-1">17.1.1</a> Když se během rozehry stane vážný úraz, musí rozhodčí hru okamžitě přerušit a pustit na hřiště zdravotníky. Rozehra se pak opakuje.</p>
+    <p class="sub sub--d3" id="p-17-1-2"><a class="sub__num" href="#p-17-1-2">17.1.2</a> Když zraněného nebo nemocného hráče nelze vystřídat řádně ani výjimečně, dostane <strong>3 minuty</strong> na zotavení, a to stejný hráč nejvýš jednou za utkání. Když se hráč nezotaví, je jeho družstvo prohlášeno za neúplné.</p>
+    <h4 class="sub-heading" id="p-17-2"><a class="sub__num" href="#p-17-2">17.2</a> Vnější zásah</h4>
+    <p>Když do hry zasáhne něco zvenčí (např. míč z vedlejšího hřiště, divák na hřišti), hra se přeruší a rozehra se opakuje.</p>
+    <h4 class="sub-heading" id="p-17-3"><a class="sub__num" href="#p-17-3">17.3</a> Prodloužená přerušení</h4>
+    <p class="sub sub--d3" id="p-17-3-1"><a class="sub__num" href="#p-17-3-1">17.3.1</a> Když utkání přeruší nepředvídané okolnosti, rozhodne první rozhodčí spolu s pořadatelem (a kontrolní komisí, pokud je) o opatřeních, jak obnovit normální podmínky.</p>
+    <p class="sub sub--d3" id="p-17-3-2"><a class="sub__num" href="#p-17-3-2">17.3.2</a> Když přerušení trvají celkem nejvýš 4 hodiny:</p>
+    <p class="sub sub--d4" id="p-17-3-2-1"><a class="sub__num" href="#p-17-3-2-1">17.3.2.1</a> pokračuje-li utkání na stejném hřišti, přerušený set se dohraje normálně se stejným skóre, hráči (kromě vyloučených a diskvalifikovaných) a postavením. Odehrané sety platí;</p>
+    <p class="sub sub--d4" id="p-17-3-2-2"><a class="sub__num" href="#p-17-3-2-2">17.3.2.2</a> pokračuje-li utkání na jiném hřišti, přerušený set se ruší a hraje se znovu se stejnými členy družstev a stejnými základními sestavami (kromě vyloučených a diskvalifikovaných); udělené sankce zůstávají v platnosti. Odehrané sety platí.</p>
+    <p class="sub sub--d3" id="p-17-3-3"><a class="sub__num" href="#p-17-3-3">17.3.3</a> Když přerušení trvají celkem víc než 4 hodiny, hraje se celé utkání znovu.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-18">
+    <summary><h3><span class="rule__num">18</span> Přestávky a výměna polí</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-18-1"><a class="sub__num" href="#p-18-1">18.1</a> Přestávky</h4>
+    <p>Přestávka je doba mezi sety. Všechny přestávky trvají <strong>tři minuty</strong>. Během nich se mění strany a zapisují se sestavy družstev.</p>
+    <p>Přestávku mezi druhým a třetím setem může příslušný orgán na žádost pořadatele prodloužit až na 10 minut.</p>
+    <h4 class="sub-heading" id="p-18-2"><a class="sub__num" href="#p-18-2">18.2</a> Výměna polí</h4>
+    <p class="sub sub--d3" id="p-18-2-1"><a class="sub__num" href="#p-18-2-1">18.2.1</a> Po každém setu si družstva vymění strany, kromě rozhodujícího setu.</p>
+    <p class="sub sub--d3" id="p-18-2-2"><a class="sub__num" href="#p-18-2-2">18.2.2</a> V rozhodujícím (5.) setu si družstva vymění strany, jakmile vedoucí družstvo dosáhne <strong>8 bodů</strong>, a to bez zdržení; postavení hráčů zůstává stejné. Když se na výměnu zapomene, provede se, jakmile si toho někdo všimne; skóre zůstává, jaké bylo v okamžiku výměny.</p>
+    </div></details>
     </section>
+    <section class="rules-chapter" id="kapitola-6" aria-labelledby="kapitola-6-nadpis">
+    <h2 id="kapitola-6-nadpis"><span class="rules-chapter__label">Kapitola 6</span> Hráč libero</h2>
+    <details class="rule" id="pravidlo-19">
+    <summary><h3><span class="rule__num">19</span> Hráč libero</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="libero" aria-label="Ve zkratce: libero">
+      <p class="rule-brief__label">Ve zkratce · libero</p>
+      <ul>
+        <li>Libero je obranný specialista v dresu odlišné barvy. Družstvo může mít až dvě libera, na hřišti ale smí být vždy jen jedno. Smí hrát <strong>jen v zadní řadě</strong>.</li>
+        <li>Nesmí podávat, blokovat ani se o blok pokoušet a nesmí dokončit útok na míč, který je celý nad horním okrajem sítě.</li>
+        <li><strong>Výměny libera nejsou střídání</strong>: jejich počet není omezený, ale mezi dvěma výměnami musí proběhnout dokončená rozehra. Vyměňuje se jen v zóně výměny libera.</li>
+      </ul>
+    </aside>
+    <h4 class="sub-heading" id="p-19-1"><a class="sub__num" href="#p-19-1">19.1</a> Určení libera</h4>
+    <p class="sub sub--d3" id="p-19-1-1"><a class="sub__num" href="#p-19-1-1">19.1.1</a> Každé družstvo smí ze seznamu hráčů v zápisu určit až <strong>dva</strong> obranné specialisty, libera.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Má-li družstvo dospělých v zápisu víc než 12 hráčů, musí mít na soupisce povinně dvě libera.</p>
+    <p class="sub sub--d3" id="p-19-1-2"><a class="sub__num" href="#p-19-1-2">19.1.2</a> Všechna libera musí být zapsaná v zápisu o utkání na řádcích k tomu určených.</p>
+    <p class="sub sub--d3" id="p-19-1-3"><a class="sub__num" href="#p-19-1-3">19.1.3</a> Libero, které je na hřišti, je <strong>hrající libero</strong>. Druhé libero družstva je <strong>druhé libero</strong>. Na hřišti smí být vždy jen jedno libero.</p>
+    <h4 class="sub-heading" id="p-19-2"><a class="sub__num" href="#p-19-2">19.2</a> Výstroj</h4>
+    <p>Libero musí mít úbor (nově určené libero vestu nebo rozlišovací dres), jehož převládající barva se liší od všech barev ostatních hráčů a výrazně s nimi kontrastuje. Obě libera mohou mít úbor odlišný od sebe navzájem i od zbytku družstva.</p>
+    <p>Úbor libera je očíslovaný stejně jako u ostatních hráčů.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Nově určené libero má mít podle možnosti dres stejného střihu a barvy jako původní libero, ale ponechá si své číslo.</p>
+    <h4 class="sub-heading" id="p-19-3"><a class="sub__num" href="#p-19-3">19.3</a> Činnosti s účastí libera</h4>
+    <p class="sub sub--d3" id="p-19-3-1"><a class="sub__num" href="#p-19-3-1">19.3.1</a> <strong>Herní činnosti.</strong> </p>
+    <p class="sub sub--d4" id="p-19-3-1-1"><a class="sub__num" href="#p-19-3-1-1">19.3.1.1</a> Libero smí nahradit kteréhokoli hráče na pozici v zadní řadě.</p>
+    <p class="sub sub--d4" id="p-19-3-1-2"><a class="sub__num" href="#p-19-3-1-2">19.3.1.2</a> Hraje jen jako hráč zadní řady a nesmí odkudkoli (z hřiště ani z volné zóny) dokončit útočný úder, je-li míč v okamžiku dotyku celý výš než horní okraj sítě.</p>
+    <p class="sub sub--d4" id="p-19-3-1-3"><a class="sub__num" href="#p-19-3-1-3">19.3.1.3</a> Nesmí podávat, blokovat ani se o blok pokusit.</p>
+    <p class="sub sub--d4" id="p-19-3-1-4"><a class="sub__num" href="#p-19-3-1-4">19.3.1.4</a> Hráč nesmí dokončit útočný úder na míč, který je celý výš než horní okraj sítě, pokud mu ho libero nahrálo <strong>prsty vrchem ve své přední zóně</strong>. Když libero nahraje stejně zpoza přední zóny, smí se na míč útočit volně.</p>
+    <p class="sub sub--d3" id="p-19-3-2"><a class="sub__num" href="#p-19-3-2">19.3.2</a> <strong>Výměny libera.</strong> </p>
+    <p class="sub sub--d4" id="p-19-3-2-1"><a class="sub__num" href="#p-19-3-2-1">19.3.2.1</a> Výměny libera se <strong>nepočítají jako střídání</strong>. Jejich počet není omezený, ale mezi dvěma výměnami musí proběhnout dokončená rozehra. Výjimkou je, když se družstvo kvůli trestu posune a libero by se dostalo na pozici 4, nebo když hrající libero nemůže pokračovat a rozehra tak není dokončená.</p>
+    <p class="sub sub--d4" id="p-19-3-2-2"><a class="sub__num" href="#p-19-3-2-2">19.3.2.2</a> Hráč, za kterého se libero pravidelně vyměňuje, smí nahradit kterékoli libero a kterékoli libero smí nahradit jeho. Hrající libero smí nahradit jen tento hráč na dané pozici nebo druhé libero.</p>
+    <p class="sub sub--d4" id="p-19-3-2-3"><a class="sub__num" href="#p-19-3-2-3">19.3.2.3</a> Na začátku setu smí libero vstoupit na hřiště až poté, co druhý rozhodčí zkontroluje základní sestavu a povolí výměnu libera s hráčem základní sestavy.</p>
+    <p class="sub sub--d4" id="p-19-3-2-4"><a class="sub__num" href="#p-19-3-2-4">19.3.2.4</a> Ostatní výměny libera se smějí provádět jen tehdy, když je míč mimo hru, a před hvizdem k podání.</p>
+    <p class="sub sub--d4" id="p-19-3-2-5"><a class="sub__num" href="#p-19-3-2-5">19.3.2.5</a> Výměna libera provedená po hvizdu k podání, ale před úderem podávajícího se neodmítne. Po skončení rozehry se ale kapitánovi ve hře oznámí, že to není povolený postup a že opakování se bude trestat za zdržování.</p>
+    <p class="sub sub--d4" id="p-19-3-2-6"><a class="sub__num" href="#p-19-3-2-6">19.3.2.6</a> Každá další opožděná výměna libera vede k okamžitému přerušení hry a k sankci za zdržování. Kdo bude příště podávat, záleží na tom, jaká sankce to byla (napomenutí, nebo trest).</p>
+    <p class="sub sub--d4" id="p-19-3-2-7"><a class="sub__num" href="#p-19-3-2-7">19.3.2.7</a> Libero a hráč, kterého nahrazuje, smějí vstupovat na hřiště a odcházet z něj jen <strong>zónou výměny libera</strong> (<a href="#p-1-4-4">1.4.4</a>).</p>
+    <p class="sub sub--d4" id="p-19-3-2-8"><a class="sub__num" href="#p-19-3-2-8">19.3.2.8</a> Výměny libera se zapisují do kontrolního listu libera (pokud se používá) nebo do elektronického zápisu.</p>
+    <p class="sub sub--d4" id="p-19-3-2-9"><a class="sub__num" href="#p-19-3-2-9">19.3.2.9</a> Nedovolená výměna libera je mimo jiné:</p>
+    <ul class="rule-list">
+    <li>když mezi výměnami libera neproběhla dokončená rozehra,</li>
+    <li>když libero nahradí jiný hráč než druhé libero nebo hráč, za kterého se pravidelně vyměňuje.</li>
+    </ul>
+    <p>Nedovolená výměna libera se posuzuje stejně jako neoprávněné střídání (<a href="#p-15-9">15.9</a>): když se zjistí před začátkem další rozehry, rozhodčí ji opraví a družstvo dostane sankci za zdržování; když se zjistí až po úderu podávajícího, má stejné důsledky jako neoprávněné střídání.</p>
+    <h4 class="sub-heading" id="p-19-4"><a class="sub__num" href="#p-19-4">19.4</a> Určení nového libera</h4>
+    <p class="sub sub--d3" id="p-19-4-1"><a class="sub__num" href="#p-19-4-1">19.4.1</a> Libero nemůže hrát, když je zraněné, nemocné, vyloučené nebo diskvalifikované. Trenér (v jeho nepřítomnosti asistent trenéra nebo kapitán ve hře) může libero z jakéhokoli důvodu prohlásit za neschopné hry.</p>
+    <p class="sub sub--d3" id="p-19-4-2"><a class="sub__num" href="#p-19-4-2">19.4.2</a> <strong>Družstvo s jedním liberem.</strong> </p>
+    <p class="sub sub--d4" id="p-19-4-2-1"><a class="sub__num" href="#p-19-4-2-1">19.4.2.1</a> Když má družstvo k dispozici jen jedno libero (nebo jen jedno zapsalo) a to se stane neschopným hry nebo je tak prohlášeno, může trenér (asistent trenéra nebo kapitán ve hře) určit za libero do konce utkání kteréhokoli jiného hráče, který v tu chvíli není na hřišti (kromě hráče, za kterého se libero pravidelně vyměňuje).</p>
+    <p class="sub sub--d4" id="p-19-4-2-2"><a class="sub__num" href="#p-19-4-2-2">19.4.2.2</a> Když se neschopným hry stane hrající libero, smí ho nahradit hráč, za kterého se pravidelně vyměňuje, nebo rovnou na hřiště nově určené libero. Libero, za které bylo určeno nové, už do konce utkání hrát nesmí. Totéž platí, když libero prohlášené za neschopné hry zrovna není na hřišti.</p>
+    <p class="sub sub--d4" id="p-19-4-2-3"><a class="sub__num" href="#p-19-4-2-3">19.4.2.3</a> O novém určení libera informuje trenér (asistent trenéra nebo kapitán ve hře) druhého rozhodčího.</p>
+    <p class="sub sub--d4" id="p-19-4-2-4"><a class="sub__num" href="#p-19-4-2-4">19.4.2.4</a> Když se neschopným hry stane i nově určené libero, smí se určit další.</p>
+    <p class="sub sub--d4" id="p-19-4-2-5"><a class="sub__num" href="#p-19-4-2-5">19.4.2.5</a> Když trenér požádá, aby novým liberem byl kapitán družstva, je to povoleno.</p>
+    <p class="sub sub--d4" id="p-19-4-2-6"><a class="sub__num" href="#p-19-4-2-6">19.4.2.6</a> Číslo hráče nově určeného za libero se zapíše do poznámek v zápisu a do kontrolního listu libera (nebo do elektronického zápisu).</p>
+    <p class="sub sub--d3" id="p-19-4-3"><a class="sub__num" href="#p-19-4-3">19.4.3</a> <strong>Družstvo se dvěma libery.</strong> </p>
+    <p class="sub sub--d4" id="p-19-4-3-1"><a class="sub__num" href="#p-19-4-3-1">19.4.3.1</a> Když družstvo zapsalo dvě libera a jedno z nich se stane neschopným hry, smí družstvo hrát jen s jedním liberem. Nové libero smí určit až tehdy, když nemůže pokračovat ani zbývající libero.</p>
+    <h4 class="sub-heading" id="p-19-5"><a class="sub__num" href="#p-19-5">19.5</a> Shrnutí</h4>
+    <p>Když je libero vyloučené nebo diskvalifikované, smí ho okamžitě nahradit druhé libero družstva. Má-li družstvo jen jedno libero, má právo určit nové.</p>
+    </div></details>
+    </section>
+    <section class="rules-chapter" id="kapitola-7" aria-labelledby="kapitola-7-nadpis">
+    <h2 id="kapitola-7-nadpis"><span class="rules-chapter__label">Kapitola 7</span> Chování účastníků</h2>
+    <details class="rule" id="pravidlo-20">
+    <summary><h3><span class="rule__num">20</span> Požadavky na chování</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-20-1"><a class="sub__num" href="#p-20-1">20.1</a> Sportovní chování</h4>
+    <p class="sub sub--d3" id="p-20-1-1"><a class="sub__num" href="#p-20-1-1">20.1.1</a> Účastníci musí znát oficiální pravidla volejbalu a dodržovat je.</p>
+    <p class="sub sub--d3" id="p-20-1-2"><a class="sub__num" href="#p-20-1-2">20.1.2</a> Účastníci musí rozhodnutí rozhodčích přijímat sportovně a nezpochybňovat je. V případě pochybností smí o vysvětlení požádat jen kapitán ve hře (<a href="#p-5-1-2-1">5.1.2.1</a>).</p>
+    <p class="sub sub--d3" id="p-20-1-3"><a class="sub__num" href="#p-20-1-3">20.1.3</a> Účastníci se musí zdržet jednání nebo postojů, kterými by chtěli ovlivnit rozhodnutí rozhodčích nebo zakrýt chyby svého družstva.</p>
+    <h4 class="sub-heading" id="p-20-2"><a class="sub__num" href="#p-20-2">20.2</a> Fair play</h4>
+    <p class="sub sub--d3" id="p-20-2-1"><a class="sub__num" href="#p-20-2-1">20.2.1</a> Účastníci se musí chovat s respektem a zdvořile v duchu <strong>fair play</strong>, a to nejen k rozhodčím, ale i k ostatním činovníkům, soupeři, spoluhráčům a divákům.</p>
+    <p class="sub sub--d3" id="p-20-2-2"><a class="sub__num" href="#p-20-2-2">20.2.2</a> Členové družstva spolu smějí během utkání komunikovat.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-21">
+    <summary><h3><span class="rule__num">21</span> Nevhodné chování a sankce</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="chovani" aria-label="Ve zkratce: chování a tresty">
+      <p class="rule-brief__label">Ve zkratce · chování a tresty</p>
+      <ul>
+        <li><strong>Mírně nevhodné chování</strong> se nejdřív řeší ústním upozorněním přes kapitána ve hře, potom žlutou kartou (napomenutí). Napomenutí samo není trest.</li>
+        <li><strong>Trest</strong> (červená karta) za první hrubé chování: soupeř získá bod a podání.</li>
+        <li><strong>Vyloučení</strong> (červená a žlutá karta společně v jedné ruce): člen družstva musí do konce setu odejít do šatny. Dostane ho hned za první urážlivé chování.</li>
+        <li><strong>Diskvalifikace</strong> (červená a žlutá karta každá v jiné ruce): člen družstva musí do konce utkání odejít do šatny. Dostane ji hned za první agresi.</li>
+      </ul>
+    </aside>
+    <h4 class="sub-heading" id="p-21-1"><a class="sub__num" href="#p-21-1">21.1</a> Mírně nevhodné chování</h4>
+    <p>Za mírně nevhodné chování se sankce neudělují. Úkolem prvního rozhodčího je předcházet tomu, aby se družstva k úrovni sankcí vůbec dostala. Dělá to ve dvou krocích:</p>
+    <ul class="rule-list">
+    <li><strong>1. krok:</strong> ústní upozornění přes kapitána ve hře;</li>
+    <li><strong>2. krok:</strong> <strong>žlutá karta</strong> pro dotyčného člena družstva. Toto formální napomenutí samo není sankcí, ale znamením, že člen družstva (a tím i celé družstvo) dosáhl pro toto utkání úrovně sankcí. Zapíše se do zápisu, ale nemá okamžité důsledky.</li>
+    </ul>
+    <h4 class="sub-heading" id="p-21-2"><a class="sub__num" href="#p-21-2">21.2</a> Nevhodné chování vedoucí k sankcím</h4>
+    <p>Nesprávné chování člena družstva k činovníkům, soupeřům, spoluhráčům nebo divákům se podle závažnosti dělí do tří kategorií:</p>
+    <p class="sub sub--d3" id="p-21-2-1"><a class="sub__num" href="#p-21-2-1">21.2.1</a> <strong>Hrubé chování.</strong> Jednání v rozporu se slušností nebo morálními zásadami.</p>
+    <p class="sub sub--d3" id="p-21-2-2"><a class="sub__num" href="#p-21-2-2">21.2.2</a> <strong>Urážlivé chování.</strong> Hanlivá nebo urážlivá slova či gesta nebo jakékoli jednání vyjadřující pohrdání.</p>
+    <p class="sub sub--d3" id="p-21-2-3"><a class="sub__num" href="#p-21-2-3">21.2.3</a> <strong>Agrese.</strong> Skutečné fyzické napadení nebo agresivní či výhrůžné chování.</p>
+    <h4 class="sub-heading" id="p-21-3"><a class="sub__num" href="#p-21-3">21.3</a> Stupnice sankcí</h4>
+    <figure class="diagram diagram--table" id="diagram-9">
+      <div class="diagram__scroll">
+        <table class="rule-table">
+          <thead>
+            <tr><th scope="col">Kategorie</th><th scope="col">Kolikáté</th><th scope="col">Kdo</th><th scope="col">Sankce</th><th scope="col">Karty</th><th scope="col">Důsledek</th></tr>
+          </thead>
+          <tbody>
+            <tr class="rule-table__group"><th scope="row" rowspan="3">Mírně nevhodné chování</th><td>1. krok</td><td>kdokoli</td><td rowspan="2">není sankce</td><td>žádná (ústně)</td><td rowspan="2">jen prevence</td></tr>
+            <tr><td>2. krok</td><td>kdokoli</td><td><span class="card-chip card-chip--yellow">žlutá</span></td></tr>
+            <tr><td>opakování</td><td></td><td>trest</td><td>viz níže</td><td>viz níže</td></tr>
+            <tr class="rule-table__group"><th scope="row" rowspan="3">Hrubé chování</th><td>první</td><td>kdokoli</td><td>trest</td><td><span class="card-chip card-chip--red">červená</span></td><td>bod a podání soupeři</td></tr>
+            <tr><td>druhé</td><td>tentýž člen</td><td>vyloučení</td><td><span class="card-chip card-chip--red">červená</span> + <span class="card-chip card-chip--yellow">žlutá</span> společně</td><td>do šatny do konce setu</td></tr>
+            <tr><td>třetí</td><td>tentýž člen</td><td>diskvalifikace</td><td><span class="card-chip card-chip--red">červená</span> + <span class="card-chip card-chip--yellow">žlutá</span> odděleně</td><td>do šatny do konce utkání</td></tr>
+            <tr class="rule-table__group"><th scope="row" rowspan="2">Urážlivé chování</th><td>první</td><td>kdokoli</td><td>vyloučení</td><td><span class="card-chip card-chip--red">červená</span> + <span class="card-chip card-chip--yellow">žlutá</span> společně</td><td>do šatny do konce setu</td></tr>
+            <tr><td>druhé</td><td>tentýž člen</td><td>diskvalifikace</td><td><span class="card-chip card-chip--red">červená</span> + <span class="card-chip card-chip--yellow">žlutá</span> odděleně</td><td>do šatny do konce utkání</td></tr>
+            <tr class="rule-table__group"><th scope="row">Agrese</th><td>první</td><td>kdokoli</td><td>diskvalifikace</td><td><span class="card-chip card-chip--red">červená</span> + <span class="card-chip card-chip--yellow">žlutá</span> odděleně</td><td>do šatny do konce utkání</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 9a</span> Stupnice napomenutí a sankcí za nevhodné chování podle diagramu 9a FIVB. Sankce jsou osobní a platí po celé utkání.</figcaption>
+    </figure>
+    <p>Podle úsudku prvního rozhodčího a podle závažnosti přestupku se udělují a do zápisu zapisují tyto sankce: <strong>trest</strong>, <strong>vyloučení</strong>, nebo <strong>diskvalifikace</strong>.</p>
+    <p class="sub sub--d3" id="p-21-3-1"><a class="sub__num" href="#p-21-3-1">21.3.1</a> <strong>Trest.</strong> První hrubé chování kteréhokoli člena družstva v utkání se trestá bodem a podáním pro soupeře.</p>
+    <p class="sub sub--d3" id="p-21-3-2"><a class="sub__num" href="#p-21-3-2">21.3.2</a> <strong>Vyloučení.</strong> </p>
+    <p class="sub sub--d4" id="p-21-3-2-1"><a class="sub__num" href="#p-21-3-2-1">21.3.2.1</a> Vyloučený člen družstva musí být, pokud je na hřišti, okamžitě vystřídán (řádně nebo výjimečně), do konce setu se nesmí hry účastnit a musí odejít do šatny družstva až do konce probíhajícího setu; jiné důsledky to nemá. Vyloučený trenér ztrácí v setu právo zasahovat do hry a musí do konce setu odejít do šatny.</p>
+    <p class="sub sub--d4" id="p-21-3-2-2"><a class="sub__num" href="#p-21-3-2-2">21.3.2.2</a> První urážlivé chování člena družstva se trestá vyloučením bez dalších důsledků.</p>
+    <p class="sub sub--d4" id="p-21-3-2-3"><a class="sub__num" href="#p-21-3-2-3">21.3.2.3</a> Druhé hrubé chování téhož člena družstva v témže utkání se trestá vyloučením bez dalších důsledků.</p>
+    <p class="sub sub--d3" id="p-21-3-3"><a class="sub__num" href="#p-21-3-3">21.3.3</a> <strong>Diskvalifikace.</strong> </p>
+    <p class="sub sub--d4" id="p-21-3-3-1"><a class="sub__num" href="#p-21-3-3-1">21.3.3.1</a> Diskvalifikovaný člen družstva musí být, pokud je na hřišti, okamžitě vystřídán (řádně nebo výjimečně) a musí do konce utkání odejít do šatny družstva; jiné důsledky to nemá.</p>
+    <p class="sub sub--d4" id="p-21-3-3-2"><a class="sub__num" href="#p-21-3-3-2">21.3.3.2</a> První fyzické napadení nebo naznačená či hrozící agrese se trestá diskvalifikací bez dalších důsledků.</p>
+    <p class="sub sub--d4" id="p-21-3-3-3"><a class="sub__num" href="#p-21-3-3-3">21.3.3.3</a> Druhé urážlivé chování téhož člena družstva v témže utkání se trestá diskvalifikací bez dalších důsledků.</p>
+    <p class="sub sub--d4" id="p-21-3-3-4"><a class="sub__num" href="#p-21-3-3-4">21.3.3.4</a> Třetí hrubé chování téhož člena družstva v témže utkání se trestá diskvalifikací bez dalších důsledků.</p>
+    <h4 class="sub-heading" id="p-21-4"><a class="sub__num" href="#p-21-4">21.4</a> Uplatnění sankcí za nevhodné chování</h4>
+    <p class="sub sub--d3" id="p-21-4-1"><a class="sub__num" href="#p-21-4-1">21.4.1</a> Všechny sankce za nevhodné chování jsou <strong>osobní</strong>, platí po celé utkání a zapisují se do zápisu.</p>
+    <p class="sub sub--d3" id="p-21-4-2"><a class="sub__num" href="#p-21-4-2">21.4.2</a> Opakované nevhodné chování téhož člena družstva v témže utkání se trestá postupně přísněji (za každý další přestupek dostane těžší sankci).</p>
+    <p class="sub sub--d3" id="p-21-4-3"><a class="sub__num" href="#p-21-4-3">21.4.3</a> Vyloučení nebo diskvalifikace za urážlivé chování nebo agresi nevyžaduje předchozí sankci.</p>
+    <h4 class="sub-heading" id="p-21-5"><a class="sub__num" href="#p-21-5">21.5</a> Nevhodné chování před sety a mezi nimi</h4>
+    <p>Nevhodné chování před setem nebo mezi sety se trestá podle <a href="#p-21-3">21.3</a> a sankce se uplatní v následujícím setu.</p>
+    <h4 class="sub-heading" id="p-21-6"><a class="sub__num" href="#p-21-6">21.6</a> Přehled sankcí a karet</h4>
+    <table class="rule-table">
+      <caption>Přehled podle pravidla 21.6</caption>
+      <thead><tr><th scope="col">Kategorie</th><th scope="col">Je to sankce?</th><th scope="col">Znamení</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Napomenutí</th><td>Ne</td><td>1. krok: ústní upozornění<br>2. krok: <span class="card-chip card-chip--yellow">žlutá karta</span></td></tr>
+        <tr><th scope="row">Trest</th><td>Ano – bod a podání soupeři</td><td><span class="card-chip card-chip--red">červená karta</span></td></tr>
+        <tr><th scope="row">Vyloučení</th><td>Ano – do konce setu</td><td><span class="card-chip card-chip--red">červená</span> + <span class="card-chip card-chip--yellow">žlutá</span> společně v jedné ruce</td></tr>
+        <tr><th scope="row">Diskvalifikace</th><td>Ano – do konce utkání</td><td><span class="card-chip card-chip--red">červená</span> a <span class="card-chip card-chip--yellow">žlutá</span> každá v jiné ruce</td></tr>
+      </tbody>
+    </table>
+    </div></details>
+    </section>
+    <p class="rules-part">Oddíl 2 · Rozhodčí, jejich povinnosti a oficiální znamení</p>
+    <section class="rules-chapter" id="kapitola-8" aria-labelledby="kapitola-8-nadpis">
+    <h2 id="kapitola-8-nadpis"><span class="rules-chapter__label">Kapitola 8</span> Rozhodčí</h2>
+    <details class="rule" id="pravidlo-22">
+    <summary><h3><span class="rule__num">22</span> Rozhodčí sbor a postupy</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-22-1"><a class="sub__num" href="#p-22-1">22.1</a> Složení</h4>
+    <p>Rozhodčí sbor utkání tvoří:</p>
+    <ul class="rule-list">
+    <li>první rozhodčí (<a href="#pravidlo-23">23</a>),</li>
+    <li>druhý rozhodčí (<a href="#pravidlo-24">24</a>),</li>
+    <li>rozhodčí pro video challenge (<a href="#pravidlo-25">25</a>),</li>
+    <li>rezervní rozhodčí (<a href="#pravidlo-26">26</a>),</li>
+    <li>zapisovatel (a pomocný zapisovatel, <a href="#pravidlo-27">27</a>, <a href="#pravidlo-28">28</a>),</li>
+    <li>čtyři (nebo dva) čároví rozhodčí (<a href="#pravidlo-29">29</a>).</li>
+    </ul>
+    <p>Jejich rozmístění ukazuje <a href="#diagram-10">diagram 10</a>.</p>
+    <figure class="diagram" id="diagram-10">
+      <div class="diagram__scroll">
+        <svg class="dg" viewBox="0 0 280 175" role="img" aria-labelledby="dg10-title dg10-desc">
+          <title id="dg10-title">Rozmístění rozhodčích a pomocníků</title>
+          <desc id="dg10-desc">Hřiště shora se sítí uprostřed. První rozhodčí stojí na stupínku u sítě na horní straně, druhý rozhodčí u sloupku na protější dolní straně a za ním stolek zapisovatele a pomocného zapisovatele. Čtyři čároví rozhodčí stojí u rohů hřiště, každý v prodloužení čáry, kterou hlídá. Šest sběračů míčů stojí v rozích volné zóny a za oběma rozhodčími.</desc>
+          <rect class="dg-free" x="20" y="10" width="240" height="140" rx="3" />
+          <rect class="dg-floor" x="50" y="35" width="180" height="90" />
+          <rect class="dg-line" x="50" y="35" width="180" height="90" />
+          <line class="dg-line" x1="110" y1="35" x2="110" y2="125" />
+          <line class="dg-line" x1="170" y1="35" x2="170" y2="125" />
+          <line class="dg-net" x1="140" y1="25" x2="140" y2="135" />
+          <!-- rozhodčí -->
+          <g class="dg-official">
+            <rect x="131" y="12" width="18" height="10" rx="2" />
+            <rect x="131" y="138" width="18" height="10" rx="2" />
+          </g>
+          <g class="dg-official-text"><text x="140" y="17">1R</text><text x="140" y="143">2R</text></g>
+          <!-- stolek zapisovatele -->
+          <rect class="dg-furniture" x="92" y="154" width="96" height="11" rx="1.5" />
+          <!-- čároví rozhodčí: v prodloužení hlídané čáry -->
+          <g class="dg-lj">
+            <path d="M50 22 l-5 8 h10 z" /><path d="M243 35 l8 -5 v10 z" />
+            <path d="M230 138 l5 -8 h-10 z" /><path d="M37 125 l-8 5 v-10 z" />
+          </g>
+          <g class="dg-lj-text"><text x="50" y="28.5">1</text><text x="247" y="36.5">2</text><text x="230" y="136">3</text><text x="33" y="126.5">4</text></g>
+          <g class="dg-watch">
+            <line x1="50" y1="33" x2="50" y2="60" marker-end="url(#dg-arrow)" />
+            <line x1="238" y1="35" x2="212" y2="35" marker-end="url(#dg-arrow)" />
+            <line x1="230" y1="127" x2="230" y2="100" marker-end="url(#dg-arrow)" />
+            <line x1="42" y1="125" x2="68" y2="125" marker-end="url(#dg-arrow)" />
+          </g>
+          <!-- sběrači míčů -->
+          <g class="dg-retriever">
+            <circle cx="28" cy="18" r="4" /><circle cx="252" cy="18" r="4" /><circle cx="252" cy="142" r="4" /><circle cx="28" cy="142" r="4" />
+            <circle cx="160" cy="16" r="4" /><circle cx="120" cy="143" r="4" />
+          </g>
+          <g class="dg-note">
+            <text x="140" y="159.5">zapisovatel + pomocný zapisovatel</text>
+            <text x="140" y="171" class="dg-small">▲ čároví rozhodčí 1–4 · ● sběrači míčů</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><span class="diagram__num">Diagram 10</span> Rozmístění rozhodčího sboru podle diagramu 10 FIVB (zjednodušeně). Jsou-li jen dva čároví rozhodčí, stojí v rozích nejblíž pravé ruce každého z rozhodčích (šikmo naproti sobě) a každý hlídá koncovou i postranní čáru na své straně.</figcaption>
+    </figure>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Rozhodčí pro challenge (pokud se používá video challenge), rezervní rozhodčí a pomocný zapisovatel jsou povinní.</p>
+    <h4 class="sub-heading" id="p-22-2"><a class="sub__num" href="#p-22-2">22.2</a> Postupy</h4>
+    <p class="sub sub--d3" id="p-22-2-1"><a class="sub__num" href="#p-22-2-1">22.2.1</a> Během utkání smějí pískat <strong>jen první a druhý rozhodčí</strong>:</p>
+    <p class="sub sub--d4" id="p-22-2-1-1"><a class="sub__num" href="#p-22-2-1-1">22.2.1.1</a> první rozhodčí hvizdem povoluje podání, kterým začíná rozehra;</p>
+    <p class="sub sub--d4" id="p-22-2-1-2"><a class="sub__num" href="#p-22-2-1-2">22.2.1.2</a> první nebo druhý rozhodčí hvizdem ukončí rozehru, pokud si je jistý, že došlo k chybě, a ví, o jakou chybu jde.</p>
+    <p class="sub sub--d3" id="p-22-2-2"><a class="sub__num" href="#p-22-2-2">22.2.2</a> Když je míč mimo hru, smějí hvizdem ukázat, že žádost družstva povolují nebo odmítají.</p>
+    <p class="sub sub--d3" id="p-22-2-3"><a class="sub__num" href="#p-22-2-3">22.2.3</a> Hned po hvizdu, kterým ukončí rozehru, musí rozhodčí oficiálními znameními ukázat:</p>
+    <p class="sub sub--d4" id="p-22-2-3-1"><a class="sub__num" href="#p-22-2-3-1">22.2.3.1</a> když chybu odpíská první rozhodčí, ukáže v tomto pořadí: a) družstvo, které bude podávat, b) druh chyby, c) hráče, který chybu udělal (je-li to třeba);</p>
+    <p class="sub sub--d4" id="p-22-2-3-2"><a class="sub__num" href="#p-22-2-3-2">22.2.3.2</a> když chybu odpíská druhý rozhodčí, ukáže: a) druh chyby, b) hráče, který chybu udělal (je-li to třeba), c) družstvo, které bude podávat, a to podle znamení prvního rozhodčího. První rozhodčí v tom případě neukazuje druh chyby ani hráče, jen družstvo, které bude podávat;</p>
+    <p class="sub sub--d4" id="p-22-2-3-3"><a class="sub__num" href="#p-22-2-3-3">22.2.3.3</a> při chybě útočného úderu nebo bloku hráče zadní řady nebo libera ukazují oba rozhodčí podle <a href="#p-22-2-3-1">22.2.3.1</a> a <a href="#p-22-2-3-2">22.2.3.2</a>;</p>
+    <p class="sub sub--d4" id="p-22-2-3-4"><a class="sub__num" href="#p-22-2-3-4">22.2.3.4</a> při oboustranné chybě ukážou oba rozhodčí v tomto pořadí: a) druh chyby, b) hráče, kteří chybu udělali (je-li to třeba). Družstvo, které bude podávat, pak ukáže první rozhodčí.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-23">
+    <summary><h3><span class="rule__num">23</span> První rozhodčí</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-23-1"><a class="sub__num" href="#p-23-1">23.1</a> Umístění</h4>
+    <p>První rozhodčí řídí utkání ze stupínku (rozhodčí stoličky) na jednom konci sítě, na straně naproti zapisovateli. Oči má asi 50 cm nad horním okrajem sítě.</p>
+    <h4 class="sub-heading" id="p-23-2"><a class="sub__num" href="#p-23-2">23.2</a> Pravomoci</h4>
+    <p class="sub sub--d3" id="p-23-2-1"><a class="sub__num" href="#p-23-2-1">23.2.1</a> První rozhodčí řídí utkání od začátku do konce. Má pravomoc nad všemi členy rozhodčího sboru i členy družstev. Během utkání jsou jeho rozhodnutí konečná. Smí změnit rozhodnutí ostatních členů rozhodčího sboru, když zjistí, že se mýlí, a může dokonce vyměnit člena rozhodčího sboru, který svou funkci nevykonává správně.</p>
+    <p class="sub sub--d3" id="p-23-2-2"><a class="sub__num" href="#p-23-2-2">23.2.2</a> Řídí také práci sběračů míčů a utěračů podlahy.</p>
+    <p class="sub sub--d3" id="p-23-2-3"><a class="sub__num" href="#p-23-2-3">23.2.3</a> Má pravomoc rozhodnout o všech otázkách týkajících se hry, i o těch, které pravidla neupravují.</p>
+    <p class="sub sub--d3" id="p-23-2-4"><a class="sub__num" href="#p-23-2-4">23.2.4</a> Nedovolí o svých rozhodnutích diskutovat. Na žádost kapitána ve hře ale vysvětlí, jak použil nebo vyložil pravidlo, o které rozhodnutí opřel. Když kapitán ve hře s vysvětlením nesouhlasí a chce proti rozhodnutí protestovat, musí si hned vyhradit právo podat a zapsat protest po skončení utkání. První rozhodčí mu toto právo musí povolit.</p>
+    <p class="sub sub--d3" id="p-23-2-5"><a class="sub__num" href="#p-23-2-5">23.2.5</a> První rozhodčí před utkáním i během něj odpovídá za to, že vybavení hrací plochy a podmínky odpovídají požadavkům pro hru.</p>
+    <h4 class="sub-heading" id="p-23-3"><a class="sub__num" href="#p-23-3">23.3</a> Povinnosti</h4>
+    <p class="sub sub--d3" id="p-23-3-1"><a class="sub__num" href="#p-23-3-1">23.3.1</a> Před utkáním první rozhodčí:</p>
+    <p class="sub sub--d4" id="p-23-3-1-1"><a class="sub__num" href="#p-23-3-1-1">23.3.1.1</a> zkontroluje stav hrací plochy, míče a další vybavení;</p>
+    <p class="sub sub--d4" id="p-23-3-1-2"><a class="sub__num" href="#p-23-3-1-2">23.3.1.2</a> provede s kapitány losování;</p>
+    <p class="sub sub--d4" id="p-23-3-1-3"><a class="sub__num" href="#p-23-3-1-3">23.3.1.3</a> dohlíží na rozcvičení družstev.</p>
+    <p class="sub sub--d3" id="p-23-3-2"><a class="sub__num" href="#p-23-3-2">23.3.2</a> Během utkání je oprávněn:</p>
+    <p class="sub sub--d4" id="p-23-3-2-1"><a class="sub__num" href="#p-23-3-2-1">23.3.2.1</a> dávat družstvům napomenutí;</p>
+    <p class="sub sub--d4" id="p-23-3-2-2"><a class="sub__num" href="#p-23-3-2-2">23.3.2.2</a> trestat nevhodné chování a zdržování;</p>
+    <p class="sub sub--d4" id="p-23-3-2-3"><a class="sub__num" href="#p-23-3-2-3">23.3.2.3</a> rozhodovat o:</p>
+    <ul class="rule-list">
+    <li>a) chybách podávajícího a chybách v postavení podávajícího družstva, včetně clony,</li>
+    <li>b) chybách při hře míčem,</li>
+    <li>c) chybách nad sítí a chybných dotecích hráče se sítí, hlavně (ne však jen) na straně útočícího družstva,</li>
+    <li>d) chybách útočného úderu libera a hráčů zadní řady,</li>
+    <li>e) dokončených útočných úderech výš než horní okraj sítě na míč, který libero nahrálo prsty vrchem ve své přední zóně,</li>
+    <li>f) míči, který celý proletí spodním prostorem pod sítí,</li>
+    <li>g) dokončeném bloku hráčů zadní řady nebo pokusu libera o blok,</li>
+    <li>h) míči, který přejde síť zčásti nebo celý mimo prostor přeletu do pole soupeře nebo se dotkne anténky na jeho straně hřiště,</li>
+    <li>i) podaném míči a druhém či třetím odbití, které přeletí nad anténkou nebo mimo ni na jeho straně hřiště.</li>
+    </ul>
+    <p class="sub sub--d3" id="p-23-3-3"><a class="sub__num" href="#p-23-3-3">23.3.3</a> Po skončení utkání zkontroluje zápis o utkání a podepíše ho.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-24">
+    <summary><h3><span class="rule__num">24</span> Druhý rozhodčí</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-24-1"><a class="sub__num" href="#p-24-1">24.1</a> Umístění</h4>
+    <p>Druhý rozhodčí stojí mimo hřiště u sloupku, na opačné straně než první rozhodčí a čelem k němu.</p>
+    <h4 class="sub-heading" id="p-24-2"><a class="sub__num" href="#p-24-2">24.2</a> Pravomoci</h4>
+    <p class="sub sub--d3" id="p-24-2-1"><a class="sub__num" href="#p-24-2-1">24.2.1</a> Druhý rozhodčí je pomocníkem prvního rozhodčího, ale má i vlastní oblast rozhodování (<a href="#p-24-3">24.3</a>). Když první rozhodčí nemůže pokračovat, může ho druhý rozhodčí nahradit.</p>
+    <p class="sub sub--d3" id="p-24-2-2"><a class="sub__num" href="#p-24-2-2">24.2.2</a> Chyby mimo svou oblast rozhodování smí ukázat i bez hvizdu, ale nesmí na nich u prvního rozhodčího trvat.</p>
+    <p class="sub sub--d3" id="p-24-2-3"><a class="sub__num" href="#p-24-2-3">24.2.3</a> Dohlíží na práci zapisovatelů.</p>
+    <p class="sub sub--d3" id="p-24-2-4"><a class="sub__num" href="#p-24-2-4">24.2.4</a> Dohlíží na členy družstev na lavici a jejich nevhodné chování hlásí prvnímu rozhodčímu.</p>
+    <p class="sub sub--d3" id="p-24-2-5"><a class="sub__num" href="#p-24-2-5">24.2.5</a> Dohlíží na hráče v prostorech pro rozcvičení.</p>
+    <p class="sub sub--d3" id="p-24-2-6"><a class="sub__num" href="#p-24-2-6">24.2.6</a> Povoluje řádná přerušení hry, hlídá jejich délku a odmítá neoprávněné žádosti.</p>
+    <p class="sub sub--d3" id="p-24-2-7"><a class="sub__num" href="#p-24-2-7">24.2.7</a> Hlídá počet oddechových časů a střídání každého družstva a druhý oddechový čas a páté a šesté střídání hlásí prvnímu rozhodčímu a příslušnému trenérovi.</p>
+    <p class="sub sub--d3" id="p-24-2-8"><a class="sub__num" href="#p-24-2-8">24.2.8</a> Při zranění hráče povoluje výjimečné střídání nebo poskytne 3 minuty na zotavení.</p>
+    <p class="sub sub--d3" id="p-24-2-9"><a class="sub__num" href="#p-24-2-9">24.2.9</a> Kontroluje stav podlahy, hlavně v přední zóně, a během utkání také to, že míče stále odpovídají předpisům.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Povinnost podle <a href="#p-24-2-5">24.2.5</a> vykonává rezervní rozhodčí.</p>
+    <h4 class="sub-heading" id="p-24-3"><a class="sub__num" href="#p-24-3">24.3</a> Povinnosti</h4>
+    <p class="sub sub--d3" id="p-24-3-1"><a class="sub__num" href="#p-24-3-1">24.3.1</a> Na začátku každého setu, při výměně stran v rozhodujícím setu a kdykoli je to třeba kontroluje, že skutečné postavení hráčů na hřišti odpovídá listům se sestavou.</p>
+    <p class="sub sub--d3" id="p-24-3-2"><a class="sub__num" href="#p-24-3-2">24.3.2</a> Během utkání rozhoduje, píská a ukazuje:</p>
+    <p class="sub sub--d4" id="p-24-3-2-1"><a class="sub__num" href="#p-24-3-2-1">24.3.2.1</a> proniknutí do pole soupeře a do prostoru pod sítí;</p>
+    <p class="sub sub--d4" id="p-24-3-2-2"><a class="sub__num" href="#p-24-3-2-2">24.3.2.2</a> chyby v postavení přijímajícího družstva;</p>
+    <p class="sub sub--d4" id="p-24-3-2-3"><a class="sub__num" href="#p-24-3-2-3">24.3.2.3</a> chybný dotek hráče se sítí, hlavně (ne však jen) na straně blokujícího družstva, a s anténkou na své straně hřiště;</p>
+    <p class="sub sub--d4" id="p-24-3-2-4"><a class="sub__num" href="#p-24-3-2-4">24.3.2.4</a> dokončený blok hráčů zadní řady nebo pokus libera o blok a chybu útočného úderu hráčů zadní řady nebo libera;</p>
+    <p class="sub sub--d4" id="p-24-3-2-5"><a class="sub__num" href="#p-24-3-2-5">24.3.2.5</a> dotek míče s předmětem mimo hřiště;</p>
+    <p class="sub sub--d4" id="p-24-3-2-6"><a class="sub__num" href="#p-24-3-2-6">24.3.2.6</a> dotek míče s podlahou, když na něj první rozhodčí nevidí;</p>
+    <p class="sub sub--d4" id="p-24-3-2-7"><a class="sub__num" href="#p-24-3-2-7">24.3.2.7</a> míč, který přejde rovinu sítě zčásti nebo celý mimo prostor přeletu do pole soupeře nebo se dotkne anténky na jeho straně hřiště;</p>
+    <p class="sub sub--d4" id="p-24-3-2-8"><a class="sub__num" href="#p-24-3-2-8">24.3.2.8</a> podaný míč a druhé či třetí odbití, které přeletí nad anténkou nebo mimo ni na jeho straně hřiště.</p>
+    <p class="sub sub--d3" id="p-24-3-3"><a class="sub__num" href="#p-24-3-3">24.3.3</a> Po skončení utkání zkontroluje zápis o utkání a podepíše ho.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-25">
+    <summary><h3><span class="rule__num">25</span> Rozhodčí pro video challenge</h3></summary>
+    <div class="rule__body">
+    <p>Rozhodčí pro challenge je povinný na soutěžích FIVB, pokud se používá systém video challenge (přezkoumání sporných situací podle záznamu na žádost družstva).</p>
+    <h4 class="sub-heading" id="p-25-1"><a class="sub__num" href="#p-25-1">25.1</a> Umístění</h4>
+    <p>Pracuje v kabině pro challenge na samostatném místě, které určí technický delegát FIVB.</p>
+    <h4 class="sub-heading" id="p-25-2"><a class="sub__num" href="#p-25-2">25.2</a> Povinnosti</h4>
+    <p class="sub sub--d3" id="p-25-2-1"><a class="sub__num" href="#p-25-2-1">25.2.1</a> Dohlíží na průběh challenge a na to, aby probíhal podle platného předpisu.</p>
+    <p class="sub sub--d3" id="p-25-2-2"><a class="sub__num" href="#p-25-2-2">25.2.2</a> Při výkonu funkce má oficiální úbor rozhodčího.</p>
+    <p class="sub sub--d3" id="p-25-2-3"><a class="sub__num" href="#p-25-2-3">25.2.3</a> Po přezkoumání sdělí prvnímu rozhodčímu, o jakou chybu šlo.</p>
+    <p class="sub sub--d3" id="p-25-2-4"><a class="sub__num" href="#p-25-2-4">25.2.4</a> Po skončení utkání podepíše zápis o utkání.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-26">
+    <summary><h3><span class="rule__num">26</span> Rezervní rozhodčí</h3></summary>
+    <div class="rule__body">
+    <p>Rezervní rozhodčí je povinný na soutěžích FIVB.</p>
+    <h4 class="sub-heading" id="p-26-1"><a class="sub__num" href="#p-26-1">26.1</a> Umístění</h4>
+    <p>Pracuje na samostatném místě určeném plánem hřiště FIVB.</p>
+    <h4 class="sub-heading" id="p-26-2"><a class="sub__num" href="#p-26-2">26.2</a> Povinnosti</h4>
+    <p>Rezervní rozhodčí musí:</p>
+    <p class="sub sub--d3" id="p-26-2-1"><a class="sub__num" href="#p-26-2-1">26.2.1</a> mít při výkonu funkce oficiální úbor rozhodčího;</p>
+    <p class="sub sub--d3" id="p-26-2-2"><a class="sub__num" href="#p-26-2-2">26.2.2</a> nahradit druhého rozhodčího, když chybí, nemůže pokračovat nebo se stal prvním rozhodčím;</p>
+    <p class="sub sub--d3" id="p-26-2-3"><a class="sub__num" href="#p-26-2-3">26.2.3</a> před utkáním a mezi sety kontrolovat tabulky pro střídání (pokud se používají);</p>
+    <p class="sub sub--d3" id="p-26-2-4"><a class="sub__num" href="#p-26-2-4">26.2.4</a> před utkáním a mezi sety kontrolovat tablety u lavic, pokud s nimi je problém;</p>
+    <p class="sub sub--d3" id="p-26-2-5"><a class="sub__num" href="#p-26-2-5">26.2.5</a> pomáhat druhému rozhodčímu udržovat volnou zónu volnou;</p>
+    <p class="sub sub--d3" id="p-26-2-6"><a class="sub__num" href="#p-26-2-6">26.2.6</a> pomáhat druhému rozhodčímu poslat vyloučeného nebo diskvalifikovaného člena družstva do šatny;</p>
+    <p class="sub sub--d3" id="p-26-2-7"><a class="sub__num" href="#p-26-2-7">26.2.7</a> dohlížet na náhradníky v prostoru pro rozcvičení a na lavici;</p>
+    <p class="sub sub--d3" id="p-26-2-8"><a class="sub__num" href="#p-26-2-8">26.2.8</a> přinést druhému rozhodčímu hned po představení hráčů základních sestav čtyři hrací míče a po kontrole postavení hráčů mu podat hrací míč;</p>
+    <p class="sub sub--d3" id="p-26-2-9"><a class="sub__num" href="#p-26-2-9">26.2.9</a> pomáhat prvnímu rozhodčímu řídit práci utěračů podlahy.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-27">
+    <summary><h3><span class="rule__num">27</span> Zapisovatel</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-27-1"><a class="sub__num" href="#p-27-1">27.1</a> Umístění</h4>
+    <p>Zapisovatel sedí u stolku zapisovatele na opačné straně hřiště než první rozhodčí, čelem k němu.</p>
+    <h4 class="sub-heading" id="p-27-2"><a class="sub__num" href="#p-27-2">27.2</a> Povinnosti</h4>
+    <p>Vyplňuje zápis o utkání podle pravidel ve spolupráci s druhým rozhodčím. Bzučákem nebo jiným zvukovým zařízením upozorňuje rozhodčí na nesrovnalosti nebo jim dává znamení podle svých povinností.</p>
+    <p class="sub sub--d3" id="p-27-2-1"><a class="sub__num" href="#p-27-2-1">27.2.1</a> Před utkáním a před setem zapisovatel:</p>
+    <p class="sub sub--d4" id="p-27-2-1-1"><a class="sub__num" href="#p-27-2-1-1">27.2.1.1</a> zapíše údaje o utkání a družstvech včetně jmen a čísel liber podle platných postupů a získá podpisy kapitánů a trenérů;</p>
+    <p class="sub sub--d4" id="p-27-2-1-2"><a class="sub__num" href="#p-27-2-1-2">27.2.1.2</a> zapíše základní sestavy družstev z listů se sestavou (nebo zkontroluje elektronicky odeslaná data). Když listy se sestavou nedostane včas, hned to oznámí druhému rozhodčímu.</p>
+    <p class="sub sub--d3" id="p-27-2-2"><a class="sub__num" href="#p-27-2-2">27.2.2</a> Během utkání zapisovatel:</p>
+    <p class="sub sub--d4" id="p-27-2-2-1"><a class="sub__num" href="#p-27-2-2-1">27.2.2.1</a> zapisuje získané body;</p>
+    <p class="sub sub--d4" id="p-27-2-2-2"><a class="sub__num" href="#p-27-2-2-2">27.2.2.2</a> hlídá pořadí podání každého družstva a chybu oznámí rozhodčím hned po úderu podávajícího;</p>
+    <p class="sub sub--d4" id="p-27-2-2-3"><a class="sub__num" href="#p-27-2-2-3">27.2.2.3</a> smí bzučákem potvrdit a ohlásit žádost o střídání, hlídá počet střídání a zapisuje střídání a oddechové časy; informuje druhého rozhodčího;</p>
+    <p class="sub sub--d4" id="p-27-2-2-4"><a class="sub__num" href="#p-27-2-2-4">27.2.2.4</a> upozorní rozhodčí na žádost o řádné přerušení, která je v rozporu s pravidly;</p>
+    <p class="sub sub--d4" id="p-27-2-2-5"><a class="sub__num" href="#p-27-2-2-5">27.2.2.5</a> ohlašuje rozhodčím konec setů a dosažení 8. bodu v rozhodujícím setu;</p>
+    <p class="sub sub--d4" id="p-27-2-2-6"><a class="sub__num" href="#p-27-2-2-6">27.2.2.6</a> zapisuje napomenutí, sankce a neoprávněné žádosti;</p>
+    <p class="sub sub--d4" id="p-27-2-2-7"><a class="sub__num" href="#p-27-2-2-7">27.2.2.7</a> zapisuje na pokyn druhého rozhodčího všechny ostatní události, např. výjimečná střídání, čas na zotavení, prodloužená přerušení, vnější zásahy, nové určení libera;</p>
+    <p class="sub sub--d4" id="p-27-2-2-8"><a class="sub__num" href="#p-27-2-2-8">27.2.2.8</a> hlídá délku přestávek mezi sety.</p>
+    <p class="sub sub--d3" id="p-27-2-3"><a class="sub__num" href="#p-27-2-3">27.2.3</a> Po skončení utkání zapisovatel:</p>
+    <p class="sub sub--d4" id="p-27-2-3-1"><a class="sub__num" href="#p-27-2-3-1">27.2.3.1</a> zapíše konečný výsledek;</p>
+    <p class="sub sub--d4" id="p-27-2-3-2"><a class="sub__num" href="#p-27-2-3-2">27.2.3.2</a> v případě protestu se souhlasem prvního rozhodčího zapíše do zápisu (nebo nechá kapitána zapsat) vyjádření k události, proti které se protestuje;</p>
+    <p class="sub sub--d4" id="p-27-2-3-3"><a class="sub__num" href="#p-27-2-3-3">27.2.3.3</a> sám zápis podepíše a pak získá podpisy kapitánů družstev a nakonec rozhodčích.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-28">
+    <summary><h3><span class="rule__num">28</span> Pomocný zapisovatel</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-28-1"><a class="sub__num" href="#p-28-1">28.1</a> Umístění</h4>
+    <p>Pomocný zapisovatel sedí u stolku zapisovatele vedle zapisovatele.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Pomocný zapisovatel je povinný.</p>
+    <h4 class="sub-heading" id="p-28-2"><a class="sub__num" href="#p-28-2">28.2</a> Povinnosti</h4>
+    <p>Zapisuje výměny libera a pomáhá zapisovateli s administrativou. Když zapisovatel nemůže pokračovat, nahradí ho.</p>
+    <p class="sub sub--d3" id="p-28-2-1"><a class="sub__num" href="#p-28-2-1">28.2.1</a> Před utkáním a před setem pomocný zapisovatel:</p>
+    <p class="sub sub--d4" id="p-28-2-1-1"><a class="sub__num" href="#p-28-2-1-1">28.2.1.1</a> připraví kontrolní list libera;</p>
+    <p class="sub sub--d4" id="p-28-2-1-2"><a class="sub__num" href="#p-28-2-1-2">28.2.1.2</a> připraví záložní zápis o utkání.</p>
+    <p class="sub sub--d3" id="p-28-2-2"><a class="sub__num" href="#p-28-2-2">28.2.2</a> Během utkání pomocný zapisovatel:</p>
+    <p class="sub sub--d4" id="p-28-2-2-1"><a class="sub__num" href="#p-28-2-2-1">28.2.2.1</a> zapisuje podrobnosti o výměnách a novém určení libera;</p>
+    <p class="sub sub--d4" id="p-28-2-2-2"><a class="sub__num" href="#p-28-2-2-2">28.2.2.2</a> bzučákem upozorňuje rozhodčí na chybu při výměně libera;</p>
+    <p class="sub sub--d4" id="p-28-2-2-3"><a class="sub__num" href="#p-28-2-2-3">28.2.2.3</a> obsluhuje ruční ukazatel skóre na stolku zapisovatele;</p>
+    <p class="sub sub--d4" id="p-28-2-2-4"><a class="sub__num" href="#p-28-2-2-4">28.2.2.4</a> kontroluje, že ukazatele skóre souhlasí;</p>
+    <p class="sub sub--d4" id="p-28-2-2-5"><a class="sub__num" href="#p-28-2-2-5">28.2.2.5</a> podle potřeby doplňuje záložní zápis a předává ho zapisovateli.</p>
+    <p class="sub sub--d3" id="p-28-2-3"><a class="sub__num" href="#p-28-2-3">28.2.3</a> Po skončení utkání pomocný zapisovatel:</p>
+    <p class="sub sub--d4" id="p-28-2-3-1"><a class="sub__num" href="#p-28-2-3-1">28.2.3.1</a> podepíše kontrolní list libera a předá ho ke kontrole;</p>
+    <p class="sub sub--d4" id="p-28-2-3-2"><a class="sub__num" href="#p-28-2-3-2">28.2.3.2</a> podepíše zápis o utkání.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Při elektronickém zápisu pomocný zapisovatel spolu se zapisovatelem ohlašuje střídání, ukazuje druhému rozhodčímu, které družstvo žádá o přerušení, a určuje výměny libera.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-29">
+    <summary><h3><span class="rule__num">29</span> Čároví rozhodčí</h3></summary>
+    <div class="rule__body">
+    <h4 class="sub-heading" id="p-29-1"><a class="sub__num" href="#p-29-1">29.1</a> Umístění</h4>
+    <p>Když jsou jen dva čároví rozhodčí, stojí v rozích hřiště, které jsou nejblíž pravé ruce každého z rozhodčích, šikmo 1–2 m od rohu. Každý z nich hlídá koncovou i postranní čáru na své straně.</p>
+    <p class="fivb-note"><span class="fivb-note__label">Soutěže FIVB</span> Při čtyřech čárových rozhodčích stojí ve volné zóně 1–3 m od každého rohu hřiště, v pomyslném prodloužení čáry, kterou hlídají.</p>
+    <h4 class="sub-heading" id="p-29-2"><a class="sub__num" href="#p-29-2">29.2</a> Povinnosti</h4>
+    <p class="sub sub--d3" id="p-29-2-1"><a class="sub__num" href="#p-29-2-1">29.2.1</a> Čároví rozhodčí ukazují praporky (40 × 40 cm):</p>
+    <p class="sub sub--d4" id="p-29-2-1-1"><a class="sub__num" href="#p-29-2-1-1">29.2.1.1</a> míč v poli a v autu, kdykoli míč dopadne blízko jejich čáry (čar);</p>
+    <p class="sub sub--d4" id="p-29-2-1-2"><a class="sub__num" href="#p-29-2-1-2">29.2.1.2</a> doteky míčů letících do autu hráči přijímajícího družstva (tečovaný míč);</p>
+    <p class="sub sub--d4" id="p-29-2-1-3"><a class="sub__num" href="#p-29-2-1-3">29.2.1.3</a> dotek míče s anténkou, podaný míč a druhé či třetí odbití družstva, které přejde síť mimo prostor přeletu, apod.;</p>
+    <p class="sub sub--d4" id="p-29-2-1-4"><a class="sub__num" href="#p-29-2-1-4">29.2.1.4</a> hráče (kromě podávajícího), který v okamžiku podání stojí mimo své pole;</p>
+    <p class="sub sub--d4" id="p-29-2-1-5"><a class="sub__num" href="#p-29-2-1-5">29.2.1.5</a> přešlap podávajícího;</p>
+    <p class="sub sub--d4" id="p-29-2-1-6"><a class="sub__num" href="#p-29-2-1-6">29.2.1.6</a> dotek kteréhokoli hráče s horními 80 cm anténky na jejich straně hřiště během hraní míče nebo při rušení hry;</p>
+    <p class="sub sub--d4" id="p-29-2-1-7"><a class="sub__num" href="#p-29-2-1-7">29.2.1.7</a> míč, který přejde síť mimo prostor přeletu do pole soupeře nebo se dotkne anténky na jejich straně hřiště.</p>
+    <p class="sub sub--d3" id="p-29-2-2"><a class="sub__num" href="#p-29-2-2">29.2.2</a> Na žádost prvního rozhodčího musí čárový rozhodčí své znamení zopakovat.</p>
+    </div></details>
+    <details class="rule" id="pravidlo-30">
+    <summary><h3><span class="rule__num">30</span> Oficiální znamení</h3></summary>
+    <div class="rule__body">
+    <aside class="rule-brief" id="signalizace" aria-label="Ve zkratce: signalizace rozhodčích">
+      <p class="rule-brief__label">Ve zkratce · signalizace</p>
+      <p>Rozhodčí musí každou chybu ukázat <strong>oficiálním gestem</strong>: kdo chybu udělal, co se stalo a kdo bude podávat. Ukazuje-li gesto jednou rukou, použije ruku na straně družstva, které chybovalo nebo o něco žádá.</p>
+    </aside>
+    <h4 class="sub-heading" id="p-30-1"><a class="sub__num" href="#p-30-1">30.1</a> Znamení rozhodčích</h4>
+    <p>Rozhodčí musí oficiálním znamením ukázat důvod svého hvizdu (druh odpískané chyby nebo účel povoleného přerušení). Znamení musí chvíli podržet. Ukazuje-li ho jednou rukou, je to ruka na straně družstva, které chybu udělalo nebo o něco žádá.</p>
+    <h4 class="sub-heading" id="p-30-2"><a class="sub__num" href="#p-30-2">30.2</a> Znamení čárových rozhodčích</h4>
+    <p>Čároví rozhodčí musí oficiálním znamením praporkem ukázat druh chyby a chvíli ho podržet.</p>
+    <h4 class="sub-heading" id="diagram-11">Všechna znamení (diagramy 11 a 12)</h4>
+    <p>Animace vychází z oficiálních pravidel FIVB 2025–2028 (diagramy 11 a 12). Gesto přehraješ tlačítkem ▶.</p>
+    <p><a class="button button--secondary" href="gesta.html">Vyzkoušej se v kvízu gest</a></p>
+    <div id="gesture-atlas" class="stack">
+      <p class="muted">Načítám gesta…</p>
+    </div>
+    <noscript><p>Animace gest potřebují zapnutý JavaScript. Gesta najdeš také v <a href="https://www.fivb.com/volleyball/the-game/official-volleyball-rules/" rel="noopener">oficiálních pravidlech FIVB</a>.</p></noscript>
+    </div></details>
+    </section>
+    <p class="rules-part">Část 3 · Definice a diagramy</p>
+    <section class="rules-chapter" id="definice" aria-labelledby="definice-nadpis">
+    <h2 id="definice-nadpis">Definice pojmů</h2>
+    <p>Pojmy, které pravidla používají v přesném významu. Seřazené podle pořadí v oficiálních pravidlech.</p>
+    <dl class="definitions">
+      <dt id="def-soutezni-prostor">Soutěžní (kontrolovaný) prostor</dt>
+      <dd>Pás kolem hřiště a volné zóny až po vnější zábrany nebo hrazení.</dd>
+      <dt id="def-zony">Zóny</dt>
+      <dd>Části hrací plochy (hřiště a volné zóny) se zvláštním účelem nebo omezením: přední zóna, zóna podání, zóna střídání, volná zóna, zadní zóna a zóna výměny libera (<a href="#p-1-4">1.4</a>).</dd>
+      <dt id="def-prostory">Prostory</dt>
+      <dd>Části podlahy <strong>mimo</strong> volnou zónu se zvláštní funkcí, např. prostor pro rozcvičení.</dd>
+      <dt id="def-spodni-prostor">Spodní prostor</dt>
+      <dd>Prostor pod sítí: shora ho ohraničuje spodní okraj sítě a šňůra ke sloupkům, po stranách sloupky a dole podlaha (<a href="#diagram-5">diagram 5</a>).</dd>
+      <dt id="def-prostor-preletu">Prostor přeletu</dt>
+      <dd>Část svislé roviny sítě ohraničená horní páskou sítě, anténkami (a jejich prodloužením) a stropem. Do pole soupeře musí míč přejít tudy (<a href="#p-10-1-1">10.1.1</a>).</dd>
+      <dt id="def-vnejsi-prostor">Vnější prostor</dt>
+      <dd>Část svislé roviny sítě mimo prostor přeletu a spodní prostor (<a href="#p-10-1-2">10.1.2</a>).</dd>
+      <dt id="def-zona-stridani">Zóna střídání</dt>
+      <dd>Část volné zóny, kde se provádějí střídání (<a href="#p-1-4-3">1.4.3</a>).</dd>
+      <dt id="def-se-souhlasem-fivb">„Pokud FIVB nepovolí jinak“</dt>
+      <dd>Výhrada, že FIVB může od norem pro vybavení a zařízení výjimečně ustoupit, např. kvůli propagaci volejbalu nebo zkoušení nových podmínek.</dd>
+      <dt id="def-normy-fivb">Normy FIVB</dt>
+      <dd>Technické parametry a limity, které FIVB stanoví výrobcům vybavení.</dd>
+      <dt id="def-chyba">Chyba</dt>
+      <dd>a) herní činnost v rozporu s pravidly, b) jiné porušení pravidel než herní činností (<a href="#p-6-1-2">6.1.2</a>).</dd>
+      <dt id="def-driblovani">Driblování</dt>
+      <dd>Odrážení míče o podlahu, obvykle jako příprava na nadhoz a podání. Přípravou je i třeba přehazování míče z ruky do ruky (<a href="#p-12-4-2">12.4.2</a>).</dd>
+      <dt id="def-sberaci">Sběrači míčů a utěrači</dt>
+      <dd>Sběrači míčů udržují plynulost hry tím, že mezi rozehrami kutálejí míč podávajícímu. Utěrači podlahy po rozehrách malými ručníky udržují podlahu čistou a suchou.</dd>
+      <dt id="def-rally-point">Rally point</dt>
+      <dd>Systém počítání, ve kterém se bod získává za každou vyhranou rozehru.</dd>
+      <dt id="def-prestavka">Přestávka</dt>
+      <dd>Doba mezi sety. Výměna stran v rozhodujícím 5. setu přestávkou není (<a href="#p-18-1">18.1</a>).</dd>
+      <dt id="def-nove-urceni">Nové určení libera</dt>
+      <dd>Úkon, kterým roli libera, které nemůže pokračovat nebo bylo prohlášeno za neschopné hry, převezme jiný hráč, který v tu chvíli není na hřišti (kromě hráče, za kterého se libero pravidelně vyměňuje) (<a href="#p-19-4">19.4</a>).</dd>
+      <dt id="def-vymena-libera">Výměna libera</dt>
+      <dd>Úkon, kterým hráč opustí hřiště a jeho místo zaujme libero (kterékoli, má-li družstvo dvě). Patří sem i výměna libera za libero. Hráč se pak smí vyměnit za kterékoli libero. Mezi výměnami s účastí libera musí proběhnout dokončená rozehra (<a href="#p-19-3-2">19.3.2</a>).</dd>
+      <dt id="def-ruseni">Rušení hry</dt>
+      <dd>Jakákoli činnost, která vytvoří výhodu proti soupeři nebo soupeři brání zahrát míč (<a href="#p-11-4-4">11.4.4</a>).</dd>
+      <dt id="def-o2bis">O-2bis</dt>
+      <dd>Oficiální formulář FIVB, na kterém se registrují hráči a členové realizačního týmu. Předkládá se při předzápasové poradě.</dd>
+      <dt id="def-predmet-mimo-hriste">Předmět mimo hřiště</dt>
+      <dd>Předmět nebo osoba mimo hřiště nebo blízko hranice volného hracího prostoru, která překáží letu míče: např. světla, stolička rozhodčího, televizní technika, stolek zapisovatele, sloupky. Anténky mezi ně nepatří, protože jsou součástí sítě (<a href="#p-8-4-2">8.4.2</a>).</dd>
+      <dt id="def-stridani">Střídání</dt>
+      <dd>Úkon, kterým jeden hráč (ne libero) opustí hřiště a jiný hráč (ne libero) zaujme jeho místo (<a href="#p-15-5">15.5</a>).</dd>
+      <dt id="def-prvni-odbiti">První odbití družstva</dt>
+      <dd>Herní činnost se považuje za první odbití družstva ve čtyřech případech: příjem podání, příjem útoku soupeře, hra míče odraženého od vlastního bloku a hra míče odraženého od bloku soupeře (<a href="#p-9-2-3-2">9.2.3.2</a>).</dd>
+      <dt id="def-protokol">Protokol</dt>
+      <dd>Sled událostí před začátkem utkání: losování, rozcvičení, představení družstev a rozhodčích podle předpisů soutěže.</dd>
+    </dl>
+    </section>
+    <section class="rules-chapter" id="diagramy" aria-labelledby="diagramy-nadpis">
+    <h2 id="diagramy-nadpis">Přehled diagramů</h2>
+    <p>Diagramy jsou vlastní nákresy podle oficiálních diagramů FIVB; najdeš je u pravidel, ke kterým patří.</p>
+    <ul class="rule-list">
+    <li><a href="#diagram-2">Hřiště a zóny</a> (diagramy 1b a 2)</li>
+    <li><a href="#diagram-3">Síť</a> (diagram 3)</li>
+    <li><a href="#diagram-4">Postavení hráčů</a> (diagram 4)</li>
+    <li><a href="#diagram-5">Přelet míče přes síť</a> (diagramy 5a a 5b)</li>
+    <li><a href="#diagram-6">Kolektivní clona</a> (diagram 6)</li>
+    <li><a href="#diagram-7">Dokončený blok</a> (diagram 7)</li>
+    <li><a href="#diagram-8">Útočný úder hráče zadní řady</a> (diagram 8)</li>
+    <li><a href="#diagram-9">Stupnice sankcí za nevhodné chování</a> a <a href="#diagram-9b">za zdržování</a> (diagram 9)</li>
+    <li><a href="#diagram-10">Rozmístění rozhodčích</a> (diagram 10)</li>
+    <li><a href="#diagram-11">Znamení rozhodčích a čárových rozhodčích</a> (diagramy 11 a 12, animace)</li>
+    </ul>
+    </section>
+    <!-- PRAVIDLA:END -->
   </main>
 
   <footer class="site-footer">

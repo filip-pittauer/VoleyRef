@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v8';
+const CACHE = 'voleyref-v9';
 
 const APP_SHELL = [
   './',
@@ -55,6 +55,7 @@ const APP_SHELL = [
   'js/quiz-api.js',
   'js/quiz.js',
   'js/referee-figure.js',
+  'js/rules-page.js',
   'js/stats.js',
   'js/supabase.js',
   'animace/podani-preslap.json',
