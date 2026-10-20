@@ -123,6 +123,8 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Hotovo: fáze 1–6, knížka pravidel, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), **gesta rozhodčích** (balíček 4 – čeká na vyzkoušení uživatelem).
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
 - V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
+- **Vzhled „Svaz“** (dolní lišta, Profil = účet + statistiky, písmo Barlow) je od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem.
+- Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
 
 ### Jak s uživatelem pracujeme
 - Větší práci dělit do **balíčků**; po každém commit + push, zastavit se a nechat uživatele vyzkoušet na živém webu, než se jde dál.
