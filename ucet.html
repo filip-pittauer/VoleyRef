@@ -135,10 +135,6 @@
       <div class="card stack profile-card">
         <p class="profile-card__name"><strong id="account-nickname"></strong>
           <span class="muted small" id="account-email"></span></p>
-        <div class="actions">
-          <a class="button" href="kviz.html">Hrát kvíz</a>
-          <button id="logout-button" class="button button--secondary" type="button">Odhlásit se</button>
-        </div>
       </div>
 
       <!-- Statistiky hráče (js/stats.js, data z RPC moje_statistiky) -->
@@ -176,6 +172,14 @@
           </div>
         </form>
         <p id="badges-empty" hidden>Zatím nemáš žádné odznaky. Získáš je hraním, přehled je výše ve <a href="#odznaky">statistikách</a>.</p>
+      </div>
+
+      <div class="card stack">
+        <h2>Odhlášení</h2>
+        <p>Odhlásí tě na tomto zařízení. Výsledky i odznaky zůstanou uložené v účtu.</p>
+        <div>
+          <button id="logout-button" class="button button--secondary" type="button">Odhlásit se</button>
+        </div>
       </div>
 
       <div class="card stack danger-zone">
