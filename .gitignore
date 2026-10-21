@@ -9,3 +9,6 @@ desktop.ini
 
 # Plná sada otázek se správnými odpověďmi – NESMÍ do veřejného repa
 private/
+
+# snímky a logy z Playwright MCP
+.playwright-mcp/
