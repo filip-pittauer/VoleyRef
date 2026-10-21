@@ -2147,7 +2147,8 @@ progress::-moz-progress-bar {
 /* tisk: všechna pravidla rozbalená, bez navigace */
 @media print {
   .rules-tools,
-  .main-nav { display: none; }
+  .main-nav,
+  .anim__controls { display: none; }
   .rule > summary::after { display: none; }
 }
 

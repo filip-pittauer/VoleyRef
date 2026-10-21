@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v14';
+const CACHE = 'voleyref-v15';
 
 const APP_SHELL = [
   './',
