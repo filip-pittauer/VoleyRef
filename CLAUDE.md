@@ -141,10 +141,15 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
   - Možná dolaďování: větší scéna na mobilu, libero (jiný dres), odlišit podávajícího, obtížnost (menší rezerva), pátá dlaždice na úvodu sama na řádku.
 - **Nová kategorie `chovani`** („Chování a tresty“, 21. 10. 2026): js/categories.js, tools/seed-otazky.mjs, kontrola v `sql/01_schema.sql` (drop + add constraint `otazky_kategorie_check`), odznak Všestranný nově vyžaduje 10 kategorií (`sql/05`, js/badges.js).
 - Animace (balíček 6): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
+- **KDE JSME SKONČILI (21. 10. 2026 večer, uživatel restartoval chat):**
+  - **NEPUSHNUTO** (uživatel chce nejdřív doladit a pak pushnout najednou): na `main` 4 commity – trenažér postavení (3×) a přepracovaná gesta (1×); v `private/` 4 commity s testy. Push až na pokyn uživatele (oba repozitáře).
+  - **Animace postav ještě předělat** – uživatel výslovně chce gesta (a postavy) dál zlepšovat; po přestavbě ruky (viz Balíček 4) je ještě nezhodnotil. Kdyby to pořád vypadalo špatně, chce zkusit knihovnu **GSAP** nebo **Anime.js** (jeho návrh – před zavedením stejně potvrdit, která). Pozor: obě řeší hlavně časování a plynulost pohybu (easing, timeline), ne kvalitu kresby postavy (tvary, vrstvy) – to vysvětlit a navrhnout, co by knihovna reálně zlepšila.
+  - Uživatel poslal 2 snímky z tmavého režimu (otevřená ruka; ruka s červenou kartou) bez komentáře – zeptat se, co na nich vadí.
+  - **Playwright MCP nainstalovaný** 21. 10. 2026 (`claude mcp add playwright -- cmd /c npx @playwright/mcp@latest --browser chrome`, scope local = jen tento projekt, tvůj Chrome; přidáno přes PowerShell – Git Bash přepisuje `/c` na `C:/`). Na interaktivní prohlížení webu; opakované testy dál skripty v `private/testy/`.
 - **Na příště – otevřené body:**
   - Licence repa: zatím žádná (= všechna práva vyhrazena). Uživatel to zatím neřeší – nepřipomínat.
   - Text pravidel před zveřejněním projde zkušený rozhodčí (uživatel to zařídí).
-  - Nápady odložené uživatelem: Playwright MCP („zatím ne, kdyžtak později“ – doporučil jsem zůstat u skriptů), Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
+  - Nápady odložené uživatelem: Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
   - Úvodní panel hráče s úrovní existuje jen ve větvi `styl-hala` – lze převzít do Svazu, pokud uživatel bude chtít.
 - Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
 
@@ -176,7 +181,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 ### Jak jsem testoval (testy nejsou ve veřejném repu)
 - SQL: PGlite (Postgres ve WASM, npm `@electric-sql/pglite`) s napodobeným Supabase (role anon/authenticated/supabase_auth_admin, `auth.users`, `auth.uid()` z `request.jwt.claim.sub`). Vždy testovat i přechod ze stávající verze (`git show HEAD:sql/…`) a dvojí spuštění skriptů.
 - Prohlížeč: `playwright-core` + nainstalovaný Chrome (`C:/Program Files/Google/Chrome/Application/chrome.exe`), statický server `http-server`, Supabase API odchycené a obsloužené PGlite. **V testech blokovat service workery** (`serviceWorkers: 'block'`) a všechny požadavky na skutečný Supabase – jinak test sáhne na živou DB.
-- **Skripty jsou zkopírované v `private/testy/`** (jen na disku, ignorované Gitem): `fake-supabase.mjs` + `lib.mjs` (prostředí), `db.mjs` (bezpečnost, 45 kontrol), `*-db.mjs` (SQL po balíčcích), `e2e-*.mjs` (prohlížeč). Spuštění: zkopírovat složku do scratchpadu sezení (ne do repa), `npm install`, `node db.mjs` atd.
+- **Skripty jsou v `private/testy/`** (soukromé repo `VoleyRef-private`, ve veřejném ignorované): `fake-supabase.mjs` + `lib.mjs` (prostředí), `db.mjs` (bezpečnost, 45 kontrol), `*-db.mjs` (SQL po balíčcích), `e2e-*.mjs` (prohlížeč). Spuštění: zkopírovat složku do scratchpadu sezení (ne do repa), `npm install`, `node db.mjs` atd.
 - Cesty uvnitř jsou natvrdo: `ROOT` v `lib.mjs` (projekt) a `OLD` v `migrate-db.mjs`, `daily-db.mjs`, `badges-db.mjs` (složka se snímkem SQL z `git show HEAD:sql/…` – před testem přechodu ji znovu vytvořit).
 - Gesta: `e2e-gesta.mjs` (kvíz gest, přehled v pravidlech, omezený pohyb), `pwa-gesta.mjs` (mezipaměť v6, gesta offline), `gesta-atlas.mjs` / `gesta-shots.mjs` / `gesto-detail.mjs <id>` (snímky gest do `shots/` – na kontrolu vzhledu animací očima).
 - Zastaralé testy (selhávají i bez změn): `e2e.mjs` krok 1 čeká „Supabase není propojený“ (config.js už propojený je), `pwa.mjs` počítá soubory v mezipaměti `voleyref-v4` (natvrdo).
