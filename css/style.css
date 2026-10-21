@@ -865,6 +865,16 @@ progress::-moz-progress-bar {
   background: var(--color-error);
 }
 
+/* hláška „Vyber jednu odpověď“ (místo bubliny prohlížeče, js/dom.js setupChoiceHint) */
+.choice-hint {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+  font-weight: 600;
+}
+
 /* ---------- Animace (SVG, jednotky = metry) ---------- */
 .anim svg {
   background: #2f6f9f;
@@ -2388,6 +2398,11 @@ main.home {
   }
 
   .answers .answer.answer--wrong {
+    animation: answer-shake 0.4s ease-in-out;
+  }
+
+  /* hláška bez vybrané odpovědi se při každém dalším kliknutí zatřese */
+  .choice-hint.choice-hint--again {
     animation: answer-shake 0.4s ease-in-out;
   }
 

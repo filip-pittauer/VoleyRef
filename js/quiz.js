@@ -1,5 +1,5 @@
 // Ovládání stránky kvízu: start → otázky → výsledek.
-import { el, showOnly, replayAnimation } from './dom.js';
+import { el, showOnly, replayAnimation, setupChoiceHint } from './dom.js';
 import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName, categoryRulesUrl, ruleUrl } from './categories.js';
 import { formatDuration, plural, secondsUntilNextDay, formatCountdown } from './format.js';
 import { badgeById } from './badges.js';
@@ -36,6 +36,8 @@ const questionMedia = document.getElementById('question-media');
 const answersBox = document.getElementById('answers');
 const questionForm = document.getElementById('question-form');
 const nextButton = document.getElementById('next-button');
+const answerHint = document.getElementById('answer-hint');
+const hasChoice = setupChoiceHint(questionForm, answerHint);
 
 const resultSummary = document.getElementById('result-summary');
 const resultList = document.getElementById('result-list');
@@ -246,6 +248,7 @@ function renderQuestion() {
         el('span', { class: 'answer__text' }, text)))
   );
 
+  answerHint.hidden = true;
   nextButton.textContent = number === total ? 'Vyhodnotit' : 'Další otázka';
 
   // nová otázka „přijede“ zprava (CSS třída .q-enter)
@@ -259,6 +262,7 @@ function renderQuestion() {
 async function handleAnswer(event) {
   // Formulář by jinak odeslal stránku na server a načetl ji znovu.
   event.preventDefault();
+  if (!hasChoice()) return;
 
   const question = state.questions[state.index];
   state.answers[question.id] = new FormData(questionForm).get('answer');

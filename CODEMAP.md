@@ -57,7 +57,7 @@ při změně upravit všech 8 souborů. Ikony navigace: `img/ikony.svg` (symboly
 ### Společné pomůcky
 | Modul | Exporty | Poznámka |
 |---|---|---|
-| `dom.js` | `el`, `svgEl`, `showOnly`, `replayAnimation`, `loadingPlaceholder` | tvorba prvků (text vždy jako `textContent` – ochrana XSS); znovuspuštění CSS animace; skeleton při načítání |
+| `dom.js` | `el`, `svgEl`, `showOnly`, `replayAnimation`, `loadingPlaceholder`, `setupChoiceHint` | tvorba prvků (text vždy jako `textContent` – ochrana XSS); znovuspuštění CSS animace; skeleton při načítání; vlastní hláška „Vyber jednu odpověď“ místo bubliny prohlížeče (kvíz, gesta) |
 | `format.js` | `formatDuration`, `plural`, `secondsUntilNextDay`, `formatCountdown` | české tvary („1 bod / 2 body / 5 bodů“); odpočet do půlnoci českého času (denní výzva) |
 | `categories.js` | `CATEGORIES`, `categoryName`, `DIFFICULTIES`, `difficultyName`, `categoryRulesUrl`, `ruleUrl` | kategorie otázek; odkazy do pravidel (`#podani`, `#p-12-4-3`) |
 | `badges.js` | `BADGE_GROUPS`, `BADGES`, `badgeById` | názvy/ikony odznaků (podmínky jsou v SQL) |

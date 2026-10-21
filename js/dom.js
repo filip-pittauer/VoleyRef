@@ -56,6 +56,26 @@ export function loadingPlaceholder(lines = 3) {
   ];
 }
 
+/**
+ * Vlastní hláška „Vyber jednu odpověď“ místo bubliny prohlížeče.
+ * Formulář dostane novalidate (prohlížeč pak sám nic neukazuje, required
+ * u přepínačů zůstává kvůli čtečkám). Vrací funkci, která při odeslání
+ * zkontroluje, že je odpověď vybraná; když ne, ukáže hlášku a vrátí false.
+ * Hláška zmizí, jakmile hráč odpověď vybere.
+ */
+export function setupChoiceHint(form, hint) {
+  form.noValidate = true;
+  form.addEventListener('change', () => { hint.hidden = true; });
+
+  return function hasChoice() {
+    if (new FormData(form).get('answer') !== null) return true;
+    hint.hidden = false;
+    replayAnimation(hint, 'choice-hint--again');
+    form.querySelector('input[name="answer"]')?.focus();
+    return false;
+  };
+}
+
 /** Zobrazí jednu sekci a ostatní ze seznamu skryje. */
 export function showOnly(visible, all) {
   for (const section of all) {

@@ -1,7 +1,7 @@
 // Kvíz „Co znamená toto gesto?“ – běží jen v prohlížeči, bez databáze.
 // Na rozdíl od hlavního kvízu ukazuje správnou odpověď hned po každé
 // otázce: nic se neukládá, takže není co prozradit, a hráč se rychleji učí.
-import { el, showOnly, replayAnimation } from './dom.js';
+import { el, showOnly, replayAnimation, setupChoiceHint } from './dom.js';
 import { plural } from './format.js';
 import { loadGestures, gestureDetails } from './gesture-data.js';
 import { createGesturePlayer } from './referee-figure.js';
@@ -31,6 +31,8 @@ const answersBox = document.getElementById('gesture-answers');
 const feedback = document.getElementById('gesture-feedback');
 const submitButton = document.getElementById('gesture-submit');
 const nextButton = document.getElementById('gesture-next');
+const answerHint = document.getElementById('gesture-hint');
+const hasChoice = setupChoiceHint(form, answerHint);
 
 const scoreText = document.getElementById('gesture-score');
 const resultText = document.getElementById('gesture-result-text');
@@ -113,6 +115,7 @@ function renderQuestion() {
 
   fieldset.disabled = false;
   feedback.replaceChildren();
+  answerHint.hidden = true;
   submitButton.hidden = false;
   nextButton.hidden = true;
   heading.focus();
@@ -120,6 +123,7 @@ function renderQuestion() {
 
 function handleAnswer(event) {
   event.preventDefault();   // formulář by jinak znovu načetl stránku
+  if (!hasChoice()) return;
   const gesture = state.questions[state.index];
   const answer = new FormData(form).get('answer');
   const isCorrect = answer === gesture.id;
