@@ -257,7 +257,7 @@ $$;
 -- Pořadí: více bodů, při shodě kratší čas.
 -- Počítají se jen běžná kola ze všech kategorií a obtížností (ne vybraná
 -- kategorie/obtížnost, opakování chyb ani denní výzva) a kola s rozumným
--- časem (aspoň 3 s na otázku – ochrana proti botům).
+-- časem (aspoň 2 s na otázku – ochrana proti botům).
 -- Vrací i odznaky, které si hráč vybral do žebříčku (nejvýše 3).
 -- ---------------------------------------------------------------------
 -- Změna vracených sloupců nejde přes "create or replace" → nejdřív smazat.
@@ -292,7 +292,7 @@ as $$
       and k.rezim = 'bezne'
       and k.kategorie is null
       and k.obtiznost is null
-      and k.konec - k.zacatek >= make_interval(secs => k.pocet * 3)
+      and k.konec - k.zacatek >= make_interval(secs => k.pocet * 2)
     order by k.uzivatel_id, k.skore desc, k.konec - k.zacatek asc
   )
   select

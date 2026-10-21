@@ -10,7 +10,7 @@
 -- private.metriky_odznaku(uzivatel) → (odznak, hodnota, cil)
 -- Pro každý odznak: kolik hráč má (hodnota) a kolik potřebuje (cil).
 -- Odznak je získaný, když hodnota >= cil.
--- „Dokonalá“ kola musí mít aspoň 3 s na otázku (stejně jako žebříček).
+-- „Dokonalá“ kola musí mít aspoň 2 s na otázku (stejně jako žebříček).
 -- ---------------------------------------------------------------------
 create or replace function private.metriky_odznaku(p_uzivatel uuid)
 returns table (odznak text, hodnota integer, cil integer)
@@ -27,7 +27,7 @@ as $$
   dokonala as (
     select * from moje_kola
     where rezim = 'bezne' and pocet >= 10 and skore = pocet
-      and trvani >= make_interval(secs => pocet * 3)
+      and trvani >= make_interval(secs => pocet * 2)
   ),
   -- úspěšnost po kategoriích (jako ve statistikách)
   kategorie as (
@@ -64,7 +64,7 @@ as $$
     ('rychly',      (select count(*) from dokonala where trvani < interval '2 minutes')::integer, 1),
     ('tezka-vaha',  (select count(*) from moje_kola
                      where rezim = 'bezne' and obtiznost = 3 and pocet >= 3 and skore = pocet
-                       and trvani >= make_interval(secs => pocet * 3))::integer, 1),
+                       and trvani >= make_interval(secs => pocet * 2))::integer, 1),
     -- učení
     ('pouceny',     (select coalesce(sum(skore), 0) from moje_kola where rezim = 'chyby')::integer, 10),
     ('cisty-stul',  (case when exists (select 1 from moje_kola where rezim = 'chyby' and skore > 0)

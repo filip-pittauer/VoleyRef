@@ -6,7 +6,7 @@
 
 -- ---------------------------------------------------------------------
 -- private.denni_poradi(den) → pořadí hráčů v denní výzvě daného dne
--- Stejná pravidla jako celkový žebříček: přihlášení hráči, aspoň 3 s
+-- Stejná pravidla jako celkový žebříček: přihlášení hráči, aspoň 2 s
 -- na otázku. Každý hráč má na den jen jedno kolo (jedinečný index).
 -- ---------------------------------------------------------------------
 create or replace function private.denni_poradi(p_den date)
@@ -34,7 +34,7 @@ as $$
     and k.den = p_den
     and k.konec is not null
     and k.uzivatel_id is not null
-    and k.konec - k.zacatek >= make_interval(secs => k.pocet * 3);
+    and k.konec - k.zacatek >= make_interval(secs => k.pocet * 2);
 $$;
 
 -- ---------------------------------------------------------------------

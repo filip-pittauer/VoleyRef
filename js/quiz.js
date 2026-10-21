@@ -300,7 +300,7 @@ function renderResultItem(question, result) {
 }
 
 // Stejné pravidlo jako v SQL funkci zebricek(): ochrana proti botům.
-const MIN_SECONDS_PER_QUESTION = 3;
+const MIN_SECONDS_PER_QUESTION = 2;
 
 /** Poznámka pod skóre: proč se (ne)zapsalo do žebříčku. */
 function leaderboardNote(round, result) {

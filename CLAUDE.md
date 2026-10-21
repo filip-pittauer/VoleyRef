@@ -125,18 +125,17 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
 - **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists` staré signatury). Změny se dělají přímo v nich a uživatel je po změně spustí znovu v pořadí 01, 02, 03… Před nasazením otestovat přechod ze stávající verze (git HEAD) na novou.
 
-## Aktuální stav (konec práce 21. 10. 2026)
+## Aktuální stav (21. 10. 2026)
 - Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1–6, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta rozhodčích (balíček 4), vzhled Svaz, úplná pravidla (balíček 5), animace (balíček 6), README.md a CODEMAP.md. Uživatel balíčky 4–6 průběžně prohlížel a schvaloval (diagramy, obsah, animace menu), celkové vyzkoušení na živém webu ještě nehlásil.
-- Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky.
-- V Supabase je spuštěné všechno SQL `01`–`05` (aktuální verze z repa, stav 20. 10. 2026). Gesta žádné SQL nepotřebují.
-- **Vzhled „Svaz“** (dolní lišta, Profil = účet + statistiky, písmo Barlow) je od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem.
-- **Úplná pravidla** (balíček 5) jsou od 20. 10. 2026 na `main` a živě – čeká na vyzkoušení uživatelem. Uživatel má spustit `private/seed-otazky.sql` (otázky 26 a 27: pravidlo 28.x → 30.x); dokud to neudělá, vedou jejich odkazy na špatné pravidlo.
-- **Animace a detaily** (balíček 6, od 21. 10. 2026 na `main`, čeká na vyzkoušení): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
+- Hotovo: fáze 1–6, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta rozhodčích (balíček 4), vzhled Svaz, úplná pravidla (balíček 5), animace (balíček 6), README.md a CODEMAP.md.
+- Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky; 21. 10. 2026 schválil i vzhled „Svaz“ (dolní lišta, Profil = účet + statistiky, písmo Barlow), úplná pravidla (balíček 5) a animace (balíček 6).
+- V Supabase je spuštěné SQL `01`–`05` a `private/seed-otazky.sql` (potvrzeno 21. 10. 2026). Gesta žádné SQL nepotřebují.
+- **Limit 2 s na otázku** (dřív 3 s; rozhodnuto 21. 10. 2026) pro žebříček, denní výzvu a „dokonalá“ kola u odznaků: `sql/02`, `04`, `05` a `MIN_SECONDS_PER_QUESTION` v js/quiz.js. Uživatel má po pushi spustit znovu `02`, `04`, `05`.
+- Animace (balíček 6): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
 - **Na příště – otevřené body:**
-  - Ověřit, jestli uživatel spustil `private/seed-otazky.sql` (připomínal jsem; nepotvrdil).
-  - Licence repa: zatím žádná (= všechna práva vyhrazena). Nabídl jsem MIT pro kód; uživatel nerozhodl.
-  - Text pravidel by měl před zveřejněním projít zkušený rozhodčí (doporučeno uživateli).
+  - Ověřit, jestli uživatel znovu spustil `sql/02_funkce.sql`, `04_denni_vyzva.sql`, `05_odznaky.sql` (limit 2 s).
+  - Licence repa: zatím žádná (= všechna práva vyhrazena). Uživatel to zatím neřeší – nepřipomínat.
+  - Text pravidel před zveřejněním projde zkušený rozhodčí (uživatel to zařídí).
   - Nápady odložené uživatelem: Playwright MCP („zatím ne, kdyžtak později“ – doporučil jsem zůstat u skriptů), Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
   - Úvodní panel hráče s úrovní existuje jen ve větvi `styl-hala` – lze převzít do Svazu, pokud uživatel bude chtít.
 - Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
@@ -144,7 +143,6 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 ### Jak s uživatelem pracujeme
 - Větší práci dělit do **balíčků**; po každém commit + push, zastavit se a nechat uživatele vyzkoušet na živém webu, než se jde dál.
 - Po změně SQL vždy přesně napsat, které soubory má spustit a v jakém pořadí.
-- Nezodpovězená otázka: limit **3 s na otázku** pro žebříček (ochrana proti botům) – nechat, nebo snížit na 2 s?
 
 ### Balíček 4: gesta rozhodčích (hotovo 20. 10. 2026, čeká na vyzkoušení)
 - `gesta.html`: kvíz „Co znamená toto gesto?“ – 10 gest (nebo 5 u čárových), 4 možnosti ze stejné skupiny (přednostně gesta z pole `zamena`), **vyhodnocení hned po každé odpovědi** (nic se neukládá, takže na rozdíl od hlavního kvízu není co prozradit). Jednoruká gesta se náhodně zrcadlí. Výsledek: skóre + chybná gesta s animací.
@@ -153,7 +151,7 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Postava: jednoduchý 3D model (paže = inverzní kinematika, ruka s prsty a dlaní), promítnutý do SVG; kreslí se podle hloubky (ruka za zády je schovaná). Gesta jsou jen data – nové gesto = záznam v `gesta/gesta.json`.
 - Možná vylepšení podle zpětné vazby: zpomalené přehrávání, smyčka, odznaky za gesta (chtělo by ukládání na server).
 
-### Balíček 5: úplná pravidla (hotovo 20. 10. 2026, na main, čeká na vyzkoušení)
+### Balíček 5: úplná pravidla (hotovo 20. 10. 2026, schváleno 21. 10. 2026)
 - Všech 30 pravidel FIVB 2025–2028 včetně podbodů, vlastními slovy; české názvy kapitol a pravidel podle staršího oficiálního překladu ČVS (2009, sites.google.com/site/volejbalopava/pravidla), novinky přeložené po vzoru. Body „Soutěže FIVB“ jsou odlišené poznámkou.
 - Číslování 2025–2028 se od pravidla 25 liší od edice 2021: přibyl **25 rozhodčí pro video challenge** a **26 rezervní rozhodčí**, takže zapisovatel = 27, pomocný zapisovatel = 28, čároví = 29, znamení = 30. Hlídat u čísel pravidel v otázkách.
 - Novinky 2025 zapsané v textu: postavení jen přijímajícího družstva (7.4), zákaz zvedat ruce nad hlavu při podání (12.5.3), prodloužený kontakt nad sítí (9.1.2.3), blok „bez ohledu na výšku doteku“ (14.1.1), nové sankce (urážlivé chování = rovnou vyloučení, agrese = diskvalifikace, vyloučený jde do šatny).

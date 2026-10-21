@@ -143,7 +143,7 @@ function renderBadges(data) {
       el('ul', { class: 'badge-grid' },
         ...Object.entries(group.badges).map(([id, badge]) => badgeCard(id, badge, byId.get(id)))),
     ]),
-    el('p', { class: 'muted small' }, 'Kola bez chyby se počítají jen tehdy, když trvala aspoň 3 sekundy na otázku.'));
+    el('p', { class: 'muted small' }, 'Kola bez chyby se počítají jen tehdy, když trvala aspoň 2 sekundy na otázku.'));
 }
 
 // ---------- Načtení ----------
