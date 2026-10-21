@@ -142,7 +142,66 @@ function drawNet(cam) {
 const UP = [0, 1, 0];
 const world = (x, z, y = 0) => [x, y, z];
 
-/** Postava hráče ve 3D (perspektivní pohled): seznam částí s hloubkou. */
+// Obrys podrážky – stejný tvar jako v diagramu postavení v pravidlech
+// (Bézierovy křivky v jednotkách diagramu: špička v −y, pravá noha, šířka v x).
+const SOLE_PATH = [
+  [[0.6, -9.5], [4.4, -9.5], [4.6, -4], [3.9, -0.5]],
+  [[3.9, -0.5], [3.4, 2.5], [3, 5.2], [2.7, 7.2]],
+  [[2.7, 7.2], [2.2, 9.9], [-2.2, 9.9], [-2.6, 7.2]],
+  [[-2.6, 7.2], [-3, 4.8], [-4, 2], [-4, -1.8]],
+  [[-4, -1.8], [-4, -6.4], [-2.8, -9.5], [0.6, -9.5]],
+];
+/** Body obrysu podrážky jako [dopředu, doprava] v metrech, střed chodidla v nule. */
+const SOLE = SOLE_PATH.flatMap(curve => [0, 0.2, 0.4, 0.6, 0.8].map(t => {
+  const u = 1 - t;
+  const bezier = i => u * u * u * curve[0][i] + 3 * u * u * t * curve[1][i] + 3 * u * t * t * curve[2][i] + t * t * t * curve[3][i];
+  return [-bezier(1) / 19 * FOOT_SIZE.length, (bezier(0) - 0.3) / 8.6 * FOOT_SIZE.width];
+}));
+
+/** Obrys boty na podlaze; levá noha je zrcadlově. */
+function soleOutline(foot, forward, left, isLeftFoot) {
+  const side = isLeftFoot ? 1 : -1;     // „doprava“ pravé nohy = −left, levá noha zrcadlově
+  return SOLE.map(([ahead, right]) => add(add(foot, scale(forward, ahead)), scale(left, side * right)));
+}
+
+/** Konvexní obal bodů na plátně (Andrewův algoritmus) – obrys trupu z průřezů. */
+function hull(points) {
+  const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+  const turn = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  const half = list => {
+    const out = [];
+    for (const p of list) {
+      while (out.length >= 2 && turn(out[out.length - 2], out[out.length - 1], p) <= 0) out.pop();
+      out.push(p);
+    }
+    return out.slice(0, -1);
+  };
+  return [...half(sorted), ...half([...sorted].reverse())];
+}
+
+/**
+ * Část těla jako obrys přes vodorovné průřezy (elipsy) – z kteréhokoli úhlu
+ * má tvar, ne jen „tlustou čáru“. sections: [{ center, halfWidth, halfDepth }].
+ */
+function bodyShape(cam, sections, forward, left, cls) {
+  const points = [];
+  for (const { center, halfWidth, halfDepth } of sections) {
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      const p = cam.project(add(center, add(scale(left, Math.cos(a) * halfWidth), scale(forward, Math.sin(a) * halfDepth))));
+      if (p.depth > NEAR) points.push(p);
+    }
+  }
+  if (points.length < 3) return null;
+  return svgEl('path', { d: `M${hull(points).map(p => `${num(p.x)} ${num(p.y)}`).join('L')}Z`, class: cls });
+}
+
+/**
+ * Postava hráče ve 3D (perspektivní pohled). Části se kreslí v pevném pořadí
+ * vrstev: nohy od vzdálenější (bota, bérec, stehno, nohavice), pánev,
+ * paže za tělem, trup, hlava, paže před tělem. Číslo dresu se nekreslí tady,
+ * ale vrací se zvlášť (label) – kreslí se až po všech hráčích.
+ */
 function playerParts(cam, player, team) {
   // přijímající se dívají k síti (−x), podávající taky k síti (+x)
   const forward = team === 'receiving' ? [-1, 0, 0] : [1, 0, 0];
@@ -152,102 +211,109 @@ function playerParts(cam, player, team) {
   const upright = player.server ? 1 : 0;     // podávající stojí rovně, ostatní v pozoru na příjem
   const bend = 1 - upright;
 
-  const hip = add(add(mid, scale(UP, 0.84 + 0.1 * upright)), scale(forward, -0.05 * bend));
+  const hip = add(add(mid, scale(UP, 0.81 + 0.13 * upright)), scale(forward, -0.05 * bend));
   const shoulder = add(add(hip, scale(UP, 0.5 + 0.04 * upright)), scale(forward, 0.16 * bend));
-  const head = add(add(shoulder, scale(UP, 0.22)), scale(forward, 0.05 * bend));
-  const parts = [];
-  const push = item => { if (item) parts.push(item); };
+  const head = add(add(shoulder, scale(UP, 0.23)), scale(forward, 0.05 * bend));
+  const bodyDepth = cam.depth(lerp(hip, shoulder, 0.5));
+  const out = [];
+  const put = item => { if (item) out.push(item.el ?? item); };
+  const shapeOf = points => {
+    const projected = points.map(cam.project).filter(p => p.depth > NEAR);
+    return projected.length >= 3 ? `M${hull(projected).map(p => `${num(p.x)} ${num(p.y)}`).join('L')}Z` : null;
+  };
 
-  // boty (na podlaze, přesně podle dat – podle nich se postavení posuzuje)
-  for (const foot of [footL, footR]) {
-    const toe = scale(forward, FOOT_SIZE.length / 2), side = scale(left, FOOT_SIZE.width / 2);
-    const shoe = [add(add(foot, toe), side), add(sub(foot, toe), side), sub(sub(foot, toe), side), sub(add(foot, toe), side)];
-    const d = cam.pathOf(shoe);
-    if (d) push({ depth: cam.depth(foot) + 0.05, el: svgEl('path', { d, class: 'ct-shoe' }) });
-  }
-
-  for (const [foot, sideSign] of [[footL, 1], [footR, -1]]) {
-    const ankle = add(add(foot, scale(UP, 0.09)), scale(forward, -0.04));
-    const knee = add(add(add(ankle, scale(UP, 0.4 + 0.05 * upright)), scale(forward, 0.15 * bend)), scale(left, 0.03 * sideSign));
+  // nohy od vzdálenější: bota (podrážka přesně podle dat), bérec, ponožka, stehno, nohavice
+  const legs = [[footL, true, 1], [footR, false, -1]].map(([foot, isLeft, sideSign]) => {
+    const ankle = add(add(foot, scale(UP, 0.07)), scale(forward, -0.04));
+    const knee = add(add(add(ankle, scale(UP, 0.42 + 0.05 * upright)), scale(forward, 0.14 * bend)), scale(left, 0.03 * sideSign));
     const hipSide = add(hip, scale(left, 0.1 * sideSign));
-    push(thick(cam, ankle, knee, 0.11, 'ct-skin'));
-    push(thick(cam, knee, hipSide, 0.14, 'ct-skin'));
-    push(thick(cam, lerp(hipSide, knee, 0.45), hipSide, 0.17, `ct-shorts ct-shorts--${team}`));
+    return { foot, isLeft, ankle, knee, hipSide, depth: cam.depth(foot) };
+  }).sort((a, b) => b.depth - a.depth);
+  for (const leg of legs) {
+    const sole = soleOutline(leg.foot, forward, left, leg.isLeft);
+    const shoeTop = add(add(leg.foot, scale(UP, 0.055)), scale(forward, -0.03));
+    const shoe = shapeOf([...sole, ...sole.map(p => lerp(shoeTop, add(p, scale(UP, 0.055)), 0.6))]);
+    if (shoe) out.push(svgEl('path', { d: shoe, class: 'ct-shoe' }));
+    const soleD = cam.pathOf(sole);
+    if (soleD) out.push(svgEl('path', { d: soleD, class: 'ct-sole' }));    // otisk na podlaze
+    put(thick(cam, leg.ankle, leg.knee, 0.095, 'ct-skin'));
+    put(thick(cam, leg.ankle, lerp(leg.ankle, leg.knee, 0.28), 0.09, 'ct-sock'));
+    put(thick(cam, leg.knee, leg.hipSide, 0.14, 'ct-skin'));
+    put(disc(cam, leg.knee, 0.05, 'ct-skin ct-hand'));
+    put(thick(cam, leg.hipSide, lerp(leg.hipSide, leg.knee, 0.3), 0.17, `ct-shorts-leg ct-shorts-leg--${team}`));
   }
 
-  push(thick(cam, add(hip, scale(UP, -0.05)), add(hip, scale(UP, 0.1)), 0.36, `ct-shorts ct-shorts--${team}`));
-  push(thick(cam, add(hip, scale(UP, 0.08)), shoulder, 0.36, `ct-jersey ct-jersey--${team}`));
+  // pánev (užší než spodek dresu, aby dres v pase vždy přesahoval)
+  put(bodyShape(cam, [
+    { center: add(hip, scale(UP, 0.1)), halfWidth: 0.16, halfDepth: 0.1 },
+    { center: add(hip, scale(UP, -0.1)), halfWidth: 0.13, halfDepth: 0.1 },
+  ], forward, left, `ct-shorts-fill ct-shorts-fill--${team}`));
 
-  for (const sideSign of [1, -1]) {
-    const shoulderSide = add(shoulder, scale(left, 0.19 * sideSign));
+  // paže: nadloktí (s rukávem) se řadí podle lokte, předloktí s rukou podle ruky
+  const arms = [1, -1].map(sideSign => {
+    const shoulderSide = add(add(shoulder, scale(left, 0.19 * sideSign)), scale(UP, -0.03));
     const hand = player.server && sideSign === 1
       ? add(add(shoulder, scale(UP, -0.05)), add(scale(forward, 0.34), scale(left, 0.05)))
       : add(add(hip, scale(UP, 0.12 + 0.2 * upright)), add(scale(forward, 0.36 - 0.26 * upright), scale(left, (0.11 + 0.1 * upright) * sideSign)));
-    const elbow = add(lerp(shoulderSide, hand, 0.5), add(scale(UP, -0.1), scale(left, 0.04 * sideSign)));
-    push(thick(cam, shoulderSide, elbow, 0.1, `ct-jersey ct-jersey--${team}`));
-    push(thick(cam, elbow, hand, 0.08, 'ct-skin'));
-  }
-  if (player.server) push(disc(cam, add(add(shoulder, scale(UP, -0.02)), scale(forward, 0.42)), 0.105, 'ct-ball'));
-
-  push(disc(cam, head, 0.11, 'ct-skin ct-head'));
-
-  return parts;
-}
-
-/**
- * Štítky s čísly dresů nad hlavami hráčů – vždy čelem k divákovi a kreslí se
- * až po všech hráčích, aby je nikdo nezakryl. Když by se dva štítky překryly,
- * vzdálenější se posune výš a s hlavou ho spojí tenká čára.
- */
-function playerTags(cam, players, stateOf) {
-  const tags = [];
-  for (const player of players) {
-    const [cx, cz] = centerOf(player);
-    const anchor = cam.project(world(cx, cz, 1.85));
-    if (anchor.depth < NEAR) continue;
-    const size = Math.max(0.26 / anchor.depth, cam.minFont);
-    const text = String(player.jersey);
-    const w = size * (0.62 * text.length + 0.55), h = size * 1.3;
-    tags.push({ player, anchor, size, text, w, h, x: anchor.x - w / 2, y: anchor.y - size * 0.4 - h, state: stateOf(player) });
-  }
-  // od nejbližšího hráče: blízký štítek zůstane u hlavy, vzdálenější uhne nahoru
-  tags.sort((a, b) => a.anchor.depth - b.anchor.depth);
-  const placed = [];
-  const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
-  for (const tag of tags) {
-    for (let i = 0; i < 12 && placed.some(other => overlaps(tag, other)); i++) tag.y -= tag.h * 0.55;
-    placed.push(tag);
-  }
-  // kreslit odzadu, vybrané a chybné navrch
-  const rank = tag => (tag.state ? 1 : 0);
-  return tags.sort((a, b) => rank(a) - rank(b) || b.anchor.depth - a.anchor.depth).map(tag => {
-    const moved = tag.anchor.y - tag.size * 0.4 - tag.h - tag.y > 1e-6;
-    return svgEl('g', { class: `ct-tag${tag.state ? ` ct-tag--${tag.state}` : ''}`, 'data-position': tag.player.position },
-      ...(moved ? [svgEl('line', { x1: num(tag.anchor.x), y1: num(tag.anchor.y), x2: num(tag.anchor.x), y2: num(tag.y + tag.h), class: 'ct-tag__leader' })] : []),
-      svgEl('rect', { x: num(tag.x), y: num(tag.y), width: num(tag.w), height: num(tag.h), rx: num(tag.h * 0.3) }),
-      svgEl('text', { x: num(tag.x + tag.w / 2), y: num(tag.y + tag.h / 2), 'font-size': num(tag.size), class: 'ct-tag__num' }, tag.text));
+    const elbow = add(lerp(shoulderSide, hand, 0.5), add(scale(UP, -0.1), scale(left, 0.05 * sideSign)));
+    return { shoulderSide, elbow, hand, upperDepth: cam.depth(elbow), lowerDepth: cam.depth(hand) };
   });
+  const drawUpper = arm => {
+    put(thick(cam, arm.shoulderSide, arm.elbow, 0.085, 'ct-skin'));
+    put(thick(cam, arm.shoulderSide, lerp(arm.shoulderSide, arm.elbow, 0.55), 0.115, `ct-sleeve ct-sleeve--${team}`));
+  };
+  const drawLower = arm => {
+    put(thick(cam, arm.elbow, arm.hand, 0.075, 'ct-skin'));
+    put(disc(cam, arm.hand, 0.045, 'ct-skin ct-hand'));
+  };
+  const farFirst = (list, key) => list.sort((a, b) => b[key] - a[key]);
+  farFirst(arms.filter(a => a.upperDepth >= bodyDepth), 'upperDepth').forEach(drawUpper);
+  farFirst(arms.filter(a => a.lowerDepth >= bodyDepth), 'lowerDepth').forEach(drawLower);
+
+  // trup, krk, hlava (vlasy vzadu – podle nich je vidět, kam se hráč dívá)
+  put(bodyShape(cam, [
+    { center: add(hip, scale(UP, 0.06)), halfWidth: 0.18, halfDepth: 0.12 },
+    { center: lerp(hip, shoulder, 0.45), halfWidth: 0.155, halfDepth: 0.1 },
+    { center: lerp(hip, shoulder, 0.85), halfWidth: 0.19, halfDepth: 0.115 },
+    { center: shoulder, halfWidth: 0.16, halfDepth: 0.09 },
+  ], forward, left, `ct-torso ct-torso--${team}`));
+  put(thick(cam, add(shoulder, scale(UP, 0.04)), lerp(shoulder, head, 0.75), 0.09, 'ct-skin'));
+  put(disc(cam, add(add(head, scale(forward, -0.03)), scale(UP, 0.025)), 0.1, 'ct-hair'));
+  put(disc(cam, add(head, scale(forward, 0.015)), 0.092, 'ct-skin ct-head'));
+
+  farFirst(arms.filter(a => a.upperDepth < bodyDepth), 'upperDepth').forEach(drawUpper);
+  farFirst(arms.filter(a => a.lowerDepth < bodyDepth), 'lowerDepth').forEach(drawLower);
+  if (player.server) put(disc(cam, add(add(shoulder, scale(UP, -0.02)), scale(forward, 0.42)), 0.105, 'ct-ball'));
+
+  // číslo dresu (kreslí se nakonec v renderScene): na trupu, záložně nad hlavou
+  const body = cam.project(lerp(hip, shoulder, 0.5));
+  const above = cam.project(add(head, scale(UP, 0.24)));
+  const minFont = team === 'receiving' ? cam.minFont : cam.minFont * 0.7;
+  const label = body.depth > NEAR && above.depth > NEAR
+    ? { body, above, size: Math.max(0.22 / body.depth, minFont), text: String(player.jersey), depth: body.depth }
+    : null;
+  return { parts: out, label };
 }
 
-/** Hráč při pohledu shora: chodidla, průsvitné tělo a číslo. */
+/** Hráč při pohledu shora: chodidla, průsvitné tělo, číslo dresu a pozice. */
 function playerPartsTop(cam, player, team) {
-  const parts = [];
-  for (const f of player.feet) {
-    const foot = world(f.x, f.z);
-    const d = cam.pathOf(floorRect(f.x - FOOT_SIZE.length / 2, f.x + FOOT_SIZE.length / 2, f.z - FOOT_SIZE.width / 2, f.z + FOOT_SIZE.width / 2));
-    if (d) parts.push({ depth: cam.depth(foot), el: svgEl('path', { d, class: 'ct-shoe ct-shoe--top' }) });
-  }
-  const box = footprint(player.feet);
-  const cx = (box.minX + box.maxX) / 2, cz = (box.minZ + box.maxZ) / 2;
+  const forward = team === 'receiving' ? [-1, 0, 0] : [1, 0, 0];
+  const left = team === 'receiving' ? [0, 0, 1] : [0, 0, -1];
+  const out = [];
+  player.feet.forEach((f, i) => {
+    const d = cam.pathOf(soleOutline(world(f.x, f.z), forward, left, i === 0));
+    if (d) out.push(svgEl('path', { d, class: 'ct-shoe' }));
+  });
+  const [cx, cz] = centerOf(player);
   const body = cam.pathOf(floorCircle(cx, cz, 0.3, 0.02));
-  if (body) parts.push({ depth: 0, el: svgEl('path', { d: body, class: `ct-body-top ct-jersey--${team}` }) });
+  if (body) out.push(svgEl('path', { d: body, class: `ct-body-top ct-body-top--${team}` }));
   const label = cam.project(world(cx, cz, 0.03));
-  parts.push({ depth: -1, el: svgEl('text', { x: num(label.x), y: num(label.y), 'font-size': num(0.32 / label.depth), class: 'ct-number' }, String(player.jersey)) });
+  out.push(svgEl('text', { x: num(label.x), y: num(label.y), 'font-size': num(0.32 / label.depth), class: 'ct-number' }, String(player.jersey)));
   if (player.position) {
     const below = cam.project(world(cx + 0.48, cz, 0.03));
-    parts.push({ depth: -1, el: svgEl('text', { x: num(below.x), y: num(below.y), 'font-size': num(0.22 / below.depth), class: 'ct-position' }, `P${player.position}`) });
+    out.push(svgEl('text', { x: num(below.x), y: num(below.y), 'font-size': num(0.22 / below.depth), class: 'ct-position' }, `P${player.position}`));
   }
-  return parts;
+  return out;
 }
 
 function centerOf(player) {
@@ -255,9 +321,29 @@ function centerOf(player) {
   return [(box.minX + box.maxX) / 2, (box.minZ + box.maxZ) / 2];
 }
 
+/** Hráč jako skupina <g>; label = číslo dresu ke kreslení nakonec (jen perspektivní pohledy). */
 function drawPlayer(cam, player, team, isTop, attrs = {}) {
-  const parts = (isTop ? playerPartsTop : playerParts)(cam, player, team).sort((a, b) => b.depth - a.depth);
-  return svgEl('g', { class: `ct-player ct-player--${team}`, ...attrs }, ...parts.map(p => p.el));
+  const { parts, label } = isTop ? { parts: playerPartsTop(cam, player, team), label: null } : playerParts(cam, player, team);
+  return { el: svgEl('g', { class: `ct-player ct-player--${team}`, ...attrs }, ...parts), label };
+}
+
+/**
+ * Čísla dresů až po všech hráčích, aby je nezakrylo žádné tělo. Když se číslo
+ * překrývá s číslem bližšího hráče, posune se nad hlavu svého hráče.
+ */
+function drawLabels(labels) {
+  const boxAt = (p, l) => {
+    const w = l.size * 0.62 * l.text.length, h = l.size * 0.8;
+    return { x: p.x - w / 2, y: p.y - h / 2, w, h };
+  };
+  const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  const placed = [];
+  for (const label of [...labels].sort((a, b) => a.depth - b.depth)) {   // od nejbližšího
+    label.at = placed.some(box => overlaps(boxAt(label.body, label), box)) ? label.above : label.body;
+    placed.push(boxAt(label.at, label));
+  }
+  return labels.sort((a, b) => b.depth - a.depth).map(label =>
+    svgEl('text', { x: num(label.at.x), y: num(label.at.y), 'font-size': num(label.size), class: 'ct-number' }, label.text));
 }
 
 // ---------- Vyhodnocení ----------
@@ -312,16 +398,15 @@ export function renderScene(svg, situation, { view = 'ref1', selected = [], resu
 
   // podávající tým je za sítí (oko je vždy na straně přijímajících), pak síť, pak přijímající
   const byDepth = list => [...list].sort((a, b) => cam.depth(world(...centerOf(b))) - cam.depth(world(...centerOf(a))));
-  for (const player of byDepth(situation.serving)) content.push(drawPlayer(cam, player, 'serving', isTop));
+  const labels = [];
+  const addPlayer = ({ el, label }) => { content.push(el); if (label) labels.push(label); };
+  for (const player of byDepth(situation.serving)) addPlayer(drawPlayer(cam, player, 'serving', isTop));
   content.push(...drawNet(cam));
   for (const player of byDepth(situation.receiving)) {
     const attrs = { 'data-position': player.position };
     if (selected.includes(player.position)) attrs['data-selected'] = '';
-    content.push(drawPlayer(cam, player, 'receiving', isTop, attrs));
+    addPlayer(drawPlayer(cam, player, 'receiving', isTop, attrs));
   }
-  if (!isTop) {
-    const stateOf = player => (faulty.has(player.position) ? 'fault' : selected.includes(player.position) ? 'selected' : null);
-    content.push(...playerTags(cam, situation.receiving, stateOf));
-  }
+  content.push(...drawLabels(labels));
   svg.replaceChildren(...content);
 }

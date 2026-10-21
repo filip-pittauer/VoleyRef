@@ -1170,12 +1170,23 @@ progress::-moz-progress-bar {
 .ct-player line { stroke-linecap: round; }
 .ct-player--receiving { cursor: pointer; }
 .ct-skin { stroke: #dba27a; }
+.ct-hand { fill: #dba27a; stroke: none; }
 .ct-head { fill: #dba27a; stroke: #6b3f22; stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.ct-jersey--receiving { stroke: #d61f2c; }
-.ct-jersey--serving { stroke: #1e3a8a; }
-.ct-shorts--receiving { stroke: #111827; }
-.ct-shorts--serving { stroke: #f8fafc; }
-.ct-shoe { fill: #111827; stroke: #fff; stroke-width: 0.75px; vector-effect: non-scaling-stroke; }
+.ct-player line.ct-sock { stroke: #f8fafc; stroke-linecap: butt; }
+.ct-player line.ct-shorts-leg { stroke-linecap: butt; }
+.ct-sole { fill: #334155; stroke: #fff; stroke-width: 1px; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.ct-hair { fill: #3b2414; }
+.ct-shorts-leg--receiving { stroke: #111827; }
+.ct-shorts-leg--serving { stroke: #f8fafc; }
+.ct-torso { stroke-width: 1px; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.ct-torso--receiving { fill: #d61f2c; stroke: #8f1019; }
+.ct-torso--serving { fill: #1e3a8a; stroke: #0b1a45; }
+.ct-sleeve--receiving { stroke: #d61f2c; }
+.ct-sleeve--serving { stroke: #1e3a8a; }
+.ct-shorts-fill { stroke-width: 1px; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.ct-shorts-fill--receiving { fill: #111827; stroke: #000; }
+.ct-shorts-fill--serving { fill: #f8fafc; stroke: #94a3b8; }
+.ct-shoe { fill: #111827; stroke: #fff; stroke-width: 0.75px; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
 .ct-ball { fill: #fff; stroke: #111827; stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .ct-number {
   fill: #fff;
@@ -1198,27 +1209,10 @@ progress::-moz-progress-bar {
   pointer-events: none;
 }
 
-/* štítek s číslem nad hráčem (vybraný = tmavě modrý, chyba = červený) */
-.ct-tag { cursor: pointer; }
-.ct-tag rect { fill: #fff; stroke: #0b2a5b; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
-.ct-tag__num {
-  fill: #0b2a5b;
-  font-family: var(--font-display);
-  font-weight: 800;
-  text-anchor: middle;
-  dominant-baseline: central;
-  pointer-events: none;
-}
-.ct-tag__leader { stroke: #0b2a5b; stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.ct-tag--selected rect { fill: #0b2a5b; stroke: #fff; }
-.ct-tag--selected .ct-tag__num { fill: #fff; }
-.ct-tag--fault rect { fill: #dc2626; stroke: #fff; }
-.ct-tag--fault .ct-tag__num { fill: #fff; }
-
 /* pohled shora: průsvitné tělo nad chodidly */
 .ct-body-top { stroke: none; fill-opacity: 0.6; }
-.ct-body-top.ct-jersey--receiving { fill: #d61f2c; }
-.ct-body-top.ct-jersey--serving { fill: #1e3a8a; }
+.ct-body-top--receiving { fill: #d61f2c; }
+.ct-body-top--serving { fill: #1e3a8a; }
 
 .ct-ring { stroke-width: 2px; vector-effect: non-scaling-stroke; }
 .ct-ring--selected { fill: #fff; fill-opacity: 0.6; stroke: #0b2a5b; stroke-width: 3px; }
