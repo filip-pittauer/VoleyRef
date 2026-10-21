@@ -53,12 +53,12 @@ const SHAPES = {
   ctyri: { fingers: [0.24, 0.08, -0.08, -0.24], thumb: 'pres' },
   palec: { fingers: [null, null, null, null], thumb: 'nahoru' },
 };
-// Karty v ruce: [barva, u od, u do, v od, v do, w] – spodek karty je v pěsti
-// mezi dlaní a pokrčenými prsty, palec ji drží zepředu.
+// Karty v ruce: [barva, u od, u do, v od, v do, w]. Karta je k divákovi lícem
+// a zakrývá celou pěst – prsty jsou za ní, vidět je jen palec, který ji drží.
 const CARDS = {
-  zluta: [['zluta', 0.07, 0.22, -0.035, 0.035, 0.012]],
-  cervena: [['cervena', 0.07, 0.22, -0.035, 0.035, 0.012]],
-  obe: [['cervena', 0.075, 0.225, 0, 0.075, 0.01], ['zluta', 0.065, 0.215, -0.065, 0.01, 0.014]],
+  zluta: [['zluta', 0.03, 0.2, -0.046, 0.046, 0.012]],
+  cervena: [['cervena', 0.03, 0.2, -0.046, 0.046, 0.012]],
+  obe: [['cervena', 0.035, 0.205, -0.005, 0.085, 0.01], ['zluta', 0.03, 0.2, -0.075, 0.012, 0.014]],
 };
 const GRIP_W = 0.012;           // tyčka praporku prochází pěstí ve stejné hloubce jako karta
 
@@ -312,8 +312,7 @@ function drawHand(node, project, arm, at, toBody) {
   const shape = SHAPES[arm.shape] ?? SHAPES.otevrena;
 
   // vidíme dlaň, nebo hřbet? (dlaň je o něco světlejší)
-  const facing = project(toBody(n)).depth;      // −1…1, kladné = dlaň k divákovi
-  const palmFacing = facing > 0;
+  const palmFacing = project(toBody(n)).depth > 0;
   const toViewer = w => (palmFacing ? w : -w);   // kladné = blíž k divákovi než rovina dlaně
 
   // --- rovina dlaně ---
@@ -352,12 +351,12 @@ function drawHand(node, project, arm, at, toBody) {
     }));
     fistD = polyline(hull([-0.004, 0.045].flatMap(pw => rounded.map(([pu, pv]) => point([pu, pv, pw])))), true);
   }
-  const fistBehind = fistD && toViewer(0.017) < 0;   // pěst za dlaní je součástí siluety
+  // Pěst za dlaní je součástí siluety. U karty taky: celá ruka je za kartou
+  // a před ní zůstane jen palec.
+  const holdsCard = Boolean(CARDS[arm.holds]);
+  const fistBehind = fistD && (holdsCard || toViewer(0.017) < 0);
 
   const palmD = polyline(palm, true);
-  // světlá dlaň jen při pohledu výrazně na dlaň (z hrany by byla jako nálepka)
-  // a ne u plné pěsti, kde dlaň skoro není vidět
-  const palmLight = facing > 0.35 && curled.length < 4;
   const plane = [
     stubOutline,
     ...(fistBehind ? [svgEl('path', { class: 'ref-outline-fill', d: fistD, 'stroke-width': 2 * OUTLINE })] : []),
@@ -365,10 +364,10 @@ function drawHand(node, project, arm, at, toBody) {
     ...straight.map(d => svgEl('path', { class: 'ref-outline', d: polyline(d), 'stroke-width': FINGER + 2 * OUTLINE })),
     stubFill,
     ...(fistBehind ? [svgEl('path', { class: 'ref-skin ref-flat', d: fistD })] : []),
-    svgEl('path', { class: `${palmLight ? 'ref-palm' : 'ref-skin'} ref-flat`, d: palmD }),
+    svgEl('path', { class: 'ref-skin ref-flat', d: palmD }),
     ...straight.flatMap(d => [
-      svgEl('path', { class: palmLight ? 'ref-crease ref-crease--palm' : 'ref-crease', d: polyline(d), 'stroke-width': FINGER + 0.006 }),
-      svgEl('path', { class: palmLight ? 'ref-digit ref-digit--palm' : 'ref-digit', d: polyline(d), 'stroke-width': FINGER }),
+      svgEl('path', { class: 'ref-crease', d: polyline(d), 'stroke-width': FINGER + 0.006 }),
+      svgEl('path', { class: 'ref-digit', d: polyline(d), 'stroke-width': FINGER }),
     ]),
   ];
 
@@ -384,16 +383,16 @@ function drawHand(node, project, arm, at, toBody) {
     // pěst před dlaní: vlastní obrys a rýhy mezi prsty
     items.push({ w: 0.02, nodes: [svgEl('path', { class: 'ref-skin', d: fistD }), ...fistCreases()] });
   }
-  if (fistBehind) plane.push(...fistCreases());
+  if (fistBehind && !holdsCard) plane.push(...fistCreases());
   if (!thumbInPlane) {
     // palec je vždy navrch ostatních částí na své straně; přes otevřenou dlaň
-    // má barvu dlaně a jemnější obrys, aby nevypadal jako nalepený díl
+    // má jen jemnou rýhu, aby nevypadal jako nalepený díl
     const w = thumb.reduce((sum, p) => sum + p[2], 0) / thumb.length;
-    const soft = !curled.length && toViewer(w) > 0 && palmLight;
+    const soft = !curled.length && toViewer(w) > 0;
     const d = polyline(thumb.map(point));
     const nodes = soft
-      ? [svgEl('path', { class: 'ref-crease ref-crease--palm', d, 'stroke-width': FINGER + 0.008 }),
-        svgEl('path', { class: 'ref-digit ref-digit--palm', d, 'stroke-width': FINGER })]
+      ? [svgEl('path', { class: 'ref-crease', d, 'stroke-width': FINGER + 0.008 }),
+        svgEl('path', { class: 'ref-digit', d, 'stroke-width': FINGER })]
       : digitNodes(thumb.map(point), FINGER * 1.25);
     items.push({ w: w + 0.01, nodes });
   }
@@ -401,8 +400,10 @@ function drawHand(node, project, arm, at, toBody) {
     point, project, grip: at(local([0.05, 0.004, GRIP_W])), stick: toBody(v), cloth: toBody(n),
   }));
 
-  const back = items.filter(item => toViewer(item.w) < 0).sort((a, b) => toViewer(a.w) - toViewer(b.w));
-  const front = items.filter(item => toViewer(item.w) >= 0).sort((a, b) => toViewer(a.w) - toViewer(b.w));
+  // karta je vždy lícem k divákovi: ruka → karta → palec (podle w), nic za rukou
+  const side = holdsCard ? w => Math.abs(w) : toViewer;
+  const back = items.filter(item => side(item.w) < 0).sort((a, b) => side(a.w) - side(b.w));
+  const front = items.filter(item => side(item.w) >= 0).sort((a, b) => side(a.w) - side(b.w));
   node.replaceChildren(...back.flatMap(i => i.nodes), ...plane, ...front.flatMap(i => i.nodes));
   return (wrist.depth + point([0.05, 0, 0]).depth) / 2;
 }

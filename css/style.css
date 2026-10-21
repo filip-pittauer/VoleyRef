@@ -26,7 +26,6 @@
 
   /* postava rozhodčího (gesta) */
   --ref-skin: #f0c19c;
-  --ref-palm: #f8dcc6;
   --ref-line: #1e293b;
   --ref-shirt: #2563eb;
   --ref-collar: #f8fafc;
@@ -1019,7 +1018,6 @@ progress::-moz-progress-bar {
 
 /* plochy (trup, hlava, dlaň, karta…) mají obrys přímo */
 .ref-skin,
-.ref-palm,
 .ref-shirt,
 .ref-collar,
 .ref-trousers,
@@ -1032,7 +1030,6 @@ progress::-moz-progress-bar {
 }
 
 .ref-skin { fill: var(--ref-skin); }
-.ref-palm { fill: var(--ref-palm); }
 .ref-shirt { fill: var(--ref-shirt); }
 .ref-collar { fill: var(--ref-collar); }
 .ref-trousers { fill: var(--ref-trousers); }
@@ -1046,16 +1043,14 @@ progress::-moz-progress-bar {
 /* ruka jako jedna silueta (js/referee-figure.js drawHand): obrysy všech částí,
    přes ně výplně bez obrysu a mezi prsty jen tenká rýha */
 .ref-outline-fill { fill: var(--ref-line); stroke: var(--ref-line); stroke-linejoin: round; }
-.ref-skin.ref-flat,
-.ref-palm.ref-flat { stroke: none; }
+.ref-skin.ref-flat { stroke: none; }
 .ref-crease {
   fill: none;
   stroke: color-mix(in srgb, var(--ref-line) 45%, var(--ref-skin));
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.ref-crease--palm { stroke: color-mix(in srgb, var(--ref-line) 40%, var(--ref-palm)); }
-.ref-digit--palm { stroke: var(--ref-palm); }
+
 
 .ref-mouth {
   fill: none;
