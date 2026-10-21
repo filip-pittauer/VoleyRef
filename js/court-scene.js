@@ -191,15 +191,42 @@ function playerParts(cam, player, team) {
 
   push(disc(cam, head, 0.11, 'ct-skin ct-head'));
 
-  // číslo dresu: vždy čelem k divákovi, aby šlo přečíst
-  const label = cam.project(lerp(hip, shoulder, 0.55));
-  if (label.depth > NEAR) {
-    parts.push({
-      depth: label.depth - 0.2,     // vždy nad trupem
-      el: svgEl('text', { x: num(label.x), y: num(label.y), 'font-size': num(Math.max(0.2 / label.depth, cam.minFont)), class: 'ct-number' }, String(player.jersey)),
-    });
-  }
   return parts;
+}
+
+/**
+ * Štítky s čísly dresů nad hlavami hráčů – vždy čelem k divákovi a kreslí se
+ * až po všech hráčích, aby je nikdo nezakryl. Když by se dva štítky překryly,
+ * vzdálenější se posune výš a s hlavou ho spojí tenká čára.
+ */
+function playerTags(cam, players, stateOf) {
+  const tags = [];
+  for (const player of players) {
+    const [cx, cz] = centerOf(player);
+    const anchor = cam.project(world(cx, cz, 1.85));
+    if (anchor.depth < NEAR) continue;
+    const size = Math.max(0.26 / anchor.depth, cam.minFont);
+    const text = String(player.jersey);
+    const w = size * (0.62 * text.length + 0.55), h = size * 1.3;
+    tags.push({ player, anchor, size, text, w, h, x: anchor.x - w / 2, y: anchor.y - size * 0.4 - h, state: stateOf(player) });
+  }
+  // od nejbližšího hráče: blízký štítek zůstane u hlavy, vzdálenější uhne nahoru
+  tags.sort((a, b) => a.anchor.depth - b.anchor.depth);
+  const placed = [];
+  const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  for (const tag of tags) {
+    for (let i = 0; i < 12 && placed.some(other => overlaps(tag, other)); i++) tag.y -= tag.h * 0.55;
+    placed.push(tag);
+  }
+  // kreslit odzadu, vybrané a chybné navrch
+  const rank = tag => (tag.state ? 1 : 0);
+  return tags.sort((a, b) => rank(a) - rank(b) || b.anchor.depth - a.anchor.depth).map(tag => {
+    const moved = tag.anchor.y - tag.size * 0.4 - tag.h - tag.y > 1e-6;
+    return svgEl('g', { class: `ct-tag${tag.state ? ` ct-tag--${tag.state}` : ''}`, 'data-position': tag.player.position },
+      ...(moved ? [svgEl('line', { x1: num(tag.anchor.x), y1: num(tag.anchor.y), x2: num(tag.anchor.x), y2: num(tag.y + tag.h), class: 'ct-tag__leader' })] : []),
+      svgEl('rect', { x: num(tag.x), y: num(tag.y), width: num(tag.w), height: num(tag.h), rx: num(tag.h * 0.3) }),
+      svgEl('text', { x: num(tag.x + tag.w / 2), y: num(tag.y + tag.h / 2), 'font-size': num(tag.size), class: 'ct-tag__num' }, tag.text));
+  });
 }
 
 /** Hráč při pohledu shora: chodidla, průsvitné tělo a číslo. */
@@ -291,6 +318,10 @@ export function renderScene(svg, situation, { view = 'ref1', selected = [], resu
     const attrs = { 'data-position': player.position };
     if (selected.includes(player.position)) attrs['data-selected'] = '';
     content.push(drawPlayer(cam, player, 'receiving', isTop, attrs));
+  }
+  if (!isTop) {
+    const stateOf = player => (faulty.has(player.position) ? 'fault' : selected.includes(player.position) ? 'selected' : null);
+    content.push(...playerTags(cam, situation.receiving, stateOf));
   }
   svg.replaceChildren(...content);
 }

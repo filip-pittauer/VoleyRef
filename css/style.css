@@ -1198,13 +1198,30 @@ progress::-moz-progress-bar {
   pointer-events: none;
 }
 
+/* štítek s číslem nad hráčem (vybraný = tmavě modrý, chyba = červený) */
+.ct-tag { cursor: pointer; }
+.ct-tag rect { fill: #fff; stroke: #0b2a5b; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.ct-tag__num {
+  fill: #0b2a5b;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+.ct-tag__leader { stroke: #0b2a5b; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.ct-tag--selected rect { fill: #0b2a5b; stroke: #fff; }
+.ct-tag--selected .ct-tag__num { fill: #fff; }
+.ct-tag--fault rect { fill: #dc2626; stroke: #fff; }
+.ct-tag--fault .ct-tag__num { fill: #fff; }
+
 /* pohled shora: průsvitné tělo nad chodidly */
 .ct-body-top { stroke: none; fill-opacity: 0.6; }
 .ct-body-top.ct-jersey--receiving { fill: #d61f2c; }
 .ct-body-top.ct-jersey--serving { fill: #1e3a8a; }
 
 .ct-ring { stroke-width: 2px; vector-effect: non-scaling-stroke; }
-.ct-ring--selected { fill: #f59e0b; fill-opacity: 0.4; stroke: #f59e0b; }
+.ct-ring--selected { fill: #fff; fill-opacity: 0.6; stroke: #0b2a5b; stroke-width: 3px; }
 .ct-ring--fault { fill: #dc2626; fill-opacity: 0.35; stroke: #dc2626; }
 .ct-rel { stroke-linecap: round; }
 .ct-rel--ok { stroke: #16a34a; }
@@ -1288,9 +1305,10 @@ progress::-moz-progress-bar {
 
 .pick[aria-pressed="true"],
 #lineup-correct[aria-pressed="true"] {
-  border-color: #f59e0b;
-  background: color-mix(in srgb, #f59e0b 25%, var(--color-surface));
-  box-shadow: none;
+  border-color: #0b2a5b;
+  background: #0b2a5b;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #fff;
 }
 
 #lineup-fieldset {
