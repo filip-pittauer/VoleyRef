@@ -1043,6 +1043,20 @@ progress::-moz-progress-bar {
 .ref-flag { fill: #e11d48; }
 .ref-stick { stroke: #475569; }
 
+/* ruka jako jedna silueta (js/referee-figure.js drawHand): obrysy všech částí,
+   přes ně výplně bez obrysu a mezi prsty jen tenká rýha */
+.ref-outline-fill { fill: var(--ref-line); stroke: var(--ref-line); stroke-linejoin: round; }
+.ref-skin.ref-flat,
+.ref-palm.ref-flat { stroke: none; }
+.ref-crease {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ref-line) 45%, var(--ref-skin));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ref-crease--palm { stroke: color-mix(in srgb, var(--ref-line) 40%, var(--ref-palm)); }
+.ref-digit--palm { stroke: var(--ref-palm); }
+
 .ref-mouth {
   fill: none;
   stroke: var(--ref-line);

@@ -6,7 +6,7 @@
     "carovi": { "nazev": "Čároví rozhodčí", "diagram": "12" }
   },
   "pozy": {
-    "klid": { "ruka": [0.06, -0.54, 0.05], "loket": [0.35, -1, -0.25], "prsty": "predlokti", "dlan": "dovnitr" },
+    "klid": { "ruka": [0.06, -0.54, 0.05], "loket": [0.35, -1, -0.25], "prsty": "predlokti", "dlan": [-0.45, 0, -1] },
     "zvednuta": { "ruka": [0.2, 0.36, 0.1], "loket": [1, -0.3, -0.1], "prsty": "nahoru", "dlan": "vpred" },
     "do-strany": { "ruka": [0.55, 0.05, 0.08], "loket": [0, -1, -0.3], "prsty": "predlokti", "dlan": "vpred", "tvar": "otevrena" }
   },
@@ -108,7 +108,7 @@
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.75, "ruka": [-0.07, 0.13, 0.31], "loket": [1, 0, -0.2], "prsty": "dovnitr", "dlan": "dolu" },
+        { "t": 0.75, "ruka": [-0.07, 0.06, 0.31], "loket": [1, 0, -0.2], "prsty": "dovnitr", "dlan": "dolu" },
         { "t": 1.7 },
         { "t": 2.2, "poza": "klid" },
         { "t": 3.2 }
@@ -116,7 +116,7 @@
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.75, "ruka": [-0.19, -0.1, 0.3], "loket": [1, -1, 0], "prsty": "nahoru", "dlan": "dovnitr+vpred" },
+        { "t": 0.75, "ruka": [-0.19, -0.17, 0.3], "loket": [1, -1, 0], "prsty": "nahoru", "dlan": "dovnitr+vpred" },
         { "t": 1.7 },
         { "t": 2.2, "poza": "do-strany" },
         { "t": 3.2 }
@@ -267,15 +267,18 @@
       "kdo": "1. rozhodčí",
       "pravidla": "12.4.1",
       "zamena": ["zadrzeny-mic", "zdrzeni-podani", "tym-podava"],
-      "kamera": { "otoceni": 55, "naklon": 18 },
+      "kamera": { "otoceni": 55, "naklon": 28 },
       "delka": 2.6,
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.6, "ruka": [0.05, -0.5, 0.2], "dlan": "nahoru" },
+        { "t": 0.6, "ruka": [0.05, -0.5, 0.2], "dlan": [0, 1, 0.3] },
         { "t": 1.05, "ruka": [0.05, -0.38, 0.4] },
         { "t": 1.5, "ruka": [0.05, -0.02, 0.555] },
         { "t": 2.6 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid", "ruka": [0.08, -0.54, -0.06] }
       ]
     },
     {
@@ -329,14 +332,16 @@
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.6, "ruka": [0.08, 0, 0.5], "dlan": "nahoru" },
+        { "t": 0.6, "ruka": [0.2, 0, 0.45], "dlan": "nahoru" },
+        { "t": 0.8, "ruka": [0.2, 0.3, 0.3] },
         { "t": 1, "ruka": [0.04, 0.555, 0.04], "dlan": "vpred" },
         { "t": 2.2 }
       ],
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.6, "ruka": [0.08, 0, 0.5], "dlan": "nahoru" },
+        { "t": 0.6, "ruka": [0.2, 0, 0.45], "dlan": "nahoru" },
+        { "t": 0.8, "ruka": [0.2, 0.3, 0.3] },
         { "t": 1, "ruka": [0.04, 0.555, 0.04], "dlan": "vpred" },
         { "t": 2.2 }
       ]
@@ -358,18 +363,11 @@
         { "t": 0.2 },
         {
           "t": 0.75,
-          "prsty": "dolu",
+          "prsty": "dolu+vpred",
           "dlan": "vzad",
           "tvar": "ukazovak",
           "loket": [0.6, -1, -0.2],
-          "kruh": {
-            "stred": [-0.16, -0.33, 0.22],
-            "polomer": 0.08,
-            "rovina": "vodorovna",
-            "otacky": 3,
-            "doba": 1.8,
-            "faze": 90
-          }
+          "kruh": { "stred": [-0.14, -0.14, 0.3], "polomer": 0.1, "rovina": "celo", "otacky": 3, "doba": 1.8, "faze": 90 }
         },
         { "t": 2.9 }
       ]
@@ -401,14 +399,14 @@
       "kdo": "1. i 2. rozhodčí",
       "pravidla": "8.4.1, 8.4.2, 8.4.3, 8.4.4, 24.3.2.5, 24.3.2.7, 24.3.2.8",
       "zamena": ["blok-cloneni", "dotek-mice", "konec-setu"],
-      "kamera": { "otoceni": 25 },
+      "kamera": { "otoceni": 12 },
       "delka": 2.4,
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
         { "t": 0.6, "ruka": [0.02, -0.15, 0.52], "loket": [0.1, -1, 0.3], "dlan": "nahoru" },
         { "t": 0.85, "ruka": [0.02, 0.04, 0.44] },
-        { "t": 1.1, "ruka": [0.01, 0.12, 0.25], "dlan": "vzad" },
+        { "t": 1.1, "ruka": [0.14, 0.12, 0.22], "dlan": "vzad" },
         { "t": 2.4 }
       ],
       "leva": [
@@ -416,7 +414,7 @@
         { "t": 0.2 },
         { "t": 0.6, "ruka": [0.02, -0.15, 0.52], "loket": [0.1, -1, 0.3], "dlan": "nahoru" },
         { "t": 0.85, "ruka": [0.02, 0.04, 0.44] },
-        { "t": 1.1, "ruka": [0.01, 0.12, 0.25], "dlan": "vzad" },
+        { "t": 1.1, "ruka": [0.14, 0.12, 0.22], "dlan": "vzad" },
         { "t": 2.4 }
       ]
     },
@@ -429,15 +427,18 @@
       "kdo": "1. rozhodčí",
       "pravidla": "9.2.2, 9.3.3, 23.3.2.3b",
       "zamena": ["nadhoz", "dvoji-dotek", "chyba-utoku"],
-      "kamera": { "otoceni": 55, "naklon": 18 },
+      "kamera": { "otoceni": 55, "naklon": 28 },
       "delka": 3,
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.65, "ruka": [0.02, -0.49, 0.21], "loket": [0, -1, -0.6], "dlan": "nahoru" },
+        { "t": 0.65, "ruka": [0.02, -0.49, 0.21], "loket": [0, -1, -0.6], "dlan": [0, 1, 0.3] },
         { "t": 1.5, "ruka": [0.02, -0.33, 0.306] },
         { "t": 2.35, "ruka": [0.02, -0.15, 0.27] },
         { "t": 3 }
+      ],
+      "leva": [
+        { "t": 0, "poza": "klid", "ruka": [0.08, -0.54, -0.06] }
       ]
     },
     {
@@ -508,13 +509,13 @@
       "pravidla": "11.4.1, 13.3.1, 14.3, 14.6.1, 23.3.2.3c",
       "zamena": ["dotek-site", "chyba-utoku", "blok-cloneni"],
       "sit": true,
-      "kamera": { "otoceni": 35, "naklon": 14 },
+      "kamera": { "otoceni": 35, "naklon": 26 },
       "delka": 2.4,
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.25 },
-        { "t": 0.85, "ruka": [-0.13, -0.06, 0.42], "prsty": "vpred+dovnitr", "dlan": "dolu" },
-        { "t": 1.3, "ruka": [-0.25, -0.06, 0.42] },
+        { "t": 0.85, "ruka": [-0.1, -0.12, 0.48], "prsty": "vpred+dovnitr", "dlan": "dolu" },
+        { "t": 1.3, "ruka": [-0.2, -0.12, 0.48] },
         { "t": 2.4 }
       ]
     },
@@ -536,7 +537,7 @@
         { "t": 0.85, "ruka": [0.145, 0.52, 0.05] },
         { "t": 1.1 },
         { "t": 1.32, "ruka": [-0.015, 0.48, 0.15] },
-        { "t": 1.5, "ruka": [-0.085, 0.35, 0.2], "dlan": "dolu" },
+        { "t": 1.5, "ruka": [0.08, 0.02, 0.3], "dlan": "dolu+vzad" },
         { "t": 2.5 }
       ]
     },
@@ -556,10 +557,10 @@
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.25 },
-        { "t": 0.85, "ruka": [-0.09, -0.42, 0.26], "prsty": [-0.1, -1, 0.5], "dlan": "vzad", "tvar": "ukazovak" },
+        { "t": 0.85, "ruka": [-0.12, -0.34, 0.38], "prsty": [0, -1, 0.9], "dlan": "vzad", "tvar": "ukazovak" },
         { "t": 1.1 },
-        { "t": 1.25, "ruka": [-0.09, -0.45, 0.28] },
-        { "t": 1.4, "ruka": [-0.09, -0.42, 0.26] },
+        { "t": 1.25, "ruka": [-0.12, -0.37, 0.4] },
+        { "t": 1.4, "ruka": [-0.12, -0.34, 0.38] },
         { "t": 2.4 }
       ]
     },
@@ -581,8 +582,8 @@
           "t": 0.9,
           "ruka": [0.15, 0.2, 0.1],
           "loket": [0.6, -1, 0],
-          "prsty": "nahoru",
-          "dlan": "vpred",
+          "prsty": "vpred",
+          "dlan": "dovnitr",
           "tvar": "palec"
         },
         { "t": 2.2 }
@@ -594,8 +595,8 @@
           "t": 0.9,
           "ruka": [0.15, 0.2, 0.1],
           "loket": [0.6, -1, 0],
-          "prsty": "nahoru",
-          "dlan": "vpred",
+          "prsty": "vpred",
+          "dlan": "dovnitr",
           "tvar": "palec"
         },
         { "t": 2.2 }
@@ -616,17 +617,17 @@
       "prava": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.8, "ruka": [0.02, 0.14, 0.17], "loket": [1, -0.6, 0], "prsty": "nahoru", "dlan": "vpred" },
+        { "t": 0.8, "ruka": [0.12, -0.15, 0.28], "loket": [1, -0.6, 0], "prsty": "nahoru", "dlan": "vpred" },
         { "t": 2.9 }
       ],
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.85, "ruka": [-0.19, 0.38, 0.2], "loket": [1, -0.3, 0], "prsty": "dovnitr", "dlan": "dolu" },
+        { "t": 0.85, "ruka": [-0.29, 0.08, 0.33], "loket": [1, -0.3, 0], "prsty": "dovnitr", "dlan": [0, -1, -0.6] },
         { "t": 1.05 },
-        { "t": 1.4, "ruka": [-0.31, 0.38, 0.2] },
-        { "t": 1.75, "ruka": [-0.19, 0.38, 0.2] },
-        { "t": 2.1, "ruka": [-0.31, 0.38, 0.2] },
+        { "t": 1.4, "ruka": [-0.41, 0.08, 0.33] },
+        { "t": 1.75, "ruka": [-0.29, 0.08, 0.33] },
+        { "t": 2.1, "ruka": [-0.41, 0.08, 0.33] },
         { "t": 2.9 }
       ]
     },
@@ -643,13 +644,13 @@
       "prava": [
         { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "zluta" },
         { "t": 0.2 },
-        { "t": 1, "ruka": [-0.33, 0.27, 0.24], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 1, "ruka": [-0.39, 0.03, 0.33], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
         { "t": 2.4 }
       ],
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.9, "ruka": [0.02, 0.36, 0.16], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 0.9, "ruka": [0.13, 0.15, 0.25], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
         { "t": 2.4 }
       ]
     },
@@ -667,13 +668,13 @@
       "prava": [
         { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "cervena" },
         { "t": 0.2 },
-        { "t": 1, "ruka": [-0.33, 0.27, 0.24], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 1, "ruka": [-0.39, 0.03, 0.33], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
         { "t": 2.4 }
       ],
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.9, "ruka": [0.02, 0.36, 0.16], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
+        { "t": 0.9, "ruka": [0.13, 0.15, 0.25], "loket": [1, -0.5, 0], "prsty": "nahoru+dovnitr", "dlan": "vpred" },
         { "t": 2.4 }
       ]
     },
@@ -689,7 +690,7 @@
       "prava": [
         { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
         { "t": 0.2 },
-        { "t": 0.85, "ruka": [-0.04, -0.3, 0.45], "prsty": "vpred", "dlan": "ven" },
+        { "t": 0.85, "ruka": [0.15, -0.4, 0.3], "prsty": "vpred+nahoru", "dlan": "ven" },
         { "t": 2.2 }
       ],
       "vyrez": [-1.15, -1.66, 2.3, 2.04]
@@ -726,16 +727,16 @@
       "prava": [
         { "t": 0, "poza": "klid", "tvar": "pest", "drzi": "praporek" },
         { "t": 0.2 },
-        { "t": 0.85, "ruka": [-0.13, -0.42, 0.3], "prsty": "vpred", "dlan": "dovnitr" },
+        { "t": 0.85, "ruka": [0.05, -0.38, 0.3], "prsty": "vzad", "dlan": "ven" },
         { "t": 2.6 }
       ],
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.2 },
-        { "t": 0.95, "ruka": [-0.17, 0.13, 0.365], "loket": [1, -0.5, 0], "prsty": "dovnitr", "dlan": "dolu" },
-        { "t": 1.15, "ruka": [-0.17, 0.09, 0.365] },
-        { "t": 1.35, "ruka": [-0.17, 0.13, 0.365] },
-        { "t": 1.55, "ruka": [-0.17, 0.09, 0.365] },
+        { "t": 0.95, "ruka": [-0.43, 0.14, 0.33], "loket": [1, -0.5, 0], "prsty": "dovnitr", "dlan": "dolu" },
+        { "t": 1.15, "ruka": [-0.43, 0.1, 0.33] },
+        { "t": 1.35, "ruka": [-0.43, 0.14, 0.33] },
+        { "t": 1.55, "ruka": [-0.43, 0.1, 0.33] },
         { "t": 2.6 }
       ],
       "vyrez": [-1.15, -1.66, 2.3, 2.04]
@@ -764,7 +765,7 @@
       "leva": [
         { "t": 0, "poza": "klid" },
         { "t": 0.6 },
-        { "t": 1.2, "ruka": [0.54, 0.08, 0.12], "tvar": "ukazovak", "dlan": "dolu" },
+        { "t": 1.2, "ruka": [0.54, 0.08, 0.12], "tvar": "ukazovak", "dlan": "dolu+vzad" },
         { "t": 3 }
       ],
       "vyrez": [-1.15, -1.66, 2.3, 2.04]
