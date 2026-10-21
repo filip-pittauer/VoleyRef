@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Trenažér postavení: najdi chybu postavení přijímajícího týmu z pohledu prvního nebo druhého rozhodčího.">
+  <title>Trenažér postavení – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/lineup-trainer.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="kviz.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg><span>Kvíz</span></a></li>
+          <li><a href="gesta.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg><span>Gesta</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <h1>Trenažér postavení</h1>
+    <p>Okamžik úderu podávajícího. Zkontroluj postavení <strong>přijímajícího týmu</strong> (červené dresy) podle zápisu. Najdi dva hráče, kteří spolu stojí v chybném pořadí, nebo potvrď, že je postavení správné. Podávající tým smí stát kdekoli, to nekontroluješ.</p>
+
+    <section class="card stack" aria-labelledby="lineup-heading">
+      <div class="board">
+        <div class="board__row">
+          <p id="lineup-progress">Situace 1</p>
+          <p id="lineup-tally" class="board__score" aria-live="polite"></p>
+        </div>
+      </div>
+      <h2 id="lineup-heading" class="visually-hidden" tabindex="-1">Situace</h2>
+
+      <div class="lineup-layout">
+        <div class="stack">
+          <div id="lineup-views" class="view-switch" role="group" aria-label="Pohled">
+            <button type="button" data-view="ref1" aria-pressed="true">1. rozhodčí</button>
+            <button type="button" data-view="ref2" aria-pressed="false">2. rozhodčí</button>
+            <button type="button" data-view="top" aria-pressed="false" hidden>Shora</button>
+          </div>
+          <svg id="lineup-scene" class="court-scene" role="img" aria-label="Hřiště v okamžiku podání z pohledu rozhodčího"></svg>
+        </div>
+
+        <div class="stack">
+          <figure class="lineup-card">
+            <figcaption>Postavení podle zápisu</figcaption>
+            <p class="lineup-card__net">síť</p>
+            <ol id="lineup-card" class="lineup-card__grid"></ol>
+            <p class="muted small">Pohled zezadu na přijímající tým: vlevo pozice 4 a 5.</p>
+          </figure>
+
+          <form id="lineup-form" class="stack">
+            <fieldset id="lineup-fieldset" class="stack">
+              <legend>Kdo stojí v chybě? Vyber dva hráče (klikni na ně ve scéně nebo tady).</legend>
+              <div id="lineup-picks" class="pick-list"></div>
+              <button id="lineup-correct" class="button button--secondary" type="button" aria-pressed="false">Postavení je správné</button>
+            </fieldset>
+            <p id="lineup-hint" class="choice-hint" role="alert" hidden></p>
+            <div id="lineup-feedback" role="status"></div>
+            <div>
+              <button id="lineup-submit" class="button" type="submit">Vyhodnotit</button>
+              <button id="lineup-next" class="button" type="button" hidden>Další situace</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <p class="small">Pravidla postavení najdeš v <a href="pravidla.html#p-7-4">pravidle 7.4</a>. Trenažér běží jen v tvém prohlížeči, nic se neukládá.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

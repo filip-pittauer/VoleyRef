@@ -7,7 +7,7 @@ Pravidla projektu a postup práce jsou v [CLAUDE.md](CLAUDE.md); tady je jen „
 > RPC funkce nebo tabulky uprav i tuto mapu (ve stejném commitu).
 > Čísla řádků sem záměrně nepíšeme – rychle zastarávají.
 
-Stav: 20. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích).
+Stav: 21. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, trenažér postavení).
 
 ---
 
@@ -28,7 +28,7 @@ Stav: 20. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích).
   Moduly se navzájem importují relativními cestami (`./dom.js`).
 - **Bezpečnost**: prohlížeč nikdy nevidí správné odpovědi ani nepočítá body.
   Kolo začne `zacni_kolo`, odpovědi vyhodnotí `odevzdej_kolo` na serveru.
-- **Co běží jen v prohlížeči (bez DB)**: kvíz gest, přehled gest, pravidla.
+- **Co běží jen v prohlížeči (bez DB)**: kvíz gest, přehled gest, trenažér postavení, pravidla.
 
 ---
 
@@ -37,8 +37,9 @@ Stav: 20. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích).
 | Stránka | Účel | Skripty (vstupní moduly) |
 |---|---|---|
 | `index.html` | úvod / rozcestník, karty sekcí, instalace PWA | `pwa.js` |
-| `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`), karta gest | `pwa.js`, `quiz.js` |
+| `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`), karty gest a trenažéru postavení | `pwa.js`, `quiz.js` |
 | `gesta.html` | kvíz „Co znamená toto gesto?“ | `pwa.js`, `gesture-quiz.js` |
+| `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); není v navigaci, odkaz z kvízu a úvodu | `pwa.js`, `lineup-trainer.js` |
 | `pravidla.html` | úplná pravidla FIVB 2025–2028, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `gesture-atlas.js` |
 | `zebricek.html` | žebříček celkový + denní (záložky) | `pwa.js`, `leaderboard.js` |
 | `ucet.html` | **Profil**: přihlášení/registrace, statistiky, odznaky, nastavení, odhlášení, smazání účtu | `pwa.js`, `account.js` (→ `stats.js`) |
@@ -46,7 +47,7 @@ Stav: 20. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích).
 | `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | inline skript |
 
 Hlavička s navigací (Kvíz, Gesta, Pravidla, Žebříček, Profil) je v **každém** HTML zvlášť –
-při změně upravit všech 8 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
+při změně upravit všech 9 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
 
 ---
 
@@ -93,12 +94,24 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 ```
 | Modul | Exporty |
 |---|---|
-| `math3d.js` | vektory (`add`, `sub`, `scale`, `dot`, `cross`, `normalize`, …), `createProjection`, `solveTwoBone` (IK paže), `sampleSmooth`, `segmentAt` |
+| `math3d.js` | vektory (`add`, `sub`, `scale`, `dot`, `cross`, `normalize`, …), `createProjection` (bez perspektivy), `createPerspective` (kamera s perspektivou), `clipNear`, `solveTwoBone` (IK paže), `sampleSmooth`, `segmentAt` |
 | `gesture-pose.js` | `BODY` (rozměry postavy), `createPoseSampler` (gesto → funkce čas → poloha paží) |
 | `referee-figure.js` | `createRefereeScene`, `createGesturePlayer` |
 | `gesture-data.js` | `loadGestures` (fetch jednou za návštěvu), `gestureSource`, `gestureDetails` |
 | `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení; výsledek přes `celebrate.js`) |
 | `gesture-atlas.js` | – (karty všech 32 gest, kotvy `#gesto-<id>`) ← `rules-page.js` |
+
+### Trenažér postavení (jen prohlížeč)
+```
+lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js ─▶ math3d.js
+(náhodná situace,    (výběr hráčů, vyhodnocení,          (hřiště, síť, hráči ve 3D → SVG,
+ kontrola 7.4.3)      karta sestavy, skóre série)          pohledy ref1 / ref2 / top)
+```
+| Modul | Exporty |
+|---|---|
+| `lineup-logic.js` | `generateSituation` (1 nebo 0 porušených vztahů, vše s rezervou `MARGIN` 0,4 m), `checkRelation`, `checkAll`, `RELATIONS`, `footprint`, `faultyPositions`, `isCorrectAnswer`, `COURT`, `FOOT_SIZE`, `FRONT_ROW`, `BACK_ROW` – bez DOM, testovatelné v Node |
+| `court-scene.js` | `VIEWS` (oko a výřez pohledů), `renderScene(svg, situace, { view, selected, result })` |
+| `lineup-trainer.js` | – (stránka trenažéru) |
 
 ### Pravidla
 | Modul | Exporty |
@@ -114,7 +127,7 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 | `gesta/gesta.json` | 32 gest (26 rozhodčích vč. 6a/6b a 25a/25b + 5 čárových), pózy, skupiny | `gesta/README.md` |
 | `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) | `animace/README.md` |
 | `pravidla.html` | text pravidel; obsah mezi značkami `<!-- PRAVIDLA:START/END -->` a `<!-- OBSAH:START/END -->` je **generovaný** | viz níže |
-| `img/ikony.svg` | ikony navigace (`#kviz`, `#gesta`, `#pravidla`, `#zebricek`, `#profil`) | SVG symboly |
+| `img/ikony.svg` | ikony navigace (`#kviz`, `#gesta`, `#pravidla`, `#zebricek`, `#profil`) a `#postaveni` (úvod) | SVG symboly |
 | `img/icons/` | ikony aplikace (PWA, favicon), zdroj `icon.svg` | |
 | `fonts/` + `css/fonts.css` | Barlow, Barlow Condensed (woff2, latin + latin-ext), offline bez Googlu | |
 | `manifest.json` | PWA manifest | |
@@ -127,7 +140,7 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 
 ### CSS (`css/style.css`, jeden soubor, sekce podle komentářů)
 Barvy a rozměry (proměnné, tmavý režim) · Základ · Hlavička a navigace (dolní lišta na mobilu) · Patička ·
-Komponenty · Formuláře · Kvíz · Animace · Gesta · Výsledek · Záložky · Denní výzva · Žebříček · Statistiky ·
+Komponenty · Formuláře · Kvíz · Animace · Gesta · Trenažér postavení (scéna, třídy `ct-*`) · Výsledek · Záložky · Denní výzva · Žebříček · Statistiky ·
 Odznaky · Pravidla · Diagramy (SVG, třídy `dg-*`) · Větší obrazovky · Úvodní stránka · Detaily (medaile, skeleton) ·
 Animace stránek a detailů (přechody mezi stránkami, příjezd otázky, žebříček, pravidla, úvod – vše jen bez „omezeného pohybu“).
 Animace menu jsou v sekci „Animace navigace“ hned za navigací.
@@ -205,6 +218,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat/změnit otázku | `private/otazky.json` → seed SQL → spustit v Supabase |
 | přidat kategorii otázek | `js/categories.js`, `tools/seed-otazky.mjs` (`CATEGORIES`), `check (kategorie in …)` v `sql/01_schema.sql`, shrnutí s tím id v pravidlech |
 | přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) |
+| upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |
 | upravit text pravidel | `private/pravidla-zdroj/src/*.txt` + build (nebo drobnost přímo v `pravidla.html`) |
 | přidat odznak | `js/badges.js` + `private.metriky_odznaku` v `sql/05_odznaky.sql` (stejné id) |

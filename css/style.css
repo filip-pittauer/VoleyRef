@@ -1099,6 +1099,214 @@ progress::-moz-progress-bar {
   box-shadow: 0 0 0 2px var(--color-primary);
 }
 
+/* ---------- Trenažér postavení (postaveni.html, 3D scéna v SVG) ---------- */
+.lineup-layout {
+  display: grid;
+  gap: var(--space);
+}
+
+@media (min-width: 52rem) {
+  .lineup-layout {
+    grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr);
+    align-items: start;
+  }
+}
+
+/* přepínač pohledu – vzhled jako záložky v žebříčku */
+.view-switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  justify-self: start;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.view-switch button {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.view-switch button[aria-pressed="true"] {
+  background: var(--color-primary-dark);
+  color: #fff;
+  box-shadow: inset 0 -3px 0 var(--color-accent);
+}
+
+.court-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  background: #c9d3e0;
+  touch-action: manipulation;
+}
+
+/* barvy scény jsou pevné (obrázek haly), stejné ve světlém i tmavém režimu */
+.ct-wall { fill: #c9d3e0; }
+.ct-free { fill: #2f6f9f; }
+.ct-court { fill: #e98a3c; }
+.ct-line { fill: #fff; stroke: #fff; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.ct-post { stroke: #94a3b8; stroke-linecap: round; }
+.ct-mesh { fill: #0f172a; fill-opacity: 0.1; }
+.ct-mesh-line { stroke: #0f172a; stroke-opacity: 0.45; }
+.ct-band { fill: #fff; stroke: #94a3b8; stroke-width: 0.5px; vector-effect: non-scaling-stroke; }
+.ct-cord { stroke: #475569; }
+.ct-antenna { stroke: #fff; }
+.ct-antenna--red { stroke: #dc2626; }
+
+.ct-player line { stroke-linecap: round; }
+.ct-player--receiving { cursor: pointer; }
+.ct-skin { stroke: #dba27a; }
+.ct-head { fill: #dba27a; stroke: #6b3f22; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.ct-jersey--receiving { stroke: #d61f2c; }
+.ct-jersey--serving { stroke: #1e3a8a; }
+.ct-shorts--receiving { stroke: #111827; }
+.ct-shorts--serving { stroke: #f8fafc; }
+.ct-shoe { fill: #111827; stroke: #fff; stroke-width: 0.75px; vector-effect: non-scaling-stroke; }
+.ct-ball { fill: #fff; stroke: #111827; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.ct-number {
+  fill: #fff;
+  stroke: #111827;
+  stroke-width: 0.14em;
+  paint-order: stroke;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.ct-position {
+  fill: #0b2a5b;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+/* pohled shora: průsvitné tělo nad chodidly */
+.ct-body-top { stroke: none; fill-opacity: 0.6; }
+.ct-body-top.ct-jersey--receiving { fill: #d61f2c; }
+.ct-body-top.ct-jersey--serving { fill: #1e3a8a; }
+
+.ct-ring { stroke-width: 2px; vector-effect: non-scaling-stroke; }
+.ct-ring--selected { fill: #f59e0b; fill-opacity: 0.4; stroke: #f59e0b; }
+.ct-ring--fault { fill: #dc2626; fill-opacity: 0.35; stroke: #dc2626; }
+.ct-rel { stroke-linecap: round; }
+.ct-rel--ok { stroke: #16a34a; }
+.ct-rel--fault { stroke: #dc2626; }
+
+/* karta „Postavení podle zápisu“ */
+.lineup-card {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.lineup-card figcaption {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lineup-card__net {
+  margin: 0.5rem 0 0.25rem;
+  border-top: 3px dashed var(--color-text);
+  font-size: 0.75rem;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.lineup-card__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.lineup-card__cell {
+  display: grid;
+  justify-items: center;
+  padding: 0.35rem;
+  border-radius: 3px;
+  background: color-mix(in srgb, #e98a3c 22%, var(--color-surface));
+}
+
+.lineup-card__pos {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.lineup-card__num {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* výběr hráčů podle čísla dresu */
+.pick-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pick {
+  min-width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pick:hover { border-color: var(--color-primary); }
+
+.pick[aria-pressed="true"],
+#lineup-correct[aria-pressed="true"] {
+  border-color: #f59e0b;
+  background: color-mix(in srgb, #f59e0b 25%, var(--color-surface));
+  box-shadow: none;
+}
+
+#lineup-fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#lineup-fieldset legend {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+#lineup-fieldset:disabled .pick,
+#lineup-fieldset:disabled #lineup-correct { cursor: default; opacity: 0.7; }
+
 /* ---------- Výsledek ---------- */
 .score {
   margin: 0;

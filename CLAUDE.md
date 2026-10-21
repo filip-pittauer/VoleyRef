@@ -35,6 +35,8 @@ pravidla.html       úplná pravidla: 30 pravidel v <details class="rule"> (kotv
 zebricek.html       žebříček
 statistiky.html     jen přesměrování na Profil (staré odkazy a záložky)
 gesta.html          kvíz gest rozhodčích (jen v prohlížeči, bez DB; přístup z kviz.html a úvodu)
+postaveni.html      trenažér postavení (jen v prohlížeči; 3D pohled 1./2. rozhodčího, po odpovědi shora;
+                    js/lineup-logic.js, court-scene.js, lineup-trainer.js; přístup z kviz.html a úvodu)
 ucet.html           Profil: přihlášení, registrace, statistiky (js/stats.js, RPC moje_statistiky),
                     nastavení účtu, smazání účtu (adresa zůstává kvůli odkazům z Supabase)
 ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
@@ -134,6 +136,9 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
   - Nové otázky postupem: `private/testy/otazky-check.mjs <balicek.json> [--merge]` (formát, kotvy v pravidla.html, podobnost, nápadně delší správná odpověď, rozložení A–D; `--merge` přidá do private/otazky.json), `otazky-export.mjs` (text pro ověřovacího agenta). Agentovi dát cestu k textu pravidel a otázkám, ať hlásí ZÁVAŽNÉ/STŘEDNÍ/DROBNÉ s citací.
   - Nevyřešené: trest za porušení 12.5.3 (ruce nad hlavou při podání) pravidla výslovně neuvádějí – otázka 67 se proto ptá jen na zákaz; ověřit v Casebooku 2025.
   - Možné další kroky: animace/obrázky k vybraným otázkám (`media`), víc otázek obtížnosti 3.
+- **Trenažér postavení** (21. 10. 2026, jen lokálně na `main`, NEPUSHNUTO – uživatel chce nejdřív doladit): `postaveni.html`. Vlastní 3D v SVG (`createPerspective` v math3d.js), bez knihovny – uživatel souhlasil (three.js jen jako záloha, kdyby SVG nestačilo). Pohledy 1. rozhodčí (stupínek u sloupku, oči 50 cm nad sítí) a 2. rozhodčí (u sloupku na straně přijímajících), přepínatelné; po odpovědi automaticky shora s čarami vztahů (zelená ok, červená chyba) a čísly pozic. Odpověď = vybrat dvojici v porušeném vztahu (nebo „Postavení je správné“); generátor dělá 0 nebo 1 porušený vztah, ~60 % chyb, rezerva 0,4 m. Kontroluje se jen přijímající tým (7.4 od 2025). Postavy hráčů zatím jednoduché – „kdyžtak doladíme“. Pohled shora pro začátečníky uživatel zatím nechce.
+  - Testy: `private/testy/lineup-logic.mjs` (3000 situací, `math` = s Math.random), `e2e-postaveni.mjs` (stejná náhoda ve stránce i testu → zná správnou odpověď).
+  - Možná dolaďování: větší scéna na mobilu, libero (jiný dres), odlišit podávajícího, obtížnost (menší rezerva), pátá dlaždice na úvodu sama na řádku.
 - **Nová kategorie `chovani`** („Chování a tresty“, 21. 10. 2026): js/categories.js, tools/seed-otazky.mjs, kontrola v `sql/01_schema.sql` (drop + add constraint `otazky_kategorie_check`), odznak Všestranný nově vyžaduje 10 kategorií (`sql/05`, js/badges.js).
 - Animace (balíček 6): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
 - **Na příště – otevřené body:**
@@ -163,8 +168,6 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Testy: `e2e-pravidla.mjs` (kotvy do sbalených pravidel, staré odkazy kategorií, atlas gest, rozbalit/sbalit vše), `pravidla-diagramy.mjs` (snímky diagramů).
 
 ### Odložené / nápady
-- **Trenažér postavení** (uživatel ho chce, ale později; bez DB, jen v prohlížeči): SVG hřiště, 6 hráčů přijímajícího týmu v okamžiku podání + karta sestavy (pozice I–VI → čísla dresů). Hráč klikne na hráče v chybě postavení, nebo „Postavení je správné“. Situace generovat náhodně kódem, pravdu počítat z geometrie (vztahy předních/zadních 4–5, 3–6, 2–1 a bočních 4–3, 3–2, 5–6, 6–1; okraj nejistoty ≥ 0,4 m). Po odpovědi ukázat porušené vztahy. Přístup z kviz.html (karta) a z úvodu; navigace se nerozšiřuje.
-  - Zjištěno 20. 10. 2026: od pravidel 2025–2028 **podávající tým chybu postavení nemá** (hráči podávajícího týmu smějí stát kdekoli), v pořadí musí být jen přijímající tým; po úderu podávajícího se smějí volně pohybovat oba týmy (7.4, 7.4.4). Trenažér proto jen pro přijímající tým. **Před psaním ověřit přesné znění 7.4.3 a 7.5** v anglickém PDF (`https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf`).
 - Editor animací s „developer módem“ (jen pro vybrané editory, animace by se přesunuly do DB) – uživatel zatím neví, jestli animace, nebo videa (rozhodne s kamarádem, jehož je to nápad).
 - Animace vs. video: formát otázky podporuje obojí (`media.typ`).
 - Vlastní doména (jméno zatím nevybrané).

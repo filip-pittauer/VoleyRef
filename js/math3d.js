@@ -1,4 +1,4 @@
-// Malá 3D matematika pro animovanou postavu rozhodčího.
+// Malá 3D matematika pro animovanou postavu rozhodčího a hřiště v trenažéru postavení.
 // Vektor je obyčejné pole [x, y, z] v metrech (v C# by to byl struct Vector3).
 
 export const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
@@ -48,6 +48,40 @@ export function createProjection(yawDeg, pitchDeg) {
     const z1 = -x * sy + z * cy;
     return { x: x1, y: -(y * cp - z1 * sp), depth: z1 * cp + y * sp };
   };
+}
+
+/**
+ * Perspektivní kamera (jako oko nebo fotoaparát) – vzdálené věci jsou menší.
+ * eye = kde je oko, target = kam se dívá (obojí v metrech).
+ * toCamera: bod → [vpravo, nahoru, dopředu] vzhledem k oku;
+ * project: bod → { x, y, depth } na „plátně“ 1 m před okem (y v SVG dolů,
+ * větší depth = dál od oka – opačně než u createProjection).
+ */
+export function createPerspective(eye, target, up = [0, 1, 0]) {
+  const forward = normalize(sub(target, eye));
+  const right = normalize(cross(forward, up));
+  const upward = cross(right, forward);
+  const toCamera = p => {
+    const d = sub(p, eye);
+    return [dot(d, right), dot(d, upward), dot(d, forward)];
+  };
+  const fromCamera = ([x, y, z]) => ({ x: x / z, y: -y / z, depth: z });
+  return { toCamera, fromCamera, project: p => fromCamera(toCamera(p)) };
+}
+
+/**
+ * Ořízne mnohoúhelník (body v souřadnicích kamery) rovinou kousek před okem,
+ * aby se nepromítaly body za zády (Sutherland–Hodgman pro jednu rovinu).
+ */
+export function clipNear(points, near) {
+  const out = [];
+  for (let i = 0; i < points.length; i++) {
+    const a = points[i], b = points[(i + 1) % points.length];
+    const aIn = a[2] >= near, bIn = b[2] >= near;
+    if (aIn) out.push(a);
+    if (aIn !== bIn) out.push(lerp(a, b, (near - a[2]) / (b[2] - a[2])));
+  }
+  return out;
 }
 
 // ---------- Paže ----------
