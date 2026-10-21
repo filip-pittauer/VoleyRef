@@ -15,6 +15,7 @@
   --color-gold: #c08a12;          /* odznaky */
   --color-on-dark: #ffffff;       /* text na tmavě modré */
   --color-on-dark-muted: #c9d4e8;
+  --color-accent-on-dark: #ff8a92; /* červená na tmavě modré (logo, úvod, tabule) – kontrast ≥ 4,5 : 1 */
   --color-bg: #f2f4f7;
   --color-surface: #ffffff;       /* karty, panely */
   --color-text: #111827;
@@ -205,7 +206,7 @@ h4 {
 }
 
 .logo span {
-  color: #ffb3b8;
+  color: var(--color-accent-on-dark);
 }
 
 .logo__icon {
@@ -747,7 +748,7 @@ progress::-moz-progress-bar {
 }
 
 .board__score span {
-  color: #ffb3b8;
+  color: var(--color-accent-on-dark);
 }
 
 .board progress {
@@ -2202,7 +2203,7 @@ main.home {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: #ffb3b8;
+  color: var(--color-accent-on-dark);
 }
 
 .hero h1 {
