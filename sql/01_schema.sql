@@ -19,7 +19,7 @@ create table if not exists public.otazky (
   aktivni         boolean  not null default true,
   kategorie       text     not null check (kategorie in (
                     'podani', 'prijem-nahravka', 'utok', 'blok', 'dotyky-chyby',
-                    'rotace-postaveni', 'stridani', 'preruseni-hry', 'signalizace')),
+                    'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace')),
   obtiznost       smallint not null default 1 check (obtiznost between 1 and 3),
   situace         text     not null,
   media           jsonb,
@@ -28,6 +28,13 @@ create table if not exists public.otazky (
   verze_pravidel  text,
   upraveno        timestamptz not null default now()
 );
+
+-- Seznam kategorií v už existující tabulce ("create table if not exists"
+-- ji nezmění): starou kontrolu smazat a vytvořit znovu s aktuálním seznamem.
+alter table public.otazky drop constraint if exists otazky_kategorie_check;
+alter table public.otazky add constraint otazky_kategorie_check check (kategorie in (
+  'podani', 'prijem-nahravka', 'utok', 'blok', 'dotyky-chyby',
+  'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace'));
 
 -- ---------------------------------------------------------------------
 -- Otázky – tajná část (správná odpověď a vysvětlení)

@@ -9,6 +9,7 @@ export const CATEGORIES = {
   'rotace-postaveni': 'Rotace a postavení',
   'stridani': 'Střídání a libero',
   'preruseni-hry': 'Přerušení a zdržování hry',
+  'chovani': 'Chování a tresty',
   'signalizace': 'Signalizace rozhodčích',
 };
 

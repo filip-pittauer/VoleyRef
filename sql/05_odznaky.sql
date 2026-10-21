@@ -70,7 +70,7 @@ as $$
     ('cisty-stul',  (case when exists (select 1 from moje_kola where rezim = 'chyby' and skore > 0)
                            and not exists (select 1 from private.chybne_otazky(p_uzivatel))
                           then 1 else 0 end), 1),
-    ('vsestranny',  (select count(*) from kategorie where otazek >= 5 and spravne >= 0.7 * otazek)::integer, 9),
+    ('vsestranny',  (select count(*) from kategorie where otazek >= 5 and spravne >= 0.7 * otazek)::integer, 10),
     ('specialista', (select count(*) from kategorie where otazek >= 15 and spravne >= 0.9 * otazek)::integer, 1),
     -- denní výzva
     ('denni-hrac',  (select count(*) from moje_kola where rezim = 'denni')::integer, 1),

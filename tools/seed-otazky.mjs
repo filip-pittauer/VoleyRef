@@ -18,7 +18,7 @@ const OUTPUT = 'private/seed-otazky.sql';
 
 const CATEGORIES = [
   'podani', 'prijem-nahravka', 'utok', 'blok', 'dotyky-chyby',
-  'rotace-postaveni', 'stridani', 'preruseni-hry', 'signalizace',
+  'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace',
 ];
 const ANSWER_KEYS = ['A', 'B', 'C', 'D'];
 const MEDIA_TYPES = ['obrazek', 'video', 'animace'];

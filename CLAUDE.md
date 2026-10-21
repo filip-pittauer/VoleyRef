@@ -77,7 +77,7 @@ Platí pro `private/otazky.json` i DB (tabulky `public.otazky` + `private.otazky
 }
 ```
 - `aktivni`: koncept pro autora. Otázky s `false` se v kvízu nezobrazují (např. neověřená odpověď).
-- `kategorie`: jedna hlavní kategorie, identifikátor bez diakritiky (`podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `signalizace`). Český název se doplní až v UI.
+- `kategorie`: jedna hlavní kategorie, identifikátor bez diakritiky (`podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `chovani`, `signalizace`). Český název se doplní až v UI.
 - `obtiznost`: 1–3.
 - `media`: `null`, nebo objekt s `typ` (`obrazek` | `video` | `animace`), `soubor` a `popis` (alt text).
 - `odpovedi`: 2–4 možnosti, klíče A–D. Právě jedna správná (`spravna`).
@@ -120,7 +120,6 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 ## Jak se mnou pracovat
 - Komunikuj **česky**.
 - Jsem nejsilnější v C#, JavaScript a CSS znám základně. U JS a webových konceptů **vysvětli, proč** se něco dělá, nejen co. Kde to pomůže, ukaž srovnání s C#.
-- Postupuj po malých krocích, které jde hned vyzkoušet v prohlížeči přes Live Server.
 - Před větší změnou (nová knihovna, změna struktury, změna DB schématu) se nejdřív zeptej.
 - SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
 - **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists` staré signatury). Změny se dělají přímo v nich a uživatel je po změně spustí znovu v pořadí 01, 02, 03… Před nasazením otestovat přechod ze stávající verze (git HEAD) na novou.
@@ -130,10 +129,13 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Hotovo: fáze 1–6, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta rozhodčích (balíček 4), vzhled Svaz, úplná pravidla (balíček 5), animace (balíček 6), README.md a CODEMAP.md.
 - Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky; 21. 10. 2026 schválil i vzhled „Svaz“ (dolní lišta, Profil = účet + statistiky, písmo Barlow), úplná pravidla (balíček 5) a animace (balíček 6).
 - V Supabase je spuštěné SQL `01`–`05` a `private/seed-otazky.sql` (potvrzeno 21. 10. 2026). Gesta žádné SQL nepotřebují.
-- **Limit 2 s na otázku** (dřív 3 s; rozhodnuto 21. 10. 2026) pro žebříček, denní výzvu a „dokonalá“ kola u odznaků: `sql/02`, `04`, `05` a `MIN_SECONDS_PER_QUESTION` v js/quiz.js. Uživatel má po pushi spustit znovu `02`, `04`, `05`.
+- **Limit 2 s na otázku** (dřív 3 s; rozhodnuto 21. 10. 2026) pro žebříček, denní výzvu a „dokonalá“ kola u odznaků: `sql/02`, `04`, `05` a `MIN_SECONDS_PER_QUESTION` v js/quiz.js. Uživatel je spustil (21. 10. 2026).
+- **Rozšíření otázek na ~200** (rozpracováno od 21. 10. 2026): uživatel chce aspoň 200 otázek, rovnou `aktivni: true` (před spuštěním pro veřejnost je zkontroluje rozhodčí). Postup po balíčcích: otázky píšu já podle anglického PDF FIVB 2025–2028 (převedeného na text ve scratchpadu), kontrolní skript (formát, kotvy v pravidla.html, podobnost, délka správné odpovědi, rozložení A–D) a pak nezávislý agent ověří každou otázku proti textu FIVB. Balíček 1 (otázky 28–75) hotový; agent zkontroloval i původních 27 a opravily se u nich čísla pravidel a vysvětlení. Další balíčky: hlavně nová kategorie `chovani` (zatím 1 otázka), pak dorovnat ostatní na ~20 každá.
+  - Nevyřešené: trest za porušení 12.5.3 (ruce nad hlavou při podání) pravidla výslovně neuvádějí – otázka 67 se proto ptá jen na zákaz; ověřit v Casebooku 2025.
+- **Nová kategorie `chovani`** („Chování a tresty“, 21. 10. 2026): js/categories.js, tools/seed-otazky.mjs, kontrola v `sql/01_schema.sql` (drop + add constraint `otazky_kategorie_check`), odznak Všestranný nově vyžaduje 10 kategorií (`sql/05`, js/badges.js).
 - Animace (balíček 6): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
 - **Na příště – otevřené body:**
-  - Ověřit, jestli uživatel znovu spustil `sql/02_funkce.sql`, `04_denni_vyzva.sql`, `05_odznaky.sql` (limit 2 s).
+  - Ověřit, jestli uživatel spustil `sql/01_schema.sql`, `05_odznaky.sql` a `private/seed-otazky.sql` (kategorie chovani + balíček otázek 1).
   - Licence repa: zatím žádná (= všechna práva vyhrazena). Uživatel to zatím neřeší – nepřipomínat.
   - Text pravidel před zveřejněním projde zkušený rozhodčí (uživatel to zařídí).
   - Nápady odložené uživatelem: Playwright MCP („zatím ne, kdyžtak později“ – doporučil jsem zůstat u skriptů), Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
