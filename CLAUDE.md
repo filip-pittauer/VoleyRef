@@ -56,7 +56,7 @@ animace/            SVG animace situací jako JSON (formát v animace/README.md)
 gesta/              gesta rozhodčích jako data (gesta.json, formát v gesta/README.md)
 sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
 tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
-private/            NENÍ v repu: otázky se správnými odpověďmi, testy (testy/), zdroj pravidel (pravidla-zdroj/)
+private/            NENÍ ve veřejném repu: vlastní SOUKROMÉ repo filip-pittauer/VoleyRef-private (otázky, testy/, pravidla-zdroj/)
 ```
 
 ## Formát otázky
@@ -86,7 +86,7 @@ Platí pro `private/otazky.json` i DB (tabulky `public.otazky` + `private.otazky
 - Jen halový (šestkový) volejbal. Tlačítko „Nevím“ pro hráče nebudeme dělat.
 
 ### Kde otázky leží
-- `private/otazky.json` – **plná sada se správnými odpověďmi**. Složka `private/` je v `.gitignore` a nesmí do veřejného repa. Je jen na disku autora (zálohovat!).
+- `private/otazky.json` – **plná sada se správnými odpověďmi**. Složka `private/` je v `.gitignore` a nesmí do veřejného repa. Má vlastní **soukromé** repo `filip-pittauer/VoleyRef-private` (git přímo ve složce `private/`, bez `Client secret/` a `seed-otazky.sql`). Po změně otázek nebo testů commit + push i tam.
 - Databáze: `node tools/seed-otazky.mjs` zkontroluje JSON a vytvoří `private/seed-otazky.sql` (upsert), které se vloží do SQL editoru Supabase. Otázky se nemažou, jen se nastaví `aktivni: false`.
 
 ## Postup vývoje (fáze)
@@ -138,7 +138,6 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Animace (balíček 6): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
 - **Na příště – otevřené body:**
   - Ověřit, jestli uživatel spustil `sql/01_schema.sql`, `05_odznaky.sql` a `private/seed-otazky.sql` (kategorie chovani + 200 otázek).
-  - Připomenout zálohu složky `private/` (200 otázek se správnými odpověďmi je jen na disku).
   - Licence repa: zatím žádná (= všechna práva vyhrazena). Uživatel to zatím neřeší – nepřipomínat.
   - Text pravidel před zveřejněním projde zkušený rozhodčí (uživatel to zařídí).
   - Nápady odložené uživatelem: Playwright MCP („zatím ne, kdyžtak později“ – doporučil jsem zůstat u skriptů), Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
@@ -183,5 +182,5 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Firemní e-mail (kontakt v ochrana-udaju.html je dočasný alias `raphael.silva955@flounderfantasy.com`) a převod Google Cloud projektu na firemní účet (IAM → Owner).
 - Google OAuth: projekt `VoleyRef`, Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`, je v testovacím režimu (jen přidaní testeři) – „Publish app“ až před spuštěním. Vyměnit Client secret (byl vidět na screenshotu); secret patří jen do Supabase.
 - Vlastní SMTP v Supabase (např. Brevo) – vestavěný posílá jen pár e-mailů za hodinu.
-- Ověřit obsah otázek (`private/otazky.json`, psané z paměti) a pravidel; zálohovat složku `private/` (není v repu).
+- Ověřit obsah otázek (`private/otazky.json`, 200 otázek ověřených agentem proti PDF FIVB, ale ještě ne člověkem) a pravidel.
 - Zvážit vypnutí/zapnutí registrací.
