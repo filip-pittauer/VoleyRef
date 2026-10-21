@@ -178,8 +178,8 @@ Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
 - Zastaralé testy (selhávají i bez změn): `e2e.mjs` krok 1 čeká „Supabase není propojený“ (config.js už propojený je), `pwa.mjs` počítá soubory v mezipaměti `voleyref-v4` (natvrdo).
 
 ### Před spuštěním pro veřejnost
-- E-mail projektu `volleyref.app@gmail.com` (od 21. 10. 2026; v ochrana-udaju.html už je). Zbývá: Google Cloud (IAM → Owner, OAuth – e-mail podpory a kontakt vývojáře), Supabase (člen organizace), případně Brevo.
-- Google OAuth: projekt `VoleyRef`, Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`, je v testovacím režimu (jen přidaní testeři) – „Publish app“ až před spuštěním. Vyměnit Client secret (byl vidět na screenshotu); secret patří jen do Supabase.
+- E-mail projektu `volleyref.app@gmail.com` (21. 10. 2026): je v ochrana-udaju.html, v Google Cloud jako druhý Owner + e-mail podpory a kontakt vývojáře v Branding, v Supabase jako druhý Owner organizace (organizace se jmenuje `filip-pittauer`, přejmenování volitelné). Osobní účty zůstávají jako záloha. Brevo účet zakládat na tento e-mail; odesílatel e-mailů ale musí být na vlastní doméně (gmail.com přes cizí SMTP neprojde).
+- Google OAuth: projekt `VoleyRef`, Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`, je v testovacím režimu (jen přidaní testeři) – „Publish app“ až před spuštěním. Vyměnit Client secret (byl vidět na screenshotu; uživatel odložil 21. 10. 2026) – postup: Clients → Add secret → vložit do Supabase (Auth → Providers → Google) → otestovat přihlášení → starý Disable + Delete; pak smazat `private/Client secret/`. Secret patří jen do Supabase.
 - Vlastní SMTP v Supabase (např. Brevo) – vestavěný posílá jen pár e-mailů za hodinu.
 - Ověřit obsah otázek (`private/otazky.json`, 200 otázek ověřených agentem proti PDF FIVB, ale ještě ne člověkem) a pravidel.
 - Zvážit vypnutí/zapnutí registrací.
