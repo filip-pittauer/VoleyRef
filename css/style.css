@@ -1160,7 +1160,12 @@ progress::-moz-progress-bar {
   aspect-ratio: 4 / 3;
   border-radius: var(--radius);
   background: #c9d3e0;
-  touch-action: manipulation;
+  /* jedním prstem jde posouvat stránka, dva prsty dostane zoom; přiblížená scéna se posouvá prstem */
+  touch-action: pan-y;
+}
+
+.court-scene.is-zoomed {
+  touch-action: none;
 }
 
 /* barvy scény jsou pevné (obrázek haly), stejné ve světlém i tmavém režimu */
@@ -1230,7 +1235,18 @@ progress::-moz-progress-bar {
 .ct-rel--ok { stroke: #16a34a; }
 .ct-rel--fault { stroke: #dc2626; }
 
-/* karta „Postavení podle zápisu“ */
+/* karta „Postavení podle zápisu“ – čísla jsou zároveň tlačítka pro výběr hráče */
+.lineup-fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.lineup-fieldset legend {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
 .lineup-card {
   margin: 0;
   padding: 0.75rem;
@@ -1259,7 +1275,7 @@ progress::-moz-progress-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.35rem;
-  margin: 0 0 0.5rem;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -1267,10 +1283,17 @@ progress::-moz-progress-bar {
 .lineup-card__cell {
   display: grid;
   justify-items: center;
+  width: 100%;
   padding: 0.35rem;
+  border: 2px solid transparent;
   border-radius: 3px;
   background: color-mix(in srgb, #e98a3c 22%, var(--color-surface));
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
 }
+
+.lineup-card__cell:hover { border-color: var(--color-primary); }
 
 .lineup-card__pos {
   font-size: 0.75rem;
@@ -1284,29 +1307,8 @@ progress::-moz-progress-bar {
   line-height: 1.1;
 }
 
-/* výběr hráčů podle čísla dresu */
-.pick-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.pick {
-  min-width: 2.75rem;
-  height: 2.75rem;
-  border: 2px solid var(--color-border);
-  border-radius: 50%;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.pick:hover { border-color: var(--color-primary); }
-
-.pick[aria-pressed="true"],
+/* vybraný hráč i „Postavení je správné“: tmavě modrá jako kroužek ve scéně */
+.lineup-card__cell[aria-pressed="true"],
 #lineup-correct[aria-pressed="true"] {
   border-color: #0b2a5b;
   background: #0b2a5b;
@@ -1314,19 +1316,131 @@ progress::-moz-progress-bar {
   box-shadow: inset 0 0 0 2px #fff;
 }
 
-#lineup-fieldset {
-  margin: 0;
-  padding: 0;
+.lineup-card__cell[aria-pressed="true"] .lineup-card__pos { color: #c9d4e8; }
+
+.lineup-fieldset:disabled .lineup-card__cell { cursor: default; }
+
+.lineup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* scéna s přiblížením dvěma prsty (js/scene-zoom.js) */
+.scene-wrap {
+  position: relative;
+}
+
+.scene-reset {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.35rem 0.7rem;
   border: none;
+  border-radius: var(--radius);
+  background: rgb(11 42 91 / 0.85);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
 }
 
-#lineup-fieldset legend {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
+.lineup-about { margin-top: var(--space); }
 
-#lineup-fieldset:disabled .pick,
-#lineup-fieldset:disabled #lineup-correct { cursor: default; opacity: 0.7; }
+/* ---------- Kompaktní stránky her na mobilu (gesta, postavení) ----------
+   Na telefonu má být scéna co největší a ovládání vidět zároveň s ní:
+   menší nadpis a okraje, scéna od okraje k okraji karty. */
+@media (max-width: 47.99rem) {
+  main.app-page {
+    padding: 0.5rem;
+  }
+
+  main.app-page h1 {
+    margin: 0.25rem 0 0.5rem;
+    font-size: 1.6rem;
+  }
+
+  main.app-page .card {
+    --space: 0.6rem;
+  }
+
+  main.app-page .board {
+    padding-block: 0.5rem;
+  }
+
+  main.app-page .board .board__score {
+    font-size: 1.3rem;
+  }
+
+  /* scéna a postava přes celou šířku karty */
+  main.app-page .scene-wrap,
+  main.app-page .gesture {
+    margin-inline: calc(-1 * var(--space));
+    max-width: none;
+  }
+
+  main.app-page .court-scene,
+  main.app-page .gesture svg {
+    border-radius: 0;
+  }
+
+  main.app-page .gesture .anim__controls {
+    padding-inline: var(--space);
+  }
+
+  main.app-page .answer {
+    padding: 0.45rem 0.6rem;
+  }
+
+  /* kvíz gest: krátké odpovědi ve dvou sloupcích, ať se otázka vejde na obrazovku */
+  main.app-page #gesture-answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  main.app-page #gesture-answers > * {
+    margin-top: 0;
+  }
+
+  main.app-page #gesture-answers .answer {
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem;
+    font-size: 0.92rem;
+    line-height: 1.25;
+  }
+
+  main.app-page #gesture-answers .answer__key {
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 1rem;
+  }
+
+  .lineup-card {
+    padding: 0.5rem;
+  }
+
+  .lineup-card__net {
+    margin-top: 0.3rem;
+  }
+
+  .lineup-card__cell {
+    grid-auto-flow: column;
+    align-items: baseline;
+    gap: 0.3rem;
+    padding: 0.2rem;
+  }
+
+  .lineup-card__pos { font-size: 0.65rem; }
+  .lineup-card__num { font-size: 1.3rem; }
+
+  .lineup-actions .button {
+    flex: 1;
+  }
+}
 
 /* ---------- Výsledek ---------- */
 .score {

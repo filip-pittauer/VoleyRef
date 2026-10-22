@@ -481,11 +481,59 @@ function createNet() {
  * Vytvoří SVG s postavou pro jedno gesto. Vrací { svg, render(t) }.
  * mirror = zrcadlově (gesto pro tým na druhé straně – význam se nemění).
  */
+/**
+ * Výřez přizpůsobený gestu: projde celý pohyb a zjistí, kam až sahají ruce
+ * (a karta), aby postava vyplnila co nejvíc místa – hlavně na mobilu.
+ * Poměr stran zůstává jako u výchozího výřezu, spodní okraj taky (jen když
+ * praporek sahá níž, výřez se protáhne), a postava stojí uprostřed (výřez je
+ * souměrný, takže sedí i zrcadlené gesto). Gesta se sítí mají výřez pevný.
+ */
+function fitViewBox(gesture, poseAt, camera) {
+  if (gesture.sit) return gesture.vyrez ?? VIEWBOX;
+  const margin = 0.07;      // tloušťka ruky a malý okraj
+  let halfWidth = 0.3;      // aspoň ramena a paže podél těla
+  let top = -(HEAD.y + HEAD.r);
+  let bottom = VIEWBOX[1] + VIEWBOX[3];
+  for (let t = 0; t <= gesture.delka + 1e-9; t += 0.05) {
+    const pose = poseAt(t);
+    const project = createProjection(camera.otoceni + pose.twist, camera.naklon);
+    for (const [side, name] of [[RIGHT, 'right'], [LEFT, 'left']]) {
+      const arm = pose[name];
+      const shoulder = [side * BODY.shoulderX, BODY.shoulderY, 0];
+      const at = local => add(shoulder, [side * local[0], local[1], local[2]]);
+      const reach = (CARDS[arm.holds] ? 0.24 : 0.11) * HAND;
+      const points = [arm.elbow, arm.wrist, add(arm.wrist, scale(arm.fingers, reach))];
+      if (arm.holds === 'praporek') {
+        // tyčka ve směru palce, látka ve směru dlaně (jako v drawHeld)
+        const n = normalize(perpendicular(arm.palm, arm.fingers), anyPerpendicular(arm.fingers));
+        const stick = cross(n, arm.fingers);
+        const grip = add(arm.wrist, scale(arm.fingers, 0.05 * HAND));
+        for (const k of [-0.07, 0.17, 0.48]) {
+          points.push(add(grip, scale(stick, k)), add(add(grip, scale(stick, k)), scale(n, 0.32)));
+        }
+      }
+      for (const point of points) {
+        const p = project(at(point));
+        halfWidth = Math.max(halfWidth, Math.abs(p.x) + margin);
+        top = Math.min(top, p.y - margin);
+        bottom = Math.max(bottom, p.y + margin);
+      }
+    }
+  }
+  const aspect = VIEWBOX[2] / VIEWBOX[3];
+  let width = 2 * (halfWidth + 0.05);
+  let height = bottom - (top - 0.05);
+  if (width / height < aspect) width = height * aspect;
+  else height = width / aspect;
+  return [-width / 2, bottom - height, width, height];
+}
+
 export function createRefereeScene(gesture, poses, { mirror = false } = {}) {
   const poseAt = createPoseSampler(gesture, poses);
   const camera = { otoceni: 18, naklon: 6, ...gesture.kamera };
 
-  const svg = svgEl('svg', { viewBox: (gesture.vyrez ?? VIEWBOX).join(' '), role: 'img', class: 'ref' });
+  const viewBox = fitViewBox(gesture, poseAt, camera).map(v => Math.round(v * 1000) / 1000);
+  const svg = svgEl('svg', { viewBox: viewBox.join(' '), role: 'img', class: 'ref' });
   const figure = svgEl('g', mirror ? { transform: 'scale(-1 1)' } : {});
   svg.append(figure);
 
