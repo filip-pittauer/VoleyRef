@@ -1,195 +1,87 @@
 # CLAUDE.md – Volejbal: trénink rozhodčích
 
 ## O projektu
-Webová aplikace pro lidi, kteří se učí na volejbalové rozhodčí. Uživatel vidí herní situaci (jeden odehraný míč), rozhodne, jak má rozhodčí postupovat (odpověď A/B/C), a na konci kola dostane skóre. Nejlepší výsledky jsou v žebříčku.
+Webová aplikace pro lidi, kteří se učí na volejbalové rozhodčí: kvíz z herních situací (A/B/C, skóre a vysvětlení na konci kola, žebříček), úplná pravidla FIVB 2025–2028 **vlastními slovy** (oficiální text nekopírujeme – autorská práva; diagramy vlastní SVG), kvíz gest rozhodčích, trenažér postavení, přihlášení, PWA.
 
-Hlavní části:
-- **Kvíz:** kolo má ~10 otázek. Každá otázka ukazuje situaci jako animaci, video nebo obrázek s popisem a nabízí odpovědi A/B/C. Na konci se zobrazí skóre a vysvětlení správných odpovědí.
-- **Pravidla („knížka“):** úplná pravidla volejbalu (FIVB 2025–2028) s oficiálním číslováním a členěním, ale **vlastními slovy** – oficiální text nekopírujeme ani doslova nepřekládáme (autorská práva). Odkazujeme na oficiální pravidla (ČVS/FIVB). Diagramy jsou vlastní SVG nákresy.
-- **Přihlášení:** registrace a přihlášení hráčů.
-- **Žebříček:** nejlepší skóre přihlášených hráčů.
-- **PWA:** web půjde nainstalovat na mobil jako aplikace.
+Repo: https://github.com/filip-pittauer/VoleyRef · web: https://filip-pittauer.github.io/VoleyRef/
 
 ## Technologie
-- **Frontend:** čisté HTML, CSS a JavaScript (ES moduly). **Žádný framework** (React apod.) ani build krok, dokud to nebude opravdu potřeba.
-- **Animace situací:** SVG ovládané přes JS/CSS. Hřiště, hráči a míč jsou samostatné SVG prvky a pohyb se řídí daty (souřadnice v čase). Záložní varianta: obrázek nebo krátké video.
-- **Hosting:** GitHub Pages (statický web, HTTPS zdarma). Později možná vlastní doména.
-- **Backend:** Supabase (hostovaný, free plán, region Evropa)
-  - PostgreSQL databáze
-  - Supabase Auth (přihlášení)
-  - Data API přes knihovnu `supabase-js` (načtená z CDN)
-  - Projekt je založený se zapnutým Data API, automatickým zpřístupněním nových tabulek a **automatickým RLS**
-- **Vývoj:** VS Code + rozšíření Live Server (Ritwick Dey), Git + GitHub.
+- **Frontend:** čisté HTML, CSS, JavaScript (ES moduly). **Žádný framework ani build krok.**
+- **Animace:** SVG ovládané z JS podle dat (souřadnice v čase); vlastní 3D projekce (math3d.js).
+- **Hosting:** GitHub Pages. **Backend:** Supabase (free, EU) – PostgreSQL, Auth, Data API přes `supabase-js` z CDN; automatické RLS.
+- **Vývoj:** VS Code + Live Server, Git + GitHub. Playwright MCP pro prohlížení webu.
 
 ## Struktura projektu
 Podrobná mapa modulů, závislostí, RPC a toků je v **CODEMAP.md**.
 ```
-README.md           představení projektu pro návštěvníky GitHubu (co to je, spuštění, Supabase)
 CODEMAP.md          mapa kódu (moduly, importy, RPC, kotvy, „kam sáhnout“)
-index.html          úvodní stránka / rozcestník
-kviz.html           kvíz
-pravidla.html       úplná pravidla: 30 pravidel v <details class="rule"> (kotvy #pravidlo-12, body #p-12-4-3),
-                    shrnutí „Ve zkratce“ mají id = kategorie otázek (#podani…), definice #def-…, diagramy
-                    #diagram-N (inline SVG); js/rules-page.js rozbalí pravidlo, na které vede odkaz.
-                    Obsah mezi značkami PRAVIDLA/OBSAH generuje private/pravidla-zdroj/build.mjs
-zebricek.html       žebříček
-statistiky.html     jen přesměrování na Profil (staré odkazy a záložky)
-gesta.html          kvíz gest rozhodčích (jen v prohlížeči, bez DB; přístup z kviz.html a úvodu)
-postaveni.html      trenažér postavení (jen v prohlížeči; 3D pohled 1./2. rozhodčího, po odpovědi shora;
-                    js/lineup-logic.js, court-scene.js, lineup-trainer.js; přístup z kviz.html a úvodu)
-ucet.html           Profil: přihlášení, registrace, statistiky (js/stats.js, RPC moje_statistiky),
-                    nastavení účtu, smazání účtu (adresa zůstává kvůli odkazům z Supabase)
-ochrana-udaju.html  zásady ochrany osobních údajů (GDPR)
-css/style.css       společné styly (vzhled „Svaz“: tmavě modrá + červená, úzké nadpisy)
-css/fonts.css       písma Barlow a Barlow Condensed uložená ve fonts/ (offline, bez Googlu kvůli GDPR)
-js/config.js        Supabase URL + publishable klíč (veřejné)
-js/supabase.js      klient Supabase (supabase-js z CDN), pomocné funkce pro přihlášení
-js/quiz-api.js      volání RPC zacni_kolo / odevzdej_kolo
-js/badges.js        názvy a ikony odznaků (podmínky jsou v sql/05_odznaky.sql)
-js/player.js        přehrávač animací (play/pauza, posuvník) – pro situace i gesta
-js/referee-figure.js  postava rozhodčího v SVG (3D model promítnutý do 2D); gesture-pose.js
-                    počítá polohu paží z dat, math3d.js vektory/IK/interpolace
-js/                 další moduly (quiz.js, gesture-quiz.js, gesture-atlas.js, account.js, dom.js, …)
-img/                obrázky situací, img/icons/ ikony aplikace (zdroj icon.svg),
-                    img/ikony.svg ikony navigace (symboly pro <use>)
-manifest.json       PWA manifest
-sw.js               service worker (mezipaměť, offline)
-animace/            SVG animace situací jako JSON (formát v animace/README.md)
-gesta/              gesta rozhodčích jako data (gesta.json, formát v gesta/README.md)
-sql/                SQL pro Supabase (spouštět v SQL editoru v pořadí 01, 02, …)
-tools/              pomocné skripty pro Node (např. seed-otazky.mjs)
-private/            NENÍ ve veřejném repu: vlastní SOUKROMÉ repo filip-pittauer/VoleyRef-private (otázky, testy/, pravidla-zdroj/)
+docs/historie.md    podrobnosti hotových částí, odložené nápady, testování podrobně – číst při práci na dané části
+docs/pred-spustenim.md  kontrolní seznam před zveřejněním (OAuth, SMTP, e-mail, kontrola obsahu)
+index.html          úvod / rozcestník
+kviz.html           kvíz (+ karty gest a trenažéru)
+pravidla.html       úplná pravidla: <details class="rule"> (kotvy #pravidlo-12, body #p-12-4-3), shrnutí s id
+                    kategorií, diagramy #diagram-N; obsah mezi značkami generuje private/pravidla-zdroj/build.mjs
+gesta.html          kvíz gest (jen prohlížeč, bez DB)
+postaveni.html      trenažér postavení (jen prohlížeč; js/lineup-logic.js, court-scene.js, lineup-trainer.js)
+zebricek.html, ucet.html (Profil), ochrana-udaju.html, statistiky.html (jen přesměrování)
+css/style.css       všechny styly (vzhled „Svaz“), css/fonts.css + fonts/ (písma offline kvůli GDPR)
+js/                 moduly (viz CODEMAP.md); js/config.js = Supabase URL + publishable klíč
+gesta/gesta.json    gesta jako data; animace/*.json situace jako data
+sql/                SQL pro Supabase (spouštět v pořadí 01, 02, …)
+tools/              Node skripty (seed-otazky.mjs)
+.claude/skills/     postupy pro Clauda (nove-otazky)
+private/            NENÍ ve veřejném repu: vlastní SOUKROMÉ repo filip-pittauer/VoleyRef-private
+                    (otazky.json se správnými odpověďmi, testy/, pravidla-zdroj/)
 ```
 
 ## Formát otázky
-Platí pro `private/otazky.json` i DB (tabulky `public.otazky` + `private.otazky_reseni`).
+Platí pro `private/otazky.json` i DB (`public.otazky` + `private.otazky_reseni`).
 ```json
-{
-  "id": 1,
-  "aktivni": true,
-  "kategorie": "podani",
-  "obtiznost": 1,
+{ "id": 1, "aktivni": true, "kategorie": "podani", "obtiznost": 1,
   "situace": "Popis situace…",
   "media": { "typ": "obrazek", "soubor": "img/podani-01.png", "popis": "alt text" },
-  "odpovedi": { "A": "…", "B": "…", "C": "…" },
-  "spravna": "B",
-  "vysvetleni": "…",
-  "pravidlo": "12.4.3",
-  "verze_pravidel": "2025"
-}
+  "odpovedi": { "A": "…", "B": "…", "C": "…" }, "spravna": "B",
+  "vysvetleni": "…", "pravidlo": "12.4.3", "verze_pravidel": "2025" }
 ```
-- `aktivni`: koncept pro autora. Otázky s `false` se v kvízu nezobrazují (např. neověřená odpověď).
-- `kategorie`: jedna hlavní kategorie, identifikátor bez diakritiky (`podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `chovani`, `signalizace`). Český název se doplní až v UI.
-- `obtiznost`: 1–3.
-- `media`: `null`, nebo objekt s `typ` (`obrazek` | `video` | `animace`), `soubor` a `popis` (alt text).
-- `odpovedi`: 2–4 možnosti, klíče A–D. Právě jedna správná (`spravna`).
-- `verze_pravidel`: rok vydání pravidel, ke kterému se otázka vztahuje (při změně pravidel se otázky dají najít a zkontrolovat).
-- Správná odpověď se hráči ukazuje **až na konci kola**, ne po každé otázce.
-- Jen halový (šestkový) volejbal. Tlačítko „Nevím“ pro hráče nebudeme dělat.
-
-### Kde otázky leží
-- `private/otazky.json` – **plná sada se správnými odpověďmi**. Složka `private/` je v `.gitignore` a nesmí do veřejného repa. Má vlastní **soukromé** repo `filip-pittauer/VoleyRef-private` (git přímo ve složce `private/`, bez `Client secret/` a `seed-otazky.sql`). Po změně otázek nebo testů commit + push i tam.
-- Databáze: `node tools/seed-otazky.mjs` zkontroluje JSON a vytvoří `private/seed-otazky.sql` (upsert), které se vloží do SQL editoru Supabase. Otázky se nemažou, jen se nastaví `aktivni: false`.
-
-## Postup vývoje (fáze)
-Každá fáze končí funkční verzí, kterou jde nasadit na GitHub Pages.
-1. **Kostra webu:** stránky, navigace, základní responzivní CSS (mobile-first).
-2. **Kvíz lokálně:** otázky z `data/otazky.json`, obrázky s popisem, A/B/C, skóre spočítané v prohlížeči.
-3. **Supabase:** tabulky, RLS pravidla, přihlášení. Otázky a správné odpovědi se přesunou do databáze.
-4. **Žebříček:** ukládání výsledků a stránka se žebříčkem.
-5. **Animace:** SVG animace situací místo (nebo vedle) obrázků.
-6. **PWA:** `manifest.json`, ikony, service worker.
-7. **Vlastní doména** (volitelně).
+- `aktivni: false` = koncept, v kvízu se nezobrazí. Otázky se nemažou, jen deaktivují.
+- `kategorie`: `podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `chovani`, `signalizace` (český název až v UI).
+- `obtiznost` 1–3; `media` null nebo `obrazek` | `video` | `animace`; `odpovedi` 2–4 (A–D), právě jedna správná.
+- Správná odpověď se hráči ukazuje **až na konci kola**. Jen halový volejbal. Tlačítko „Nevím“ nebude.
+- `private/otazky.json` je jediný zdroj; `node tools/seed-otazky.mjs` vytvoří `private/seed-otazky.sql` (upsert) pro SQL editor Supabase. Postup přidání otázek: skill **nove-otazky**.
 
 ## Bezpečnostní pravidla (důležité)
-- Do repa a frontendu patří jen **Project URL** a **anon/publishable klíč** Supabase. **Nikdy** heslo k databázi ani `service_role` klíč. Repo je veřejné.
-- Každá tabulka musí mít **RLS** s explicitními pravidly (např. žebříček čte každý, výsledek zapisuje jen přihlášený uživatel sám za sebe).
-- **Skóre počítá server, ne prohlížeč.** Od fáze 3 jsou správné odpovědi jen v databázi a body počítá databázová funkce (Postgres RPC), které frontend posílá odpovědi uživatele. Prohlížeč nesmí poslat přímo „mám X bodů“.
-- Správné odpovědi nesmí být čitelné z frontendu (žádný `SELECT` na ně pro role `anon`/`authenticated`).
-- Ukládáme co nejméně osobních údajů (přezdívka, e-mail pro přihlášení). Kvůli GDPR přidat stránku se zásadami ochrany osobních údajů.
+- Do repa a frontendu jen **Project URL** a **publishable klíč** Supabase. **Nikdy** heslo k DB ani `service_role`. Repo je veřejné.
+- Každá tabulka má **RLS** s explicitními pravidly.
+- **Skóre počítá server** (Postgres RPC `zacni_kolo` / `odevzdej_kolo`), prohlížeč posílá jen odpovědi.
+- Správné odpovědi nesmí být čitelné z frontendu (žádný `SELECT` pro `anon`/`authenticated`).
+- Co nejméně osobních údajů (přezdívka, e-mail); zásady GDPR v ochrana-udaju.html.
 
 ## Konvence kódu
-- **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.**
-- **CODEMAP.md držet aktuální**: při přidání/smazání/přejmenování souboru, modulu, exportu, RPC funkce nebo tabulky upravit mapu ve stejném commitu.
-- Navigace: Kvíz, Gesta, Pravidla, Žebříček, Profil (úvod přes logo). Na mobilu dolní lišta s ikonami, od 48rem řádek v hlavičce. Víc než 5 položek se do lišty nevejde.
-- Hlavička a navigace jsou v každém HTML souboru zvlášť (bez build kroku) – při změně upravit všechny stránky.
-- Texty v UI jsou česky. Názvy proměnných a funkcí v kódu anglicky, komentáře česky.
-- Sémantické HTML, přístupnost (alt texty, popisky formulářů, ovladatelnost klávesnicí).
-- Mobile-first CSS, CSS proměnné pro barvy.
-- Obsah (otázky, situace animací) držet jako data (JSON / DB), ne natvrdo v kódu, aby šly přidávat bez programování.
-- Malé, čitelné soubory a funkce. Žádné zbytečné závislosti.
+- **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.** Při změně existujících souborů webu `CACHE` taky zvýšit.
+- **CODEMAP.md držet aktuální** (soubor, modul, export, RPC, tabulka) ve stejném commitu.
+- Navigace: Kvíz, Gesta, Pravidla, Žebříček, Profil (úvod přes logo); max. 5 položek. Hlavička a navigace jsou v každém HTML zvlášť – při změně upravit všechny stránky.
+- UI česky; názvy v kódu anglicky, komentáře česky.
+- Sémantické HTML, přístupnost, mobile-first CSS, CSS proměnné pro barvy. Stránky her mají `main.app-page` (kompaktní na mobilu).
+- Obsah jako data (JSON / DB), ne natvrdo v kódu. Malé, čitelné soubory a funkce, žádné zbytečné závislosti.
 
 ## Jak se mnou pracovat
 - Komunikuj **česky**.
-- Jsem nejsilnější v C#, JavaScript a CSS znám základně. U JS a webových konceptů **vysvětli, proč** se něco dělá, nejen co. Kde to pomůže, ukaž srovnání s C#.
+- Jsem nejsilnější v C#, JavaScript a CSS znám základně. U JS a webových konceptů **vysvětli, proč** se něco dělá; kde pomůže, srovnej s C#.
 - Před větší změnou (nová knihovna, změna struktury, změna DB schématu) se nejdřív zeptej.
-- SQL pro Supabase (tabulky, RLS, funkce) piš tak, abych ho mohl vložit do SQL editoru v dashboardu, a vysvětli, co dělá.
-- **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists` staré signatury). Změny se dělají přímo v nich a uživatel je po změně spustí znovu v pořadí 01, 02, 03… Před nasazením otestovat přechod ze stávající verze (git HEAD) na novou.
+- SQL piš pro SQL editor v dashboardu Supabase a vysvětli, co dělá. **Všechny soubory v `sql/` musí jít spustit opakovaně** (`if not exists`, `create or replace`, `add column if not exists`, při změně parametrů funkce nejdřív `drop function if exists`). Po změně SQL přesně napsat, které soubory spustit a v jakém pořadí.
+- Větší práci dělit do **balíčků**; po každém commit + push a nechat mě vyzkoušet na živém webu. Když řeknu „nepushuj“, commitovat a pushnout až na pokyn.
+- Lokální větev `styl-hala` je **jen na mém disku – nikdy ji nepushovat**.
 
-## Aktuální stav (21. 10. 2026)
-- Repo: https://github.com/filip-pittauer/VoleyRef, web: https://filip-pittauer.github.io/VoleyRef/
-- Hotovo: fáze 1–6, statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta rozhodčích (balíček 4), vzhled Svaz, úplná pravidla (balíček 5), animace (balíček 6), README.md a CODEMAP.md.
-- Otestováno uživatelem na živém webu: přihlášení Google i e-mail, kvíz, žebříček, přezdívka, smazání účtu, obtížnost, opakování chyb, denní výzva, odznaky; 21. 10. 2026 schválil i vzhled „Svaz“ (dolní lišta, Profil = účet + statistiky, písmo Barlow), úplná pravidla (balíček 5) a animace (balíček 6).
-- V Supabase je spuštěné SQL `01`–`05` a `private/seed-otazky.sql` (aktuální verze z repa včetně kategorie chovani a všech 200 otázek; potvrzeno 21. 10. 2026, na webu funguje). Gesta žádné SQL nepotřebují.
-- **Limit 2 s na otázku** (dřív 3 s; rozhodnuto 21. 10. 2026) pro žebříček, denní výzvu a „dokonalá“ kola u odznaků: `sql/02`, `04`, `05` a `MIN_SECONDS_PER_QUESTION` v js/quiz.js. Uživatel je spustil (21. 10. 2026).
-- **200 otázek** (hotovo 21. 10. 2026, styl uživatel schválil): všechny `aktivni: true` (před spuštěním pro veřejnost je zkontroluje rozhodčí), 17–23 na kategorii, bez médií. Psané podle anglického PDF FIVB 2025–2028 (`pdftotext` z `https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf`), každý balíček prošel skriptem a pak nezávislým agentem, který ověřil každou otázku proti textu FIVB (i původních 27 – opravila se jejich čísla pravidel a vysvětlení).
-  - Nové otázky postupem: `private/testy/otazky-check.mjs <balicek.json> [--merge]` (formát, kotvy v pravidla.html, podobnost, nápadně delší správná odpověď, rozložení A–D; `--merge` přidá do private/otazky.json), `otazky-export.mjs` (text pro ověřovacího agenta). Agentovi dát cestu k textu pravidel a otázkám, ať hlásí ZÁVAŽNÉ/STŘEDNÍ/DROBNÉ s citací.
-  - Nevyřešené: trest za porušení 12.5.3 (ruce nad hlavou při podání) pravidla výslovně neuvádějí – otázka 67 se proto ptá jen na zákaz; ověřit v Casebooku 2025.
-  - Možné další kroky: animace/obrázky k vybraným otázkám (`media`), víc otázek obtížnosti 3.
-- **Trenažér postavení** (21. 10. 2026, pushnuto 22. 10. 2026, čeká na vyzkoušení na živém webu): `postaveni.html`. Vlastní 3D v SVG (`createPerspective` v math3d.js), bez knihovny – uživatel souhlasil (three.js jen jako záloha, kdyby SVG nestačilo). Pohledy 1. rozhodčí (stupínek u sloupku, oči 50 cm nad sítí) a 2. rozhodčí (u sloupku na straně přijímajících), přepínatelné; po odpovědi automaticky shora s čarami vztahů (zelená ok, červená chyba) a čísly pozic. Odpověď = vybrat dvojici v porušeném vztahu (nebo „Postavení je správné“); generátor dělá 0 nebo 1 porušený vztah, ~60 % chyb, rezerva 0,4 m. Kontroluje se jen přijímající tým (7.4 od 2025). Postavy hráčů zatím jednoduché – „kdyžtak doladíme“. Pohled shora pro začátečníky uživatel zatím nechce.
-  - Testy: `private/testy/lineup-logic.mjs` (3000 situací, `math` = s Math.random), `e2e-postaveni.mjs` (stejná náhoda ve stránce i testu → zná správnou odpověď).
-  - Možná dolaďování: větší scéna na mobilu, libero (jiný dres), odlišit podávajícího, obtížnost (menší rezerva), pátá dlaždice na úvodu sama na řádku.
-- **Nová kategorie `chovani`** („Chování a tresty“, 21. 10. 2026): js/categories.js, tools/seed-otazky.mjs, kontrola v `sql/01_schema.sql` (drop + add constraint `otazky_kategorie_check`), odznak Všestranný nově vyžaduje 10 kategorií (`sql/05`, js/badges.js).
-- Animace (balíček 6): animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 % správně), přechody mezi stránkami (@view-transition), příjezd otázky, zpětná vazba v kvízu gest, žebříček s medailemi, plynulé rozbalení pravidel, kreslení čar na úvodu, skeleton při načítání, odpočet denní výzvy. Vše vypnuté při `prefers-reduced-motion: reduce`.
-- **KDE JSME SKONČILI (22. 10. 2026, uživatel restartoval chat):**
-  - **Všechno pushnuté** (oba repozitáře): trenažér postavení a přepracovaná gesta jsou na živém webu – **čekají na vyzkoušení uživatelem** (zatím zkoušel jen lokálně přes Live Server).
-  - **Animace postav ještě předělat** – uživatel výslovně chce gesta (a postavy) dál zlepšovat; po přestavbě ruky (viz Balíček 4) je ještě nezhodnotil. Kdyby to pořád vypadalo špatně, chce zkusit knihovnu **GSAP** nebo **Anime.js** (jeho návrh – před zavedením stejně potvrdit, která). Pozor: obě řeší hlavně časování a plynulost pohybu (easing, timeline), ne kvalitu kresby postavy (tvary, vrstvy) – to vysvětlit a navrhnout, co by knihovna reálně zlepšila.
-  - Vyřešeno 21. 10. 2026 po restartu: ruka s kartou – celá ruka (i pěst) je za kartou, vidět je jen palec (`holdsCard` v drawHand); světlá dlaň (`--ref-palm`) zrušená, ruka má jednu barvu kůže.
-  - **Playwright MCP nainstalovaný** 21. 10. 2026 (`claude mcp add playwright -- cmd /c npx @playwright/mcp@latest --browser chrome`, scope **user** – local nefungoval, VS Code otevírá projekt jako `c:\Users\…` s malým písmenem a klíč projektu nesouhlasil; tvůj Chrome; přidávat přes PowerShell – Git Bash přepisuje `/c` na `C:/`). Po restartu 22. 10. ověřit, že jsou nástroje Playwright MCP opravdu k dispozici (v předchozím chatu se nenačetly). Na interaktivní prohlížení webu; opakované testy dál skripty v `private/testy/`.
-- **Mobil (22. 10. 2026, větev `mobil` sloučená do `main` a pushnutá):** stránky her mají `main.app-page` (na mobilu menší nadpis a okraje, scéna od okraje k okraji). Trenažér: scéna + zápis + tlačítka na jedné obrazovce, výběr hráče klepnutím v zápisu (řada kulatých tlačítek zrušena), kamera zaměřená na hráče, čísla min. 6,5 % výšky scény, plánek shora jen hřiště (čtverec), po vyhodnocení posun nahoru, zoom dvěma prsty (`js/scene-zoom.js`). Gesta: výřez podle rozsahu pohybu (`fitViewBox` v referee-figure.js, i s praporkem), odpovědi na mobilu ve 2 sloupcích. Uživatel schválil. Test zoomu: `private/testy/e2e-zoom.mjs`.
-- **Na příště – otevřené body:**
-  - Licence repa: zatím žádná (= všechna práva vyhrazena). Uživatel to zatím neřeší – nepřipomínat.
-  - Text pravidel před zveřejněním projde zkušený rozhodčí (uživatel to zařídí).
-  - Nápady odložené uživatelem: Supabase MCP jen pro čtení. Z návrhů animací uživatel nechtěl bod 4 (napočítání čísel a lesk odznaků v Profilu/statistikách).
-  - Úvodní panel hráče s úrovní existuje jen ve větvi `styl-hala` – lze převzít do Svazu, pokud uživatel bude chtít.
-- Lokální větev `styl-hala` (alternativní tmavý „herní“ vzhled s úrovněmi hráče) je **jen na disku uživatele – nikdy ji nepushovat na GitHub** (výslovné přání uživatele).
+## Testy
+Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ignorované):
+- `node run-all.mjs` – všechny aktuální testy (SQL v PGlite, prohlížeč přes playwright-core), vypíše jen souhrn a selhané kontroly; `node run-all.mjs e2e` jen vybrané. Sám si vytvoří snímek SQL z git HEAD pro test přechodu.
+- Před nasazením změn SQL vždy otestovat přechod ze stávající verze (`prechod-db`) a dvojí spuštění.
+- V testech se blokuje service worker a každý požadavek na skutečný Supabase.
+- Podrobnosti a nástroje na kontrolu vzhledu (snímky gest, PDF pro rozhodčího): docs/historie.md.
 
-### Jak s uživatelem pracujeme
-- Větší práci dělit do **balíčků**; po každém commit + push, zastavit se a nechat uživatele vyzkoušet na živém webu, než se jde dál.
-- Po změně SQL vždy přesně napsat, které soubory má spustit a v jakém pořadí.
-
-### Balíček 4: gesta rozhodčích (hotovo 20. 10. 2026, čeká na vyzkoušení)
-- `gesta.html`: kvíz „Co znamená toto gesto?“ – 10 gest (nebo 5 u čárových), 4 možnosti ze stejné skupiny (přednostně gesta z pole `zamena`), **vyhodnocení hned po každé odpovědi** (nic se neukládá, takže na rozdíl od hlavního kvízu není co prozradit). Jednoruká gesta se náhodně zrcadlí. Výsledek: skóre + chybná gesta s animací.
-- `pravidla.html#signalizace`: přehled všech 32 gest s animacemi (kotvy `#gesto-<id>`), nahradil textový seznam. Signalizace je v pravidlech 2025–2028 **pravidlo 30** (dřív 28).
-- Seznam a popisy ověřené proti PDF FIVB 2025–2028 (Diagram 11: 26 gest, 6a/6b a 25 rozdělené na napomenutí/trest; Diagram 12: 5 signálů praporkem). Oficiální český překlad pravidel 2025–2028 jsem nenašel – názvy jsou vlastní, navazují na knížku pravidel.
-- Postava: jednoduchý 3D model (paže = inverzní kinematika, ruka s prsty a dlaní), promítnutý do SVG; kreslí se podle hloubky (ruka za zády je schovaná). Gesta jsou jen data – nové gesto = záznam v `gesta/gesta.json`.
-- **Přepracovaná postava (21.–22. 10. 2026, pushnuto, čeká na vyzkoušení):** ruka se kreslí jako jedna silueta (`drawHand`: nejdřív obrysy všech částí, pak výplně, mezi prsty rýhy `.ref-crease`); dlaň má tloušťku (konvexní obal); pokrčené prsty = jeden zaoblený „polštářek“; karta/praporek v dlani mezi dlaní a prsty (pořadí podle strany dlaně), palec `karta` ji svírá zepředu; palec `nahoru` do strany od pěsti; záplata lokte; hloubka paží vůči ose těla ve stejné výšce (pohled shora); uši za hlavou. V datech: `klid.dlan` hřbetem k divákovi, upravená gesta, kde ruka zakrývala obličej, zdržování (karta na zápěstí), čároví (praporek), dlaň vzhůru/dolů. Kontrola: `private/testy/gesta-shots.mjs` (arch fází), `hands-sheet.mjs <složka> [id,…]` (vektorové detaily rukou) + 2 kola nezávislých agentů.
-- Možná vylepšení podle zpětné vazby: zpomalené přehrávání, smyčka, odznaky za gesta (chtělo by ukládání na server).
-
-### Balíček 5: úplná pravidla (hotovo 20. 10. 2026, schváleno 21. 10. 2026)
-- Všech 30 pravidel FIVB 2025–2028 včetně podbodů, vlastními slovy; české názvy kapitol a pravidel podle staršího oficiálního překladu ČVS (2009, sites.google.com/site/volejbalopava/pravidla), novinky přeložené po vzoru. Body „Soutěže FIVB“ jsou odlišené poznámkou.
-- Číslování 2025–2028 se od pravidla 25 liší od edice 2021: přibyl **25 rozhodčí pro video challenge** a **26 rezervní rozhodčí**, takže zapisovatel = 27, pomocný zapisovatel = 28, čároví = 29, znamení = 30. Hlídat u čísel pravidel v otázkách.
-- Novinky 2025 zapsané v textu: postavení jen přijímajícího družstva (7.4), zákaz zvedat ruce nad hlavu při podání (12.5.3), prodloužený kontakt nad sítí (9.1.2.3), blok „bez ohledu na výšku doteku“ (14.1.1), nové sankce (urážlivé chování = rovnou vyloučení, agrese = diskvalifikace, vyloučený jde do šatny).
-- Zdroj: `private/pravidla-zdroj/src/*.txt` (jednoduchý řádkový formát popsaný v hlavičce build.mjs), `diagramy/*.html`; `node private/pravidla-zdroj/build.mjs pravidla.html` přepíše obsah mezi značkami a zkontroluje, že všechny odkazy [[12.4.3]] mají cíl. Drobné opravy jdou dělat i přímo v HTML (pak ale zdroj zastará).
-- Výsledky kvízu odkazují číslem pravidla přímo na bod (`ruleUrl` v js/categories.js).
-- Testy: `e2e-pravidla.mjs` (kotvy do sbalených pravidel, staré odkazy kategorií, atlas gest, rozbalit/sbalit vše), `pravidla-diagramy.mjs` (snímky diagramů).
-
-### Odložené / nápady
-- Editor animací s „developer módem“ (jen pro vybrané editory, animace by se přesunuly do DB) – uživatel zatím neví, jestli animace, nebo videa (rozhodne s kamarádem, jehož je to nápad).
-- Animace vs. video: formát otázky podporuje obojí (`media.typ`).
-- Vlastní doména (jméno zatím nevybrané).
-
-### Jak jsem testoval (testy nejsou ve veřejném repu)
-- SQL: PGlite (Postgres ve WASM, npm `@electric-sql/pglite`) s napodobeným Supabase (role anon/authenticated/supabase_auth_admin, `auth.users`, `auth.uid()` z `request.jwt.claim.sub`). Vždy testovat i přechod ze stávající verze (`git show HEAD:sql/…`) a dvojí spuštění skriptů.
-- Prohlížeč: `playwright-core` + nainstalovaný Chrome (`C:/Program Files/Google/Chrome/Application/chrome.exe`), statický server `http-server`, Supabase API odchycené a obsloužené PGlite. **V testech blokovat service workery** (`serviceWorkers: 'block'`) a všechny požadavky na skutečný Supabase – jinak test sáhne na živou DB.
-- **Skripty jsou v `private/testy/`** (soukromé repo `VoleyRef-private`, ve veřejném ignorované): `fake-supabase.mjs` + `lib.mjs` (prostředí), `db.mjs` (bezpečnost, 45 kontrol), `*-db.mjs` (SQL po balíčcích), `e2e-*.mjs` (prohlížeč). Spuštění: zkopírovat složku do scratchpadu sezení (ne do repa), `npm install`, `node db.mjs` atd.
-- Cesty uvnitř jsou natvrdo: `ROOT` v `lib.mjs` (projekt) a `OLD` v `migrate-db.mjs`, `daily-db.mjs`, `badges-db.mjs` (složka se snímkem SQL z `git show HEAD:sql/…` – před testem přechodu ji znovu vytvořit).
-- Gesta: `e2e-gesta.mjs` (kvíz gest, přehled v pravidlech, omezený pohyb), `pwa-gesta.mjs` (mezipaměť v6, gesta offline), `gesta-atlas.mjs` / `gesta-shots.mjs` / `gesto-detail.mjs <id>` (snímky gest do `shots/` – na kontrolu vzhledu animací očima).
-- Zastaralé testy (selhávají i bez změn): `e2e.mjs` krok 1 čeká „Supabase není propojený“ (config.js už propojený je), `pwa.mjs` počítá soubory v mezipaměti `voleyref-v4` (natvrdo).
-
-### Před spuštěním pro veřejnost
-- E-mail projektu `volleyref.app@gmail.com` (21. 10. 2026): je v ochrana-udaju.html, v Google Cloud jako druhý Owner + e-mail podpory a kontakt vývojáře v Branding, v Supabase jako druhý Owner organizace (organizace se jmenuje `filip-pittauer`, přejmenování volitelné). Osobní účty zůstávají jako záloha. Brevo účet zakládat na tento e-mail; odesílatel e-mailů ale musí být na vlastní doméně (gmail.com přes cizí SMTP neprojde).
-- Google OAuth: projekt `VoleyRef`, Client ID `748381175650-vdl2mkth4jjnrqmetc0pj17cqlqd97k4.apps.googleusercontent.com`, je v testovacím režimu (jen přidaní testeři) – „Publish app“ až před spuštěním. Vyměnit Client secret (byl vidět na screenshotu; uživatel odložil 21. 10. 2026) – postup: Clients → Add secret → vložit do Supabase (Auth → Providers → Google) → otestovat přihlášení → starý Disable + Delete; pak smazat `private/Client secret/`. Secret patří jen do Supabase.
-- Vlastní SMTP v Supabase (Brevo) – vestavěný posílá jen pár e-mailů za hodinu a nejspíš jen členům týmu (ověřit registrací cizí adresou). **Čeká na vlastní doménu** (21. 10. 2026: doménu chceme, ale „VoleyRef“ je jen pracovní název, jméno zatím není). Postup: doména → Brevo (účet na volleyref.app@gmail.com, DNS záznamy) → SMTP klíč → Supabase SMTP Settings → Rate Limits → české šablony e-mailů. Alternativa: jen přihlášení přes Google.
-- Ověřit obsah otázek (`private/otazky.json`, 200 otázek ověřených agentem proti PDF FIVB, ale ještě ne člověkem) a pravidel.
-- Zvážit vypnutí/zapnutí registrací.
+## Aktuální stav (22. 10. 2026)
+- Hotovo a na živém webu: fáze 1–6, kvíz (200 otázek, 10 kategorií, obtížnost, opakování chyb, denní výzva, odznaky, limit 2 s na otázku), pravidla, gesta (přepracovaná postava), trenažér postavení, mobilní verze her. V Supabase spuštěné SQL `01`–`05` a seed všech 200 otázek.
+- **Otevřené body:**
+  - Animace postav (gesta) uživatel chce dál zlepšovat; záložní nápad GSAP / Anime.js (viz docs/historie.md).
+  - Text pravidel a otázky zkontroluje zkušený rozhodčí (uživatel zařídí).
+  - Před zveřejněním: docs/pred-spustenim.md (OAuth, Client secret, SMTP čeká na doménu, jméno webu zatím není).
