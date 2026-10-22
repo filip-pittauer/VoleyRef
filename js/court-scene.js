@@ -34,7 +34,8 @@ export const VIEWS = {
     eye: [4.5, 40, 0],
     target: [4.5, 0, 0],
     up: [-1, 0, 0],          // síť nahoře, pozice 4 a 5 vlevo
-    frame: corners([-0.7, 9.6], [-5.2, 5.2], [0]),
+    frame: corners([-0.35, 9.05], [-4.55, 4.55], [0]),   // jen hřiště a síť
+    aspect: 1,               // hřiště je čtverec 9 × 9 m
   },
 };
 
@@ -305,13 +306,13 @@ function playerPartsTop(cam, player, team) {
     if (d) out.push(svgEl('path', { d, class: 'ct-shoe' }));
   });
   const [cx, cz] = centerOf(player);
-  const body = cam.pathOf(floorCircle(cx, cz, 0.3, 0.02));
+  const body = cam.pathOf(floorCircle(cx, cz, 0.4, 0.02));
   if (body) out.push(svgEl('path', { d: body, class: `ct-body-top ct-body-top--${team}` }));
   const label = cam.project(world(cx, cz, 0.03));
-  out.push(svgEl('text', { x: num(label.x), y: num(label.y), 'font-size': num(0.32 / label.depth), class: 'ct-number' }, String(player.jersey)));
+  out.push(svgEl('text', { x: num(label.x), y: num(label.y), 'font-size': num(0.5 / label.depth), class: 'ct-number' }, String(player.jersey)));
   if (player.position) {
-    const below = cam.project(world(cx + 0.48, cz, 0.03));
-    out.push(svgEl('text', { x: num(below.x), y: num(below.y), 'font-size': num(0.22 / below.depth), class: 'ct-position' }, `P${player.position}`));
+    const below = cam.project(world(cx + 0.62, cz, 0.03));
+    out.push(svgEl('text', { x: num(below.x), y: num(below.y), 'font-size': num(0.34 / below.depth), class: 'ct-position' }, `P${player.position}`));
   }
   return out;
 }
@@ -386,11 +387,13 @@ export function renderScene(svg, situation, { view = 'ref1', selected = [], resu
     minX -= extra;
     maxX += extra;
   }
-  const pad = (isTop ? 0.04 : 0.08) * Math.max(maxX - minX, maxY - minY);
+  const pad = (isTop ? 0.015 : 0.08) * Math.max(maxX - minX, maxY - minY);
   minX -= pad; maxX += pad; minY -= pad; maxY += pad;
   let w = maxX - minX, h = maxY - minY;
-  if (w / h < ASPECT) { const extra = h * ASPECT - w; minX -= extra / 2; w += extra; }
-  else { const extra = w / ASPECT - h; minY -= extra / 2; h += extra; }
+  const aspect = settings.aspect ?? ASPECT;
+  if (w / h < aspect) { const extra = h * aspect - w; minX -= extra / 2; w += extra; }
+  else { const extra = w / aspect - h; minY -= extra / 2; h += extra; }
+  svg.style.aspectRatio = String(aspect);
   svg.setAttribute('viewBox', `${num(minX)} ${num(minY)} ${num(w)} ${num(h)}`);
   cam.minFont = h * 0.065;     // čísla na dresech i u vzdálených hráčů aspoň takhle velká (čitelné i na mobilu)
 
