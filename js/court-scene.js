@@ -392,7 +392,7 @@ export function renderScene(svg, situation, { view = 'ref1', selected = [], resu
   if (w / h < ASPECT) { const extra = h * ASPECT - w; minX -= extra / 2; w += extra; }
   else { const extra = w / ASPECT - h; minY -= extra / 2; h += extra; }
   svg.setAttribute('viewBox', `${num(minX)} ${num(minY)} ${num(w)} ${num(h)}`);
-  cam.minFont = h * 0.034;     // čísla na dresech i u vzdálených hráčů aspoň takhle velká
+  cam.minFont = h * 0.065;     // čísla na dresech i u vzdálených hráčů aspoň takhle velká (čitelné i na mobilu)
 
   const byPosition = Object.fromEntries(situation.receiving.map(p => [p.position, p]));
   const faulty = new Set(result?.faulty ?? []);
