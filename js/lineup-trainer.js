@@ -4,13 +4,13 @@
 import { el } from './dom.js';
 import { generateSituation, faultyPositions, isCorrectAnswer, FRONT_ROW, BACK_ROW } from './lineup-logic.js';
 import { renderScene } from './court-scene.js';
+import { attachPinchZoom } from './scene-zoom.js';
 
 const scene = document.getElementById('lineup-scene');
 const viewButtons = [...document.querySelectorAll('#lineup-views [data-view]')];
 const card = document.getElementById('lineup-card');
 const form = document.getElementById('lineup-form');
 const fieldset = document.getElementById('lineup-fieldset');
-const picks = document.getElementById('lineup-picks');
 const correctButton = document.getElementById('lineup-correct');
 const submitButton = document.getElementById('lineup-submit');
 const nextButton = document.getElementById('lineup-next');
@@ -19,6 +19,8 @@ const feedback = document.getElementById('lineup-feedback');
 const progress = document.getElementById('lineup-progress');
 const tally = document.getElementById('lineup-tally');
 const heading = document.getElementById('lineup-heading');
+const zoomReset = document.getElementById('lineup-zoom-reset');
+const zoom = attachPinchZoom(scene, { onChange: zoomed => { zoomReset.hidden = !zoomed; } });
 
 const state = {
   situation: null,
@@ -38,27 +40,29 @@ const who = position => `hráč na pozici ${position} (č. ${jerseyOf(position)}
 // ---------- Vykreslení ----------
 function render() {
   renderScene(scene, state.situation, { view: state.shownView, selected: state.selected, result: state.result });
+  zoom.refresh();
   for (const button of viewButtons) button.setAttribute('aria-pressed', String(button.dataset.view === state.shownView));
-  for (const button of picks.querySelectorAll('button')) {
+  for (const button of card.querySelectorAll('button')) {
     button.setAttribute('aria-pressed', String(state.selected.includes(Number(button.dataset.position))));
   }
   correctButton.setAttribute('aria-pressed', String(state.correctLineup));
 }
 
-/** Karta „Postavení podle zápisu“: síť nahoře, vlevo pozice 4 a 5. */
+/**
+ * Karta „Postavení podle zápisu“ (síť nahoře, vlevo pozice 4 a 5). Čísla jsou
+ * zároveň tlačítka: klepnutím se hráč vybere stejně jako ve scéně.
+ */
 function renderCard() {
-  card.replaceChildren(...[...FRONT_ROW, ...BACK_ROW].map(position =>
-    el('li', { class: 'lineup-card__cell' },
+  card.replaceChildren(...[...FRONT_ROW, ...BACK_ROW].map(position => {
+    const jersey = jerseyOf(position);
+    return el('li', {},
+      el('button', {
+        type: 'button', class: 'lineup-card__cell', 'data-position': position, 'aria-pressed': 'false',
+        'aria-label': `Hráč číslo ${jersey}, pozice ${position}`,
+      },
       el('span', { class: 'lineup-card__pos' }, `pozice ${position}`),
-      el('span', { class: 'lineup-card__num' }, String(jerseyOf(position))))));
-}
-
-function renderPicks() {
-  // tlačítka podle čísel dresů vzestupně (pořadí nesmí prozradit pozice)
-  const players = [...state.situation.receiving].sort((a, b) => a.jersey - b.jersey);
-  picks.replaceChildren(...players.map(p =>
-    el('button', { type: 'button', class: 'pick', 'data-position': p.position, 'aria-pressed': 'false', 'aria-label': `Hráč číslo ${p.jersey}` },
-      String(p.jersey))));
+      el('span', { class: 'lineup-card__num' }, String(jersey))));
+  }));
 }
 
 function renderBoard() {
@@ -79,12 +83,12 @@ function newSituation() {
   fieldset.disabled = false;
   hint.hidden = true;
   feedback.replaceChildren();
+  correctButton.hidden = false;
   submitButton.hidden = false;
   nextButton.hidden = true;
 
   renderBoard();
   renderCard();
-  renderPicks();
   render();
 }
 
@@ -152,6 +156,7 @@ function evaluate(event) {
 
   viewButtons.find(b => b.dataset.view === 'top').hidden = false;
   fieldset.disabled = true;
+  correctButton.hidden = true;
   hint.hidden = true;
   submitButton.hidden = true;
   nextButton.hidden = false;
@@ -166,7 +171,7 @@ scene.addEventListener('click', event => {
   if (player) togglePlayer(Number(player.dataset.position));
 });
 
-picks.addEventListener('click', event => {
+card.addEventListener('click', event => {
   const button = event.target.closest('button[data-position]');
   if (button) togglePlayer(Number(button.dataset.position));
 });
@@ -187,6 +192,7 @@ for (const button of viewButtons) {
   });
 }
 
+zoomReset.addEventListener('click', () => zoom.reset());
 form.addEventListener('submit', evaluate);
 nextButton.addEventListener('click', () => {
   newSituation();

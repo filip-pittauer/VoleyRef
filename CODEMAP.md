@@ -96,7 +96,7 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 |---|---|
 | `math3d.js` | vektory (`add`, `sub`, `scale`, `dot`, `cross`, `normalize`, …), `createProjection` (bez perspektivy), `createPerspective` (kamera s perspektivou), `clipNear`, `solveTwoBone` (IK paže), `sampleSmooth`, `segmentAt` |
 | `gesture-pose.js` | `BODY` (rozměry postavy), `createPoseSampler` (gesto → funkce čas → poloha paží) |
-| `referee-figure.js` | `createRefereeScene`, `createGesturePlayer` |
+| `referee-figure.js` | `createRefereeScene`, `createGesturePlayer` (výřez scény se přizpůsobí rozsahu pohybu gesta – `fitViewBox`) |
 | `gesture-data.js` | `loadGestures` (fetch jednou za návštěvu), `gestureSource`, `gestureDetails` |
 | `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení; výsledek přes `celebrate.js`) |
 | `gesture-atlas.js` | – (karty všech 32 gest, kotvy `#gesto-<id>`) ← `rules-page.js` |
@@ -112,6 +112,7 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 | `lineup-logic.js` | `generateSituation` (1 nebo 0 porušených vztahů, vše s rezervou `MARGIN` 0,4 m), `checkRelation`, `checkAll`, `RELATIONS`, `footprint`, `faultyPositions`, `isCorrectAnswer`, `COURT`, `FOOT_SIZE`, `FRONT_ROW`, `BACK_ROW` – bez DOM, testovatelné v Node |
 | `court-scene.js` | `VIEWS` (oko a výřez pohledů), `renderScene(svg, situace, { view, selected, result })` |
 | `lineup-trainer.js` | – (stránka trenažéru) |
+| `scene-zoom.js` | `attachPinchZoom(svg, { onChange })` → `{ refresh, reset }` – přiblížení dvěma prsty a posun přiblížené scény (mění viewBox); trenažér postavení |
 
 ### Pravidla
 | Modul | Exporty |

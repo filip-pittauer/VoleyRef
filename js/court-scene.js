@@ -369,11 +369,24 @@ export function renderScene(svg, situation, { view = 'ref1', selected = [], resu
   const cam = createCamera(settings);
   const isTop = view === 'top';
 
-  // výřez: body z frame promítnuté na plátno + okraj, doplněno na poměr stran
-  const pts = settings.frame.map(cam.project).filter(p => p.depth > NEAR);
+  // Výřez: shora celé pole (body z frame). U pohledů rozhodčích jen kolem
+  // hráčů přijímajícího týmu (chodidla a hlavy), aby byli co největší –
+  // ale aspoň 55 % šířky celého výřezu, ať je vidět i síť a čáry kolem.
+  const framePts = settings.frame.map(cam.project).filter(p => p.depth > NEAR);
+  const playerPts = situation.receiving.flatMap(player => {
+    const [cx, cz] = centerOf(player);
+    return [...player.feet.map(f => world(f.x, f.z)), world(cx, cz, 1.95)];
+  }).map(cam.project).filter(p => p.depth > NEAR);
+  const pts = isTop ? framePts : playerPts;
   let minX = Math.min(...pts.map(p => p.x)), maxX = Math.max(...pts.map(p => p.x));
   let minY = Math.min(...pts.map(p => p.y)), maxY = Math.max(...pts.map(p => p.y));
-  const pad = 0.04 * Math.max(maxX - minX, maxY - minY);
+  const minWidth = 0.55 * (Math.max(...framePts.map(p => p.x)) - Math.min(...framePts.map(p => p.x)));
+  if (maxX - minX < minWidth) {
+    const extra = (minWidth - (maxX - minX)) / 2;
+    minX -= extra;
+    maxX += extra;
+  }
+  const pad = (isTop ? 0.04 : 0.08) * Math.max(maxX - minX, maxY - minY);
   minX -= pad; maxX += pad; minY -= pad; maxY += pad;
   let w = maxX - minX, h = maxY - minY;
   if (w / h < ASPECT) { const extra = h * ASPECT - w; minX -= extra / 2; w += extra; }

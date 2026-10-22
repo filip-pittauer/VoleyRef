@@ -33,9 +33,8 @@
     </div>
   </header>
 
-  <main id="obsah">
+  <main id="obsah" class="app-page">
     <h1>Trenažér postavení</h1>
-    <p>Okamžik úderu podávajícího. Zkontroluj postavení <strong>přijímajícího týmu</strong> (červené dresy) podle zápisu. Najdi dva hráče, kteří spolu stojí v chybném pořadí, nebo potvrď, že je postavení správné. Podávající tým smí stát kdekoli, to nekontroluješ.</p>
 
     <section class="card stack" aria-labelledby="lineup-heading">
       <div class="board">
@@ -53,35 +52,36 @@
             <button type="button" data-view="ref2" aria-pressed="false">2. rozhodčí</button>
             <button type="button" data-view="top" aria-pressed="false" hidden>Shora</button>
           </div>
-          <svg id="lineup-scene" class="court-scene" role="img" aria-label="Hřiště v okamžiku podání z pohledu rozhodčího"></svg>
+          <div class="scene-wrap">
+            <svg id="lineup-scene" class="court-scene" role="img" aria-label="Hřiště v okamžiku podání z pohledu rozhodčího"></svg>
+            <button id="lineup-zoom-reset" class="scene-reset" type="button" hidden>Zrušit přiblížení</button>
+          </div>
         </div>
 
-        <div class="stack">
-          <figure class="lineup-card">
-            <figcaption>Postavení podle zápisu</figcaption>
-            <p class="lineup-card__net">síť</p>
-            <ol id="lineup-card" class="lineup-card__grid"></ol>
-            <p class="muted small">Pohled zezadu na přijímající tým: vlevo pozice 4 a 5.</p>
-          </figure>
-
-          <form id="lineup-form" class="stack">
-            <fieldset id="lineup-fieldset" class="stack">
-              <legend>Kdo stojí v chybě? Vyber dva hráče (klikni na ně ve scéně nebo tady).</legend>
-              <div id="lineup-picks" class="pick-list"></div>
-              <button id="lineup-correct" class="button button--secondary" type="button" aria-pressed="false">Postavení je správné</button>
-            </fieldset>
-            <p id="lineup-hint" class="choice-hint" role="alert" hidden></p>
-            <div id="lineup-feedback" role="status"></div>
-            <div>
-              <button id="lineup-submit" class="button" type="submit">Vyhodnotit</button>
-              <button id="lineup-next" class="button" type="button" hidden>Další situace</button>
-            </div>
-          </form>
-        </div>
+        <form id="lineup-form" class="stack">
+          <fieldset id="lineup-fieldset" class="lineup-fieldset">
+            <legend>Kdo stojí v chybě? Klepni na dva hráče ve scéně nebo v zápisu.</legend>
+            <figure class="lineup-card">
+              <figcaption>Postavení podle zápisu</figcaption>
+              <p class="lineup-card__net">síť</p>
+              <ol id="lineup-card" class="lineup-card__grid"></ol>
+            </figure>
+          </fieldset>
+          <p id="lineup-hint" class="choice-hint" role="alert" hidden></p>
+          <div id="lineup-feedback" role="status"></div>
+          <div class="lineup-actions">
+            <button id="lineup-correct" class="button button--secondary" type="button" aria-pressed="false">Postavení je správné</button>
+            <button id="lineup-submit" class="button" type="submit">Vyhodnotit</button>
+            <button id="lineup-next" class="button" type="button" hidden>Další situace</button>
+          </div>
+        </form>
       </div>
     </section>
 
-    <p class="small">Pravidla postavení najdeš v <a href="pravidla.html#p-7-4">pravidle 7.4</a>. Trenažér běží jen v tvém prohlížeči, nic se neukládá.</p>
+    <div class="stack lineup-about">
+      <p>Okamžik úderu podávajícího. Zkontroluj postavení <strong>přijímajícího týmu</strong> (červené dresy) podle zápisu a najdi dva hráče, kteří spolu stojí v chybném pořadí, nebo potvrď, že je postavení správné. Podávající tým smí stát kdekoli, to nekontroluješ.</p>
+      <p class="small">Zápis je viděný zezadu na přijímající tým: vlevo pozice 4 a 5. Na telefonu scénu přiblížíš dvěma prsty. Pravidla postavení najdeš v <a href="pravidla.html#p-7-4">pravidle 7.4</a>. Trenažér běží jen v tvém prohlížeči, nic se neukládá.</p>
+    </div>
   </main>
 
   <footer class="site-footer">
