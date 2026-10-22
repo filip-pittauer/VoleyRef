@@ -81,6 +81,7 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 
 ## Aktuální stav (22. 10. 2026)
 - Hotovo a na živém webu: fáze 1–6, kvíz (200 otázek, 10 kategorií, obtížnost, opakování chyb, denní výzva, odznaky, limit 2 s na otázku), pravidla, gesta (přepracovaná postava), trenažér postavení, mobilní verze her. V Supabase spuštěné SQL `01`–`05` a seed všech 200 otázek.
+- **Kde jsme skončili (23. 10. 2026):** úspora kontextu hotová – CLAUDE.md zkrácený (podrobnosti v docs/), testy `run-all.mjs` (18 testů, vše prošlo), skilly `nove-otazky` a `vydani`. Vše pushnuté v obou repozitářích, nic rozpracovaného. Další krok si vybere uživatel.
 - **Otevřené body:**
   - Animace postav (gesta) uživatel chce dál zlepšovat; záložní nápad GSAP / Anime.js (viz docs/historie.md).
   - Text pravidel a otázky zkontroluje zkušený rozhodčí (uživatel zařídí).
