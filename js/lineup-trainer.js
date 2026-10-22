@@ -162,7 +162,11 @@ function evaluate(event) {
   nextButton.hidden = false;
   renderBoard();
   render();
-  nextButton.focus();
+  // fokus na „Další situace“ (klávesnice), ale bez posunu k tlačítku –
+  // stránka se vrátí nahoru, aby byl vidět plánek shora s vyhodnocením
+  nextButton.focus({ preventScroll: true });
+  const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
 }
 
 // ---------- Události ----------
