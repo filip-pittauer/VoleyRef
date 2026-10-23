@@ -1744,6 +1744,46 @@ progress::-moz-progress-bar {
   color: var(--color-text-muted);
 }
 
+/* „Nahlásit chybu“ pod výsledkem otázky / gesta (js/report.js) */
+.report {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.report__toggle {
+  color: var(--color-text-muted);
+}
+
+.report__form {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.report__form textarea {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius) / 2);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  resize: vertical;
+}
+
+.report__status:empty {
+  display: none;
+}
+
+.report__thanks {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
 /* ---------- Záložky (žebříček) ---------- */
 .tabs {
   display: inline-flex;

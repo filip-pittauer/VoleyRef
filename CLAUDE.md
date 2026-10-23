@@ -83,7 +83,8 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 
 ## Aktuální stav (22. 10. 2026)
 - Hotovo a na živém webu: fáze 1–6, kvíz (200 otázek, 10 kategorií, obtížnost, opakování chyb, denní výzva, odznaky, limit 2 s na otázku), pravidla, gesta (přepracovaná postava), trenažér postavení, mobilní verze her. V Supabase spuštěné SQL `01`–`05` a seed všech 200 otázek.
-- **Kde jsme skončili (23. 10. 2026):** zkouškový režim (zkouska.html) + kategorie `hriste` (27 faktografických otázek, pravidla 1–4, ověřené agentem, 8 se zástupným obrázkem). Testy 19/19. Uživatel musí v Supabase spustit `01`, `02`, `03`, `05` a pak seed.
+- Zkouška (zkouska.html, kategorie `hriste` s 27 otázkami) je na živém webu, SQL spuštěné.
+- **Kde jsme skončili (23. 10. 2026):** hlášení chyb (js/report.js, sql/06_hlaseni.sql) u výsledků kvízu, zkoušky a v kvízu gest; prohlížení v dashboardu Supabase (`private.prehled_hlaseni`). Testy 21/21. Uživatel musí spustit `sql/06_hlaseni.sql`.
 - **Otevřené body:**
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
   - Počet hráčů v týmu: anglická pravidla 4.1.1 = 12 (14 jen soutěže FIVB dospělých), oficiální český překlad ČVS = 14; ověřit u rozhodčího.

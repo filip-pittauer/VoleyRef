@@ -6,6 +6,7 @@ import { plural } from './format.js';
 import { loadGestures, gestureDetails } from './gesture-data.js';
 import { createGesturePlayer } from './referee-figure.js';
 import { createScore, celebrate } from './celebrate.js';
+import { createReportLink } from './report.js';
 
 const ROUND_SIZE = 10;
 const OPTION_COUNT = 4;
@@ -143,7 +144,8 @@ function handleAnswer(event) {
   feedback.replaceChildren(el('div', { class: `result ${isCorrect ? 'result--ok' : 'result--wrong'}` },
     el('p', { class: 'result__status' }, isCorrect ? '✓ Správně' : '✗ Špatně'),
     el('p', {}, isCorrect ? '' : 'Správně je: ', el('strong', {}, gesture.nazev)),
-    ...gestureDetails(gesture, data.skupiny)));
+    ...gestureDetails(gesture, data.skupiny),
+    createReportLink({ gestureId: gesture.id })));
 
   const isLast = state.index === state.questions.length - 1;
   nextButton.textContent = isLast ? 'Zobrazit výsledek' : 'Další gesto';
@@ -173,7 +175,8 @@ function renderMistake({ gesture, answer }) {
     el('p', {}, el('strong', {}, gesture.nazev)),
     createGesturePlayer(gesture, data.pozy, { autoplay: false }),
     el('p', {}, el('strong', {}, 'Tvoje odpověď: '), answer?.nazev ?? '–'),
-    ...gestureDetails(gesture, data.skupiny));
+    ...gestureDetails(gesture, data.skupiny),
+    createReportLink({ gestureId: gesture.id }));
 }
 
 function renderResult() {

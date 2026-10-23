@@ -73,11 +73,12 @@ při změně upravit všech 10 souborů. Ikony navigace: `img/ikony.svg` (symbol
 | `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel), `getDailyStatus`, `getMistakesCount` – jediné místo volání RPC kvízu |
 | `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
-| `quiz-result.js` | `dom`, `categories`, `badges` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
+| `quiz-result.js` | `dom`, `categories`, `badges`, `report` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
 | `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate(ring, { ribbons })` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu, zkoušky i kvízu gest |
 | `media.js` | `dom`, `animation` | `renderMedia` – obrázek / video / animace u otázky; obrázek bez `soubor` = zástupný rámeček s popisem (obrázek se chystá) |
 | `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek`; medaile pro 1.–3. místo |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
+| `report.js` | `dom` (+ `supabase` načtený až při odeslání přes `import()`) | `createReportLink({ questionId } | { gestureId })` – odkaz „Nahlásit chybu“ s formulářem; RPC `nahlasit_chybu` |
 | `stats.js` | `dom`, `format`, `categories`, `badges`, `supabase` | `loadStats` – statistiky a odznaky v Profilu |
 
 ### Animace situací
@@ -101,7 +102,7 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 | `gesture-pose.js` | `BODY` (rozměry postavy), `createPoseSampler` (gesto → funkce čas → poloha paží) |
 | `referee-figure.js` | `createRefereeScene`, `createGesturePlayer` (výřez scény se přizpůsobí rozsahu pohybu gesta – `fitViewBox`) |
 | `gesture-data.js` | `loadGestures` (fetch jednou za návštěvu), `gestureSource`, `gestureDetails` |
-| `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení; výsledek přes `celebrate.js`) |
+| `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení; výsledek přes `celebrate.js`; hlášení přes `report.js`) |
 | `gesture-atlas.js` | – (karty všech 32 gest, kotvy `#gesto-<id>`) ← `rules-page.js` |
 
 ### Trenažér postavení (jen prohlížeč)
@@ -167,6 +168,7 @@ CDN s pevnou verzí: mezipaměť napřed; Supabase: nikdy necachovat.
 | `public.kola` | odehraná kola (čas, skóre, režim, odpovědi) | `select` jen svoje |
 | `public.denni_vyzvy` | otázky denní výzvy | jen přes funkce |
 | `public.odznaky_hracu` | získané odznaky | jen přes funkce |
+| `public.hlaseni` (`06_hlaseni.sql`) | hlášení chyb v otázkách/gestech, stav `nove`/`vyreseno`/`zamitnuto` | jen zápis přes funkci; čtení v dashboardu (pohled `private.prehled_hlaseni`) |
 
 Trigger `po_registraci` → `private.zalozit_profil()` založí profil při registraci.
 
@@ -180,6 +182,7 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 | | `smazat_ucet()` | auth | `account.js` | |
 | `03_statistiky.sql` | `moje_statistiky()` (vč. historie zkoušek) | auth | `stats.js` | |
 | `04_denni_vyzva.sql` | `denni_zebricek(limit)`, `stav_denni_vyzvy()` | anon, auth | `leaderboard.js`, `quiz-api.js` | `denni_poradi`, `denni_serie` |
+| `06_hlaseni.sql` | `nahlasit_chybu(otazka_id, gesto, typ, text)` | anon, auth | `report.js` | pohled `prehled_hlaseni` |
 | `05_odznaky.sql` | `moje_odznaky()`, `nastav_odznaky(odznaky)` | auth | `account.js`, `stats.js` | `metriky_odznaku`, `udel_odznaky` |
 
 Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jeden pokus),

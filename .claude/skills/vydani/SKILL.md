@@ -11,5 +11,5 @@ description: Kontrolní seznam před commitem a pushem změn webu VoleyRef – t
 4. **Vzhled:** u změn UI zkontrolovat přes Playwright MCP (desktop i šířka 390 px; snímky jdou do `.playwright-mcp/`, ignorované). Multitouch neumí – na to skripty.
 5. **Commit:** zprávy česky, končit řádkem `Co-Authored-By` podle systémové připomínky. Veřejné repo i `private/` (soukromé repo – testy, otázky) zvlášť.
 6. **Push:** jen pokud uživatel nechtěl počkat („nepushuj“ = commit a push až na pokyn). Větev `styl-hala` nikdy nepushovat.
-7. **SQL:** změnily se `sql/` nebo otázky → uživateli přesně napsat, co spustit v SQL editoru Supabase a v jakém pořadí (`01`…`05`, pak `private/seed-otazky.sql`).
+7. **SQL:** změnily se `sql/` nebo otázky → uživateli přesně napsat, co spustit v SQL editoru Supabase a v jakém pořadí (`01`…`06`, pak `private/seed-otazky.sql`).
 8. **Stav:** podstatnou změnu stavu zapsat krátce do „Aktuální stav“ v CLAUDE.md; podrobnosti do docs/historie.md (CLAUDE.md držet krátký – načítá se v každém sezení).

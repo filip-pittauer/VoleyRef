@@ -2,6 +2,7 @@
 import { el } from './dom.js';
 import { categoryName, categoryRulesUrl, ruleUrl } from './categories.js';
 import { badgeById } from './badges.js';
+import { createReportLink } from './report.js';
 
 function answerLine(label, question, key) {
   const text = key ? `${key} – ${question.odpovedi[key]}` : 'bez odpovědi';
@@ -18,7 +19,8 @@ export function renderResultItem(question, result) {
     result.explanation ? el('p', { class: 'result__explanation' }, result.explanation) : null,
     el('p', { class: 'result__rule' },
       question.pravidlo ? [el('a', { href: ruleUrl(question.pravidlo) }, `Pravidlo ${question.pravidlo}`), ' · '] : '',
-      el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))));
+      el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))),
+    createReportLink({ questionId: question.id }));
 }
 
 /** Blok „🏅 Nový odznak!“ ve výsledku kola (null, když žádný nový není). */

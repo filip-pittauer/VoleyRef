@@ -31,6 +31,12 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Zástupné obrázky: `media: { typ: "obrazek", soubor: null, popis: "obrázek sítě…" }` → rámeček s popisem (js/media.js). Po dodání obrázku stačí doplnit `soubor`.
 - Testy: `badges-db` (zkouška v DB), `e2e-zkouska` (průběh, ovládané hodiny pro odpočet, Profil), snímky `zkouska-shots.mjs <složka> [mobile]`.
 
+## Hlášení chyb (23. 10. 2026)
+- Odkaz „Nahlásit chybu“ u každé otázky ve výsledku kvízu a zkoušky, v kvízu gest ve zpětné vazbě po odpovědi a u chybných gest na konci. Typ chyby + nepovinný text (max. 1000 znaků). Hlásit jde i bez přihlášení.
+- `sql/06_hlaseni.sql`: tabulka `public.hlaseni` (otázka NEBO gesto), funkce `nahlasit_chybu` (přihlášený: stejnou věc jednou, 20/h; nepřihlášení dohromady 50/h), pohled `private.prehled_hlaseni` se správnou odpovědí. Po smazání účtu hlášení zůstane bez vazby (on delete set null) – uvedeno v ochrana-udaju.html.
+- Prohlížení: dashboard Supabase (Table Editor, schéma private → prehled_hlaseni; stav a poznámka v public → hlaseni). Admin stránka na webu případně později spolu se správou otázek.
+- Kvíz gest načte supabase-js až při odeslání hlášení (`import()`), jinak funguje bez Supabase i offline.
+
 ## Balíček 4: gesta rozhodčích
 - `gesta.html`: kvíz „Co znamená toto gesto?“ – 10 gest (nebo 5 u čárových), 4 možnosti ze stejné skupiny (přednostně z `zamena`), vyhodnocení hned po odpovědi (nic se neukládá). Jednoruká gesta se náhodně zrcadlí.
 - `pravidla.html#signalizace`: přehled 32 gest (kotvy `#gesto-<id>`). Signalizace je v pravidlech 2025–2028 **pravidlo 30**.
