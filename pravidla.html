@@ -14,6 +14,7 @@
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
   <script type="module" src="js/pwa.js"></script>
   <script type="module" src="js/rules-page.js"></script>
+  <script type="module" src="js/rules-search.js"></script>
   <script type="module" src="js/gesture-atlas.js"></script>
 </head>
 <body>
@@ -36,6 +37,16 @@
 
   <main id="obsah" class="rules">
     <h1>Pravidla</h1>
+
+    <!-- Hledání v pravidlech (js/rules-search.js); bez JavaScriptu nefunguje, proto skryté -->
+    <form id="rules-search" class="rules-search card stack" role="search" hidden>
+      <label for="rules-search-input">Hledat v pravidlech</label>
+      <input id="rules-search-input" type="search" autocomplete="off" enterkeyhint="search"
+        placeholder="např. blokování, dotek sítě, smeč z druhé zóny…">
+      <p id="rules-search-status" class="small muted" aria-live="polite"></p>
+      <ol id="rules-search-results" class="search-results"></ol>
+    </form>
+
     <p class="rules-intro">Úplná pravidla halového volejbalu podle oficiálních pravidel FIVB 2025–2028, napsaná <strong>vlastními slovy</strong>.
       Číslování a členění odpovídá oficiálnímu znění, takže přesný text každého bodu dohledáš v pravidlech
       <a href="https://www.cvf.cz/" rel="noopener">ČVS</a> a <a href="https://www.fivb.com/volleyball/the-game/official-volleyball-rules/" rel="noopener">FIVB</a>.

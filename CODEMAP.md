@@ -41,7 +41,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); není v navigaci, odkaz z kvízu | `pwa.js`, `exam.js` |
 | `gesta.html` | kvíz „Co znamená toto gesto?“ | `pwa.js`, `gesture-quiz.js` |
 | `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); není v navigaci, odkaz z kvízu a úvodu | `pwa.js`, `lineup-trainer.js` |
-| `pravidla.html` | úplná pravidla FIVB 2025–2028, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `gesture-atlas.js` |
+| `pravidla.html` | úplná pravidla FIVB 2025–2028, hledání, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `rules-search.js`, `gesture-atlas.js` |
 | `zebricek.html` | žebříček celkový + denní (záložky) | `pwa.js`, `leaderboard.js` |
 | `ucet.html` | **Profil**: přihlášení/registrace, statistiky, odznaky, nastavení, odhlášení, smazání účtu | `pwa.js`, `account.js` (→ `stats.js`) |
 | `ochrana-udaju.html` | zásady GDPR (statický text) | `pwa.js` |
@@ -122,6 +122,7 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 | Modul | Exporty |
 |---|---|
 | `rules-page.js` | `reveal`, `showHashTarget` – rozbalí `<details>` pravidla, na které vede kotva; tlačítka Rozbalit/Sbalit vše; rozbalení při tisku |
+| `rules-search.js` | – (← `dom`, `rules-page`) hledání v pravidlech v prohlížeči: index z textu stránky při prvním hledání, bez diakritiky, kmeny slov, slovníček hovorových výrazů `SYNONYMS`, řazení podle vzácnosti slov a názvu pravidla; skok na kotvu s podbarvením |
 
 ---
 
@@ -232,6 +233,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |
 | ilustrace k otázce | `private/obrazky/animace.mjs` / `diagramy.mjs` (vygenerovat), `media-otazek.mjs` (zapíše media do otazky.json), seed; nové soubory do `APP_SHELL`. Ilustrace nesmí prozradit odpověď. Kontrola: `private/testy/media-shots.mjs` |
+| upravit hledání v pravidlech | slovníček `SYNONYMS`, `STOPWORDS`, koncovky `SUFFIXES` v `js/rules-search.js`; test `private/testy/e2e-hledani.mjs` |
 | upravit text pravidel | `private/pravidla-zdroj/src/*.txt` + build (nebo drobnost přímo v `pravidla.html`) |
 | přidat odznak | `js/badges.js` + `private.metriky_odznaku` v `sql/05_odznaky.sql` (stejné id) |
 | novou stránku | HTML s hlavičkou/navigací jako ostatní, `APP_SHELL` + `CACHE` v `sw.js`, navigace ve všech stránkách |

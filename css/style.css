@@ -2265,6 +2265,84 @@ progress::-moz-progress-bar {
 }
 
 /* ---------- Pravidla ---------- */
+/* hledání v pravidlech (js/rules-search.js) */
+.rules-search label {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rules-search input[type="search"] {
+  max-width: none;
+  font-size: 1.05rem;
+}
+
+.rules-search #rules-search-status:empty,
+.search-results:empty {
+  display: none;
+}
+
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.search-result {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.search-result:hover,
+.search-result:focus-visible {
+  background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
+}
+
+.search-result__place {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.search-result__text {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.search-result mark,
+.search-target mark {
+  padding: 0 0.1em;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-gold) 35%, transparent);
+  color: inherit;
+}
+
+/* místo, na které hledání skočilo: krátce se podbarví */
+.search-target {
+  animation: search-flash 2.4s ease-out;
+  border-radius: var(--radius);
+}
+
+@keyframes search-flash {
+  0%, 30% { background: color-mix(in srgb, var(--color-gold) 30%, transparent); }
+  100% { background: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-target { animation: none; outline: 2px solid var(--color-gold); outline-offset: 2px; }
+}
 .rules-section {
   margin-top: 2rem;
   /* při skoku na kotvu nadpis není nalepený na horní okraj */

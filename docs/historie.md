@@ -31,6 +31,10 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Zástupné obrázky: `media: { typ: "obrazek", soubor: null, popis: "obrázek sítě…" }` → rámeček s popisem (js/media.js). Po dodání obrázku stačí doplnit `soubor`.
 - Testy: `badges-db` (zkouška v DB), `e2e-zkouska` (průběh, ovládané hodiny pro odpočet, Profil), snímky `zkouska-shots.mjs <složka> [mobile]`.
 
+## Hledání v pravidlech (24. 10. 2026)
+- `js/rules-search.js`: pole nahoře na pravidla.html, výsledky při psaní, Enter = první výsledek. Bez diakritiky, kmeny slov (blokování ≈ blok), slovníček hovorových výrazů (smeč → útočný úder, první zóna → přední zóna, žlutá karta → napomenutí, time out → oddechový čas).
+- Chytré hledání podle významu probráno s uživatelem: embeddingy v prohlížeči (velký model, slabá čeština) nebo AI na serveru (Supabase Edge Function + Claude API, „Zeptej se pravidel“ – platí se za dotaz, limit, GDPR). Zatím nerozhodnuto, případně samostatný balíček.
+
 ## Ilustrace k otázkám (24. 10. 2026)
 - 49 otázek má ilustraci: 22 animací shora, 5 scén postavení (`typ: "postaveni"`, 3D z trenažéru nebo shora, pod scénou zápis pozic), 22 SVG obrázků (z boku podél sítě s figurami-piktogramy a lupou na míč u horního okraje, detaily čar a chodidel shora, síť zepředu s anténkou).
 - Výběr udělal agent (vybráno 45 + 4 ručně kreslené k otázkám o hřišti); druhý agent zkontroloval všech 49 přes Playwright (soulad se zadáním, neprozrazení odpovědi, mobil, tmavý režim) a nálezy jsou opravené.
