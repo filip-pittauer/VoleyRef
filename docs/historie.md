@@ -37,6 +37,7 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Pravidlo: ilustrace je vidět před odpovědí → nesmí ji prozradit. Proto nemají obrázek např. otázky na polohu zón a čar (205, 208, 209, 216), pořadí doteků nebo kvalitu odbití.
 - Generátory v `private/obrazky/`: `animace.mjs` (oblouky míče, kontrola přechodu sítě), `diagramy.mjs` (dráha přes síť musí být nad páskou – jinak chyba), `media-otazek.mjs` (zapíše media do otazky.json). Kontrola vzhledu: `private/testy/media-shots.mjs <složka> [id,…]`, `arch.mjs` (arch snímků); test `e2e-media`.
 - Engine animací: štítky hráčů (na straně od sítě), libero, značky, obdélníky, výřez; anténky nad hráči; míč ve výšce posunutý jen o 0,1·z (u antén je vidět, kde přechází síť).
+- Náhled všech ilustrací s otázkami a odpověďmi na jedné stránce: `node private/obrazky/nahled.mjs` → `private/nahled-ilustraci.html` (neveřejné, v .gitignore), otevřít přes Live Server: http://127.0.0.1:5500/private/nahled-ilustraci.html
 - Nápady na později: ilustrace ve vysvětlení po kole (tam smí ukázat i řešení – např. zóny, čáry).
 
 ## Hlášení chyb (23. 10. 2026)
