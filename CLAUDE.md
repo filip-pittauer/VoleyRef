@@ -91,6 +91,7 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - Hledání v pravidlech (js/rules-search.js) je na webu.
 - Slovníček pojmů (slovnicek/pojmy.json, js/glossary.js) je na webu.
 - **Kde jsme skončili (24. 10. 2026):** trenažér zápisu (zapis.html, krátká a dlouhá verze, js/scoresheet-*.js), pravidla zkontrolovaná agentem. Testy 26/26.
+- **Příští session:** nejdřív připomenout uživateli, ať otestuje trenažér zápisu (obě verze, dlouhou na mobilu). Pak fokus: čitelnost a optimalizace kódu, zabezpečení celé aplikace, předávací dokumentace (lokální stránka / přehled kódu – jak spolu moduly komunikují, komentáře), normy a audity (přístupnost, bezpečnost, výkon).
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
