@@ -3,10 +3,18 @@ import { el } from './dom.js';
 import { categoryName, categoryRulesUrl, ruleUrl } from './categories.js';
 import { badgeById } from './badges.js';
 import { createReportLink } from './report.js';
+import { annotateTerms } from './glossary.js';
 
 function answerLine(label, question, key) {
   const text = key ? `${key} – ${question.odpovedi[key]}` : 'bez odpovědi';
   return el('p', {}, el('strong', {}, `${label}: `), text);
+}
+
+/** Vysvětlení s podtrženými pojmy ze slovníčku (bubliny se doplní po načtení pojmů). */
+function explanationWithTerms(text) {
+  const paragraph = el('p', { class: 'result__explanation' }, text);
+  annotateTerms(paragraph);
+  return paragraph;
 }
 
 /** Položka seznamu „Vysvětlení“: situace, odpovědi, vysvětlení a odkaz do pravidel. */
@@ -16,7 +24,7 @@ export function renderResultItem(question, result) {
     el('p', {}, question.situace),
     answerLine('Tvoje odpověď', question, result.answer),
     result.isCorrect ? null : answerLine('Správná odpověď', question, result.correctAnswer),
-    result.explanation ? el('p', { class: 'result__explanation' }, result.explanation) : null,
+    result.explanation ? explanationWithTerms(result.explanation) : null,
     el('p', { class: 'result__rule' },
       question.pravidlo ? [el('a', { href: ruleUrl(question.pravidlo) }, `Pravidlo ${question.pravidlo}`), ' · '] : '',
       el('a', { href: categoryRulesUrl(question.kategorie) }, categoryName(question.kategorie))),

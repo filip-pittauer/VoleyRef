@@ -31,6 +31,11 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Zástupné obrázky: `media: { typ: "obrazek", soubor: null, popis: "obrázek sítě…" }` → rámeček s popisem (js/media.js). Po dodání obrázku stačí doplnit `soubor`.
 - Testy: `badges-db` (zkouška v DB), `e2e-zkouska` (průběh, ovládané hodiny pro odpočet, Profil), snímky `zkouska-shots.mjs <složka> [mobile]`.
 
+## Slovníček pojmů (24. 10. 2026)
+- 61 oficiálních pojmů v `slovnicek/pojmy.json` (vlastními slovy podle našich pravidel). Generátor pravidel z nich dělá sekci Definice pojmů (`@slovnicek` v src/80-definice.txt), web bubliny (`js/glossary.js`).
+- Bubliny: v pravidlech (první výskyt pojmu v každém pravidle) a ve vysvětlení po kole/zkoušce. V otázce před odpovědí ne (napovídalo by). Hovorové výrazy záměrně ne (uživatel chtěl jen oficiální).
+- `tvary` = začátky slov, `=` na konci = celé slovo (blok= nechytá blokovat).
+
 ## Hledání v pravidlech (24. 10. 2026)
 - `js/rules-search.js`: pole nahoře na pravidla.html, výsledky při psaní, Enter = první výsledek. Bez diakritiky, kmeny slov (blokování ≈ blok), slovníček hovorových výrazů (smeč → útočný úder, první zóna → přední zóna, žlutá karta → napomenutí, time out → oddechový čas).
 - Chytré hledání podle významu probráno s uživatelem: embeddingy v prohlížeči (velký model, slabá čeština) nebo AI na serveru (Supabase Edge Function + Claude API, „Zeptej se pravidel“ – platí se za dotaz, limit, GDPR). Zatím nerozhodnuto, případně samostatný balíček.

@@ -122,6 +122,7 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 | Modul | Exporty |
 |---|---|
 | `rules-page.js` | `reveal`, `showHashTarget` – rozbalí `<details>` pravidla, na které vede kotva; tlačítka Rozbalit/Sbalit vše; rozbalení při tisku |
+| `glossary.js` | `annotateTerms(root)` (← `dom`, `categories`) – slovníček: podtrhne pojmy ze `slovnicek/pojmy.json` (první výskyt v prvku) a po klepnutí ukáže bublinu s definicí a odkazem do pravidel; volá `rules-page.js` (každé pravidlo) a `quiz-result.js` (vysvětlení, ne otázka) |
 | `rules-search.js` | – (← `dom`, `rules-page`) hledání v pravidlech v prohlížeči: index z textu stránky při prvním hledání, bez diakritiky, kmeny slov, slovníček hovorových výrazů `SYNONYMS`, řazení podle vzácnosti slov a názvu pravidla; skok na kotvu s podbarvením |
 
 ---
@@ -130,6 +131,7 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 
 | Soubor | Co obsahuje | Formát |
 |---|---|---|
+| `slovnicek/pojmy.json` | slovníček pojmů (id, pojem, tvary pro vyhledání v textu, definice, pravidlo); zdroj sekce Definice pojmů (`@slovnicek` v generátoru) i bublin | popis v souboru |
 | `gesta/gesta.json` | 32 gest (26 rozhodčích vč. 6a/6b a 25a/25b + 5 čárových), pózy, skupiny | `gesta/README.md` |
 | `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) a `q<id>-*.json` k otázkám (generuje `private/obrazky/animace.mjs`) | `animace/README.md` |
 | `img/otazky/*.svg` | obrázky k otázkám (generuje `private/obrazky/diagramy.mjs`, kromě 201/212/213/217 kreslených ručně) | SVG s třídami `dg-*`/`qd-*` |
@@ -234,6 +236,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |
 | ilustrace k otázce | `private/obrazky/animace.mjs` / `diagramy.mjs` (vygenerovat), `media-otazek.mjs` (zapíše media do otazky.json), seed; nové soubory do `APP_SHELL`. Ilustrace nesmí prozradit odpověď. Kontrola: `private/testy/media-shots.mjs` |
 | upravit hledání v pravidlech | slovníček `SYNONYMS`, `STOPWORDS`, koncovky `SUFFIXES` v `js/rules-search.js`; test `private/testy/e2e-hledani.mjs` |
+| přidat/upravit pojem slovníčku | `slovnicek/pojmy.json` → `node private/pravidla-zdroj/build.mjs pravidla.html` (definice v pravidlech); test `e2e-slovnicek` |
 | upravit text pravidel | `private/pravidla-zdroj/src/*.txt` + build (nebo drobnost přímo v `pravidla.html`) |
 | přidat odznak | `js/badges.js` + `private.metriky_odznaku` v `sql/05_odznaky.sql` (stejné id) |
 | novou stránku | HTML s hlavičkou/navigací jako ostatní, `APP_SHELL` + `CACHE` v `sw.js`, navigace ve všech stránkách |

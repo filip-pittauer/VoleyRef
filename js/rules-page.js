@@ -2,6 +2,8 @@
 // (např. pravidla.html#p-12-4-3 nebo #podani z výsledků kvízu) musí pravidlo
 // nejdřív rozbalit – do sbaleného obsahu prohlížeč neumí skočit.
 
+import { annotateTerms } from './glossary.js';
+
 /** Rozbalí všechna <details>, ve kterých prvek leží (podobně jako rozbalení uzlů stromu k vybranému uzlu). */
 export function reveal(element) {
   for (let details = element.closest('details'); details; details = details.parentElement.closest('details')) {
@@ -49,3 +51,6 @@ window.addEventListener('beforeprint', () => {
 });
 
 showHashTarget();
+
+// Slovníček: pojmy v textu každého pravidla (první výskyt v pravidle) s bublinou definice.
+for (const body of document.querySelectorAll('details.rule .rule__body')) annotateTerms(body);

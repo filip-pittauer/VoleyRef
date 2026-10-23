@@ -3314,3 +3314,57 @@ main.home {
   from { opacity: 0.45; }
   to { opacity: 1; }
 }
+
+/* ---------- Slovníček pojmů (js/glossary.js) ---------- */
+/* pojem v textu: vypadá jako text, jen tečkovaně podtržený (je to tlačítko kvůli klávesnici) */
+.term {
+  display: inline;
+  padding: 0;
+  border: none;
+  border-bottom: 1.5px dotted var(--color-primary);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: help;
+}
+
+.term:hover,
+.term[aria-expanded="true"] {
+  border-bottom-style: solid;
+  color: var(--color-primary);
+}
+
+.term-pop {
+  position: absolute;
+  z-index: 50;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.term-pop p {
+  margin: 0;
+}
+
+.term-pop p + p {
+  margin-top: 0.4rem;
+}
+
+.term-pop__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.term-pop__links {
+  font-size: 0.85rem;
+}

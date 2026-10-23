@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v24';
+const CACHE = 'voleyref-v25';
 
 const APP_SHELL = [
   './',
@@ -49,6 +49,7 @@ const APP_SHELL = [
   'js/exam.js',
   'js/format.js',
   'js/gesture-atlas.js',
+  'js/glossary.js',
   'js/gesture-data.js',
   'js/gesture-pose.js',
   'js/gesture-quiz.js',
@@ -72,6 +73,7 @@ const APP_SHELL = [
   'animace/podani-preslap.json',
   'animace/utok-zadni-rada.json',
   'animace/mic-antena.json',
+  'slovnicek/pojmy.json',
   // ilustrace k otázkám (animace a SVG obrázky)
   'animace/q6-cloneni.json',
   'animace/q11-skupinovy-blok.json',

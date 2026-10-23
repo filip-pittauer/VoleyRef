@@ -27,6 +27,7 @@ zkouska.html        zkouška: 30 otázek / 30 min / 80 % (js/exam.js, režim 'zk
 zebricek.html, ucet.html (Profil), ochrana-udaju.html, statistiky.html (jen přesměrování)
 css/style.css       všechny styly (vzhled „Svaz“), css/fonts.css + fonts/ (písma offline kvůli GDPR)
 js/                 moduly (viz CODEMAP.md); js/config.js = Supabase URL + publishable klíč
+slovnicek/pojmy.json  slovníček pojmů (definice v pravidlech + bubliny)
 gesta/gesta.json    gesta jako data; animace/*.json situace jako data
 sql/                SQL pro Supabase (spouštět v pořadí 01, 02, …)
 tools/              Node skripty (seed-otazky.mjs)
@@ -86,7 +87,8 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - Zkouška (zkouska.html, kategorie `hriste` s 27 otázkami) je na živém webu, SQL spuštěné.
 - Hlášení chyb (js/report.js, sql/06) je na živém webu.
 - Ilustrace u 49 otázek jsou na webu (generátory v private/obrazky/, náhled private/obrazky/nahled.mjs).
-- **Kde jsme skončili (24. 10. 2026):** hledání v pravidlech (js/rules-search.js, bez serveru; slovníček synonym).
+- Hledání v pravidlech (js/rules-search.js) je na webu.
+- **Kde jsme skončili (24. 10. 2026):** slovníček pojmů (slovnicek/pojmy.json → definice v pravidlech + bubliny v textu a ve vysvětlení, js/glossary.js). Testy 24/24.
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
