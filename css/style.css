@@ -875,6 +875,78 @@ progress::-moz-progress-bar {
   font-weight: 600;
 }
 
+/* SVG obrázek k otázce (img/otazky/*.svg, vložený do stránky): styl diagramů dg-*,
+   ale bez minimální šířky – v kvízu se nemá posouvat do strany */
+.media--diagram {
+  max-width: 36rem;
+}
+
+.media--diagram svg {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+/* díly obrázků k otázkám (private/obrazky/diagramy.mjs): figury, síť z boku, detaily čar */
+.qd-floor { fill: #e98a3c; }
+.qd-post { stroke: var(--color-text-muted); stroke-width: 4; opacity: 0.45; }
+.qd-net { stroke: var(--color-text); stroke-width: 1.6; stroke-dasharray: 2 1.2; }
+.qd-level { stroke: var(--color-text-muted); stroke-width: 0.6; stroke-dasharray: 1 2.2; }
+.qd-plane { stroke: var(--color-text-muted); stroke-width: 0.6; stroke-dasharray: 3 2; }
+/* figura jako sportovní piktogram: barva dresu týmu, hlava a dlaně v barvě kůže */
+.qd-person { --qd-team: #1d4ed8; }
+.qd-b { --qd-team: #b91c1c; }
+.qd-libero { --qd-team: #0f9f6e; }
+.qd-person polyline { fill: none; stroke: var(--qd-team); stroke-linecap: round; stroke-linejoin: round; stroke-width: 5.2; }
+.qd-person .qd-torso { stroke-width: 10; }
+.qd-person .qd-arm { stroke-width: 4.4; }
+.qd-person .qd-limb--back { opacity: 0.7; }
+.qd-person .qd-head,
+.qd-person .qd-palm { fill: var(--ref-skin); stroke: var(--qd-team); stroke-width: 1; }
+.qd-ghost { opacity: 0.7; }
+/* lupa na rozhodující detail (míč vůči horní úrovni sítě) */
+.qd-lupa-bg { fill: var(--color-surface); }
+.qd-lupa-ring { fill: none; stroke: var(--color-text); stroke-width: 1.2; }
+.qd-lupa-link { stroke: var(--color-text-muted); stroke-width: 0.6; stroke-dasharray: 1.5 1.5; }
+.qd-level--zoom { stroke-width: 0.45; stroke-dasharray: none; stroke: var(--color-accent); }
+.qd-front polyline { stroke-width: 5.5; }
+.qd-front circle { fill: var(--ref-skin); stroke: var(--qd-team); stroke-width: 1; }
+.dg .qd-ball { fill: #ffe14d; stroke: #1e3a8a; stroke-width: 0.8; }
+.qd-court { fill: #e98a3c; }
+.qd-free { fill: #2f6f9f; }
+.qd-line { fill: #fff; }
+.qd-netline { stroke: #1e293b; stroke-width: 1.4; stroke-dasharray: 4 3; opacity: 0.55; }
+.qd-shoe { fill: #f8fafc; stroke: #1e293b; stroke-width: 1.4; }
+.qd-shoe--b { fill: #1d4ed8; }
+.qd-guide { stroke: #1e293b; stroke-width: 0.8; stroke-dasharray: 3 2.5; }
+.qd-touch { fill: #ffe14d; fill-opacity: 0.85; stroke: #1e3a8a; stroke-width: 1; }
+.qd-lying path, .qd-lying ellipse { fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.qd-lying path { fill: none; }
+.qd-lying circle { fill: var(--ref-skin); stroke: #1e293b; stroke-width: 1; }
+.qd-hand { fill: var(--ref-skin); stroke: #1e293b; stroke-width: 1; }
+.qd-opponent { fill: #b91c1c; stroke: #fff; stroke-width: 1.2; }
+.qd-antenna { stroke-width: 3; }
+.qd-antenna-outline { stroke: #475569; stroke-width: 4.6; }
+/* popisky přímo na podlaze hřiště: tmavé i v tmavém režimu (podlaha je pořád oranžová) */
+.dg-note.qd-on-court text { fill: #111827; }
+
+/* scéna postavení u otázky: pod ní zápis pozic */
+.media--scene figcaption {
+  margin-top: 0.4rem;
+}
+
+/* obrázky v otázkách jsou menší než diagramy v pravidlech → větší písmo */
+.media--diagram .dg-text,
+.media--diagram .dg-note {
+  font-size: 9px;
+}
+
+.media--diagram .dg .dg-small {
+  font-size: 7px;
+}
+
 /* obrázek k otázce se teprve připravuje – zástupný rámeček s popisem (js/media.js) */
 .media--placeholder {
   display: grid;
@@ -1097,6 +1169,56 @@ progress::-moz-progress-bar {
 .anim-player text {
   fill: #fff;
   font-size: 0.62px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* libero: jiná barva dresu (jako ve skutečnosti) */
+.anim-team-a.anim-libero circle,
+.anim-team-b.anim-libero circle {
+  fill: #0f9f6e;
+}
+
+/* štítek pod hráčem („zadní řada“, „L“) – tmavý obrys kvůli čitelnosti na podlaze */
+.anim-player .anim-tag {
+  font-size: 0.46px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: rgb(0 0 0 / 0.65);
+  stroke-width: 0.12px;
+  stroke-linejoin: round;
+}
+
+.anim-player .anim-tag--left { text-anchor: end; }
+.anim-player .anim-tag--right { text-anchor: start; }
+
+.anim-post {
+  fill: #e5e7eb;
+  stroke: #1e293b;
+  stroke-width: 0.05;
+}
+
+/* neutrální značky na podlaze (prodloužení čar, krátké čáry zóny podání) */
+.anim-mark {
+  stroke: #fff;
+  stroke-width: 0.06;
+  opacity: 0.85;
+}
+
+.anim-mark--dash {
+  stroke-dasharray: 0.15 0.2;
+}
+
+.anim-box {
+  fill: #e5e7eb;
+  stroke: #1e293b;
+  stroke-width: 0.05;
+}
+
+.anim-box-text {
+  fill: #1e293b;
+  font-size: 0.6px;
   font-weight: 700;
   text-anchor: middle;
   dominant-baseline: central;

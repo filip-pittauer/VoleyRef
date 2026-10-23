@@ -46,7 +46,7 @@ Platí pro `private/otazky.json` i DB (`public.otazky` + `private.otazky_reseni`
 ```
 - `aktivni: false` = koncept, v kvízu se nezobrazí. Otázky se nemažou, jen deaktivují.
 - `kategorie`: `podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `chovani`, `signalizace`, `hriste` (český název až v UI).
-- `obtiznost` 1–3; `media` null nebo `obrazek` | `video` | `animace`; `odpovedi` 2–4 (A–D), právě jedna správná.
+- `obtiznost` 1–3; `media` null nebo `obrazek` | `video` | `animace` | `postaveni` (3D scéna, hráči v datech); `odpovedi` 2–4 (A–D), právě jedna správná. Ilustrace se ukazuje před odpovědí – nesmí ji prozradit (generátory v `private/obrazky/`).
 - `obrazek` se `soubor: null` = zástupný rámeček s textem `popis` (obrázek dodá uživatel nebo se nakreslí SVG).
 - Správná odpověď se hráči ukazuje **až na konci kola**. Jen halový volejbal. Tlačítko „Nevím“ nebude.
 - `private/otazky.json` je jediný zdroj; `node tools/seed-otazky.mjs` vytvoří `private/seed-otazky.sql` (upsert) pro SQL editor Supabase. Postup přidání otázek: skill **nove-otazky**.
@@ -84,7 +84,8 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 ## Aktuální stav (22. 10. 2026)
 - Hotovo a na živém webu: fáze 1–6, kvíz (200 otázek, 10 kategorií, obtížnost, opakování chyb, denní výzva, odznaky, limit 2 s na otázku), pravidla, gesta (přepracovaná postava), trenažér postavení, mobilní verze her. V Supabase spuštěné SQL `01`–`05` a seed všech 200 otázek.
 - Zkouška (zkouska.html, kategorie `hriste` s 27 otázkami) je na živém webu, SQL spuštěné.
-- **Kde jsme skončili (23. 10. 2026):** hlášení chyb (js/report.js, sql/06_hlaseni.sql) u výsledků kvízu, zkoušky a v kvízu gest; prohlížení v dashboardu Supabase (`private.prehled_hlaseni`). Testy 21/21. Uživatel musí spustit `sql/06_hlaseni.sql`.
+- Hlášení chyb (js/report.js, sql/06) je na živém webu.
+- **Kde jsme skončili (24. 10. 2026):** ilustrace u 49 otázek (animace, scény postavení, SVG; generátory v private/obrazky/, zkontrolované agentem). Testy 22/22. Uživatel musí spustit nový private/seed-otazky.sql.
 - **Otevřené body:**
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
   - Počet hráčů v týmu: anglická pravidla 4.1.1 = 12 (14 jen soutěže FIVB dospělých), oficiální český překlad ČVS = 14; ověřit u rozhodčího.

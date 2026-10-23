@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 280 244">
+  <!-- Otázka 75 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q75-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <defs><pattern id="q75-mesh" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M6 0H0V6" class="dg-mesh" /></pattern></defs>
+  <line class="dg-ground" x1="0" y1="228" x2="280" y2="228" />
+  <rect class="dg-sideline" x="118" y="227" width="4" height="4" />
+  <rect class="dg-pole" x="57" y="75" width="6" height="153" />
+  <rect x="80" y="82.2" width="200" height="60" fill="url(#q75-mesh)" />
+  <line class="dg-cord" x1="60" y1="83.2" x2="80" y2="83.2" />
+  <line class="dg-cord" x1="60" y1="141.2" x2="80" y2="141.2" />
+  <rect class="dg-band" x="80" y="80.7" width="200" height="4" />
+  <rect class="dg-band" x="80" y="140.2" width="200" height="3" />
+  <rect class="dg-band" x="118" y="82.2" width="4" height="60" />
+  <line class="qd-antenna-outline" x1="117" y1="142.2" x2="117" y2="34.2" />
+  <line class="dg-antenna qd-antenna" x1="117" y1="142.2" x2="117" y2="34.2" />
+  <line class="dg-antenna dg-antenna--stripes qd-antenna" x1="117" y1="82.2" x2="117" y2="34.2" />
+  <g class="qd-person qd-a qd-front">
+    <polyline points="90 228 97 171 105 228" />
+    <polyline points="97 171 97 138" />
+    <polyline points="97 139.2 88 121.2 84 111" />
+    <polyline points="97 139.2 92 159 78 183" />
+    <circle cx="97" cy="127.2" r="7.2" />
+  </g>
+  <circle class="dg-ball qd-ball" cx="72" cy="207" r="6.3" />
+  <g class="dg-note">
+    <text x="117" y="27.2">anténka</text>
+    <text x="60" y="239" class="dg-small">sloupek</text>
+    <text x="120" y="239" class="dg-small">postranní čára</text>
+    <text x="200" y="16" class="dg-small">hráč vybírá míč u sítě</text>
+  </g>
+</svg>

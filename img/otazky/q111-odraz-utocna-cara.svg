@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 220 130">
+  <!-- Otázka 111 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q111-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <rect class="qd-court" x="0" y="0" width="220" height="130" />
+  <rect class="qd-line" x="0" y="46" width="220" height="8" />
+  <path class="qd-shoe" transform="translate(110 75.7) rotate(0)" d="M0.6 -22.7 C8 -22.7 8.4 -9.6 7 -1.2 C6.1 6 5.3 12.4 4.7 17.2 C3.7 23.7 -4.9 23.7 -5.7 17.2 C-6.4 11.5 -8.4 4.8 -8.4 -4.3 C-8.4 -15.3 -6.1 -22.7 0.6 -22.7Z" />
+  <path class="qd-shoe" transform="translate(132 96) rotate(0)" d="M0.6 -22.7 C8 -22.7 8.4 -9.6 7 -1.2 C6.1 6 5.3 12.4 4.7 17.2 C3.7 23.7 -4.9 23.7 -5.7 17.2 C-6.4 11.5 -8.4 4.8 -8.4 -4.3 C-8.4 -15.3 -6.1 -22.7 0.6 -22.7Z" />
+  <g class="dg-note qd-on-court">
+    <text x="8" y="30" text-anchor="start">přední zóna</text>
+    <text x="8" y="76" text-anchor="start">zadní zóna</text>
+    <text x="212" y="40" text-anchor="end" class="dg-small">útočná čára</text>
+    <text x="212" y="12" text-anchor="end" class="dg-small">↑ k síti</text>
+    <text x="185" y="120" class="dg-small">chodidla při odrazu</text>
+  </g>
+</svg>

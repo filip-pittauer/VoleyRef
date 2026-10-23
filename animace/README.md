@@ -45,5 +45,14 @@ Pohled shora, jednotky jsou **metry**:
 | `pozice`, `mic` | **klíčové body** `[čas, x, y, z?]` seřazené podle času. Mezi body se poloha dopočítá rovnoměrně (interpolace). Před prvním bodem a po posledním stojí na místě. |
 | `zvyrazneni[]` | žlutě zvýrazněná čára (např. koncová nebo útočná) viditelná v čase `od`–`do` |
 | `texty[]` | popisek pod animací v čase `od`–`do` |
+| `hraci[].stitek` | nepovinný štítek pod hráčem, např. `"zadní řada"`, `"L"`, `"pozice 2"` |
+| `hraci[].libero` | `true` = hráč v dresu libera (zelený) |
+| `znacky[]` | pevné bílé značky na podlaze `{ x1, y1, x2, y2, carkovana? }` (prodloužení čar, krátké čáry zóny podání) |
+| `obdelniky[]` | pevné obdélníky s popiskem `{ x, y, sirka, vyska, text? }` (např. stolek zapisovatele) |
+| `vyrez` | nepovinný výřez `[x, y, šířka, výška]` místo výchozího `[-3, -2.5, 24, 14]` |
 
 Tip: hráče, který stojí na místě, stačí zapsat jedním bodem, např. `[[0, 7.5, 4.5]]`.
+
+## Animace k otázkám
+
+Soubory `q<id>-*.json` generuje skript `private/obrazky/animace.mjs` (oblouky míče se dopočítají), do otázek je zapisuje `private/obrazky/media-otazek.mjs`. Animace ukazuje jen situaci ze zadání, nikdy řešení – otázka ji vidí před odpovědí.

@@ -75,7 +75,7 @@ při změně upravit všech 10 souborů. Ikony navigace: `img/ikony.svg` (symbol
 | `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
 | `quiz-result.js` | `dom`, `categories`, `badges`, `report` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
 | `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate(ring, { ribbons })` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu, zkoušky i kvízu gest |
-| `media.js` | `dom`, `animation` | `renderMedia` – obrázek / video / animace u otázky; obrázek bez `soubor` = zástupný rámeček s popisem (obrázek se chystá) |
+| `media.js` | `dom`, `animation`, `court-scene`, `lineup-logic` | `renderMedia` – obrázek / video / animace / scéna postavení (`typ: "postaveni"`, hráči v datech otázky, pod scénou zápis pozic) u otázky; SVG obrázky (`img/otazky/`) vkládá přímo do stránky kvůli CSS (`dg-*`, `qd-*`, tmavý režim); obrázek bez `soubor` = zástupný rámeček |
 | `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek`; medaile pro 1.–3. místo |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
 | `report.js` | `dom` (+ `supabase` načtený až při odeslání přes `import()`) | `createReportLink({ questionId } | { gestureId })` – odkaz „Nahlásit chybu“ s formulářem; RPC `nahlasit_chybu` |
@@ -85,7 +85,7 @@ při změně upravit všech 10 souborů. Ikony navigace: `img/ikony.svg` (symbol
 | Modul | ← importuje | Exporty |
 |---|---|---|
 | `player.js` | `dom` | `createPlayer` – ovládání ▶/pauza + posuvník (pro situace i gesta) |
-| `animation.js` | `dom`, `player` | `sample`, `createAnimationPlayer` – SVG hřiště z dat `animace/*.json` |
+| `animation.js` | `dom`, `player` | `sample`, `createAnimationPlayer` – SVG hřiště z dat `animace/*.json` (štítky hráčů, libero, značky, obdélníky, výřez) |
 
 ### Gesta rozhodčích (jen prohlížeč)
 ```
@@ -113,7 +113,7 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 ```
 | Modul | Exporty |
 |---|---|
-| `lineup-logic.js` | `generateSituation` (1 nebo 0 porušených vztahů, vše s rezervou `MARGIN` 0,4 m), `checkRelation`, `checkAll`, `RELATIONS`, `footprint`, `faultyPositions`, `isCorrectAnswer`, `COURT`, `FOOT_SIZE`, `FRONT_ROW`, `BACK_ROW` – bez DOM, testovatelné v Node |
+| `lineup-logic.js` | `generateSituation` (1 nebo 0 porušených vztahů, vše s rezervou `MARGIN` 0,4 m), `checkRelation`, `checkAll`, `RELATIONS`, `footprint`, `faultyPositions`, `isCorrectAnswer`, `situationFromData` (pevná situace z dat otázky), `COURT`, `FOOT_SIZE`, `FRONT_ROW`, `BACK_ROW` – bez DOM, testovatelné v Node |
 | `court-scene.js` | `VIEWS` (oko a výřez pohledů), `renderScene(svg, situace, { view, selected, result })` |
 | `lineup-trainer.js` | – (stránka trenažéru) |
 | `scene-zoom.js` | `attachPinchZoom(svg, { onChange })` → `{ refresh, reset }` – přiblížení dvěma prsty a posun přiblížené scény (mění viewBox); trenažér postavení |
@@ -130,7 +130,8 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 | Soubor | Co obsahuje | Formát |
 |---|---|---|
 | `gesta/gesta.json` | 32 gest (26 rozhodčích vč. 6a/6b a 25a/25b + 5 čárových), pózy, skupiny | `gesta/README.md` |
-| `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) | `animace/README.md` |
+| `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) a `q<id>-*.json` k otázkám (generuje `private/obrazky/animace.mjs`) | `animace/README.md` |
+| `img/otazky/*.svg` | obrázky k otázkám (generuje `private/obrazky/diagramy.mjs`, kromě 201/212/213/217 kreslených ručně) | SVG s třídami `dg-*`/`qd-*` |
 | `pravidla.html` | text pravidel; obsah mezi značkami `<!-- PRAVIDLA:START/END -->` a `<!-- OBSAH:START/END -->` je **generovaný** | viz níže |
 | `img/ikony.svg` | ikony navigace (`#kviz`, `#gesta`, `#pravidla`, `#zebricek`, `#profil`) a `#postaveni` (úvod) | SVG symboly |
 | `img/icons/` | ikony aplikace (PWA, favicon), zdroj `icon.svg` | |
@@ -213,6 +214,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 |---|---|---|
 | `private/otazky.json` | **otázky se správnými odpověďmi** (zdroj pravdy) | upravit → `node tools/seed-otazky.mjs` → `private/seed-otazky.sql` spustit v Supabase |
 | `private/pravidla-zdroj/` | zdroj textu pravidel (`src/*.txt`), diagramy (`diagramy/*.html`), `build.mjs`, CSS pravidel | `node private/pravidla-zdroj/build.mjs pravidla.html` |
+| `private/obrazky/` | generátory ilustrací k otázkám (`animace.mjs`, `diagramy.mjs`, `media-otazek.mjs`) | `node private/obrazky/<skript>.mjs` |
 | `private/testy/` | testy (PGlite + Playwright), viz CLAUDE.md „Jak jsem testoval“ | zkopírovat do scratchpadu, `npm install` |
 
 `tools/seed-otazky.mjs` – kontrola `otazky.json` a vygenerování upsert SQL (výstup obsahuje odpovědi → nikdy necommitovat).
@@ -229,6 +231,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) |
 | upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |
+| ilustrace k otázce | `private/obrazky/animace.mjs` / `diagramy.mjs` (vygenerovat), `media-otazek.mjs` (zapíše media do otazky.json), seed; nové soubory do `APP_SHELL`. Ilustrace nesmí prozradit odpověď. Kontrola: `private/testy/media-shots.mjs` |
 | upravit text pravidel | `private/pravidla-zdroj/src/*.txt` + build (nebo drobnost přímo v `pravidla.html`) |
 | přidat odznak | `js/badges.js` + `private.metriky_odznaku` v `sql/05_odznaky.sql` (stejné id) |
 | novou stránku | HTML s hlavičkou/navigací jako ostatní, `APP_SHELL` + `CACHE` v `sw.js`, navigace ve všech stránkách |

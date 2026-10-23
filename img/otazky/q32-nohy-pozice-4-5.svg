@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 240 216">
+  <!-- Otázka 32 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q32-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <rect class="qd-court" x="0" y="0" width="240" height="216" />
+  <line class="qd-guide" x1="8" y1="82.8" x2="232" y2="82.8" />
+  <path class="qd-shoe" transform="translate(170 106) rotate(0)" d="M0.6 -22.7 C8 -22.7 8.4 -9.6 7 -1.2 C6.1 6 5.3 12.4 4.7 17.2 C3.7 23.7 -4.9 23.7 -5.7 17.2 C-6.4 11.5 -8.4 4.8 -8.4 -4.3 C-8.4 -15.3 -6.1 -22.7 0.6 -22.7Z" />
+  <path class="qd-shoe" transform="translate(196 170) rotate(0)" d="M0.6 -22.7 C8 -22.7 8.4 -9.6 7 -1.2 C6.1 6 5.3 12.4 4.7 17.2 C3.7 23.7 -4.9 23.7 -5.7 17.2 C-6.4 11.5 -8.4 4.8 -8.4 -4.3 C-8.4 -15.3 -6.1 -22.7 0.6 -22.7Z" />
+  <path class="qd-shoe qd-shoe--b" transform="translate(52 106) rotate(0)" d="M0.6 -22.7 C8 -22.7 8.4 -9.6 7 -1.2 C6.1 6 5.3 12.4 4.7 17.2 C3.7 23.7 -4.9 23.7 -5.7 17.2 C-6.4 11.5 -8.4 4.8 -8.4 -4.3 C-8.4 -15.3 -6.1 -22.7 0.6 -22.7Z" />
+  <path class="qd-shoe qd-shoe--b" transform="translate(80 42) rotate(0)" d="M0.6 -22.7 C8 -22.7 8.4 -9.6 7 -1.2 C6.1 6 5.3 12.4 4.7 17.2 C3.7 23.7 -4.9 23.7 -5.7 17.2 C-6.4 11.5 -8.4 4.8 -8.4 -4.3 C-8.4 -15.3 -6.1 -22.7 0.6 -22.7Z" />
+  <g class="dg-note qd-on-court">
+    <text x="183" y="206">pozice 4</text>
+    <text x="66" y="142">pozice 5</text>
+    <text x="120" y="75.8" class="dg-small">úroveň přední nohy hráče na pozici 4</text>
+    <text x="232" y="12" text-anchor="end" class="dg-small">↑ k síti</text>
+  </g>
+</svg>

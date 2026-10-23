@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 -16 280 166">
+  <!-- Otázka 109 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q109-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <rect class="qd-floor" x="0" y="138" width="280" height="8" />
+  <line class="dg-ground" x1="0" y1="138" x2="280" y2="138" />
+  <line class="qd-post" x1="150" y1="138" x2="150" y2="36" />
+  <line class="qd-net" x1="150" y1="40.8" x2="150" y2="80.8" />
+  <rect class="dg-band" x="148.4" y="40.8" width="3.2" height="2.8" />
+  <rect class="dg-attack-line" x="29" y="137" width="2" height="3" />
+  <line class="qd-level" x1="4" y1="40.8" x2="276" y2="40.8" />
+  <line class="qd-plane" x1="150" y1="14" x2="150" y2="138" />
+  <g class="qd-person qd-a">
+    <polyline class="qd-limb qd-limb--back" points="130 108 134 89.2 133.2 71.2" />
+    <polyline class="qd-torso" points="133.2 71.2 135.6 50" />
+    <polyline class="qd-limb" points="134.8 110 137.2 90 133.2 71.2" />
+    <polyline class="qd-arm" points="135.6 50 143.6 32 157.6 22" />
+    <circle class="qd-palm" cx="157.6" cy="22" r="2.6" />
+    <circle class="qd-head" cx="136.8" cy="42" r="5" />
+  </g>
+  <circle class="dg-ball qd-ball" cx="161.6" cy="20.8" r="4.2" />
+  <g class="dg-note">
+    <text x="274" y="35.8" text-anchor="end" class="dg-small">horní okraj sítě</text>
+    <text x="30" y="148" class="dg-small">útočná čára</text>
+    <text x="150" y="148" class="dg-small">síť</text>
+    <text x="114" y="-2">hráč přední řady</text>
+    <text x="153" y="104" text-anchor="start" class="dg-small">rovina sítě</text>
+  </g>
+</svg>

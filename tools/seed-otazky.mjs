@@ -21,7 +21,7 @@ const CATEGORIES = [
   'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace', 'hriste',
 ];
 const ANSWER_KEYS = ['A', 'B', 'C', 'D'];
-const MEDIA_TYPES = ['obrazek', 'video', 'animace'];
+const MEDIA_TYPES = ['obrazek', 'video', 'animace', 'postaveni'];
 
 // ---------- Kontrola dat ----------
 function validate(questions) {
@@ -48,8 +48,14 @@ function validate(questions) {
 
     if (q.media !== null && q.media !== undefined) {
       if (!MEDIA_TYPES.includes(q.media.typ)) err(`neznámý typ média "${q.media.typ}"`);
+      // scéna postavení: data hráčů přímo v otázce, bez souboru
+      if (q.media.typ === 'postaveni') {
+        const ok = Array.isArray(q.media.hraci) && q.media.hraci.length > 0
+          && q.media.hraci.every(h => [1, 2, 3, 4, 5, 6].includes(h.pozice) && Number.isFinite(h.x) && Number.isFinite(h.z));
+        if (!ok) err('scéna postavení potřebuje hraci: [{ pozice 1–6, cislo, x, z }]');
+        if (q.media.pohled && !['ref1', 'ref2', 'top'].includes(q.media.pohled)) err(`neznámý pohled "${q.media.pohled}"`);
       // obrázek bez souboru = zástupný rámeček s popisem (obrázek se teprve připraví)
-      if (!q.media.soubor) {
+      } else if (!q.media.soubor) {
         if (q.media.typ !== 'obrazek') err('médium nemá soubor');
       } else if (!/^https?:/.test(q.media.soubor) && !existsSync(q.media.soubor)) err(`soubor média "${q.media.soubor}" neexistuje`);
       if (!q.media.popis) err('médium nemá popis (alt text)');

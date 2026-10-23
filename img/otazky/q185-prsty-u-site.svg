@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 -16 280 166">
+  <!-- Otázka 185 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q185-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <rect class="qd-floor" x="0" y="138" width="280" height="8" />
+  <line class="dg-ground" x1="0" y1="138" x2="280" y2="138" />
+  <line class="qd-post" x1="150" y1="138" x2="150" y2="36" />
+  <line class="qd-net" x1="150" y1="40.8" x2="150" y2="80.8" />
+  <rect class="dg-band" x="148.4" y="40.8" width="3.2" height="2.8" />
+  <rect class="dg-attack-line" x="29" y="137" width="2" height="3" />
+  <line class="qd-level" x1="4" y1="40.8" x2="276" y2="40.8" />
+  <g class="qd-person qd-a">
+    <polyline class="qd-limb qd-limb--back" points="97.2 138 102 117.2 101.2 99.2" />
+    <polyline class="qd-torso" points="101.2 99.2 103.6 78" />
+    <polyline class="qd-limb" points="104 138 105.2 118 101.2 99.2" />
+    <polyline class="qd-arm" points="103.6 78 109.2 70.8 112.4 61.2" />
+    <circle class="qd-palm" cx="112.4" cy="61.2" r="2.6" />
+    <circle class="qd-head" cx="104.8" cy="70" r="5" />
+  </g>
+  <circle class="dg-ball qd-ball" cx="116.4" cy="56.4" r="4.2" />
+  <polyline class="dg-path" points="294 10 150.8 32.4 122 53.2" marker-end="url(#q185-arrow)" />
+  <g class="dg-note">
+    <text x="274" y="35.8" text-anchor="end" class="dg-small">horní okraj sítě</text>
+    <text x="30" y="148" class="dg-small">útočná čára</text>
+    <text x="150" y="148" class="dg-small">síť</text>
+    <text x="102" y="8">hráč přední řady</text>
+    <text x="276" y="0" text-anchor="end">podání soupeře</text>
+  </g>
+</svg>

@@ -224,3 +224,25 @@ export function isCorrectAnswer(situation, answer) {
   const chosen = [...answer.positions].sort();
   return faulty.length === chosen.length && [...faulty].sort().every((p, i) => p === chosen[i]);
 }
+
+// Výchozí podávající tým pro scény u otázek (data ho neuvádějí): pět hráčů
+// rozestavěných po poli a podávající za koncovou čarou.
+const DEFAULT_SERVING = [
+  { x: -1.2, z: 2.6 }, { x: -1.5, z: -0.4 }, { x: -1.0, z: -3.0 },
+  { x: -5.6, z: 1.6 }, { x: -6.2, z: -2.0 }, { x: -10.2, z: -2.6, server: true },
+];
+
+/**
+ * Pevná situace z dat otázky (media typ "postaveni"):
+ * hraci = [{ pozice, cislo, x, z }] – x = vzdálenost od sítě, z = napříč
+ * (kladné vlevo z pohledu týmu), viz souřadnice nahoře. Chodidla se
+ * dopočítají vedle sebe kolem středu. Vrací situaci pro renderScene.
+ */
+export function situationFromData({ hraci, podavajici = DEFAULT_SERVING }) {
+  const feetAround = (x, z) => [{ x, z: z + 0.18 }, { x, z: z - 0.18 }];
+  // chodidla: [{ x, z }, { x, z }] jde zadat i přímo (např. jedna noha za postranní čarou)
+  const receiving = hraci.map(h => ({ position: h.pozice, jersey: h.cislo, feet: h.chodidla ?? feetAround(h.x, h.z) }));
+  const serving = podavajici.map((p, i) => ({ jersey: p.cislo ?? [3, 8, 11, 14, 17, 9][i % 6], feet: feetAround(p.x, p.z), server: !!p.server }));
+  const relations = checkAll(Object.fromEntries(receiving.map(p => [p.position, p])));
+  return { receiving, serving, relations, fault: relations.find(r => r.status === 'fault') ?? null };
+}

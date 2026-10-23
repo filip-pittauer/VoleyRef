@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 220 130">
+  <!-- Otázka 20 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q20-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <rect class="qd-free" x="0" y="0" width="220" height="130" />
+  <rect class="qd-court" x="0" y="0" width="110" height="130" />
+  <rect class="qd-line" x="102" y="0" width="8" height="130" />
+  <circle class="qd-touch" cx="112" cy="62" r="16.8" />
+  <g class="dg-note qd-on-court">
+    <text x="10" y="18" text-anchor="start">pole soupeře</text>
+    <text x="212" y="18" text-anchor="end">mimo hřiště</text>
+    <text x="106" y="118" class="dg-small">postranní čára</text>
+    <text x="150" y="94" text-anchor="start" class="dg-small">dopad míče</text>
+  </g>
+</svg>

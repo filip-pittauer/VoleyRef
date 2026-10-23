@@ -31,6 +31,14 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Zástupné obrázky: `media: { typ: "obrazek", soubor: null, popis: "obrázek sítě…" }` → rámeček s popisem (js/media.js). Po dodání obrázku stačí doplnit `soubor`.
 - Testy: `badges-db` (zkouška v DB), `e2e-zkouska` (průběh, ovládané hodiny pro odpočet, Profil), snímky `zkouska-shots.mjs <složka> [mobile]`.
 
+## Ilustrace k otázkám (24. 10. 2026)
+- 49 otázek má ilustraci: 22 animací shora, 5 scén postavení (`typ: "postaveni"`, 3D z trenažéru nebo shora, pod scénou zápis pozic), 22 SVG obrázků (z boku podél sítě s figurami-piktogramy a lupou na míč u horního okraje, detaily čar a chodidel shora, síť zepředu s anténkou).
+- Výběr udělal agent (vybráno 45 + 4 ručně kreslené k otázkám o hřišti); druhý agent zkontroloval všech 49 přes Playwright (soulad se zadáním, neprozrazení odpovědi, mobil, tmavý režim) a nálezy jsou opravené.
+- Pravidlo: ilustrace je vidět před odpovědí → nesmí ji prozradit. Proto nemají obrázek např. otázky na polohu zón a čar (205, 208, 209, 216), pořadí doteků nebo kvalitu odbití.
+- Generátory v `private/obrazky/`: `animace.mjs` (oblouky míče, kontrola přechodu sítě), `diagramy.mjs` (dráha přes síť musí být nad páskou – jinak chyba), `media-otazek.mjs` (zapíše media do otazky.json). Kontrola vzhledu: `private/testy/media-shots.mjs <složka> [id,…]`, `arch.mjs` (arch snímků); test `e2e-media`.
+- Engine animací: štítky hráčů (na straně od sítě), libero, značky, obdélníky, výřez; anténky nad hráči; míč ve výšce posunutý jen o 0,1·z (u antén je vidět, kde přechází síť).
+- Nápady na později: ilustrace ve vysvětlení po kole (tam smí ukázat i řešení – např. zóny, čáry).
+
 ## Hlášení chyb (23. 10. 2026)
 - Odkaz „Nahlásit chybu“ u každé otázky ve výsledku kvízu a zkoušky, v kvízu gest ve zpětné vazbě po odpovědi a u chybných gest na konci. Typ chyby + nepovinný text (max. 1000 znaků). Hlásit jde i bez přihlášení.
 - `sql/06_hlaseni.sql`: tabulka `public.hlaseni` (otázka NEBO gesto), funkce `nahlasit_chybu` (přihlášený: stejnou věc jednou, 20/h; nepřihlášení dohromady 50/h), pohled `private.prehled_hlaseni` se správnou odpovědí. Po smazání účtu hlášení zůstane bez vazby (on delete set null) – uvedeno v ochrana-udaju.html.

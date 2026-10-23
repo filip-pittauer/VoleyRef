@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 240 150">
+  <!-- Otázka 95 (generuje private/obrazky/diagramy.mjs) -->
+  <defs>
+    <marker id="q95-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="dg-arrowhead" d="M0 0L10 5L0 10z" /></marker>
+  </defs>
+  <rect class="qd-court" x="0" y="0" width="240" height="150" />
+  <rect class="qd-line" x="0" y="58" width="240" height="8" />
+  <line class="qd-netline" x1="0" y1="62" x2="240" y2="62" />
+  <g class="qd-lying">
+    <path d="M150 98 L182 92 L206 104 M150 100 L180 110 L204 124" />
+    <ellipse cx="132" cy="98" rx="24" ry="9" />
+    <path d="M112 92 L104 72 L101 52" />
+    <circle cx="98" cy="100" r="8" />
+  </g>
+  <ellipse class="qd-hand" cx="100.5" cy="48" rx="5" ry="7" />
+  <circle class="qd-opponent" cx="44" cy="16" r="8" />
+  <circle class="qd-opponent" cx="200" cy="14" r="8" />
+  <g class="dg-note qd-on-court">
+    <text x="120" y="14">pole soupeře</text>
+    <text x="8" y="140" text-anchor="start">pole hráče</text>
+    <text x="232" y="76" text-anchor="end" class="dg-small">střední čára</text>
+    <text x="70" y="40" class="dg-small">ruka</text>
+  </g>
+</svg>
