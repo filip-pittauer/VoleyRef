@@ -52,6 +52,34 @@ $$;
 revoke all on function private.dnes() from public, anon, authenticated;
 
 -- ---------------------------------------------------------------------
+-- Zkouška: parametry na jednom místě (počet otázek, časový limit,
+-- hranice úspěchu). Web je dostane od zacni_kolo, nemá je natvrdo.
+-- ---------------------------------------------------------------------
+create or replace function private.zkouska_otazek()
+returns integer language sql immutable set search_path = '' as $$ select 30 $$;
+
+create or replace function private.zkouska_limit()
+returns interval language sql immutable set search_path = '' as $$ select interval '30 minutes' $$;
+
+-- potřebný počet správných odpovědí: 80 % (zaokrouhleno nahoru)
+create or replace function private.zkouska_hranice(p_pocet integer)
+returns integer language sql immutable set search_path = '' as $$ select ceil(p_pocet * 0.8)::integer $$;
+
+-- Zkouška je splněná, když má dost bodů a byla odevzdaná v limitu.
+-- Minuta navíc kryje zpoždění sítě: web odevzdá sám, jakmile čas vyprší.
+create or replace function private.zkouska_splnena(p_skore integer, p_pocet integer, p_trvani interval)
+returns boolean
+language sql immutable set search_path = '' as $$
+  select p_skore >= private.zkouska_hranice(p_pocet)
+     and p_trvani <= private.zkouska_limit() + interval '1 minute';
+$$;
+
+revoke all on function private.zkouska_otazek()                            from public, anon, authenticated;
+revoke all on function private.zkouska_limit()                             from public, anon, authenticated;
+revoke all on function private.zkouska_hranice(integer)                    from public, anon, authenticated;
+revoke all on function private.zkouska_splnena(integer, integer, interval) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
 -- zacni_kolo(kategorie, obtiznost, rezim) → { kolo_id, otazky: [...] }
 -- Založí kolo a uloží čas startu (na serveru, takže ho hráč nemůže
 -- podvrhnout). Vrací otázky BEZ správných odpovědí.
@@ -60,6 +88,8 @@ revoke all on function private.dnes() from public, anon, authenticated;
 --   rezim 'denni' = denní výzva: 5 otázek, pro všechny hráče ten den stejných.
 --                   Přihlášený hráč má jeden pokus; rozehrané kolo pokračuje
 --                   (čas běží dál), dokončené už znovu začít nejde.
+--   rezim 'zkouska' = test na čas: 30 otázek, z každé kategorie nejvýš 3,
+--                   aby byly zastoupené všechny. Vrací i limit a hranici.
 -- ---------------------------------------------------------------------
 -- Starší verze měla jen jeden parametr. Bez smazání by vedle sebe
 -- existovaly dvě funkce stejného jména a API by nevědělo, kterou volat.
@@ -80,10 +110,11 @@ declare
   v_kolo_id uuid;
   v_chyby   boolean := p_rezim = 'chyby';
   v_denni   boolean := p_rezim = 'denni';
+  v_zkouska boolean := p_rezim = 'zkouska';
   v_den     date := private.dnes();
   v_hotovo  boolean;
 begin
-  if p_rezim is null or p_rezim not in ('bezne', 'chyby', 'denni') then
+  if p_rezim is null or p_rezim not in ('bezne', 'chyby', 'denni', 'zkouska') then
     raise exception 'Neznámý režim kola.';
   end if;
   if v_chyby and auth.uid() is null then
@@ -123,6 +154,27 @@ begin
       end if;
       -- v_kolo_id není null → rozehrané kolo, pokračuje se v něm
     end if;
+  elsif v_zkouska then
+    -- row_number() očísluje otázky v každé kategorii náhodně (partition by
+    -- = „pro každou skupinu zvlášť“). Řazení podle tohoto čísla vezme
+    -- nejdřív první a druhou otázku z každé kategorie, zbytek do 30 doplní
+    -- třetí otázky náhodných kategorií. Každá kategorie má tak 2–3 otázky.
+    -- Vnější "order by random()" pak zamíchá pořadí ve zkoušce.
+    select coalesce(array_agg(vyber.id order by random()), '{}')
+    into v_otazky
+    from (
+      select k.id
+      from (
+        select o.id,
+               row_number() over (partition by o.kategorie order by random()) as poradi
+        from public.otazky o
+        where o.aktivni
+          and exists (select 1 from private.otazky_reseni r where r.otazka_id = o.id)
+      ) as k
+      where k.poradi <= 3
+      order by k.poradi, random()
+      limit private.zkouska_otazek()
+    ) as vyber;
   else
     select coalesce(array_agg(vyber.id), '{}')
     into v_otazky
@@ -159,6 +211,10 @@ begin
 
   return jsonb_build_object(
     'kolo_id', v_kolo_id,
+    -- jen u zkoušky: limit v sekundách a kolik správných odpovědí je potřeba
+    'zkouska', case when v_zkouska then jsonb_build_object(
+                 'limit_s', extract(epoch from private.zkouska_limit())::integer,
+                 'hranice', private.zkouska_hranice(cardinality(v_otazky))) end,
     'otazky', (
       select jsonb_agg(
                jsonb_build_object(
@@ -178,7 +234,7 @@ end;
 $$;
 
 -- ---------------------------------------------------------------------
--- odevzdej_kolo(kolo_id, odpovedi) → { skore, pocet, trvani_s, vysledky }
+-- odevzdej_kolo(kolo_id, odpovedi) → { skore, pocet, trvani_s, vysledky, nove_odznaky, zkouska }
 -- odpovedi = {"12": "B", "7": "A", …}
 -- Body i čas počítá server. Kolo jde odevzdat jen jednou a jen tím,
 -- kdo ho začal.
@@ -247,7 +303,12 @@ begin
     'pocet', v_kolo.pocet,
     'trvani_s', round(extract(epoch from now() - v_kolo.zacatek))::integer,
     'vysledky', v_vysledky,
-    'nove_odznaky', to_jsonb(v_nove)
+    'nove_odznaky', to_jsonb(v_nove),
+    -- jen u zkoušky: prošel/neprošel (vcas = odevzdáno v limitu)
+    'zkouska', case when v_kolo.rezim = 'zkouska' then jsonb_build_object(
+                 'hranice', private.zkouska_hranice(v_kolo.pocet),
+                 'vcas', now() - v_kolo.zacatek <= private.zkouska_limit() + interval '1 minute',
+                 'splneno', private.zkouska_splnena(v_skore, v_kolo.pocet, now() - v_kolo.zacatek)) end
   );
 end;
 $$;

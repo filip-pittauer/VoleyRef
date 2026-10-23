@@ -40,8 +40,11 @@ export function createScore(score, total) {
   return ring;
 }
 
-/** Spustí animaci skóre (musí už být na stránce) a případně stuhy. */
-export function celebrate(ring) {
+/**
+ * Spustí animaci skóre (musí už být na stránce) a případně stuhy.
+ * ribbons: false = bez stuh (např. nesplněná zkouška, i když má přes 60 %).
+ */
+export function celebrate(ring, { ribbons = true } = {}) {
   const score = Number(ring.dataset.score);
   const total = Number(ring.dataset.total);
   const ratio = total ? score / total : 0;
@@ -72,7 +75,7 @@ export function celebrate(ring) {
   count.textContent = '0';
   requestAnimationFrame(tick);
 
-  if (ratio >= RIBBONS_FROM) {
+  if (ribbons && ratio >= RIBBONS_FROM) {
     // stuhy vystřelí, až kruh skoro doběhne
     setTimeout(() => launchRibbons({ count: ratio === 1 ? 150 : 80, gold: ratio === 1 }), COUNT_MS * 0.7);
   }

@@ -10,11 +10,12 @@ function requireSupabase() {
 }
 
 /**
- * Začne nové kolo. Vrací { roundId, questions }.
+ * Začne nové kolo. Vrací { roundId, questions, exam }.
  *   category   = id kategorie, nebo null pro všechny
  *   difficulty = 1–3, nebo null pro všechny
- *   mode       = 'bezne' | 'chyby' (opakování chyb) | 'denni' (denní výzva)
- *                u 'chyby' a 'denni' se kategorie a obtížnost ignorují
+ *   mode       = 'bezne' | 'chyby' (opakování chyb) | 'denni' (denní výzva) | 'zkouska'
+ *                u ostatních než 'bezne' se kategorie a obtížnost ignorují
+ *   exam       = jen u zkoušky: { limitSeconds, passScore }, jinak null
  */
 export async function startRound({ category = null, difficulty = null, mode = 'bezne' } = {}) {
   requireSupabase();
@@ -24,7 +25,11 @@ export async function startRound({ category = null, difficulty = null, mode = 'b
     p_rezim: mode,
   });
   if (error) throw error;
-  return { roundId: data.kolo_id, questions: data.otazky };
+  return {
+    roundId: data.kolo_id,
+    questions: data.otazky,
+    exam: data.zkouska ? { limitSeconds: data.zkouska.limit_s, passScore: data.zkouska.hranice } : null,
+  };
 }
 
 /**
@@ -49,7 +54,8 @@ export async function getMistakesCount() {
 /**
  * Odevzdá odpovědi kola. answers = { [idOtazky]: 'A' | 'B' | ... }
  * Vrací { score, total, durationSeconds, newBadges: [id odznaku…],
- *         results: [{ id, answer, correctAnswer, isCorrect, explanation }] }
+ *         results: [{ id, answer, correctAnswer, isCorrect, explanation }],
+ *         exam: { passScore, inTime, passed } jen u zkoušky, jinak null }
  */
 export async function submitRound(roundId, answers) {
   requireSupabase();
@@ -72,5 +78,8 @@ export async function submitRound(roundId, answers) {
       isCorrect: v.je_spravne,
       explanation: v.vysvetleni,
     })),
+    exam: data.zkouska
+      ? { passScore: data.zkouska.hranice, inTime: data.zkouska.vcas, passed: data.zkouska.splneno }
+      : null,
   };
 }

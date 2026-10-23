@@ -27,8 +27,9 @@ export const BADGE_GROUPS = [
     badges: {
       'pouceny': { icon: '🔧', name: 'Poučený z chyb', description: 'Oprav 10 chyb v opakování chyb.' },
       'cisty-stul': { icon: '🧹', name: 'Čistý stůl', description: 'Oprav všechny své chyby.' },
-      'vsestranny': { icon: '🧭', name: 'Všestranný', description: 'Ve všech 10 kategoriích aspoň 5 otázek s úspěšností 70 %.' },
+      'vsestranny': { icon: '🧭', name: 'Všestranný', description: 'Ve všech 11 kategoriích aspoň 5 otázek s úspěšností 70 %.' },
       'specialista': { icon: '🎓', name: 'Specialista', description: 'V jedné kategorii aspoň 15 otázek s úspěšností 90 %.' },
+      'zkouska': { icon: '📜', name: 'Zkouška složena', description: 'Slož zkoušku: 30 otázek za 30 minut, aspoň 80 % správně.' },
     },
   },
   {

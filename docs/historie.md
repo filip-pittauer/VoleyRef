@@ -12,7 +12,7 @@ Podrobnosti, které nejsou potřeba v každém sezení (proto nejsou v CLAUDE.md
 6. **PWA:** `manifest.json`, ikony, service worker.
 7. **Vlastní doména** (volitelně, jméno zatím není).
 
-Dál hotovo: statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta (balíček 4), vzhled „Svaz“, úplná pravidla (balíček 5), animace a detaily (balíček 6), README.md a CODEMAP.md, 200 otázek, trenažér postavení, mobilní úpravy.
+Dál hotovo: statistiky, obtížnost, opakování chyb, denní výzva, odznaky (18, výběr 3 do žebříčku), gesta (balíček 4), vzhled „Svaz“, úplná pravidla (balíček 5), animace a detaily (balíček 6), README.md a CODEMAP.md, 200 otázek, trenažér postavení, mobilní úpravy, zkouška.
 Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žebříček, přezdívku, smazání účtu, obtížnost, opakování chyb, denní výzvu, odznaky, vzhled Svaz, pravidla, animace, mobilní verzi trenažéru a gest.
 
 ## Otázky (200, hotovo 21. 10. 2026)
@@ -22,6 +22,14 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Limit **2 s na otázku** (dřív 3 s) pro žebříček, denní výzvu a „dokonalá“ kola: `sql/02`, `04`, `05`, `MIN_SECONDS_PER_QUESTION` v js/quiz.js.
 - Nevyřešené: trest za porušení 12.5.3 (ruce nad hlavou při podání) pravidla výslovně neuvádějí – otázka 67 se ptá jen na zákaz; ověřit v Casebooku 2025.
 - PDF k připomínkám (pro kamaráda rozhodčího): `private/testy/pravidla-pdf.mjs <výstup.pdf>`, `otazky-pdf.mjs <výstup.pdf>` (otázky se správnými odpověďmi – neveřejné).
+
+## Zkouška (`zkouska.html`, 23. 10. 2026)
+- Inspirace: veřejný test Komise rozhodčích MSKVS (kr-mskvs.cz, 132 otázek s výběrem ze 3–4 možností, hodně faktografie) a školení KVS (písemný test + ústní + praktická část; v testu i soutěžní řád – ten zatím neřešíme, není součást pravidel FIVB).
+- 30 otázek, z každé kategorie 2–3 (`row_number() over (partition by kategorie)`), limit 30 min (+1 min tolerance na serveru), hranice 80 % = 24. Web odevzdá sám při 0:00. Volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení.
+- Výsledek: prošel/neprošel, skóre, úspěšnost po kategoriích, vysvětlení (`js/quiz-result.js` sdílí s kvízem). Stuhy jen při splnění. Přihlášeným se ukládá (Profil → Zkoušky, `moje_statistiky().zkousky`), odznak „Zkouška složena“. Do žebříčku se nepočítá.
+- Kategorie `hriste` („Hřiště a vybavení“, pravidla 1–4): 27 faktografických otázek (id 201–227). Zdroj také oficiální český překlad ČVS 2025–2028: https://www.cvf.cz/rs/obr/clanky/028/973/Pravidla_volejbalu_2025_2028_final_II.pdf
+- Zástupné obrázky: `media: { typ: "obrazek", soubor: null, popis: "obrázek sítě…" }` → rámeček s popisem (js/media.js). Po dodání obrázku stačí doplnit `soubor`.
+- Testy: `badges-db` (zkouška v DB), `e2e-zkouska` (průběh, ovládané hodiny pro odpočet, Profil), snímky `zkouska-shots.mjs <složka> [mobile]`.
 
 ## Balíček 4: gesta rozhodčích
 - `gesta.html`: kvíz „Co znamená toto gesto?“ – 10 gest (nebo 5 u čárových), 4 možnosti ze stejné skupiny (přednostně z `zamena`), vyhodnocení hned po odpovědi (nic se neukládá). Jednoruká gesta se náhodně zrcadlí.

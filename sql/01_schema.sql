@@ -19,7 +19,7 @@ create table if not exists public.otazky (
   aktivni         boolean  not null default true,
   kategorie       text     not null check (kategorie in (
                     'podani', 'prijem-nahravka', 'utok', 'blok', 'dotyky-chyby',
-                    'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace')),
+                    'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace', 'hriste')),
   obtiznost       smallint not null default 1 check (obtiznost between 1 and 3),
   situace         text     not null,
   media           jsonb,
@@ -34,7 +34,7 @@ create table if not exists public.otazky (
 alter table public.otazky drop constraint if exists otazky_kategorie_check;
 alter table public.otazky add constraint otazky_kategorie_check check (kategorie in (
   'podani', 'prijem-nahravka', 'utok', 'blok', 'dotyky-chyby',
-  'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace'));
+  'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace', 'hriste'));
 
 -- ---------------------------------------------------------------------
 -- Otázky – tajná část (správná odpověď a vysvětlení)
@@ -84,6 +84,12 @@ alter table public.kola add column if not exists
 alter table public.kola add column if not exists
   rezim text not null default 'bezne'
   check (rezim in ('bezne', 'chyby', 'denni'));                -- běžné kolo / opakování chyb / denní výzva
+
+-- Režim 'zkouska' přibyl později. Kontrolu u existující tabulky "add column
+-- if not exists" nezmění → smazat a vytvořit znovu s aktuálním seznamem.
+alter table public.kola drop constraint if exists kola_rezim_check;
+alter table public.kola add constraint kola_rezim_check
+  check (rezim in ('bezne', 'chyby', 'denni', 'zkouska'));    -- + zkouška (test na čas, 02_funkce.sql)
 
 alter table public.kola add column if not exists
   den date;                                                    -- jen u denní výzvy: ke kterému dni patří

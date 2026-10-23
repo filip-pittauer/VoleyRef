@@ -7,7 +7,7 @@ Pravidla projektu a postup práce jsou v [CLAUDE.md](CLAUDE.md); tady je jen „
 > RPC funkce nebo tabulky uprav i tuto mapu (ve stejném commitu).
 > Čísla řádků sem záměrně nepíšeme – rychle zastarávají.
 
-Stav: 21. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, trenažér postavení).
+Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, trenažér postavení, zkouška).
 
 ---
 
@@ -37,7 +37,8 @@ Stav: 21. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | Stránka | Účel | Skripty (vstupní moduly) |
 |---|---|---|
 | `index.html` | úvod / rozcestník, karty sekcí, instalace PWA | `pwa.js` |
-| `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`), karty gest a trenažéru postavení | `pwa.js`, `quiz.js` |
+| `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`), karty zkoušky (`#zkouska`), gest a trenažéru postavení | `pwa.js`, `quiz.js` |
+| `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); není v navigaci, odkaz z kvízu | `pwa.js`, `exam.js` |
 | `gesta.html` | kvíz „Co znamená toto gesto?“ | `pwa.js`, `gesture-quiz.js` |
 | `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); není v navigaci, odkaz z kvízu a úvodu | `pwa.js`, `lineup-trainer.js` |
 | `pravidla.html` | úplná pravidla FIVB 2025–2028, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `gesture-atlas.js` |
@@ -47,7 +48,7 @@ Stav: 21. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | inline skript |
 
 Hlavička s navigací (Kvíz, Gesta, Pravidla, Žebříček, Profil) je v **každém** HTML zvlášť –
-při změně upravit všech 9 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
+při změně upravit všech 10 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
 
 ---
 
@@ -69,10 +70,12 @@ při změně upravit všech 9 souborů. Ikony navigace: `img/ikony.svg` (symboly
 ### Kvíz, žebříček, profil (používají Supabase)
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
-| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound`, `getDailyStatus`, `getMistakesCount` – jediné místo volání RPC kvízu |
-| `quiz.js` | `dom`, `categories`, `format`, `badges`, `media`, `celebrate`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
-| `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu i kvízu gest |
-| `media.js` | `dom`, `animation` | `renderMedia` – obrázek / video / animace u otázky |
+| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel), `getDailyStatus`, `getMistakesCount` – jediné místo volání RPC kvízu |
+| `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
+| `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
+| `quiz-result.js` | `dom`, `categories`, `badges` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
+| `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate(ring, { ribbons })` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu, zkoušky i kvízu gest |
+| `media.js` | `dom`, `animation` | `renderMedia` – obrázek / video / animace u otázky; obrázek bez `soubor` = zástupný rámeček s popisem (obrázek se chystá) |
 | `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek`; medaile pro 1.–3. místo |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
 | `stats.js` | `dom`, `format`, `categories`, `badges`, `supabase` | `loadStats` – statistiky a odznaky v Profilu |
@@ -170,16 +173,17 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 ### Funkce (RPC)
 | Soubor | Veřejné (volá prohlížeč) | Kdo smí | Volá z JS | Interní (`private.*`) |
 |---|---|---|---|---|
-| `02_funkce.sql` | `zacni_kolo(kategorie, obtiznost, rezim)` | anon, auth | `quiz-api.js` | `chybne_otazky`, `dnes` |
+| `02_funkce.sql` | `zacni_kolo(kategorie, obtiznost, rezim)` | anon, auth | `quiz-api.js` | `chybne_otazky`, `dnes`, `zkouska_otazek`, `zkouska_limit`, `zkouska_hranice`, `zkouska_splnena` |
 | | `odevzdej_kolo(kolo_id, odpovedi)` – spočítá body, uloží, udělí odznaky | anon, auth | `quiz-api.js` | |
 | | `zebricek(limit)` | anon, auth | `leaderboard.js` | |
 | | `pocet_chyb()` | auth | `quiz-api.js`, `stats.js` | |
 | | `smazat_ucet()` | auth | `account.js` | |
-| `03_statistiky.sql` | `moje_statistiky()` | auth | `stats.js` | |
+| `03_statistiky.sql` | `moje_statistiky()` (vč. historie zkoušek) | auth | `stats.js` | |
 | `04_denni_vyzva.sql` | `denni_zebricek(limit)`, `stav_denni_vyzvy()` | anon, auth | `leaderboard.js`, `quiz-api.js` | `denni_poradi`, `denni_serie` |
 | `05_odznaky.sql` | `moje_odznaky()`, `nastav_odznaky(odznaky)` | auth | `account.js`, `stats.js` | `metriky_odznaku`, `udel_odznaky` |
 
-Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jeden pokus).
+Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jeden pokus),
+`zkouska` (30 otázek, z každé kategorie 2–3; limit 30 min + 1 min tolerance, hranice 80 % – parametry v `private.zkouska_*`; do žebříčku se nepočítá, odznak `zkouska`).
 
 ---
 
@@ -217,7 +221,8 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | Chci… | Upravit |
 |---|---|
 | přidat/změnit otázku | `private/otazky.json` → seed SQL → spustit v Supabase |
-| přidat kategorii otázek | `js/categories.js`, `tools/seed-otazky.mjs` (`CATEGORIES`), `check (kategorie in …)` v `sql/01_schema.sql`, shrnutí s tím id v pravidlech |
+| přidat kategorii otázek | `js/categories.js`, `tools/seed-otazky.mjs` (`CATEGORIES`), `check (kategorie in …)` v `sql/01_schema.sql`, shrnutí s tím id v pravidlech, cíl odznaku Všestranný (`sql/05` + `js/badges.js`), `CATS` v `private/testy/otazky-check.mjs` |
+| změnit zkoušku (počet, limit, hranice) | `private.zkouska_*` v `sql/02_funkce.sql` + texty v `zkouska.html`, karta v `kviz.html`, popis odznaku v `js/badges.js` |
 | přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) |
 | upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |

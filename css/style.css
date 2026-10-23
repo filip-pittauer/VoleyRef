@@ -875,6 +875,163 @@ progress::-moz-progress-bar {
   font-weight: 600;
 }
 
+/* obrázek k otázce se teprve připravuje – zástupný rámeček s popisem (js/media.js) */
+.media--placeholder {
+  display: grid;
+  place-items: center;
+  gap: 0.25rem;
+  min-height: 9rem;
+  padding: var(--space);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.media--placeholder span {
+  font-size: 2rem;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+/* ---------- Zkouška (zkouska.html) ---------- */
+.exam-facts {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.exam-facts li + li {
+  margin-top: 0.35rem;
+}
+
+/* odpočet na tabuli: stejné písmo jako skóre, při posledních minutách červeně */
+.board .exam-timer {
+  font-size: 1.6rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.board .exam-timer--low {
+  color: var(--color-accent-on-dark);
+}
+
+.exam-nav {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.exam-nav .button {
+  flex: 1;
+}
+
+@media (min-width: 40rem) {
+  .exam-nav .button {
+    flex: none;
+    min-width: 10rem;
+  }
+
+  .exam-nav #next-button {
+    margin-left: auto;
+  }
+}
+
+.exam-overview {
+  padding-top: var(--space);
+  border-top: 1px solid var(--color-border);
+}
+
+.exam-overview__title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.exam-overview__title .muted {
+  font-weight: 400;
+}
+
+/* mřížka čísel otázek: zodpovězené vyplněné, aktuální s rámečkem */
+.exam-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.6rem, 1fr));
+  gap: 0.4rem;
+}
+
+.exam-grid__item {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.exam-grid__item:hover {
+  border-color: var(--color-primary);
+}
+
+.exam-grid__item--answered {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.exam-grid__item[aria-current="step"] {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.exam-verdict {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.exam-verdict--pass,
+.exam-pass {
+  color: var(--color-success);
+}
+
+.exam-verdict--fail,
+.exam-fail {
+  color: var(--color-error);
+}
+
+/* tabulka zkoušek v Profilu */
+.exam-pass,
+.exam-fail {
+  font-weight: 600;
+}
+
+/* nativní modální okno (<dialog>), pozadí za ním ztmavené */
+.dialog {
+  width: min(28rem, calc(100vw - 2rem));
+  padding: var(--space);
+  border: none;
+  border-top: 4px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dialog::backdrop {
+  background: rgb(11 19 34 / 0.6);
+}
+
+.dialog h2 {
+  margin: 0;
+}
+
 /* ---------- Animace (SVG, jednotky = metry) ---------- */
 .anim svg {
   background: #2f6f9f;

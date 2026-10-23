@@ -86,6 +86,7 @@ function renderCategories(categories, mistakes) {
 function roundLabel(round) {
   if (round.rezim === 'chyby') return 'Opakování chyb';
   if (round.rezim === 'denni') return 'Denní výzva';
+  if (round.rezim === 'zkouska') return 'Zkouška';
   return [round.kategorie ? categoryName(round.kategorie) : 'Všechny', difficultyName(round.obtiznost)]
     .filter(Boolean).join(' · ');
 }
@@ -107,6 +108,28 @@ function renderRecent(rounds) {
           el('td', {}, roundLabel(r)),
           el('td', { class: 'num' }, `${r.skore}/${r.pocet}`),
           el('td', { class: 'num' }, formatDuration(r.trvani_s))))))));
+}
+
+// ---------- Zkoušky ----------
+function renderExams(exams) {
+  if (!exams || exams.pocet === 0) return null;
+  return el('section', { id: 'zkousky', class: 'stack' },
+    el('h3', {}, 'Zkoušky'),
+    el('p', {}, `Splněno ${exams.splnenych} z ${plural(exams.pocet, 'pokusu', 'pokusů', 'pokusů')}. `,
+      el('a', { href: 'zkouska.html' }, 'Nová zkouška'), '.'),
+    el('div', { class: 'table-wrap' },
+      el('table', { class: 'leaderboard' },
+        el('caption', { class: 'visually-hidden' }, 'Posledních 10 zkoušek'),
+        el('thead', {}, el('tr', {},
+          el('th', { scope: 'col' }, 'Kdy'),
+          el('th', { scope: 'col' }, 'Výsledek'),
+          el('th', { scope: 'col', class: 'num' }, 'Body'),
+          el('th', { scope: 'col', class: 'num' }, 'Čas'))),
+        el('tbody', {}, ...exams.posledni.map(z => el('tr', {},
+          el('td', {}, dateFormat.format(new Date(z.datum))),
+          el('td', { class: z.splneno ? 'exam-pass' : 'exam-fail' }, z.splneno ? '✓ splněno' : '✗ nesplněno'),
+          el('td', { class: 'num' }, `${z.skore}/${z.pocet}`),
+          el('td', { class: 'num' }, formatDuration(z.trvani_s))))))));
 }
 
 // ---------- Odznaky ----------
@@ -185,12 +208,13 @@ async function load() {
     renderSummary(data),
     renderCategories(data.kategorie, mistakes),
     renderRecent(data.posledni) ?? '',
+    renderExams(data.zkousky) ?? '',
     renderBadges(badges) ?? '');
   status.hidden = true;
   content.hidden = false;
 
-  // odkaz ucet.html#odznaky – sekce vznikla až teď, prohlížeč na ni sám neodroloval
-  if (location.hash === '#odznaky') document.getElementById('odznaky')?.scrollIntoView();
+  // odkazy ucet.html#odznaky / #zkousky – sekce vznikla až teď, prohlížeč na ni sám neodroloval
+  if (['#odznaky', '#zkousky'].includes(location.hash)) document.querySelector(location.hash)?.scrollIntoView();
 }
 
 /** Načte a vykreslí statistiky (volá Profil po přihlášení). */

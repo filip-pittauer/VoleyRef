@@ -10,6 +10,7 @@
 --   kategorie: [{ kategorie, otazek, spravne }],
 --   nejlepsi:  { skore, pocet, trvani_s }                       (nejlepší běžné kolo)
 --   posledni:  [{ datum, kategorie, obtiznost, rezim, skore, pocet, trvani_s }]   (posledních 10 kol)
+--   zkousky:   { pocet, splnenych, posledni: [{ datum, skore, pocet, trvani_s, splneno }] }  (10 posledních)
 -- }
 -- Úspěšnost v kategoriích se počítá ze správných odpovědí, které hráč
 -- nesmí vidět (private schéma) – proto to musí spočítat server.
@@ -81,6 +82,27 @@ begin
         order by k.konec desc
         limit 10
       ) as p
+    ),
+
+    -- zkoušky: kolik jich hráč dělal, kolik splnil a posledních 10
+    -- (filter = jen některé řádky do agregace, jako Where() před Select() v LINQ)
+    'zkousky', (
+      select jsonb_build_object(
+        'pocet', count(*),
+        'splnenych', count(*) filter (where z.splneno),
+        'posledni', coalesce(
+          jsonb_agg(jsonb_build_object('datum', z.konec, 'skore', z.skore, 'pocet', z.pocet,
+                                       'trvani_s', z.trvani_s, 'splneno', z.splneno)
+                    order by z.konec desc) filter (where z.poradi <= 10),
+          '[]'::jsonb))
+      from (
+        select k.konec, k.skore, k.pocet,
+               round(extract(epoch from k.konec - k.zacatek))::integer as trvani_s,
+               private.zkouska_splnena(k.skore, k.pocet, k.konec - k.zacatek) as splneno,
+               row_number() over (order by k.konec desc) as poradi
+        from public.kola k
+        where k.uzivatel_id = v_uzivatel and k.konec is not null and k.rezim = 'zkouska'
+      ) as z
     )
   );
 end;

@@ -18,7 +18,7 @@ const OUTPUT = 'private/seed-otazky.sql';
 
 const CATEGORIES = [
   'podani', 'prijem-nahravka', 'utok', 'blok', 'dotyky-chyby',
-  'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace',
+  'rotace-postaveni', 'stridani', 'preruseni-hry', 'chovani', 'signalizace', 'hriste',
 ];
 const ANSWER_KEYS = ['A', 'B', 'C', 'D'];
 const MEDIA_TYPES = ['obrazek', 'video', 'animace'];
@@ -48,8 +48,10 @@ function validate(questions) {
 
     if (q.media !== null && q.media !== undefined) {
       if (!MEDIA_TYPES.includes(q.media.typ)) err(`neznámý typ média "${q.media.typ}"`);
-      if (!q.media.soubor) err('médium nemá soubor');
-      else if (!/^https?:/.test(q.media.soubor) && !existsSync(q.media.soubor)) err(`soubor média "${q.media.soubor}" neexistuje`);
+      // obrázek bez souboru = zástupný rámeček s popisem (obrázek se teprve připraví)
+      if (!q.media.soubor) {
+        if (q.media.typ !== 'obrazek') err('médium nemá soubor');
+      } else if (!/^https?:/.test(q.media.soubor) && !existsSync(q.media.soubor)) err(`soubor média "${q.media.soubor}" neexistuje`);
       if (!q.media.popis) err('médium nemá popis (alt text)');
     }
   }

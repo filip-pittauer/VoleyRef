@@ -23,6 +23,7 @@ pravidla.html       úplná pravidla: <details class="rule"> (kotvy #pravidlo-12
                     kategorií, diagramy #diagram-N; obsah mezi značkami generuje private/pravidla-zdroj/build.mjs
 gesta.html          kvíz gest (jen prohlížeč, bez DB)
 postaveni.html      trenažér postavení (jen prohlížeč; js/lineup-logic.js, court-scene.js, lineup-trainer.js)
+zkouska.html        zkouška: 30 otázek / 30 min / 80 % (js/exam.js, režim 'zkouska' v zacni_kolo)
 zebricek.html, ucet.html (Profil), ochrana-udaju.html, statistiky.html (jen přesměrování)
 css/style.css       všechny styly (vzhled „Svaz“), css/fonts.css + fonts/ (písma offline kvůli GDPR)
 js/                 moduly (viz CODEMAP.md); js/config.js = Supabase URL + publishable klíč
@@ -44,8 +45,9 @@ Platí pro `private/otazky.json` i DB (`public.otazky` + `private.otazky_reseni`
   "vysvetleni": "…", "pravidlo": "12.4.3", "verze_pravidel": "2025" }
 ```
 - `aktivni: false` = koncept, v kvízu se nezobrazí. Otázky se nemažou, jen deaktivují.
-- `kategorie`: `podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `chovani`, `signalizace` (český název až v UI).
+- `kategorie`: `podani`, `prijem-nahravka`, `utok`, `blok`, `dotyky-chyby`, `rotace-postaveni`, `stridani`, `preruseni-hry`, `chovani`, `signalizace`, `hriste` (český název až v UI).
 - `obtiznost` 1–3; `media` null nebo `obrazek` | `video` | `animace`; `odpovedi` 2–4 (A–D), právě jedna správná.
+- `obrazek` se `soubor: null` = zástupný rámeček s textem `popis` (obrázek dodá uživatel nebo se nakreslí SVG).
 - Správná odpověď se hráči ukazuje **až na konci kola**. Jen halový volejbal. Tlačítko „Nevím“ nebude.
 - `private/otazky.json` je jediný zdroj; `node tools/seed-otazky.mjs` vytvoří `private/seed-otazky.sql` (upsert) pro SQL editor Supabase. Postup přidání otázek: skill **nove-otazky**.
 
@@ -81,8 +83,10 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 
 ## Aktuální stav (22. 10. 2026)
 - Hotovo a na živém webu: fáze 1–6, kvíz (200 otázek, 10 kategorií, obtížnost, opakování chyb, denní výzva, odznaky, limit 2 s na otázku), pravidla, gesta (přepracovaná postava), trenažér postavení, mobilní verze her. V Supabase spuštěné SQL `01`–`05` a seed všech 200 otázek.
-- **Kde jsme skončili (23. 10. 2026):** úspora kontextu hotová – CLAUDE.md zkrácený (podrobnosti v docs/), testy `run-all.mjs` (18 testů, vše prošlo), skilly `nove-otazky` a `vydani`. Vše pushnuté v obou repozitářích, nic rozpracovaného. Další krok si vybere uživatel.
+- **Kde jsme skončili (23. 10. 2026):** zkouškový režim (zkouska.html) + kategorie `hriste` (27 faktografických otázek, pravidla 1–4, ověřené agentem, 8 se zástupným obrázkem). Testy 19/19. Uživatel musí v Supabase spustit `01`, `02`, `03`, `05` a pak seed.
 - **Otevřené body:**
+  - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
+  - Počet hráčů v týmu: anglická pravidla 4.1.1 = 12 (14 jen soutěže FIVB dospělých), oficiální český překlad ČVS = 14; ověřit u rozhodčího.
   - Animace postav (gesta) uživatel chce dál zlepšovat; záložní nápad GSAP / Anime.js (viz docs/historie.md).
   - Text pravidel a otázky zkontroluje zkušený rozhodčí (uživatel zařídí).
   - Před zveřejněním: docs/pred-spustenim.md (OAuth, Client secret, SMTP čeká na doménu, jméno webu zatím není).

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Zkouškový test pro volejbalové rozhodčí: 30 otázek ze všech oblastí pravidel za 30 minut.">
+  <title>Zkouška – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/exam.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="kviz.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg><span>Kvíz</span></a></li>
+          <li><a href="gesta.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg><span>Gesta</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="app-page">
+    <h1>Zkouška</h1>
+
+    <p id="exam-error" class="alert alert--error" role="alert" hidden></p>
+
+    <!-- 1) Úvod -->
+    <section id="exam-start" class="card stack">
+      <h2>Zkouškový test</h2>
+      <p>Test ve stylu písemné části zkoušky rozhodčích. Otázky jsou ze všech oblastí pravidel: hřiště a vybavení, herní situace, střídání, tresty i signalizace.</p>
+      <ul class="exam-facts">
+        <li><strong>30 otázek</strong>, z každé kategorie dvě nebo tři</li>
+        <li><strong>30 minut</strong>, potom se test odevzdá sám</li>
+        <li>Ke splnění potřebuješ <strong>80 %</strong>, tedy 24 správných odpovědí</li>
+        <li>K otázkám se můžeš vracet a odpovědi měnit. Správné odpovědi uvidíš až po odevzdání.</li>
+      </ul>
+      <p id="player-info" class="muted small" aria-live="polite"></p>
+      <div>
+        <button id="start-button" class="button" type="button">Začít zkoušku</button>
+      </div>
+    </section>
+
+    <!-- 2) Test -->
+    <section id="exam-run" class="card stack" hidden>
+      <div class="board">
+        <div class="board__row">
+          <p id="exam-progress"></p>
+          <p class="exam-timer" role="timer" aria-label="Zbývající čas"><span id="exam-timer">30:00</span></p>
+        </div>
+        <progress id="exam-progress-bar" value="0" max="30" aria-hidden="true"></progress>
+      </div>
+      <!-- jednorázové hlášení „Zbývá 5 minut“ pro čtečku obrazovky -->
+      <p id="timer-alert" class="visually-hidden" aria-live="assertive"></p>
+
+      <h2 id="question-heading" class="visually-hidden" tabindex="-1">Otázka</h2>
+      <p id="question-text" class="situation"></p>
+      <div id="question-media"></div>
+      <form id="question-form" class="stack">
+        <fieldset class="answers">
+          <legend>Vyber odpověď</legend>
+          <div id="answers" class="stack"></div>
+        </fieldset>
+        <div class="exam-nav">
+          <button id="prev-button" class="button button--secondary" type="button">Předchozí</button>
+          <button id="next-button" class="button" type="submit">Další</button>
+        </div>
+      </form>
+
+      <nav class="exam-overview stack" aria-labelledby="overview-heading">
+        <h3 id="overview-heading" class="exam-overview__title">Přehled otázek <span id="exam-answered" class="muted"></span></h3>
+        <ol id="exam-grid" class="exam-grid"></ol>
+        <div>
+          <button id="submit-button" class="button button--secondary" type="button">Odevzdat zkoušku</button>
+        </div>
+      </nav>
+    </section>
+
+    <!-- Potvrzení odevzdání (<dialog> je nativní modální okno prohlížeče) -->
+    <dialog id="submit-dialog" class="dialog" aria-labelledby="submit-dialog-heading">
+      <form method="dialog" class="stack">
+        <h2 id="submit-dialog-heading">Odevzdat zkoušku?</h2>
+        <p id="submit-dialog-text"></p>
+        <div class="actions">
+          <button class="button" type="submit" value="confirm">Odevzdat</button>
+          <button class="button button--secondary" type="submit" value="cancel">Zpět k otázkám</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- 3) Výsledek -->
+    <section id="exam-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="result-heading" tabindex="-1">Výsledek zkoušky</h2>
+        <div id="result-summary" class="stack"></div>
+        <div class="actions">
+          <button id="again-button" class="button" type="button">Nová zkouška</button>
+          <a href="kviz.html">Zpět na kvíz</a>
+        </div>
+      </div>
+      <section class="card stack" aria-labelledby="categories-heading">
+        <h2 id="categories-heading">Podle kategorií</h2>
+        <ul id="result-categories" class="cat-list"></ul>
+      </section>
+      <h2>Vysvětlení</h2>
+      <ol id="result-list" class="result-list"></ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

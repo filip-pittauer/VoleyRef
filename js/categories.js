@@ -11,6 +11,7 @@ export const CATEGORIES = {
   'preruseni-hry': 'Přerušení a zdržování hry',
   'chovani': 'Chování a tresty',
   'signalizace': 'Signalizace rozhodčích',
+  'hriste': 'Hřiště a vybavení',
 };
 
 export function categoryName(id) {

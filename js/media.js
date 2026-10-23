@@ -8,6 +8,11 @@ export function renderMedia(media) {
 
   switch (media.typ) {
     case 'obrazek':
+      // obrázek se teprve připravuje → zatím rámeček s popisem („obrázek sítě“)
+      if (!media.soubor) {
+        return el('figure', { class: 'media media--placeholder' },
+          el('span', { 'aria-hidden': 'true' }, '🖼️'), el('figcaption', {}, media.popis ?? 'obrázek'));
+      }
       return el('figure', { class: 'media' },
         el('img', { src: media.soubor, alt: media.popis ?? '' }));
 
