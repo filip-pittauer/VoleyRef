@@ -143,6 +143,7 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 
 ### Kotvy v `pravidla.html`
 - `#kapitola-N`, `#pravidlo-N` (`<details class="rule">`), body `#p-12-4-3`
+- `#definice`, `#diagramy` – rozbalovací bloky bez čísla (`details.rule.rule--extra`, v generátoru `## id | Název`)
 - shrnutí „Ve zkratce“ = id kategorií otázek: `#hriste`, `#body`, `#podani`, `#prijem-nahravka`, `#utok`, `#blok`,
   `#dotyky-chyby`, `#sit-hrac`, `#rotace-postaveni`, `#stridani`, `#preruseni-hry`, `#libero`, `#chovani`, `#signalizace`
 - definice `#def-…`, diagramy `#diagram-2` … `#diagram-10` (+ `#diagram-9b`, `#diagram-11` = atlas gest), gesta `#gesto-<id>`

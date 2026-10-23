@@ -113,7 +113,7 @@ function placeOf(node, anchor) {
 
 function buildIndex() {
   const nodes = document.querySelectorAll(
-    'main .rules-chapter :is(p, li, dd, dt, h4, figcaption), main details.rule summary h3, #gesture-atlas :is(h3, p)');
+    'main :is(.rules-chapter, details.rule) :is(p, li, dd, dt, h4, figcaption), main details.rule summary h3, #gesture-atlas :is(h3, p)');
   const entries = [];
   for (const node of nodes) {
     // seznam uvnitř odstavce/položky indexujeme jen jednou (nejvnitřnější prvky)
