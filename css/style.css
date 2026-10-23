@@ -2265,18 +2265,66 @@ progress::-moz-progress-bar {
 }
 
 /* ---------- Pravidla ---------- */
-/* hledání v pravidlech (js/rules-search.js) */
-.rules-search label {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+/* hledání v pravidlech (js/rules-search.js): nadpis + lupa v řádku, blok jen o kousek větší než pole */
+.rules-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.rules-search input[type="search"] {
+.rules-search-toggle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.rules-search-toggle[aria-expanded="true"] {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.rules-search-toggle svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.rules-search {
+  --space: 0.5rem;
+  max-width: 36rem;
+  padding: 0.5rem;
+}
+
+/* id kvůli prioritě: obecný styl input:not(…) má jinak přednost (a max. šířku 24rem) */
+.rules-search #rules-search-input {
   max-width: none;
   font-size: 1.05rem;
+}
+
+/* na počítači je pole vidět pořád, lupa není potřeba */
+@media (min-width: 48rem) {
+  .rules-search-toggle {
+    display: none;
+  }
+}
+
+/* na mobilu je hledání schované, dokud se neklepne na lupu */
+@media (max-width: 47.99rem) {
+  .rules-search:not(.is-open) {
+    display: none;
+  }
 }
 
 .rules-search #rules-search-status:empty,

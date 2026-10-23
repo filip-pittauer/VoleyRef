@@ -225,6 +225,15 @@ if (form) {
 
   form.hidden = false;
 
+  // Lupa vedle nadpisu (jen na mobilu, viz CSS): otevře/zavře blok hledání.
+  const toggle = document.getElementById('rules-search-toggle');
+  toggle.hidden = false;
+  toggle.addEventListener('click', () => {
+    const open = form.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    if (open) input.focus();
+  });
+
   const render = () => {
     const query = input.value.trim();
     if (query.length < 2) {

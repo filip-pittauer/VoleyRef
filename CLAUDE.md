@@ -86,8 +86,9 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - Zkouška (zkouska.html, kategorie `hriste` s 27 otázkami) je na živém webu, SQL spuštěné.
 - Hlášení chyb (js/report.js, sql/06) je na živém webu.
 - Ilustrace u 49 otázek jsou na webu (generátory v private/obrazky/, náhled private/obrazky/nahled.mjs).
-- **Kde jsme skončili (24. 10. 2026):** hledání v pravidlech (js/rules-search.js, bez serveru; slovníček synonym). AI „Zeptej se pravidel“ jen probráno, nerozhodnuto.
+- **Kde jsme skončili (24. 10. 2026):** hledání v pravidlech (js/rules-search.js, bez serveru; slovníček synonym).
 - **Otevřené body:**
+  - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
   - Počet hráčů v týmu: anglická pravidla 4.1.1 = 12 (14 jen soutěže FIVB dospělých), oficiální český překlad ČVS = 14; ověřit u rozhodčího.
   - Animace postav (gesta) uživatel chce dál zlepšovat; záložní nápad GSAP / Anime.js (viz docs/historie.md).

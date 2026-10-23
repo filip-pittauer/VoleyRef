@@ -36,13 +36,20 @@
   </header>
 
   <main id="obsah" class="rules">
-    <h1>Pravidla</h1>
+    <div class="rules-title">
+      <h1>Pravidla</h1>
+      <!-- na mobilu otevře hledání (na počítači je pole vidět pořád) -->
+      <button id="rules-search-toggle" class="rules-search-toggle" type="button" aria-expanded="false"
+        aria-controls="rules-search" aria-label="Hledat v pravidlech" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>
+      </button>
+    </div>
 
     <!-- Hledání v pravidlech (js/rules-search.js); bez JavaScriptu nefunguje, proto skryté -->
     <form id="rules-search" class="rules-search card stack" role="search" hidden>
-      <label for="rules-search-input">Hledat v pravidlech</label>
+      <label for="rules-search-input" class="visually-hidden">Hledat v pravidlech</label>
       <input id="rules-search-input" type="search" autocomplete="off" enterkeyhint="search"
-        placeholder="např. blokování, dotek sítě, smeč z druhé zóny…">
+        placeholder="Hledat v pravidlech, např. blokování, dotek sítě…">
       <p id="rules-search-status" class="small muted" aria-live="polite"></p>
       <ol id="rules-search-results" class="search-results"></ol>
     </form>
