@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Trenažér zápisu pro volejbalové rozhodčí a zapisovatele: pořadí podání, střídání, libero, oddechové časy a sankce.">
+  <title>Trenažér zápisu – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/scoresheet-trainer.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="kviz.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg><span>Kvíz</span></a></li>
+          <li><a href="gesta.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg><span>Gesta</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="app-page">
+    <h1>Trenažér zápisu</h1>
+
+    <!-- 1) Výběr verze -->
+    <section id="sc-start" class="stack">
+      <p>Procvič si práci zapisovatele: pořadí podání, střídání, výměny libera, oddechové časy a sankce.
+        Zápis je zjednodušený (není to kopie oficiálního formuláře), ale obsahuje to podstatné.</p>
+      <div class="sc-modes">
+        <div class="card stack">
+          <h2>Úlohy nad zápisem</h2>
+          <p>Krátká verze: 10 úloh. Uvidíš rozepsaný zápis a hřiště a rozhodneš jednu situaci – kdo podává, jestli povolit střídání, jakou sankci zapsat… Asi 5 minut.</p>
+          <div><button id="start-short" class="button" type="button">Začít úlohy</button></div>
+        </div>
+        <div class="card stack">
+          <h2>Vedení celého setu</h2>
+          <p>Dlouhá verze: vedeš zápis celého setu. Zapisuješ body a podávajícího, povoluješ nebo odmítáš žádosti a zapisuješ sankce. Asi 10–15 minut.</p>
+          <div><button id="start-long" class="button button--secondary" type="button">Vést set</button></div>
+        </div>
+      </div>
+      <details class="sc-help card">
+        <summary>Jak číst zápis</summary>
+        <ul>
+          <li><strong>Pořadí podání I–VI</strong> je základní sestava. U družstva, které set zahajuje podáním, podává jako první sloupec I. Když družstvo získá podání, posune se a podává další sloupec (přijímající družstvo tedy začíná sloupcem II).</li>
+          <li><strong>●</strong> označuje hráče na pozici 1. U podávajícího družstva podává; u přijímajícího bude po získání podání podávat hráč z dalšího sloupce.</li>
+          <li><strong>Náhradník</strong> se píše pod hráče, za kterého nastoupil, ke skóre střídání (nejdřív body vlastního družstva). <strong>↩</strong> = návrat hráče základní sestavy. Přeškrtnuté číslo = hráč teď není na hřišti.</li>
+          <li><strong>Ztráta podání</strong> = skóre družstva ve chvíli, kdy přišlo o podání (u hráče, který podával).</li>
+          <li>Na hřišti je družstvo <strong>A vlevo</strong>, <strong>B vpravo</strong>, libero je zelené. Výměny libera se ve skutečnosti zapisují do zápisu o výměnách libera (vede ho pomocný zapisovatel).</li>
+          <li>Žádosti povoluje a odmítá <strong>druhý rozhodčí</strong>; zapisovatel je potvrdí bzučákem, upozorní na neoprávněnou žádost a vše zapíše. V trenažéru rozhoduješ, jak má žádost správně dopadnout.</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- 2) Hra -->
+    <section id="sc-play" class="card stack" hidden>
+      <div class="board">
+        <div class="board__row">
+          <p id="sc-progress"></p>
+          <p class="board__score" id="sc-tally" aria-live="polite"></p>
+        </div>
+      </div>
+      <div id="sc-event" class="sc-event stack">
+        <h2 id="sc-event-heading" class="visually-hidden" tabindex="-1">Situace</h2>
+        <p id="sc-event-text" class="situation"></p>
+        <p id="sc-question" class="sc-question"></p>
+        <div id="sc-options" class="sc-options"></div>
+        <div id="sc-feedback" class="result" hidden></div>
+        <div><button id="sc-next" class="button" type="button" hidden>Další</button></div>
+      </div>
+      <div id="sc-court"></div>
+      <div id="sc-sheet" class="sc-sheet"></div>
+      <div><button id="sc-quit" class="link-button small" type="button">Ukončit a vybrat jinou verzi</button></div>
+    </section>
+
+    <!-- 3) Výsledek -->
+    <section id="sc-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="sc-result-heading" tabindex="-1">Výsledek</h2>
+        <div id="sc-score"></div>
+        <p id="sc-result-text"></p>
+        <div class="actions">
+          <button id="sc-again" class="button" type="button">Znovu</button>
+          <button id="sc-switch" class="button button--secondary" type="button">Jiná verze</button>
+        </div>
+      </div>
+      <div id="sc-mistakes-box" class="stack" hidden>
+        <h2>Na tohle se podívej znovu</h2>
+        <ol id="sc-mistakes" class="result-list"></ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

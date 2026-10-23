@@ -23,6 +23,7 @@ pravidla.html       úplná pravidla: <details class="rule"> (kotvy #pravidlo-12
                     kategorií, diagramy #diagram-N; obsah mezi značkami generuje private/pravidla-zdroj/build.mjs
 gesta.html          kvíz gest (jen prohlížeč, bez DB)
 postaveni.html      trenažér postavení (jen prohlížeč; js/lineup-logic.js, court-scene.js, lineup-trainer.js)
+zapis.html          trenažér zápisu: úlohy / vedení setu (jen prohlížeč; js/scoresheet-*.js)
 zkouska.html        zkouška: 30 otázek / 30 min / 80 % (js/exam.js, režim 'zkouska' v zacni_kolo)
 zebricek.html, ucet.html (Profil), ochrana-udaju.html, statistiky.html (jen přesměrování)
 css/style.css       všechny styly (vzhled „Svaz“), css/fonts.css + fonts/ (písma offline kvůli GDPR)
@@ -88,7 +89,8 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - Hlášení chyb (js/report.js, sql/06) je na živém webu.
 - Ilustrace u 49 otázek jsou na webu (generátory v private/obrazky/, náhled private/obrazky/nahled.mjs).
 - Hledání v pravidlech (js/rules-search.js) je na webu.
-- **Kde jsme skončili (24. 10. 2026):** slovníček pojmů (slovnicek/pojmy.json → definice v pravidlech + bubliny v textu a ve vysvětlení, js/glossary.js). Testy 24/24.
+- Slovníček pojmů (slovnicek/pojmy.json, js/glossary.js) je na webu.
+- **Kde jsme skončili (24. 10. 2026):** trenažér zápisu (zapis.html, krátká a dlouhá verze, js/scoresheet-*.js), pravidla zkontrolovaná agentem. Testy 26/26.
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.

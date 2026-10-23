@@ -31,6 +31,13 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Zástupné obrázky: `media: { typ: "obrazek", soubor: null, popis: "obrázek sítě…" }` → rámeček s popisem (js/media.js). Po dodání obrázku stačí doplnit `soubor`.
 - Testy: `badges-db` (zkouška v DB), `e2e-zkouska` (průběh, ovládané hodiny pro odpočet, Profil), snímky `zkouska-shots.mjs <složka> [mobile]`.
 
+## Trenažér zápisu (24. 10. 2026)
+- `zapis.html`: výběr verze – krátká (10 úloh nad rozepsaným zápisem) a dlouhá (vedení celého setu). Vlastní zjednodušený zápis (pořadí podání I–VI, náhradníci, skóre střídání, ztráta podání, oddechové časy, libero, body, sankce) + malé hřiště. Bez DB.
+- Logika `js/scoresheet-model.js` (bez DOM): rotace, střídání (15.6, 15.11), libero (19.3), oddechové časy, sankce (21.3 stupnice, 16.2 zdržování). Důsledky odmítnutí: neoprávněná žádost (15.11) poprvé jen zapsat, pak zdržování; žádost o nedovolené střídání a nedovolená výměna libera rovnou zdržování.
+- Kontrolu pravidel udělal agent (rozhodčí); opravené: vyloučení nesmějí hrát/žádat (kapitán ve hře místo trenéra), po odmítnutí žádná další žádost v tomtéž přerušení, historie sankcí a oddechových časů při dřívějším skóre, úlohy ne v ukončeném setu, přesná čísla pravidel.
+- Terminologie podle ČVS: 15.9 „nedovolené střídání“ (ne neoprávněné), 15.11 „neoprávněné žádosti“ – změněno i v pravidlech a slovníčku.
+- Testy `scoresheet-logic` (pravidla + invarianty generátorů), `e2e-zapis`.
+
 ## Slovníček pojmů (24. 10. 2026)
 - 61 oficiálních pojmů v `slovnicek/pojmy.json` (vlastními slovy podle našich pravidel). Generátor pravidel z nich dělá sekci Definice pojmů (`@slovnicek` v src/80-definice.txt), web bubliny (`js/glossary.js`).
 - Bubliny: v pravidlech (první výskyt pojmu v každém pravidle) a ve vysvětlení po kole/zkoušce. V otázce před odpovědí ne (napovídalo by). Hovorové výrazy záměrně ne (uživatel chtěl jen oficiální).

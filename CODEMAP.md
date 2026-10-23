@@ -38,6 +38,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 |---|---|---|
 | `index.html` | úvod / rozcestník, karty sekcí, instalace PWA | `pwa.js` |
 | `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`), karty zkoušky (`#zkouska`), gest a trenažéru postavení | `pwa.js`, `quiz.js` |
+| `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, odkaz z kvízu | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); není v navigaci, odkaz z kvízu | `pwa.js`, `exam.js` |
 | `gesta.html` | kvíz „Co znamená toto gesto?“ | `pwa.js`, `gesture-quiz.js` |
 | `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); není v navigaci, odkaz z kvízu a úvodu | `pwa.js`, `lineup-trainer.js` |
@@ -48,7 +49,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | inline skript |
 
 Hlavička s navigací (Kvíz, Gesta, Pravidla, Žebříček, Profil) je v **každém** HTML zvlášť –
-při změně upravit všech 10 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
+při změně upravit všech 11 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
 
 ---
 
@@ -117,6 +118,20 @@ lineup-logic.js ─▶ lineup-trainer.js (postaveni.html) ◀─ court-scene.js 
 | `court-scene.js` | `VIEWS` (oko a výřez pohledů), `renderScene(svg, situace, { view, selected, result })` |
 | `lineup-trainer.js` | – (stránka trenažéru) |
 | `scene-zoom.js` | `attachPinchZoom(svg, { onChange })` → `{ refresh, reset }` – přiblížení dvěma prsty a posun přiblížené scény (mění viewBox); trenažér postavení |
+
+### Trenažér zápisu (jen prohlížeč)
+```
+scoresheet-model.js ─▶ scoresheet-tasks.js (krátká verze) ─┐
+ (set: pořadí podání,  scoresheet-game.js  (dlouhá verze)  ─┼─▶ scoresheet-trainer.js (zapis.html)
+  střídání, libero…)   scoresheet-view.js  (zápis, hřiště) ─┘
+```
+| Modul | Exporty |
+|---|---|
+| `scoresheet-model.js` | `createSet`, `applyPoint` (rotace, ztráta podání), `judgeSub`/`judgeTimeout`/`judgeLiberoIn`/`judgeLiberoOut` (posouzení podle pravidel), `outcomeOf` (neoprávněná žádost / zdržování), `misconductSanction` (stupnice 21.3), `apply*`, `simulate`, `randomTeams`, `legalSubs`, `OUTCOMES`, `SANCTIONS` – bez DOM, testovatelné v Node |
+| `scoresheet-tasks.js` | `generateTasks(random, count)` – úlohy krátké verze (kdo podává, kontrola podávajícího, střídání, zbývající střídání, kdo smí za náhradníka, oddechový čas, skóre v zápisu, libero, sankce, zdržování) |
+| `scoresheet-game.js` | `createGame(random)` → `{ set, next, resolveRally, resolveDecision }`, `explain` – události setu se správnou reakcí; po chybě se provede správná varianta |
+| `scoresheet-view.js` | `renderCourt`, `renderSheet(container, set, { onPoint, onServer, marker })` – vlastní zjednodušený zápis |
+| `scoresheet-trainer.js` | – (stránka: výběr verze, úlohy, vedení setu, výsledek) |
 
 ### Pravidla
 | Modul | Exporty |
@@ -233,6 +248,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat kategorii otázek | `js/categories.js`, `tools/seed-otazky.mjs` (`CATEGORIES`), `check (kategorie in …)` v `sql/01_schema.sql`, shrnutí s tím id v pravidlech, cíl odznaku Všestranný (`sql/05` + `js/badges.js`), `CATS` v `private/testy/otazky-check.mjs` |
 | změnit zkoušku (počet, limit, hranice) | `private.zkouska_*` v `sql/02_funkce.sql` + texty v `zkouska.html`, karta v `kviz.html`, popis odznaku v `js/badges.js` |
 | přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) |
+| upravit trenažér zápisu | pravidla a důsledky: `js/scoresheet-model.js`; úlohy: `scoresheet-tasks.js`; četnost událostí dlouhé verze: `scoresheet-game.js`; vzhled: `scoresheet-view.js` + CSS `sc-*`; testy `scoresheet-logic`, `e2e-zapis` |
 | upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |
 | ilustrace k otázce | `private/obrazky/animace.mjs` / `diagramy.mjs` (vygenerovat), `media-otazek.mjs` (zapíše media do otazky.json), seed; nové soubory do `APP_SHELL`. Ilustrace nesmí prozradit odpověď. Kontrola: `private/testy/media-shots.mjs` |
