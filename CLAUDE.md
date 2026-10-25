@@ -69,6 +69,12 @@ Platí pro `private/otazky.json` i DB (`public.otazky` + `private.otazky_reseni`
 - UI česky; názvy v kódu anglicky, komentáře česky.
 - Sémantické HTML, přístupnost, mobile-first CSS, CSS proměnné pro barvy. Stránky her mají `main.app-page` (kompaktní na mobilu).
 - Obsah jako data (JSON / DB), ne natvrdo v kódu. Malé, čitelné soubory a funkce, žádné zbytečné závislosti.
+- **Standard kódu:**
+  - JSDoc (`/** … */`) u každé exportované funkce a u funkcí, které nejsou na první pohled jasné; `@param`/`@returns` tam, kde typ není zřejmý.
+  - Komentáře česky a vysvětlují **proč**, ne co.
+  - Funkce do ~60 řádků, jinak rozdělit.
+  - Před commitem `npm run lint` bez chyb (ESLint, `eslint.config.mjs`; varování o složitosti/délce zatím ok). `x == null` je povolený idiom (null i undefined), jinak `===`.
+  - Formát souborů: `.editorconfig` (UTF-8, LF, 2 mezery).
 
 ## Jak se mnou pracovat
 - Komunikuj **česky**.

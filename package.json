@@ -1,0 +1,13 @@
+{
+  "name": "voleyref",
+  "private": true,
+  "description": "Jen vývojové nástroje (kontrola kódu). Web žádný build krok nemá.",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "globals": "17.13.0"
+  }
+}

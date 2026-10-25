@@ -5,7 +5,7 @@
 // pak do modelu vždy provede SPRÁVNOU variantu, takže set pokračuje dál
 // správně, i když hráč chyboval.
 import {
-  createSet, randomTeams, pick, other, ROMAN, OUTCOMES, SANCTIONS, isSetOver,
+  createSet, randomTeams, pick, other, ROMAN, SANCTIONS, isSetOver,
   slotPlayer, serverSlot, nextServerSlot, playerAt, positionOf, freshBench, legalSubs, liberoCandidates,
   judgeSub, judgeTimeout, judgeLiberoIn, judgeLiberoOut, outcomeOf, explainOutcome, delayOutcome, misconductSanction,
   misconductRule, requester,

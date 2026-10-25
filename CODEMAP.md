@@ -242,6 +242,8 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 
 `tools/seed-otazky.mjs` – kontrola `otazky.json` a vygenerování upsert SQL (výstup obsahuje odpovědi → nikdy necommitovat).
 
+**Vývojové nástroje v kořeni** (na web nepatří, nejsou v `APP_SHELL`): `.editorconfig` (UTF-8, LF, 2 mezery), `.gitattributes` (LF i na disku; `js/vendor/` beze změn), `package.json` + `package-lock.json` (jen devDependencies: ESLint), `eslint.config.mjs` (pravidla; `private/` a `js/vendor/` se nekontrolují). `npm install` jednou, pak `npm run lint`.
+
 ---
 
 ## 8. Kam sáhnout, když chci…

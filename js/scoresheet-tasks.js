@@ -262,7 +262,7 @@ function taskLibero(random) {
     const team = pick(random, ['A', 'B']);
     const t = set.teams[team];
     const kind = pick(random, ['ok', 'ok', 'front', 'no-rally', 'wrong-back', 'server']);
-    let text = null, verdict = null;
+    let text, verdict;
     const libero = pick(random, t.liberos);
 
     if (t.libero) {

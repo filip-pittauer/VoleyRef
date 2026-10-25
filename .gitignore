@@ -12,3 +12,6 @@ private/
 
 # snímky a logy z Playwright MCP
 .playwright-mcp/
+
+# vývojové nástroje (ESLint) – npm install
+node_modules/

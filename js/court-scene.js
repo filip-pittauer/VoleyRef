@@ -6,7 +6,7 @@
 // (kladné = vlevo z pohledu přijímajících). Každý bod se promítne perspektivní
 // kamerou a části se kreslí odzadu dopředu (malířův algoritmus).
 import { svgEl } from './dom.js';
-import { add, sub, scale, lerp, createPerspective, clipNear } from './math3d.js';
+import { add, scale, lerp, createPerspective, clipNear } from './math3d.js';
 import { COURT, FOOT_SIZE, footprint } from './lineup-logic.js';
 
 const NET = { top: 2.43, bottom: 1.43, halfLength: 5, postZ: 5.5, postTop: 2.55, antennaZ: 4.55, antennaTop: 3.23 };
