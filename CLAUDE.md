@@ -101,6 +101,7 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - **Kde jsme skončili (24. 10. 2026):** trenažér zápisu (zapis.html, krátká a dlouhá verze, js/scoresheet-*.js), pravidla zkontrolovaná agentem. Testy 26/26.
 - **Bezpečnost hotová (25. 10. 2026):** denní výzva bez prozrazení řešení, výchozí práva „deny by default“ (test prava-db), supabase-js v js/vendor/ + CSP (test e2e-csp), zásady GDPR. Odložené (známá omezení dema): docs/pred-spustenim.md.
 - **Čitelnost (od 25. 10. 2026, už bez druhé session):** krok 1 ESLint + .editorconfig, krok 2 komentáře (JSDoc u funkcí, obsah v css/style.css). Další: 12 varování o složitosti/délce funkcí (`npm run lint`), pak předávací dokumentace a audity.
+- **Kde jsme skončili (26. 10. 2026):** prototyp animací `prototyp/animace.html` (A = SVG, B = Three.js; podrobnosti docs/historie.md). Na PC je B mnohem hezčí. Na mobilu uživatele (PowerVR D-Series, WebGL 2) B v plné kvalitě nenaběhne (`Error creating WebGL context`), nízká kvalita jde, ale vypadá hůř než SVG. **Příště:** dokončit testování a rozjet B na mobilu v dobré kvalitě (podezření na `antialias: true` – zkusit bez něj, ale s vyšším rozlišením a stíny, automatické pokusy). Pak rozhodnout A/B, přeanimovat situace, minihry (Učebna/Hala, „Odpískej to!“, duely).
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.
