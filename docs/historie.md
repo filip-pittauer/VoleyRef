@@ -99,6 +99,12 @@ Animace menu, výsledek kola v kruhu se stuhami (js/celebrate.js, od 60 %), pře
 - Mobil: `main.app-page`, scéna + zápis + tlačítka na jedné obrazovce, výběr klepnutím v zápisu, kamera zaměřená na hráče, čísla min. 6,5 % výšky scény, zoom dvěma prsty (`js/scene-zoom.js`), po vyhodnocení posun nahoru.
 - Možná dolaďování: libero (jiný dres), odlišit podávajícího, obtížnost (menší rezerva), pátá dlaždice na úvodu sama na řádku.
 
+## Prototyp animací A/B (26. 10. 2026)
+- `prototyp/animace.html` (mimo navigaci, není v `APP_SHELL`): stejná situace (útok hráče zadní řady s odrazem na útočné čáře, 13.3.3) kreslená dvakrát – **A** SVG bez knihovny (`prototyp/scene-svg.js`, kreslení z `js/court-scene.js`), **B** Three.js / WebGL (`prototyp/scene-three.js`, figuríny z válců a koulí, stíny). Jedna časová osa, pohledy (1./2. rozhodčí, za útočníkem, televizní), zpomalení, otáčení kamery tažením, doba vykreslení snímku.
+- Pohyb sdílí `prototyp/motion.js`: pózy (poloha chodidel a rukou vůči pánvi) + inverzní kinematika z `math3d.js`, běh podle uražené vzdálenosti, výskoky jako parabola, míč po parabolách mezi body (dotyky jsou u rukou hráčů). Data `prototyp/situace.json`.
+- Three.js: `js/vendor/three-0.186.1/` = `build/three.module.js` + `three.core.js` z npm beze změny (SHA-256 three.core.js 9edde002…, three.module.js 9052042d…; shodné s unpkg), licence MIT. Bez `eval` → CSP beze změny. Nezmenšené (2 MB, po kompresi ~420 kB); doplňky z `examples/jsm` (OrbitControls…) importují `'three'` přes import map, ta by byla inline skript → nepoužívat, nebo upravit cestu.
+- Snímky: `node private/testy/proto-shots.mjs <pohledy> <časy>` (WebGL v headless Chrome přes SwiftShader – doba snímku B je tam řádově vyšší než na skutečné grafice).
+
 ## Odložené nápady
 - Editor animací s „developer módem“ (animace by šly do DB) – zatím nerozhodnuto, jestli animace, nebo videa.
 - Úvodní panel hráče s úrovní (jen v lokální větvi `styl-hala`, nikdy nepushovat).

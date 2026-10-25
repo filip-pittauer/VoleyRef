@@ -1,0 +1,52 @@
+{
+  "delka": 4.2,
+  "hraci": [
+    { "tym": "A", "cislo": 11, "drahy": [[0, 6.6, 3.0], [0.35, 6.4, 2.85]],
+      "pozy": [[0, "ready"], [0.35, "bump"], [0.55, "bump"], [0.9, "stand"]] },
+    { "tym": "A", "cislo": 5, "smer": [0, 1], "drahy": [[0, 1.4, -2.4], [0.9, 0.9, -1.1]],
+      "pozy": [[0, "ready"], [0.45, "run"], [0.9, "stand"], [1.1, "set"], [1.25, "set"], [1.45, "setFollow"], [1.9, "stand"]] },
+    { "tym": "A", "cislo": 9, "drahy": [[0, 7.2, 0.2], [0.75, 7.0, 0.2], [1.42, 3.5, 0.1], [1.5, 3.27, 0.1], [2.32, 1.7, 0.1], [2.8, 1.3, 0.1]],
+      "pozy": [[0, "ready"], [0.75, "ready"], [0.85, "run"], [1.32, "run"], [1.44, "plant"], [1.56, "jumpUp"], [1.75, "spikeCock"], [1.9, "spikeHit"], [2.02, "spikeFollow"], [2.32, "land"], [2.9, "stand"]],
+      "skoky": [[1.5, 2.32, 0.85]] },
+    { "tym": "A", "cislo": 3, "drahy": [[0, 1.6, 0.6], [1.2, 1.3, 0.3]],
+      "pozy": [[0, "ready"], [0.9, "ready"], [1.3, "stand"]] },
+    { "tym": "A", "cislo": 14, "drahy": [[0, 1.6, 3.3], [1.4, 2.4, 2.4]],
+      "pozy": [[0, "ready"], [1.0, "stand"], [1.6, "ready"]] },
+    { "tym": "A", "cislo": 1, "drahy": [[0, 6.7, -2.8], [1.6, 4.6, -1.4]],
+      "pozy": [[0, "ready"], [1.0, "run"], [1.6, "ready"]] },
+
+    { "tym": "B", "cislo": 7, "drahy": [[0, -0.55, 0.6], [1.45, -0.5, 0.35]],
+      "pozy": [[0, "blockReady"], [1.45, "blockReady"], [1.58, "blockLoad"], [1.7, "blockUp"], [2.2, "blockUp"], [2.33, "land"], [2.9, "stand"]],
+      "skoky": [[1.6, 2.36, 0.7]] },
+    { "tym": "B", "cislo": 10, "drahy": [[0, -0.6, 2.8], [1.0, -0.6, 2.8], [1.45, -0.55, 1.1]],
+      "pozy": [[0, "blockReady"], [1.0, "blockReady"], [1.08, "run"], [1.42, "blockReady"], [1.58, "blockLoad"], [1.7, "blockUp"], [2.2, "blockUp"], [2.33, "land"], [2.9, "stand"]],
+      "skoky": [[1.6, 2.36, 0.7]] },
+    { "tym": "B", "cislo": 4, "drahy": [[0, -0.6, -2.8], [1.6, -1.4, -2.4]],
+      "pozy": [[0, "blockReady"], [1.2, "blockReady"], [1.6, "ready"]] },
+    { "tym": "B", "cislo": 8, "drahy": [[0, -6.4, -2.9], [1.8, -6.4, -2.9], [2.2, -7.0, -2.7]],
+      "pozy": [[0, "ready"], [1.8, "ready"], [1.95, "run"], [2.15, "bump"], [2.7, "stand"]] },
+    { "tym": "B", "cislo": 2, "drahy": [[0, -7.0, 0.0]], "pozy": [[0, "ready"], [2.5, "stand"]] },
+    { "tym": "B", "cislo": 12, "drahy": [[0, -6.4, 2.9], [1.9, -5.9, 2.4]], "pozy": [[0, "ready"], [2.5, "stand"]] }
+  ],
+  "mic": [
+    { "t": 0, "pozice": [-2.8, 3.4, -1.2] },
+    { "t": 0.45, "tym": "A", "hrac": 11, "ruka": "obe", "posun": [0.05, 0.1, 0] },
+    { "t": 1.25, "tym": "A", "hrac": 5, "ruka": "obe", "posun": [0.02, 0.13, 0] },
+    { "t": 1.9, "tym": "A", "hrac": 9, "ruka": "P", "posun": [0.12, 0.15, 0] },
+    { "t": 2.33, "pozice": [-7.9, 0, -3.0] },
+    { "t": 2.95, "pozice": [-10.4, 0, -4.1] },
+    { "t": 3.9, "pozice": [-12, 0, -4.8], "vali": true }
+  ],
+  "zvyrazneni": [
+    { "od": 1.5, "do": 4.2, "cara": [3, -4.5, 3, 4.5] },
+    { "od": 1.5, "do": 4.2, "chodidlo": { "tym": "A", "hrac": 9, "t": 1.5 } }
+  ],
+  "texty": [
+    { "od": 0, "do": 0.5, "text": "Příjem podání" },
+    { "od": 0.5, "do": 1.25, "text": "Míč letí na nahrávače, č. 9 (zadní řada) se rozbíhá" },
+    { "od": 1.25, "do": 1.5, "text": "Nahrávka na hráče zadní řady" },
+    { "od": 1.5, "do": 1.9, "text": "Odraz: noha je na útočné čáře" },
+    { "od": 1.9, "do": 2.3, "text": "Úder nad horní hranou sítě, míč obchází blok" },
+    { "od": 2.3, "do": 4.3, "text": "Chyba: útok hráče zadní řady z přední zóny (13.3.3)" }
+  ]
+}

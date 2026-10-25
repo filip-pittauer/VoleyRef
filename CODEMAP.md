@@ -242,6 +242,8 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 
 `tools/seed-otazky.mjs` – kontrola `otazky.json` a vygenerování upsert SQL (výstup obsahuje odpovědi → nikdy necommitovat).
 
+**Prototyp animací** (`prototyp/`, mimo navigaci a `APP_SHELL`): `animace.html` porovnává SVG (`scene-svg.js`) a Three.js (`scene-three.js`, knihovna v `js/vendor/three-0.186.1/`) nad společným pohybem `motion.js` + `situace.json`. `court-scene.js` kvůli tomu exportuje i pomocné funkce kreslení (`createCamera`, `drawCourt`, `drawNet`, `thick`, `disc`, `polygon`, `floorCircle`, `bodyShape`, `NEAR`, `num`). Podrobnosti: docs/historie.md.
+
 **Vývojové nástroje v kořeni** (na web nepatří, nejsou v `APP_SHELL`): `.editorconfig` (UTF-8, LF, 2 mezery), `.gitattributes` (LF i na disku; `js/vendor/` beze změn), `package.json` + `package-lock.json` (jen devDependencies: ESLint), `eslint.config.mjs` (pravidla; `private/` a `js/vendor/` se nekontrolují). `npm install` jednou, pak `npm run lint`.
 
 ---

@@ -10,7 +10,7 @@ import { add, scale, lerp, createPerspective, clipNear } from './math3d.js';
 import { COURT, FOOT_SIZE, footprint } from './lineup-logic.js';
 
 const NET = { top: 2.43, bottom: 1.43, halfLength: 5, postZ: 5.5, postTop: 2.55, antennaZ: 4.55, antennaTop: 3.23 };
-const NEAR = 0.3;          // rovina těsně před okem, co je blíž, se ořízne
+export const NEAR = 0.3;          // rovina těsně před okem, co je blíž, se ořízne
 const ASPECT = 4 / 3;      // poměr stran obrazu
 
 /** Pohledy: oko a místo, kam se dívá. Výřez se spočítá z bodů frame. */
@@ -46,10 +46,10 @@ function corners(xs, zs, ys) {
 
 // ---------- Pomocné funkce pro SVG ----------
 /** Číslo do SVG zaokrouhlené na 4 desetinná místa (kratší a přehlednější výstup). */
-const num = n => String(Math.round(n * 10000) / 10000);
+export const num = n => String(Math.round(n * 10000) / 10000);
 
 /** Kamera pohledu + pomocné funkce: pathOf (mnohoúhelník → SVG cesta), depth (vzdálenost od oka). */
-function createCamera(view) {
+export function createCamera(view) {
   const camera = createPerspective(view.eye, view.target, view.up);
   const project = camera.project;
 
@@ -67,7 +67,7 @@ function createCamera(view) {
 const floorRect = (x1, x2, z1, z2, y = 0) => [[x1, y, z1], [x2, y, z1], [x2, y, z2], [x1, y, z2]];
 
 /** Kruh na podlaze kolem bodu (pro výběr hráče). */
-function floorCircle(cx, cz, r, y = 0.01) {
+export function floorCircle(cx, cz, r, y = 0.01) {
   return Array.from({ length: 28 }, (_, i) => {
     const a = (i / 28) * Math.PI * 2;
     return [cx + Math.cos(a) * r, y, cz + Math.sin(a) * r];
@@ -75,13 +75,13 @@ function floorCircle(cx, cz, r, y = 0.01) {
 }
 
 /** Mnohoúhelník ve světě jako <path> (null, když je celý za okem). */
-function polygon(cam, points, cls) {
+export function polygon(cam, points, cls) {
   const d = cam.pathOf(points);
   return d && svgEl('path', { d, class: cls });
 }
 
 /** Tlustá čára mezi body ve světě; tloušťka v metrech se zmenšuje se vzdáleností. */
-function thick(cam, a, b, width, cls) {
+export function thick(cam, a, b, width, cls) {
   const pa = cam.project(a), pb = cam.project(b);
   if (pa.depth < NEAR || pb.depth < NEAR) return null;
   return {
@@ -94,7 +94,7 @@ function thick(cam, a, b, width, cls) {
 }
 
 /** Kotouč (kloub, hlava, míč) – poloměr v metrech, menší se vzdáleností. */
-function disc(cam, center, radius, cls) {
+export function disc(cam, center, radius, cls) {
   const p = cam.project(center);
   if (p.depth < NEAR) return null;
   return { depth: p.depth, el: svgEl('circle', { cx: num(p.x), cy: num(p.y), r: num(radius / p.depth), class: cls }) };
@@ -102,7 +102,7 @@ function disc(cam, center, radius, cls) {
 
 // ---------- Hřiště a síť ----------
 /** Podlaha haly, hrací plocha a čáry. */
-function drawCourt(cam) {
+export function drawCourt(cam) {
   const L = COURT.length, W = COURT.halfWidth, line = 0.05;
   const parts = [
     polygon(cam, floorRect(-L - 7, L + 7, -W - 6, W + 6), 'ct-free'),
@@ -120,7 +120,7 @@ function drawCourt(cam) {
 }
 
 /** Sloupky, síť (výplň a oka), bílé pásky, anténky s pruhy. */
-function drawNet(cam) {
+export function drawNet(cam) {
   const { top, bottom, halfLength: H, postZ, postTop, antennaZ, antennaTop } = NET;
   const parts = [];
   parts.push(thick(cam, [0, 0, postZ], [0, postTop, postZ], 0.1, 'ct-post'));
@@ -192,7 +192,7 @@ function hull(points) {
  * Část těla jako obrys přes vodorovné průřezy (elipsy) – z kteréhokoli úhlu
  * má tvar, ne jen „tlustou čáru“. sections: [{ center, halfWidth, halfDepth }].
  */
-function bodyShape(cam, sections, forward, left, cls) {
+export function bodyShape(cam, sections, forward, left, cls) {
   const points = [];
   for (const { center, halfWidth, halfDepth } of sections) {
     for (let i = 0; i < 16; i++) {

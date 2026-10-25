@@ -1,0 +1,26 @@
+/* Prototyp animací (prototyp/animace.html) – jen tato stránka. */
+.proto { max-width: 90rem; margin: 0 auto; padding: 1rem; }
+.proto-grid { display: grid; gap: 1rem; }
+@media (min-width: 64rem) {
+  .proto-grid { grid-template-columns: 1fr 1fr; }
+}
+.proto-panel { margin: 0; }
+.proto-panel figcaption { margin-bottom: 0.4rem; }
+.proto-stage {
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #c9d3e0;
+  touch-action: none;     /* tažení otáčí kamerou, ne stránkou */
+  cursor: grab;
+}
+.proto-stage svg, .proto-canvas { display: block; width: 100%; height: 100%; }
+.proto-caption { min-height: 1.5em; font-weight: 600; margin: 0.8rem 0 0.4rem; }
+.proto-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+.proto-controls input[type="range"] { flex: 1; min-width: 10rem; }
+.proto-controls [aria-pressed="true"] { background: var(--color-primary-dark); color: var(--color-on-dark); }
+
+.proto-shadow { fill: #000; fill-opacity: 0.22; }
+.ct-shoe-line { stroke: #111827; stroke-linecap: round; }
+.proto-mark-line { stroke: #dc2626; stroke-opacity: 0.85; }
+.proto-mark-ring { fill: #dc2626; fill-opacity: 0.35; stroke: #dc2626; stroke-width: 2px; vector-effect: non-scaling-stroke; }

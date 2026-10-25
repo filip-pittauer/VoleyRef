@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="robots" content="noindex">
+  <title>Prototyp animací – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="prototyp.css">
+  <link rel="icon" href="../img/icons/icon.svg" type="image/svg+xml">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <main id="obsah" class="proto">
+    <p class="muted small"><a href="../index.html">← Zpět na web</a> · Prototyp, není v navigaci.</p>
+    <h1>Porovnání animací</h1>
+    <p>Stejná situace, stejný pohyb a stejná kamera – liší se jen způsob kreslení.
+      Kamerou jde otáčet tažením myší nebo prstem.</p>
+
+    <div class="proto-grid">
+      <figure class="proto-panel">
+        <figcaption><strong>A – SVG, bez knihovny</strong> <span class="muted small" id="perf-a"></span></figcaption>
+        <div class="proto-stage" id="stage-a"></div>
+      </figure>
+      <figure class="proto-panel">
+        <figcaption><strong>B – Three.js (WebGL)</strong> <span class="muted small" id="perf-b"></span></figcaption>
+        <div class="proto-stage" id="stage-b"></div>
+      </figure>
+    </div>
+
+    <p class="proto-caption" id="caption" aria-live="polite"></p>
+    <div class="proto-controls">
+      <button class="button button--small" type="button" id="play">▶ Přehrát</button>
+      <input type="range" id="time" min="0" max="4" step="0.01" value="0" aria-label="Čas animace">
+    </div>
+    <div class="proto-controls" id="speeds" role="group" aria-label="Rychlost">
+      <span class="small">Rychlost:</span>
+      <button class="button button--small button--secondary" type="button" data-speed="1" aria-pressed="true">1×</button>
+      <button class="button button--small button--secondary" type="button" data-speed="0.5" aria-pressed="false">½×</button>
+      <button class="button button--small button--secondary" type="button" data-speed="0.25" aria-pressed="false">¼×</button>
+    </div>
+    <div class="proto-controls" id="views" role="group" aria-label="Pohled"><span class="small">Pohled:</span></div>
+  </main>
+</body>
+</html>
