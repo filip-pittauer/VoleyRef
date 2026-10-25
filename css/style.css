@@ -2,7 +2,36 @@
    Společné styly – mobile-first. Vzhled „Svaz“: klasická sportovní
    webovka (tmavě modrá + červená, úzké velké nadpisy), ale s herními prvky.
    Základní styly platí pro mobil, větší obrazovky řeší
-   @media (min-width: ...) dole v souboru.
+   @media (min-width: ...) u jednotlivých sekcí.
+
+   Obsah (v editoru vyhledej „---------- Název“):
+     · Barvy a rozměry (CSS proměnné)
+     · Základ
+     · Hlavička a navigace
+     · Animace navigace
+     · Patička
+     · Komponenty
+     · Formuláře
+     · Kvíz
+     · Zkouška (zkouska.html)
+     · Animace (SVG, jednotky = metry)
+     · Gesta rozhodčích (SVG postava, jednotky = metry)
+     · Trenažér postavení (postaveni.html, 3D scéna v SVG)
+     · Kompaktní stránky her na mobilu (gesta, postavení)
+     · Výsledek
+     · Záložky (žebříček)
+     · Denní výzva (karta v kvízu)
+     · Žebříček
+     · Statistiky
+     · Odznaky
+     · Pravidla
+     · Diagramy (SVG)
+     · Větší obrazovky
+     · Úvodní stránka
+     · Detaily (statické)
+     · Animace stránek a detailů
+     · Slovníček pojmů (js/glossary.js)
+     · Trenažér zápisu (zapis.html)
    ========================================================= */
 
 /* ---------- Barvy a rozměry (CSS proměnné) ---------- */

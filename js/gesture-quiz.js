@@ -122,6 +122,7 @@ function renderQuestion() {
   heading.focus();
 }
 
+/** Vyhodnotí odpověď hned (nic se neukládá) a ukáže zpětnou vazbu. */
 function handleAnswer(event) {
   event.preventDefault();   // formulář by jinak znovu načetl stránku
   if (!hasChoice()) return;
@@ -179,6 +180,7 @@ function renderMistake({ gesture, answer }) {
     createReportLink({ gestureId: gesture.id }));
 }
 
+/** Výsledek kvízu gest s přehledem chyb (gesto se dá přehrát znovu). */
 function renderResult() {
   const total = state.questions.length;
   const score = createScore(state.correct, total);

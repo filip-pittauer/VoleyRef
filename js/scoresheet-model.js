@@ -10,6 +10,7 @@
 export const MAX_SUBS = 6;            // 15.1
 export const MAX_TIMEOUTS = 2;        // 15.1
 export const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+/** Soupeř družstva ('A' ↔ 'B'). */
 export const other = team => (team === 'A' ? 'B' : 'A');
 
 const BACK_ROW = [1, 5, 6];           // pozice zadní řady
@@ -30,6 +31,7 @@ export const SANCTIONS = {
   diskvalifikace: { label: 'Diskvalifikace', severity: 3 },
 };
 
+/** Popisky řádků v tabulce sankcí zápisu – sankce i odmítnuté žádosti. */
 export const SANCTION_LOG_LABELS = {
   ...Object.fromEntries(Object.entries(SANCTIONS).map(([id, s]) => [id, s.label])),
   'napomenuti-zdrzovani': 'Napomenutí za zdržování',
@@ -63,6 +65,7 @@ export function createSet({ A, B, firstServe = 'A' }) {
 }
 
 // ---------- Čtení stavu ----------
+/** Kdo hraje za sloupec: náhradník, když je zrovna na hřišti, jinak hráč základní sestavy. */
 export const slotPlayer = slot => (slot.subIn ? slot.sub : slot.starter);
 
 /** Skóre z pohledu družstva: „vlastní:soupeř“ (tak se zapisuje k oddechovým časům a střídání). */
@@ -103,9 +106,11 @@ export function freshBench(set, team) {
 /** Kdo za družstvo žádá o přerušení: trenér, nebo kapitán ve hře, když je trenér vyloučený (15.3.1). */
 export const requester = (set, team) => (set.teams[team].excluded.includes('T') ? 'Kapitán ve hře družstva' : 'Trenér družstva');
 
+/** Konec setu: 25 bodů s rozdílem aspoň dvou (rozhodující set do 15 trenažér nepoužívá). */
 export const isSetOver = set => Math.max(set.score.A, set.score.B) >= 25 && Math.abs(set.score.A - set.score.B) >= 2;
 
 // ---------- Rozehra ----------
+/** Rotace po získání podání: hráč z pozice 2 jde na pozici 1 a podává, ostatní se posunou. */
 function rotate(team) {
   const c = team.court;
   team.court = [c[1], c[2], c[3], c[4], c[5], c[0]];
@@ -132,6 +137,9 @@ export function applyPoint(set, winner) {
 }
 
 // ---------- Posouzení žádostí ----------
+// Verdikt: { ok: true }, nebo odmítnutí s důvodem a pravidlem. Druh rozhoduje
+// o důsledku (outcomeOf): 'improper' = neoprávněná žádost (15.11), 'delay' = zdržování (16.1);
+// about = čeho se žádost týkala (vysvětlení v explainOutcome).
 const ok = () => ({ ok: true });
 const improper = (reason, rule, about) => ({ ok: false, kind: 'improper', reason, rule, about });
 const delay = (reason, rule, about) => ({ ok: false, kind: 'delay', reason, rule, about });
@@ -263,11 +271,16 @@ export function misconductRule(kind, sanction) {
   }[kind]?.[sanction] ?? '21.3';
 }
 
-// ---------- Provedení ----------
+// ---------- Provedení (žádost už posoudila funkce judge*) ----------
+/** Zapíše oddechový čas se skóre v tu chvíli. */
 export function applyTimeout(set, team) {
   set.teams[team].timeouts.push(scoreFor(set, team));
 }
 
+/**
+ * Provede střídání: náhradník jde do sloupce, nebo se vrací hráč základní
+ * sestavy – tím se sloupec uzavře a v setu už v něm střídat nejde (15.6).
+ */
 export function applySub(set, team, out, inn) {
   const t = set.teams[team];
   const slot = t.slots[slotOfPlayer(set, team, out)];
@@ -284,12 +297,14 @@ export function applySub(set, team, out, inn) {
   t.lastSubRally = set.rallies;
 }
 
+/** Libero jde na hřiště za hráče player; výměny libera se nepočítají do střídání. */
 export function applyLiberoIn(set, team, libero, player) {
   const t = set.teams[team];
   t.libero = { number: libero, slot: slotOfPlayer(set, team, player) };
   t.lastLiberoRally = set.rallies;
 }
 
+/** Libero odchází, na hřiště se vrací hráč, za kterého přišlo. */
 export function applyLiberoOut(set, team) {
   const t = set.teams[team];
   t.libero = null;
@@ -316,8 +331,13 @@ export function applySanction(set, team, member, kind, { withPoint = true } = {}
 }
 
 // ---------- Náhodné družstvo a průběh (pro generování úloh) ----------
+// random = funkce vracející číslo 0–1 (Math.random, v testech generátor se semínkem,
+// aby šly úlohy zopakovat).
+
+/** Náhodný prvek seznamu (z prázdného seznamu undefined). */
 export const pick = (random, list) => list[Math.floor(random() * list.length)];
 
+/** Náhodně zamíchaná kopie seznamu (Fisher–Yates: každé pořadí stejně pravděpodobné). */
 export function shuffle(random, list) {
   const result = [...list];
   for (let i = result.length - 1; i > 0; i--) {

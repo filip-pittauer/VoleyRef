@@ -12,6 +12,7 @@ const LAYOUT = {
   B: { front: [2, 3, 4], back: [1, 6, 5] },
 };
 
+/** Hráč na pozici: číslo, pozice, zvýraznění libera a podávajícího. */
 function courtCell(set, team, pos) {
   const number = playerAt(set, team, pos);
   const t = set.teams[team];
@@ -22,6 +23,7 @@ function courtCell(set, team, pos) {
     el('span', { class: 'sc-player__pos' }, serves ? `${pos} · podává` : String(pos)));
 }
 
+/** Malé hřiště s rozestavením obou družstev (pro čtečku obrazovky popsané textem). */
 export function renderCourt(set) {
   const half = team => {
     const cols = team === 'A' ? ['back', 'front'] : ['front', 'back'];
@@ -32,6 +34,7 @@ export function renderCourt(set) {
     half('A'), el('div', { class: 'sc-net', 'aria-hidden': 'true' }), half('B'));
 }
 
+/** Textový popis hřiště pro čtečky obrazovky (role="img"). */
 function courtLabel(set) {
   const team = t => [1, 2, 3, 4, 5, 6].map(p => `${p}: č. ${playerAt(set, t, p)}`).join(', ');
   return `Hřiště. Družstvo A: ${team('A')}. Družstvo B: ${team('B')}. Podává družstvo ${set.serving}.`;
@@ -57,7 +60,6 @@ function renderTeam(set, team, opts) {
           : label);
     }));
   const row = (title, cells) => el('tr', {}, el('th', { scope: 'row' }, title), ...cells.map(c => el('td', {}, c)));
-  const cls = (slot, i) => (i === marker ? 'is-server' : '');
   const table = el('table', { class: 'sc-order' },
     el('caption', { class: 'visually-hidden' }, `Pořadí podání družstva ${team}`),
     el('thead', {}, header),
@@ -68,7 +70,7 @@ function renderTeam(set, team, opts) {
       row('Střídání', t.slots.map(slot => [slot.subAt ?? '', slot.backAt ? el('br') : '', slot.backAt ? `↩ ${slot.backAt}` : ''])),
       row('Ztráta podání', t.slots.map(slot => slot.serves.join(' · ')))));
   // zvýraznit sloupec podávajícího (třída na buňkách celého sloupce)
-  for (const tr of table.querySelectorAll('tbody tr')) tr.querySelectorAll('td').forEach((td, i) => { if (cls(null, i)) td.classList.add('is-server'); });
+  for (const tr of table.querySelectorAll('tbody tr')) tr.querySelectorAll('td').forEach((td, i) => { if (i === marker) td.classList.add('is-server'); });
 
   const libero = t.libero
     ? `na hřišti č. ${t.libero.number} za č. ${slotPlayer(t.slots[t.libero.slot])}`
@@ -105,6 +107,7 @@ function renderPoints(set, team, opts) {
   return el('div', { class: 'sc-points', 'aria-label': `Body družstva ${team}: ${score}` }, ...cells);
 }
 
+/** Tabulka sankcí a odmítnutých žádostí (member null = celé družstvo, 'T' = trenér). */
 function renderSanctions(set) {
   if (!set.sanctions.length) return el('p', { class: 'muted small sc-sanctions-empty' }, 'Sankce a neoprávněné žádosti: zatím nic.');
   return el('table', { class: 'sc-sanctions' },

@@ -74,6 +74,7 @@ export function checkRelation(relation, byPosition) {
   return { ...relation, status, gap: status === 'fault' ? -fault : gap };
 }
 
+/** Stav všech vztahů postavení (přední–zadní, sousedé v řadě) pro { pozice: hráč }. */
 export function checkAll(byPosition) {
   return RELATIONS.map(relation => checkRelation(relation, byPosition));
 }

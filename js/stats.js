@@ -60,6 +60,7 @@ function findWeakest(categories) {
     .sort((a, b) => a.spravne / a.otazek - b.spravne / b.otazek)[0] ?? null;
 }
 
+/** Úspěšnost podle kategorií (pruhy) a odkaz na opakování chyb. */
 function renderCategories(categories, mistakes) {
   const byId = new Map(categories.map(c => [c.kategorie, c]));
   const weakest = findWeakest(categories);
@@ -91,6 +92,7 @@ function roundLabel(round) {
     .filter(Boolean).join(' · ');
 }
 
+/** Tabulka posledních odehraných kol. */
 function renderRecent(rounds) {
   if (rounds.length === 0) return null;
   return el('section', { class: 'stack' },
@@ -135,6 +137,7 @@ function renderExams(exams) {
 // ---------- Odznaky ----------
 const badgeDateFormat = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });
 
+/** Karta odznaku: získaný (s datem), nebo zamčený s postupem k cíli. */
 function badgeCard(id, badge, progress) {
   const earned = Boolean(progress?.ziskano);
   const showBar = !earned && progress && progress.cil > 1;
@@ -151,6 +154,7 @@ function badgeCard(id, badge, progress) {
       : null);
 }
 
+/** Všechny odznaky po skupinách s počtem získaných. */
 function renderBadges(data) {
   if (!data) return null;
   const byId = new Map(data.odznaky.map(o => [o.id, o]));

@@ -111,6 +111,10 @@ function placeOf(node, anchor) {
   return [title ?? node.closest('section')?.querySelector('h2')?.textContent.trim(), num].filter(Boolean).join(' · ');
 }
 
+/**
+ * Index textu pravidel (vytvoří se při prvním hledání): každý odstavec,
+ * položka nebo nadpis s kotvou, na kterou jde odkázat, a kmeny jeho slov.
+ */
 function buildIndex() {
   const nodes = document.querySelectorAll(
     'main :is(.rules-chapter, details.rule) :is(p, li, dd, dt, h4, figcaption), main details.rule summary h3, #gesture-atlas :is(h3, p)');
@@ -145,6 +149,11 @@ function parseQuery(query) {
   return terms;
 }
 
+/**
+ * Najde nejlepší místa v pravidlech. Skóre = součet vah nalezených slov
+ * (vzácnější slovo váží víc – idf), bonus za celou frázi, nadpis a téma
+ * pravidla; z každé kotvy jen nejlepší záznam.
+ */
 function search(query) {
   index ??= buildIndex();
   const terms = parseQuery(query);
@@ -234,6 +243,7 @@ if (form) {
     if (open) input.focus();
   });
 
+  // vyhledá a vykreslí výsledky pro aktuální text v poli (od 2 znaků)
   const render = () => {
     const query = input.value.trim();
     if (query.length < 2) {

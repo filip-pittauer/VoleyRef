@@ -39,13 +39,16 @@ export const VIEWS = {
   },
 };
 
+/** Všechny kombinace souřadnic → body, které musí být v pohledu vidět. */
 function corners(xs, zs, ys) {
   return xs.flatMap(x => zs.flatMap(z => ys.map(y => [x, y, z])));
 }
 
 // ---------- Pomocné funkce pro SVG ----------
+/** Číslo do SVG zaokrouhlené na 4 desetinná místa (kratší a přehlednější výstup). */
 const num = n => String(Math.round(n * 10000) / 10000);
 
+/** Kamera pohledu + pomocné funkce: pathOf (mnohoúhelník → SVG cesta), depth (vzdálenost od oka). */
 function createCamera(view) {
   const camera = createPerspective(view.eye, view.target, view.up);
   const project = camera.project;
@@ -71,6 +74,7 @@ function floorCircle(cx, cz, r, y = 0.01) {
   });
 }
 
+/** Mnohoúhelník ve světě jako <path> (null, když je celý za okem). */
 function polygon(cam, points, cls) {
   const d = cam.pathOf(points);
   return d && svgEl('path', { d, class: cls });
@@ -89,6 +93,7 @@ function thick(cam, a, b, width, cls) {
   };
 }
 
+/** Kotouč (kloub, hlava, míč) – poloměr v metrech, menší se vzdáleností. */
 function disc(cam, center, radius, cls) {
   const p = cam.project(center);
   if (p.depth < NEAR) return null;
@@ -96,6 +101,7 @@ function disc(cam, center, radius, cls) {
 }
 
 // ---------- Hřiště a síť ----------
+/** Podlaha haly, hrací plocha a čáry. */
 function drawCourt(cam) {
   const L = COURT.length, W = COURT.halfWidth, line = 0.05;
   const parts = [
@@ -113,6 +119,7 @@ function drawCourt(cam) {
   return parts.filter(Boolean);
 }
 
+/** Sloupky, síť (výplň a oka), bílé pásky, anténky s pruhy. */
 function drawNet(cam) {
   const { top, bottom, halfLength: H, postZ, postTop, antennaZ, antennaTop } = NET;
   const parts = [];
@@ -141,6 +148,7 @@ function drawNet(cam) {
 
 // ---------- Hráči ----------
 const UP = [0, 1, 0];
+// Pozor na pořadí: (x, z na podlaze, výška) → [x, y, z]. Hráči v datech mají jen x a z.
 const world = (x, z, y = 0) => [x, y, z];
 
 // Obrys podrážky – stejný tvar jako v diagramu postavení v pravidlech
@@ -317,6 +325,7 @@ function playerPartsTop(cam, player, team) {
   return out;
 }
 
+/** Střed hráče na podlaze [x, z] = střed obdélníku kolem chodidel. */
 function centerOf(player) {
   const box = footprint(player.feet);
   return [(box.minX + box.maxX) / 2, (box.minZ + box.maxZ) / 2];
@@ -348,6 +357,7 @@ function drawLabels(labels) {
 }
 
 // ---------- Vyhodnocení ----------
+/** Čáry mezi hráči po vyhodnocení: zelená = vztah v pořádku, červená (silnější) = chyba postavení. */
 function drawRelations(cam, byPosition, relations) {
   const parts = [];
   for (const r of relations) {

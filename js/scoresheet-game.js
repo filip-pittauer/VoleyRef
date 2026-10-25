@@ -5,16 +5,22 @@
 // pak do modelu vždy provede SPRÁVNOU variantu, takže set pokračuje dál
 // správně, i když hráč chyboval.
 import {
-  createSet, randomTeams, pick, other, ROMAN, SANCTIONS, isSetOver,
+  createSet, randomTeams, pick, other, SANCTIONS, MAX_SUBS, isSetOver,
   slotPlayer, serverSlot, nextServerSlot, playerAt, positionOf, freshBench, legalSubs, liberoCandidates,
   judgeSub, judgeTimeout, judgeLiberoIn, judgeLiberoOut, outcomeOf, explainOutcome, delayOutcome, misconductSanction,
   misconductRule, requester,
-  applyPoint, applyTimeout, applySub, applyLiberoIn, applyLiberoOut, applySanction, scoreFor,
+  applyPoint, applyTimeout, applySub, applyLiberoIn, applyLiberoOut, applySanction,
 } from './scoresheet-model.js';
 
 const MISCONDUCT = { hrube: 'hrubé chování', urazlive: 'urážlivé chování', mirne: 'mírně nevhodné chování (2. krok)' };
 const DELAYS = ['náhradník nebyl připravený ke hře', 'pomalu se vrací na hřiště po pokynu ke hře'];
 
+/**
+ * Nová hra (jeden set s náhodnými družstvy). Vrací { set, next, resolveRally, resolveDecision }:
+ * next() vydá další událost, resolveRally/resolveDecision ji provedou (správně) v modelu.
+ * Stav hry (fronta, počitadla přerušení) drží uzávěr – proměnné uvnitř funkce,
+ * podobně jako soukromá pole třídy v C#.
+ */
 export function createGame(random = Math.random) {
   const set = createSet(randomTeams(random));
   const queue = [];                // události, které musí přijít hned (bod po trestu, odchod libera)
@@ -24,6 +30,10 @@ export function createGame(random = Math.random) {
   let lastWinner = null;
 
   // ---------- Žádosti (část neoprávněných) ----------
+  /**
+   * Žádost o střídání: povolená (5× větší šance), nebo jedna z chyb, které stav
+   * setu zrovna umožňuje. null = družstvo teď nemá jak žádat.
+   */
   function subRequest(team) {
     const t = set.teams[team];
     const variants = [];
@@ -42,7 +52,7 @@ export function createGame(random = Math.random) {
       const more = legalSubs(set, team, { ignoreBreak: true });
       if (more.length) variants.push(['same-break', pick(random, more)]);
     }
-    if (t.subsUsed >= 6 && open && bench.length) variants.push(['limit', { out: open.starter, inn: pick(random, bench) }]);
+    if (t.subsUsed >= MAX_SUBS && open && bench.length) variants.push(['limit', { out: open.starter, inn: pick(random, bench) }]);
     if (!variants.length) return null;
     const [, request] = pick(random, variants);
     const verdict = judgeSub(set, team, request.out, request.inn);
@@ -52,12 +62,17 @@ export function createGame(random = Math.random) {
     };
   }
 
+  /** Žádost o oddechový čas (i třetí – neoprávněná). */
   function timeoutRequest(team) {
     const verdict = judgeTimeout(set, team);
     if (!verdict.ok && random() < 0.6) return null;   // po vyčerpání žádá trenér jen občas
     return { type: 'timeout', team, verdict, expected: outcomeOf(set, team, verdict), text: `${requester(set, team)} ${team} žádá o oddechový čas.` };
   }
 
+  /**
+   * Výměna libera: odchod (většinou správně, občas za něj jde jiný hráč), nebo
+   * příchod – většinou za hráče zadní řady, občas za podávajícího nebo do přední řady.
+   */
   function liberoRequest(team) {
     const t = set.teams[team];
     if (t.libero) {
@@ -83,6 +98,7 @@ export function createGame(random = Math.random) {
       text: `Libero č. ${libero} (družstvo ${team}) jde na hřiště za č. ${player} (pozice ${positionOf(set, team, player)}).` };
   }
 
+  /** Nevhodné chování člena družstva – sankce podle závažnosti a předchozích sankcí. */
   function misconduct(team) {
     const t = set.teams[team];
     // člen na lavičce nebo trenér – vyloučený hráč na hřišti by se musel střídat
@@ -99,11 +115,16 @@ export function createGame(random = Math.random) {
       text: `První rozhodčí: ${MISCONDUCT[kind]} – ${who} (družstvo ${team}).` };
   }
 
+  /** Zdržování hry (bez žádosti). */
   function delayEvent(team) {
     const reasons = set.teams[team].timeouts.length ? [...DELAYS, 'protahuje oddechový čas'] : DELAYS;
     return { type: 'delay', team, expected: delayOutcome(set, team), text: `Družstvo ${team} zdržuje hru: ${pick(random, reasons)}.` };
   }
 
+  /**
+   * Událost v přerušení hry pro družstvo, které v něm ještě nežádalo.
+   * Pravděpodobnosti: střídání 30 %, oddechový čas 20 %, libero 35 %, chování 10 %, zdržování 5 %.
+   */
   function breakEvent() {
     const free = ['A', 'B'].filter(t => !requested[t]);
     if (!free.length) return null;
@@ -117,6 +138,11 @@ export function createGame(random = Math.random) {
   }
 
   // ---------- Další událost ----------
+  /**
+   * Další událost v tomto pořadí: nejdřív vynucené (fronta), konec setu, občas
+   * událost v přerušení (nejvýš 2), jednou za přerušení případně kontrola
+   * podávajícího, jinak rozehra s náhodným vítězem.
+   */
   function next() {
     if (queue.length) return queue.shift();
     if (isSetOver(set)) return { type: 'end' };
@@ -137,6 +163,7 @@ export function createGame(random = Math.random) {
     return rallyEvent(winner, `Rozehru vyhrálo družstvo ${winner}.`);
   }
 
+  /** Rozehra: vítěz a kdo z něj má podávat (expectedSlot) – na to se trenažér ptá. */
   function rallyEvent(winner, text) {
     return { type: 'rally', winner, text, sideOut: set.serving !== winner,
       prevSlot: serverSlot(set, winner),      // kdo z vítěze podával naposledy (před rotací)
@@ -243,5 +270,3 @@ export function explain(set, event) {
       return { text: '', rule: null };
   }
 }
-
-export { ROMAN, scoreFor };

@@ -69,6 +69,7 @@ function updateBadgeLimit() {
   for (const box of boxes) box.disabled = full && !box.checked;
 }
 
+/** Výběr odznaků, které se ukazují u přezdívky v žebříčku (jen získané). */
 async function renderBadgePicker() {
   const { data, error } = await supabase.rpc('moje_odznaky');
   if (error) {

@@ -1,6 +1,8 @@
 // Malá 3D matematika pro animovanou postavu rozhodčího a hřiště v trenažéru postavení.
 // Vektor je obyčejné pole [x, y, z] v metrech (v C# by to byl struct Vector3).
 
+// Základní operace (jako operátory +, −, * u Vector3); dot = skalární součin,
+// lerp = bod mezi a a b (k = 0 → a, k = 1 → b, 0.5 → střed).
 export const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 export const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 export const scale = (a, k) => [a[0] * k, a[1] * k, a[2] * k];

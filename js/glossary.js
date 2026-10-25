@@ -80,6 +80,7 @@ function closePop() {
   openButton = null;
 }
 
+/** Otevře bublinu s definicí pojmu u tlačítka (pojmy se načtou při první potřebě). */
 async function openPop(button) {
   const terms = await loadTerms();
   const term = terms.find(t => t.id === button.dataset.term);

@@ -104,6 +104,11 @@ function createRibbon(width, height, left, colors) {
   };
 }
 
+/**
+ * Stuhy přes celou obrazovku na <canvas> (stovky prvků by v DOM/SVG zpomalily
+ * stránku). Jednoduchá fyzika: výstřel, odpor vzduchu, gravitace; po
+ * DURATION_MS canvas zmizí.
+ */
 function launchRibbons({ count, gold }) {
   const canvas = el('canvas', { class: 'ribbons', 'aria-hidden': 'true' });
   document.body.append(canvas);
@@ -113,7 +118,7 @@ function launchRibbons({ count, gold }) {
   const height = innerHeight;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
-  ctx.scale(dpr, dpr);
+  ctx.scale(dpr, dpr);   // ostré i na displejích s vyšší hustotou pixelů (kreslí se v CSS px)
 
   const colors = gold ? [...COLORS, GOLD, GOLD] : COLORS;
   const gravity = height * 1.6;   // px/s²
@@ -121,6 +126,8 @@ function launchRibbons({ count, gold }) {
   const start = performance.now();
   let last = start;
 
+  // jeden snímek animace; dt = čas od minulého snímku (max 50 ms – po
+  // přepnutí karty prohlížeče by stuhy jinak „poskočily“)
   const frame = now => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;

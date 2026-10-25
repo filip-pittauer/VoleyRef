@@ -122,6 +122,10 @@ function discreteAt(frames, t, name) {
   return (t - a.t) / (b.t - a.t) < 0.5 ? a[name] : b[name];
 }
 
+/**
+ * Paže v čase t: zápěstí a směr lokte plynule mezi snímky, z nich loket
+ * (inverzní kinematika). Prsty buď sledují předloktí, nebo mají vlastní směr.
+ */
 function sampleArm(arm, t) {
   const target = sampleSmooth(arm.wrist, t);
   const pole = sampleSmooth(arm.pole, t);
@@ -130,6 +134,8 @@ function sampleArm(arm, t) {
 
   const i = segmentAt(arm.frames, t);
   const next = Math.min(i + 1, arm.frames.length - 1);
+  // prsty sledují předloktí jen když oba sousední snímky chtějí „predlokti“;
+  // jinak se směr prstů plynule mění (tak vznikne i přechod na pevný směr)
   const followNow = arm.frames[i].follow && arm.frames[next].follow;
 
   return {

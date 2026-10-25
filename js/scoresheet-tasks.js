@@ -1,6 +1,10 @@
 // Trenažér zápisu – úlohy krátké verze (bez DOM).
 // Každá úloha = rozepsaný set (náhodný průběh), jedna událost a otázka.
 // { set, team, text, question, options: [{ id, label }], correct, explanation, rule, topic }
+//
+// Generátory s cyklem "attempt": náhodný stav setu konkrétní situaci nemusí
+// umožnit (např. nikdo nestřídal), tak se set vygeneruje znovu; po vyčerpání
+// pokusů vrátí generátor jinou, vždy proveditelnou úlohu.
 import {
   createSet, randomTeams, simulate, pick, shuffle, other, ROMAN, OUTCOMES, SANCTIONS, MAX_SUBS,
   slotPlayer, serverSlot, serverNumber, nextServerSlot, playerAt, positionOf, freshBench, legalSubs, liberoCandidates,
@@ -12,7 +16,9 @@ import {
 const BEFORE_NOTE = ' (Zápis a hřiště ukazují stav před touto rozehrou.)';
 const LAST_POINTS = 22;     // úlohy nevznikají těsně před koncem ani po konci setu
 
+/** Možnosti odpovědi „jak má žádost dopadnout“ (povolit / neoprávněná žádost / zdržování). */
 const outcomeOptions = () => Object.entries(OUTCOMES).map(([id, label]) => ({ id, label }));
+/** Až 4 čísla hráčů v náhodném pořadí: správné + 3 různé chytáky (bez prázdných a duplicit). */
 const numberOptions = (random, correct, distractors) => {
   const unique = [...new Set(distractors.filter(n => n !== correct && n != null))];
   return shuffle(random, [correct, ...shuffle(random, unique).slice(0, 3)]).map(n => ({ id: String(n), label: `č. ${n}` }));
@@ -45,6 +51,7 @@ function freshSet(random, { min = 6, max = 34, hook } = {}) {
 }
 
 // ---------- Rotace a pořadí podání ----------
+/** Kdo bude podávat po rozehře – stejný hráč, nebo po získání podání další sloupec. */
 function taskNextServer(random) {
   const set = freshSet(random);
   const winner = random() < 0.6 ? other(set.serving) : set.serving;
@@ -68,6 +75,7 @@ function taskNextServer(random) {
   };
 }
 
+/** Jde na podání správný hráč? (chyba v pořadí podání se hlásí až po úderu) */
 function taskServeCheck(random) {
   const set = freshSet(random);
   const team = other(set.serving);
@@ -98,12 +106,12 @@ function fillSubs(set, team, random) {
     const subs = legalSubs(set, team, { ignoreBreak: true });
     if (!subs.length) break;
     const s = pick(random, subs);
-    t.lastSubRally = -1;
     applySub(set, team, s.out, s.inn);
     playRally(set, random);
   }
 }
 
+/** Vysvětlení povoleného střídání: co a s jakým skóre se zapíše do sloupce. */
 function subExplanation(set, team, request) {
   const t = set.teams[team];
   const slotIndex = t.slots.findIndex(s => slotPlayer(s) === request.out);
@@ -112,6 +120,11 @@ function subExplanation(set, team, request) {
     : `Střídání je v pořádku – do sloupce ${ROMAN[slotIndex]} (č. ${request.out}) se zapíše náhradník č. ${request.inn} a skóre ${scoreFor(set, team)} (nejdřív body družstva, které střídá).`;
 }
 
+/**
+ * Žádost o střídání – povolená, nebo jedna z typických chyb: druhá žádost ve
+ * stejném přerušení, vyčerpaný limit, náhradníka střídá jiný hráč, uzavřený
+ * sloupec, náhradník, který už jednou hrál.
+ */
 function taskSub(random) {
   for (let attempt = 0; attempt < 40; attempt++) {
     const set = freshSet(random);
@@ -170,11 +183,13 @@ function taskSub(random) {
   return taskTimeout(random);
 }
 
+/** Kolik střídání družstvu v setu zbývá. */
 function taskSubsLeft(random) {
   const set = freshSet(random, { min: 12, max: 30 });
   const team = pick(random, ['A', 'B']);
   if (random() < 0.4) fillSubs(set, team, random);
   const left = MAX_SUBS - set.teams[team].subsUsed;
+  // chytáky kolem správného počtu (±1, ±2 a „použitá místo zbývajících“), jen 0–6
   const options = shuffle(random, [...new Set([left, Math.max(0, left - 1), Math.min(6, left + 1), 6 - left, left + 2])]
     .filter(n => n >= 0 && n <= 6)).slice(0, 4);
   if (!options.includes(left)) options[0] = left;
@@ -189,6 +204,7 @@ function taskSubsLeft(random) {
   };
 }
 
+/** Kdo smí vystřídat náhradníka – jen hráč základní sestavy z jeho sloupce. */
 function taskWhoMayReplace(random) {
   for (let attempt = 0; attempt < 30; attempt++) {
     const set = freshSet(random, { min: 12, max: 30 });
@@ -213,6 +229,7 @@ function taskWhoMayReplace(random) {
 }
 
 // ---------- Oddechové časy, skóre v zápisu ----------
+/** Žádost o oddechový čas – povolená, nebo třetí v setu. Záchranná úloha ostatních generátorů. */
 function taskTimeout(random) {
   const team = pick(random, ['A', 'B']);
   const wanted = random() < 0.5 ? 2 : Math.floor(random() * 2);
@@ -237,9 +254,10 @@ function taskTimeout(random) {
   };
 }
 
+/** Jaké skóre se zapíše k oddechovému času / střídání (nejdřív body žádajícího družstva). */
 function taskScoreOrder(random) {
   const set = freshSet(random, { min: 10, max: 30 });
-  while (set.score.A === set.score.B) playRally(set, random);
+  while (set.score.A === set.score.B) playRally(set, random);   // při shodě by obě možnosti byly stejné
   const team = pick(random, ['A', 'B']);
   const what = random() < 0.5 ? 'oddechový čas' : 'střídání';
   const right = scoreFor(set, team);
@@ -256,6 +274,10 @@ function taskScoreOrder(random) {
 }
 
 // ---------- Libero ----------
+/**
+ * Výměna libera – povolená, nebo chyba: za hráče přední řady, za podávajícího,
+ * bez rozehry mezi výměnami, libero nahrazuje jiný hráč než ten, za kterého přišlo.
+ */
 function taskLibero(random) {
   for (let attempt = 0; attempt < 40; attempt++) {
     const set = freshSet(random);
@@ -322,6 +344,7 @@ const MISCONDUCT = {
 const MISCONDUCT_ACC = { hrube: 'hrubé chování', urazlive: 'urážlivé chování', agrese: 'agresi' };
 const BASE_SANCTION = { hrube: 'trest', urazlive: 'vylouceni', agrese: 'diskvalifikace' };
 
+/** Sankce za nevhodné chování podle závažnosti a toho, co už má člen družstva v zápisu. */
 function taskMisconduct(random) {
   const team = pick(random, ['A', 'B']);
   let member = null;
@@ -332,6 +355,7 @@ function taskMisconduct(random) {
       const t = s.teams[team];
       member = random() < 0.2 ? 'T' : pick(random, [...t.lineup, ...freshBench(s, team)]);
       const hadYellow = s.sanctions.some(x => x.team === team && x.kind === 'napomenuti');
+      // napomenutí (žlutá karta) nejvýš jedno za družstvo – stejně jako v simulate()
       history = pick(random, hadYellow ? [[], [], ['trest']] : [[], [], ['trest'], ['napomenuti']]);
       for (const kind of history) applySanction(s, team, member, kind);
     },
@@ -364,6 +388,7 @@ function taskMisconduct(random) {
   };
 }
 
+/** Sankce za zdržování: poprvé napomenutí, pak trest. */
 function taskDelay(random) {
   const set = freshSet(random);
   const team = pick(random, ['A', 'B']);
@@ -384,6 +409,7 @@ function taskDelay(random) {
 }
 
 // ---------- Výběr úloh ----------
+// Generátor uvedený dvakrát se losuje dvakrát častěji (důležitější témata).
 const GENERATORS = [taskNextServer, taskNextServer, taskServeCheck, taskSub, taskSub, taskSubsLeft, taskWhoMayReplace,
   taskTimeout, taskScoreOrder, taskLibero, taskLibero, taskMisconduct, taskDelay];
 
@@ -399,7 +425,3 @@ export function generateTasks(random = Math.random, count = 10) {
   }
   return tasks;
 }
-
-export const TASK_GENERATORS = {
-  taskNextServer, taskServeCheck, taskSub, taskSubsLeft, taskWhoMayReplace, taskTimeout, taskScoreOrder, taskLibero, taskMisconduct, taskDelay,
-};

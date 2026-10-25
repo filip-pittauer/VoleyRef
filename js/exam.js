@@ -68,6 +68,7 @@ async function renderPlayerInfo() {
     : el('span', {}, 'Nejsi přihlášený, výsledek se neuloží. ', el('a', { href: 'ucet.html' }, 'Přihlásit se')));
 }
 
+/** Začne zkoušku: otázky od serveru, odpočet času, první otázka. */
 async function begin() {
   hideError();
   startButton.disabled = true;
@@ -104,6 +105,7 @@ function startTimer() {
   tick();
 }
 
+/** Každou sekundu: zbývající čas, upozornění na konec, po vypršení odevzdání. */
 function tick() {
   const left = Math.max(0, Math.round((state.endsAt - Date.now()) / 1000));
   timerText.textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
@@ -195,6 +197,7 @@ dialog.addEventListener('close', () => {
   if (dialog.returnValue === 'confirm') submit();
 });
 
+/** Odevzdá zkoušku (i nedokončenou); vyhodnotí ji server. */
 async function submit({ timeUp = false } = {}) {
   if (!state || state.submitting) return;
   state.submitting = true;
@@ -242,6 +245,7 @@ function savedNote() {
   return el('span', {}, 'Výsledek je uložený v ', el('a', { href: 'ucet.html#zkousky' }, 'Profilu'), '.');
 }
 
+/** Výsledek: splněno/nesplněno, skóre, přehled otázek se správnými odpověďmi. */
 function renderResult(result, timeUp) {
   const exam = state;
   const { passed, passScore, inTime } = result.exam;

@@ -28,9 +28,13 @@ const courtBox = document.getElementById('sc-court');
 const sheetBox = document.getElementById('sc-sheet');
 
 // ---------- Stav ----------
-// mode: 'short' | 'long'; mistakes: [{ text, explanation, rule }]
+// mode: 'short' (tasks, index) | 'long' (game, event); correct/total = počitadlo;
+// mistakes: [{ text, explanation, rule, answer? }] pro přehled chyb na konci.
+// phase (dlouhá verze) = na co se čeká: 'point' (klepnutí na bod), 'server'
+// (sloupec podávajícího), 'decision' (tlačítka); null = klepnutí do zápisu ignorovat.
 let state = null;
 
+/** Horní lišta: počet správných/chybných a postup (úloha, nebo skóre setu). */
 function updateBoard() {
   const { correct, total } = state;
   tallyText.replaceChildren(el('span', { class: 'sc-tally__ok' }, `✓ ${correct}`), ' ', el('span', {}, `✗ ${total - correct}`));
@@ -52,6 +56,7 @@ function renderOptions(options, onPick) {
   };
 }
 
+/** Po odpovědi: zamknout tlačítka, správné zeleně, zvolené špatné červeně. */
 function markOptions(correctId, pickedId) {
   for (const button of optionsBox.querySelectorAll('.sc-option')) {
     button.disabled = true;
@@ -60,6 +65,7 @@ function markOptions(correctId, pickedId) {
   }
 }
 
+/** Výsledek odpovědi s vysvětlením a odkazem na pravidlo (nová karta – rozehraná hra zůstane). */
 function showFeedback(isCorrect, explanation, rule) {
   feedback.className = `result ${isCorrect ? 'result--ok' : 'result--wrong'}`;
   feedback.replaceChildren(
@@ -69,6 +75,7 @@ function showFeedback(isCorrect, explanation, rule) {
   feedback.hidden = false;
 }
 
+/** Vyčistí otázku, možnosti a zpětnou vazbu před další událostí. */
 function resetEventPanel() {
   feedback.hidden = true;
   nextButton.hidden = true;
@@ -87,6 +94,7 @@ function startShort() {
   renderTask();
 }
 
+/** Vykreslí aktuální úlohu: text, hřiště, zápis a možnosti; po odpovědi vyhodnotí. */
 function renderTask() {
   const task = state.tasks[state.index];
   resetEventPanel();
@@ -123,6 +131,7 @@ function startLong() {
   nextEvent();
 }
 
+/** Započítá odpověď v dlouhé verzi (chyba jde do přehledu na konci). */
 function count(isCorrect, event, explanation, rule) {
   state.total++;
   if (isCorrect) state.correct++;
@@ -141,6 +150,10 @@ function proceed(isCorrect) {
   nextButton.focus();
 }
 
+/**
+ * Další událost dlouhé verze. Rozehra se odpovídá klepnutím přímo do zápisu
+ * (bod, pak případně sloupec podávajícího), ostatní události tlačítky.
+ */
 function nextEvent() {
   const { game } = state;
   const event = game.next();
@@ -177,6 +190,7 @@ function nextEvent() {
   renderOptions(Object.entries(options).map(([id, label]) => ({ id, label })), pickDecision);
 }
 
+/** Odpověď na událost s tlačítky; hra pak provede správnou variantu (i po chybě). */
 function pickDecision(pickedId) {
   const { event, game } = state;
   const isCorrect = pickedId === event.expected;
@@ -242,6 +256,7 @@ sheetBox.addEventListener('click', event => {
 // =====================================================================
 // Výsledek
 // =====================================================================
+/** Výsledek kola: skóre, přehled chyb s vysvětlením, oslava. */
 function showResult() {
   const { correct, total, mistakes, mode } = state;
   const score = createScore(correct, total);

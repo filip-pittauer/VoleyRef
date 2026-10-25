@@ -5,6 +5,10 @@
 // s prsty), který se v každém snímku promítne do 2D. Části se kreslí
 // odzadu dopředu podle hloubky – ruka před tělem je vidět, ruka za zády ne
 // (tzv. malířův algoritmus).
+//
+// Každá část postavy (trup, hlava, paže, síť) je objekt { layers, update(view, pose) }:
+// update v každém snímku přepočítá tvary a nastaví každé vrstvě hloubku (depth);
+// scéna pak vrstvy seřadí a vloží do SVG odzadu dopředu.
 import { svgEl } from './dom.js';
 import {
   add, scale, cross, lerp, normalize, perpendicular, anyPerpendicular, createProjection,
@@ -82,6 +86,7 @@ function smoothPath(points) {
   return d;
 }
 
+/** Nastaví konce <line> na dva body na plátně. */
 function setLine(line, a, b) {
   line.setAttribute('x1', num(a.x));
   line.setAttribute('y1', num(a.y));
@@ -110,6 +115,7 @@ function digitNodes(points, width = FINGER) {
 const ellipseHalfWidth = (a, b, yaw) => Math.hypot(a * Math.cos(yaw), b * Math.sin(yaw));
 
 // ---------- Trup, krk, kalhoty, límec ----------
+/** Trup, kalhoty, krk a límec – jedna vrstva v ose těla (hloubka 0). */
 function createBody() {
   const trousers = svgEl('path', { class: 'ref-trousers' });
   const neck = svgEl('path', { class: 'ref-skin' });
@@ -165,6 +171,7 @@ function headPoint(azimuth, height) {
   return [ring * Math.sin(azimuth), HEAD.y + HEAD.r * height, ring * Math.cos(azimuth)];
 }
 
+/** Hlava s vlasy, ušima, očima a pusou – podle otočení je vidět obličej, profil, nebo týl. */
 function createHead() {
   const head = svgEl('circle', { class: 'ref-skin', r: HEAD.r });
   const hair = svgEl('path', { class: 'ref-hair' });
@@ -218,6 +225,10 @@ function createHead() {
 const RIGHT = -1;   // pravá paže rozhodčího (na obrázku vlevo, protože se díváme zepředu)
 const LEFT = 1;
 
+/**
+ * Paže (RIGHT nebo LEFT): nadloktí s rukávem, předloktí, loket a ruka jako
+ * samostatné vrstvy – každá může být před tělem i za ním.
+ */
 function createArm(side) {
   const shoulder = [side * BODY.shoulderX, BODY.shoulderY, 0];
   // souřadnice paže [ven, nahoru, vpřed] → souřadnice těla [x, y, z]
@@ -447,6 +458,7 @@ function drawHeld(holds, { point, project, grip, stick, cloth }) {
 // zakrýval by ruku, která na síť ukazuje.
 const NET = { top: 0.3, bottom: -0.7, from: 0.45, to: 3.2, antenna: 1.05 };
 
+/** Výsek sítě s páskou a anténkou (gesta, která ukazují na síť). */
 function createNet() {
   const mesh = svgEl('path', { class: 'ref-net__mesh' });
   const [bandOutline, band] = outlinedLine('ref-net__band', 0.06);
@@ -477,10 +489,6 @@ function createNet() {
 }
 
 // ---------- Scéna a přehrávač ----------
-/**
- * Vytvoří SVG s postavou pro jedno gesto. Vrací { svg, render(t) }.
- * mirror = zrcadlově (gesto pro tým na druhé straně – význam se nemění).
- */
 /**
  * Výřez přizpůsobený gestu: projde celý pohyb a zjistí, kam až sahají ruce
  * (a karta), aby postava vyplnila co nejvíc místa – hlavně na mobilu.
@@ -528,6 +536,11 @@ function fitViewBox(gesture, poseAt, camera) {
   return [-width / 2, bottom - height, width, height];
 }
 
+/**
+ * Vytvoří SVG s postavou pro jedno gesto. Vrací { svg, render(t) } – render
+ * nakreslí snímek v čase t (sekundy); volá ho přehrávač (player.js).
+ * mirror = zrcadlově (gesto pro tým na druhé straně – význam se nemění).
+ */
 export function createRefereeScene(gesture, poses, { mirror = false } = {}) {
   const poseAt = createPoseSampler(gesture, poses);
   const camera = { otoceni: 18, naklon: 6, ...gesture.kamera };

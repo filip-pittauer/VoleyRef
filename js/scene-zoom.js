@@ -53,6 +53,7 @@ export function attachPinchZoom(svg, { onChange } = {}) {
     return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, dist: Math.hypot(a.x - b.x, a.y - b.y) };
   };
 
+  /** Podle počtu prstů: dva = přiblížení, jeden u přiblížené scény = posun, jinak nic. */
   function startGesture() {
     if (pointers.size >= 2) {
       const m = midpoint();
@@ -79,6 +80,7 @@ export function attachPinchZoom(svg, { onChange } = {}) {
 
     if (gesture.type === 'pinch' && pointers.size >= 2) {
       const m = midpoint();
+      // prsty od sebe na dvojnásobek → výřez poloviční šířky (2× přiblížení)
       const width = gesture.startView[2] * gesture.startDist / Math.max(m.dist, 1);
       const height = width * base[3] / base[2];
       // bod pod prsty zůstane pod prsty
@@ -106,6 +108,7 @@ export function attachPinchZoom(svg, { onChange } = {}) {
   svg.addEventListener('pointerleave', end);
 
   // po přiblížení nebo posunu nesmí „puštění prstu“ vybrat hráče
+  // (true = fáze zachycení: poběží dřív než obsluha kliknutí na hráče)
   svg.addEventListener('click', event => {
     if (!moved) return;
     moved = false;

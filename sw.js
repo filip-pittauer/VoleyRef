@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v31';
+const CACHE = 'voleyref-v32';
 
 const APP_SHELL = [
   './',
@@ -165,6 +165,7 @@ self.addEventListener('fetch', event => {
   // vše ostatní (Supabase, Google…) jde přímo na síť bez zásahu
 });
 
+/** Nejdřív síť (a uložit do mezipaměti), bez sítě mezipaměť; stránka offline → úvod. */
 async function networkFirst(request) {
   const cache = await caches.open(CACHE);
   try {

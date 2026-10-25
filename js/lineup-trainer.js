@@ -92,6 +92,7 @@ function newSituation() {
   render();
 }
 
+/** Klepnutí na hráče: vybrat / zrušit výběr (vybírá se dvojice). */
 function togglePlayer(position) {
   if (state.result) return;
   state.correctLineup = false;
@@ -127,6 +128,7 @@ function explanation(situation) {
     el('a', { href: 'pravidla.html#p-7-4-3-2' }, 'pravidlo 7.4.3.2'), ').')];
 }
 
+/** Vyhodnotí odpověď a přepne na pohled shora s čarami mezi hráči. */
 function evaluate(event) {
   event.preventDefault();
   if (state.result) return;

@@ -76,6 +76,7 @@ function sqlJson(value) {
   return `${sqlText(JSON.stringify(value))}::jsonb`;
 }
 
+/** SQL pro editor Supabase: upsert otázek (public) a řešení (private) – jde spustit opakovaně. */
 function buildSql(questions) {
   const questionRows = questions.map(q => `  (${[
     q.id, q.aktivni, sqlText(q.kategorie), q.obtiznost, sqlText(q.situace),

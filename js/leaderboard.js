@@ -60,6 +60,7 @@ function renderRow(row, withDate, index) {
     withDate ? el('td', { class: 'num hide-narrow' }, dateFormat.format(new Date(row.datum))) : null);
 }
 
+/** Načte jeden žebříček (celkový, nebo denní) přes RPC a vykreslí tabulku. */
 async function loadBoard(board) {
   const { data, error } = await supabase.rpc(board.rpc, { p_limit: LIMIT });
   if (error) {

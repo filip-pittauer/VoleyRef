@@ -14,6 +14,7 @@ export const CATEGORIES = {
   'hriste': 'Hřiště a vybavení',
 };
 
+/** Český název kategorie podle id (neznámé id vrátí beze změny). */
 export function categoryName(id) {
   return CATEGORIES[id] ?? id;
 }
@@ -25,6 +26,7 @@ export const DIFFICULTIES = {
   3: 'Těžká',
 };
 
+/** Český název obtížnosti 1–3 (neznámá → prázdný text). */
 export function difficultyName(level) {
   return DIFFICULTIES[level] ?? '';
 }

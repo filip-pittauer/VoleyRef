@@ -54,6 +54,7 @@ let state = null;
 let profile = null;
 
 // ---------- Start: hráč a filtry ----------
+/** Kdo hraje (přihlášený / anonym); pak karty opakování chyb a denní výzvy. */
 async function renderPlayerInfo() {
   if (!isConfigured) {
     showError(NOT_CONFIGURED_MESSAGE);
@@ -134,6 +135,7 @@ function renderCountdown() {
   return line;
 }
 
+/** Karta denní výzvy: stav (hráno / nehráno), počet hráčů, odkaz na včerejší řešení. */
 async function renderDaily() {
   let status;
   try {
@@ -173,6 +175,7 @@ async function renderDaily() {
 }
 
 // ---------- Start: opakování chyb ----------
+/** Karta „Opakování chyb“ s počtem otázek k opakování (jen přihlášený). */
 async function renderMistakes() {
   if (!profile) {
     mistakesCard.hidden = true;
@@ -207,6 +210,10 @@ async function renderMistakes() {
 }
 
 // ---------- Začátek kola ----------
+/**
+ * Začne kolo. mode: 'bezne' (s filtry z formuláře), 'chyby' (opakování chyb),
+ * 'denni' (denní výzva) – otázky vybere server podle režimu.
+ */
 async function begin(mode) {
   hideError();
   const filters = mode === 'bezne' ? selectedFilters() : { category: null, difficulty: null };
@@ -241,6 +248,7 @@ async function begin(mode) {
 }
 
 // ---------- Otázka ----------
+/** Vykreslí aktuální otázku (text, ilustrace, odpovědi); dřívější odpověď zůstane zaškrtnutá. */
 function renderQuestion() {
   const question = state.questions[state.index];
   const number = state.index + 1;
@@ -277,6 +285,7 @@ function renderQuestion() {
   questionHeading.focus();
 }
 
+/** Uloží odpověď a jde na další otázku; po poslední odešle kolo k vyhodnocení. */
 async function handleAnswer(event) {
   // Formulář by jinak odeslal stránku na server a načetl ji znovu.
   event.preventDefault();
@@ -334,6 +343,7 @@ function renderResultList(questions, results) {
   resultListHeading.hidden = results.length === 0;
 }
 
+/** Výsledek kola: skóre, poznámka k žebříčku, nové odznaky a přehled otázek. */
 function renderResult(result) {
   const round = state;
   const extra = el('p', { class: 'muted small' });
@@ -380,6 +390,7 @@ function renderResult(result) {
 }
 
 // ---------- Řešení včerejší denní výzvy ----------
+/** Řešení včerejší denní výzvy (vlastní kolo) – stejné zobrazení jako výsledek kola. */
 async function showDailySolution() {
   hideError();
   dailySolutionButton.disabled = true;
