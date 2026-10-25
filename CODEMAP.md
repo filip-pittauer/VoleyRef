@@ -46,7 +46,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `zebricek.html` | žebříček celkový + denní (záložky) | `pwa.js`, `leaderboard.js` |
 | `ucet.html` | **Profil**: přihlášení/registrace, statistiky, odznaky, nastavení, odhlášení, smazání účtu | `pwa.js`, `account.js` (→ `stats.js`) |
 | `ochrana-udaju.html` | zásady GDPR (statický text) | `pwa.js` |
-| `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | inline skript |
+| `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | `stats-redirect.js` (klasický skript; inline by CSP zablokovala) |
 
 Hlavička s navigací (Kvíz, Gesta, Pravidla, Žebříček, Profil) je v **každém** HTML zvlášť –
 při změně upravit všech 11 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
@@ -60,12 +60,13 @@ při změně upravit všech 11 souborů. Ikony navigace: `img/ikony.svg` (symbol
 ### Společné pomůcky
 | Modul | Exporty | Poznámka |
 |---|---|---|
-| `dom.js` | `el`, `svgEl`, `showOnly`, `replayAnimation`, `loadingPlaceholder`, `setupChoiceHint` | tvorba prvků (text vždy jako `textContent` – ochrana XSS); znovuspuštění CSS animace; skeleton při načítání; vlastní hláška „Vyber jednu odpověď“ místo bubliny prohlížeče (kvíz, gesta) |
+| `dom.js` | `el`, `svgEl`, `showOnly`, `replayAnimation`, `loadingPlaceholder`, `setupChoiceHint` | tvorba prvků (text vždy jako `textContent` – ochrana XSS; `style` přes CSSOM `style.cssText`, atribut `style=` by CSP zablokovala); znovuspuštění CSS animace; skeleton při načítání; vlastní hláška „Vyber jednu odpověď“ místo bubliny prohlížeče (kvíz, gesta) |
 | `format.js` | `formatDuration`, `plural`, `secondsUntilNextDay`, `formatCountdown` | české tvary („1 bod / 2 body / 5 bodů“); odpočet do půlnoci českého času (denní výzva) |
 | `categories.js` | `CATEGORIES`, `categoryName`, `DIFFICULTIES`, `difficultyName`, `categoryRulesUrl`, `ruleUrl` | kategorie otázek; odkazy do pravidel (`#podani`, `#p-12-4-3`) |
 | `badges.js` | `BADGE_GROUPS`, `BADGES`, `badgeById` | názvy/ikony odznaků (podmínky jsou v SQL) |
 | `config.js` | `SUPABASE_URL`, `SUPABASE_KEY` | jen veřejná URL + publishable klíč |
-| `supabase.js` | `supabase`, `isConfigured`, `NOT_CONFIGURED_MESSAGE`, `pageUrl`, `getUser`, `getProfile`, `errorMessage` | ← supabase-js z CDN (pevná verze), `config.js` |
+| `supabase.js` | `supabase`, `isConfigured`, `NOT_CONFIGURED_MESSAGE`, `pageUrl`, `getUser`, `getProfile`, `errorMessage` | ← `js/vendor/supabase-js-2.117.2.umd.js` (vložený jako `<script>`, top-level await), `config.js` |
+| `vendor/supabase-js-2.117.2.umd.js` | globální `supabase` | knihovna supabase-js z npm beze změny (UMD; SHA-256 v `supabase.js`, licence `vendor/supabase-js-LICENSE.txt`, `.gitattributes` = bez převodu konců řádků) |
 | `pwa.js` | – | registrace `sw.js`, tlačítko „Nainstalovat aplikaci“ |
 
 ### Kvíz, žebříček, profil (používají Supabase)
@@ -172,7 +173,7 @@ Animace menu jsou v sekci „Animace navigace“ hned za navigací.
 
 ### Service worker (`sw.js`)
 `APP_SHELL` = seznam všech souborů webu (offline). Vlastní soubory: síť napřed (`no-cache`), bez sítě mezipaměť;
-CDN s pevnou verzí: mezipaměť napřed; Supabase: nikdy necachovat.
+Žádné CDN (supabase-js je v `js/vendor/`); Supabase: nikdy necachovat.
 **Nový soubor webu → přidat do `APP_SHELL` a zvýšit `CACHE` (`voleyref-vN`).**
 
 ---
@@ -259,6 +260,8 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat/upravit pojem slovníčku | `slovnicek/pojmy.json` → `node private/pravidla-zdroj/build.mjs pravidla.html` (definice v pravidlech); test `e2e-slovnicek` |
 | upravit text pravidel | `private/pravidla-zdroj/src/*.txt` + build (nebo drobnost přímo v `pravidla.html`) |
 | přidat odznak | `js/badges.js` + `private.metriky_odznaku` v `sql/05_odznaky.sql` (stejné id) |
-| novou stránku | HTML s hlavičkou/navigací jako ostatní, `APP_SHELL` + `CACHE` v `sw.js`, navigace ve všech stránkách |
+| novou stránku | HTML s hlavičkou/navigací jako ostatní **včetně meta CSP**, `APP_SHELL` + `CACHE` v `sw.js`, navigace ve všech stránkách, stránku do `PAGES` v `private/testy/e2e-csp.mjs` |
+| novou externí službu (API, obrázky…) | upravit CSP (`connect-src`, `img-src`…) ve **všech** HTML stejně; test `e2e-csp` hlídá, že je všude stejná |
+| aktualizovat supabase-js | postup v `docs/historie.md` (Knihovna Supabase a CSP) |
 | změnit barvy/vzhled | proměnné na začátku `css/style.css` (světlý i tmavý režim) |
 | změnit DB | soubor v `sql/` (opakovatelně spustitelný), test přechodu ze stávající verze, uživateli napsat pořadí spuštění |

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
   <title>Statistiky – Volejbal: trénink rozhodčích</title>
   <!-- Statistiky jsou teď součástí Profilu (ucet.html). Stránka zůstává kvůli
        starým odkazům a záložkám: přesměruje a zachová kotvu (např. #odznaky). -->
@@ -11,7 +13,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
   <!-- skript až za styly: prohlížeč tak ví, že stránka má zapnuté plynulé přechody -->
-  <script>location.replace('ucet.html' + (location.hash || '#statistiky'));</script>
+  <script src="js/stats-redirect.js"></script>
 </head>
 <body>
   <main id="obsah">

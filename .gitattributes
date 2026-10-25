@@ -1,0 +1,3 @@
+# Knihovny třetích stran: ukládat bajt po bajtu (bez převodu konců řádků),
+# aby kontrolní součet seděl s originálem na npm.
+js/vendor/** -text

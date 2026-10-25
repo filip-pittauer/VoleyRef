@@ -2877,6 +2877,7 @@ progress::-moz-progress-bar {
 .dg-cord { stroke: var(--color-text-muted); stroke-width: 0.6; }
 .dg-antenna { stroke: #f8fafc; stroke-width: 1.6; }
 .dg-antenna--stripes { stroke: #dc2626; stroke-dasharray: 2 2; }
+.dg-antenna--thick { stroke-width: 2.4; }   /* místo style="…" – CSP inline styly blokuje */
 .dg-dim line { stroke: var(--color-text-muted); stroke-width: 0.5; }
 .dg-pointer { stroke: var(--color-text-muted); stroke-width: 0.5; }
 .dg-ref { stroke: var(--color-text-muted); stroke-width: 0.6; stroke-dasharray: 2 1.5; }

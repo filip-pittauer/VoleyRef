@@ -8,11 +8,11 @@
 //    nemá novější verzi (nezměněný soubor = krátká odpověď 304). Bez toho by
 //    prohlížeč mohl 10 minut používat starý soubor z HTTP cache a smíchat
 //    staré a nové moduly (import pak selže a stránka nefunguje).
-//  - knihovny z CDN s pevnou verzí: nejdřív mezipaměť (nemění se)
+//  - knihovna Supabase je v js/vendor/ (žádné CDN) – patří k souborům webu
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v28';
+const CACHE = 'voleyref-v29';
 
 const APP_SHELL = [
   './',
@@ -75,7 +75,9 @@ const APP_SHELL = [
   'js/rules-page.js',
   'js/scene-zoom.js',
   'js/stats.js',
+  'js/stats-redirect.js',
   'js/supabase.js',
+  'js/vendor/supabase-js-2.117.2.umd.js',
   'animace/podani-preslap.json',
   'animace/utok-zadni-rada.json',
   'animace/mic-antena.json',
@@ -133,8 +135,6 @@ const APP_SHELL = [
   'img/icons/favicon-32.png',
 ];
 
-const CDN = 'https://cdn.jsdelivr.net/';
-
 // Instalace: stáhnout a uložit základní soubory.
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -161,8 +161,6 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin === self.location.origin) {
     event.respondWith(networkFirst(request));
-  } else if (request.url.startsWith(CDN)) {
-    event.respondWith(cacheFirst(request));
   }
   // vše ostatní (Supabase, Google…) jde přímo na síť bez zásahu
 });
@@ -180,13 +178,4 @@ async function networkFirst(request) {
     if (request.mode === 'navigate') return cache.match('index.html');
     throw new Error(`Offline a není v mezipaměti: ${request.url}`);
   }
-}
-
-async function cacheFirst(request) {
-  const cache = await caches.open(CACHE);
-  const cached = await cache.match(request);
-  if (cached) return cached;
-  const response = await fetch(request);
-  if (response.ok) cache.put(request, response.clone());
-  return response;
 }

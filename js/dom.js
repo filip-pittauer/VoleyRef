@@ -12,7 +12,9 @@ export function el(tag, attrs = {}, ...children) {
 
   for (const [name, value] of Object.entries(attrs)) {
     if (value === false || value === null || value === undefined) continue;
-    element.setAttribute(name, value === true ? '' : value);
+    // style přes CSSOM: atribut style="…" by Content Security Policy zablokovala
+    if (name === 'style') element.style.cssText = value;
+    else element.setAttribute(name, value === true ? '' : value);
   }
 
   for (const child of children.flat()) {

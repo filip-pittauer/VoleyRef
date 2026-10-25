@@ -56,6 +56,17 @@ Uživatel na živém webu otestoval: přihlášení Google i e-mail, kvíz, žeb
 - Náhled všech ilustrací s otázkami a odpověďmi na jedné stránce: `node private/obrazky/nahled.mjs` → `private/nahled-ilustraci.html` (neveřejné, v .gitignore), otevřít přes Live Server: http://127.0.0.1:5500/private/nahled-ilustraci.html
 - Nápady na později: ilustrace ve vysvětlení po kole (tam smí ukázat i řešení – např. zóny, čáry).
 
+## Knihovna Supabase a CSP (25. 10. 2026)
+- **supabase-js je v repu** (`js/vendor/supabase-js-<verze>.umd.js`), ne z CDN: napadené CDN by nemohlo podstrčit kód a prohlížeč se nepřipojuje k dalšímu serveru (GDPR, stejně jako písma). Je to soubor `dist/umd/supabase.js` z npm balíčku beze změny – klasický skript s globální proměnnou `supabase`; `js/supabase.js` ho vloží jako `<script src>` a počká na něj (top-level await). `.gitattributes`: `js/vendor/**` bez převodu konců řádků, ať součet sedí.
+- **Aktualizace knihovny:**
+  1. Ve složce mimo repo: `npm pack @supabase/supabase-js@<verze>` (npm sám ověří integritu balíčku proti registru), rozbalit `tar xzf supabase-supabase-js-<verze>.tgz`.
+  2. Ověřit: `sha256sum package/dist/umd/supabase.js` a porovnat se stejným souborem z jiného zdroje, např. `curl -s https://unpkg.com/@supabase/supabase-js@<verze>/dist/umd/supabase.js | sha256sum` (musí sedět).
+  3. Zkopírovat do `js/vendor/supabase-js-<verze>.umd.js` (starý smazat), `package/LICENSE` → `js/vendor/supabase-js-LICENSE.txt`.
+  4. Upravit cestu, verzi a SHA-256 v komentáři a v `script.src` v `js/supabase.js`, název v `APP_SHELL` v `sw.js` + zvýšit `CACHE`, CODEMAP.md.
+  5. `node run-all.mjs` (hlavně e2e-profil, e2e-csp) a na živém webu vyzkoušet přihlášení e-mailem i přes Google.
+- **Content Security Policy** (meta ve všech HTML, stejná): `default-src 'self'`, Supabase jen v `connect-src`, žádné `unsafe-inline`/`unsafe-eval`. Výjimky: `img-src data:` (podle zadání; dnes ho nic nepotřebuje). Přihlášení přes Google a odkaz z e-mailu jsou navigace (přesměrování), na ty se CSP nevztahuje; service worker spadá pod `script-src 'self'`. Kvůli CSP: inline skript ze `statistiky.html` → `js/stats-redirect.js`, `el(…, { style })` nastavuje styl přes CSSOM, `style=` v `img/otazky/217-antenka.svg` → třída `dg-antenna--thick`. `frame-ancestors` (ochrana proti vložení do cizího iframe) v meta nefunguje – jen v HTTP hlavičce, tedy až na vlastním hostingu.
+- Testy: `e2e-csp` (všechny stránky anonym i přihlášený, přihlášení, Google, hlášení, inline SVG; kontrola, že sběr porušení funguje). Falešné Supabase v testech běží na adrese skutečného projektu (jinak by ho CSP zablokovala), požadavky obslouží `page.route` – na skutečný server nic neodejde.
+
 ## Hlášení chyb (23. 10. 2026)
 - Odkaz „Nahlásit chybu“ u každé otázky ve výsledku kvízu a zkoušky, v kvízu gest ve zpětné vazbě po odpovědi a u chybných gest na konci. Typ chyby + nepovinný text (max. 1000 znaků). Hlásit jde i bez přihlášení.
 - `sql/06_hlaseni.sql`: tabulka `public.hlaseni` (otázka NEBO gesto), funkce `nahlasit_chybu` (přihlášený: stejnou věc jednou, 20/h; nepřihlášení dohromady 50/h), pohled `private.prehled_hlaseni` se správnou odpovědí. Po smazání účtu hlášení zůstane bez vazby (on delete set null) – uvedeno v ochrana-udaju.html.

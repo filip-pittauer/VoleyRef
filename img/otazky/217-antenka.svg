@@ -14,8 +14,8 @@
   <rect class="dg-band" x="60" y="68" width="140" height="2" />
   <rect class="dg-band" x="64" y="40" width="3" height="30" />
   <!-- anténka 1,8 m = 54 jednotek, 80 cm = 24 jednotek nad sítí -->
-  <line class="dg-antenna" x1="63" y1="70" x2="63" y2="16" style="stroke-width: 2.4" />
-  <line class="dg-antenna dg-antenna--stripes" x1="63" y1="40" x2="63" y2="16" style="stroke-width: 2.4" />
+  <line class="dg-antenna dg-antenna--thick" x1="63" y1="70" x2="63" y2="16" />
+  <line class="dg-antenna dg-antenna--stripes dg-antenna--thick" x1="63" y1="40" x2="63" y2="16" />
   <g class="dg-dim">
     <line x1="46" y1="16" x2="46" y2="70" marker-start="url(#q217-arrow)" marker-end="url(#q217-arrow)" />
     <line x1="80" y1="16" x2="80" y2="38.6" marker-start="url(#q217-arrow)" marker-end="url(#q217-arrow)" />

@@ -1,9 +1,25 @@
 // Připojení k Supabase a společné funkce pro přihlášení.
 //
-// Knihovna se načítá jako ES modul přímo z CDN (bez npm a build kroku).
-// Verze je pevně daná, aby nás nepřekvapila nová verze s jiným chováním.
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm';
+// Knihovna je přímo v repu (js/vendor/), ne z cizího CDN: napadené CDN by nám
+// nemohlo podstrčit jiný kód a prohlížeč hráče se nikam dalšího nepřipojuje (GDPR).
+// Soubor = @supabase/supabase-js@2.117.2, dist/umd/supabase.js z npm, beze změny
+// (SHA-256 59d39487c3589843b410322d8a3d562ce022aba1e5ccb16898ef3fb2a0da2ecd;
+// licence MIT v js/vendor/supabase-js-LICENSE.txt; aktualizace: docs/historie.md).
+//
+// Sestavená verze v balíčku je "UMD" – klasický skript, který vytvoří globální
+// proměnnou `supabase`, ne ES modul. Proto se nenačítá přes import, ale vloží se
+// jako <script src> a počká se na něj (top-level await: modul, který tenhle
+// importuje, pokračuje až po načtení – podobně jako await při startu v C#).
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+
+await new Promise((resolve, reject) => {
+  const script = document.createElement('script');
+  script.src = new URL('./vendor/supabase-js-2.117.2.umd.js', import.meta.url).href;
+  script.onload = resolve;
+  script.onerror = () => reject(new Error('Nepodařilo se načíst knihovnu Supabase.'));
+  document.head.append(script);
+});
+const { createClient } = globalThis.supabase;
 
 export const isConfigured = Boolean(SUPABASE_URL && SUPABASE_KEY);
 
