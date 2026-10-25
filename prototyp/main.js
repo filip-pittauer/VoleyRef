@@ -25,9 +25,39 @@ function fitBounds(view) {
 const $ = id => document.getElementById(id);
 const situation = createSituation(await (await fetch('situace.json')).json());
 const svgScene = createSvgScene();
-const threeScene = createThreeScene();
 $('stage-a').append(svgScene.svg);
-$('stage-b').append(threeScene.canvas);
+
+// Kvalita B: ?kvalita=nizka (tlačítko po pádu), dotyková zařízení střední, jinak vysoká.
+const params = new URLSearchParams(location.search);
+const quality = params.get('kvalita') === 'nizka' ? 'low' : matchMedia('(pointer: coarse)').matches ? 'mobile' : 'high';
+
+/** Místo plátna B ukáže, co se stalo, a nabídne nižší kvalitu. */
+function showProblem(text) {
+  const box = document.createElement('div');
+  box.className = 'proto-problem';
+  const p = Object.assign(document.createElement('p'), { textContent: text });
+  box.append(p);
+  if (quality !== 'low') {
+    const link = Object.assign(document.createElement('a'), { href: '?kvalita=nizka', className: 'button button--small', textContent: 'Zkusit v nižší kvalitě' });
+    box.append(link);
+  }
+  $('stage-b').replaceChildren(box);
+}
+
+let threeScene;
+try {
+  threeScene = createThreeScene({
+    quality,
+    onLost: () => showProblem('Grafika (WebGL) v tomto prohlížeči spadla – nejspíš na ni nestačí paměť nebo grafický čip.'),
+  });
+  $('stage-b').append(threeScene.canvas);
+  $('info-b').textContent = threeScene.info;
+} catch (error) {
+  console.error(error);
+  showProblem(`Grafiku (WebGL) se nepodařilo spustit: ${error.message}`);
+  threeScene = { setView() {}, render() {}, resize() {} };   // A poběží dál
+  $('info-b').textContent = 'WebGL nedostupné';
+}
 
 // ---------- Kamera ----------
 let view = null;
@@ -51,6 +81,8 @@ for (const [id, preset] of Object.entries(VIEWS)) {
 let drag = null;
 for (const stage of [$('stage-a'), $('stage-b')]) {
   stage.addEventListener('pointerdown', event => {
+    // jen na samotné animaci – zachycení ukazatele by jinak „spolklo“ klik na tlačítko v hlášce
+    if (!event.target.closest('svg, canvas')) return;
     drag = { x: event.clientX, y: event.clientY, eye: view.eye };
     stage.setPointerCapture(event.pointerId);
   });

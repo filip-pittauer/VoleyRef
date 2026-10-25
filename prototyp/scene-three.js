@@ -224,15 +224,31 @@ function createBall(scene) {
   return mesh;
 }
 
+/** Popis grafiky pro diagnostiku: verze WebGL a grafický čip. */
+function describeGpu(renderer) {
+  const gl = renderer.getContext();
+  const debug = gl.getExtension('WEBGL_debug_renderer_info');
+  const gpu = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  return `${renderer.capabilities.isWebGL2 ? 'WebGL 2' : 'WebGL 1'} · ${gpu}`;
+}
+
 /**
- * Vytvoří WebGL scénu. Vrací { canvas, setView(view), render(frame) }.
+ * Vytvoří WebGL scénu. Vrací { canvas, info, setView(view), render(frame), resize() }.
  * view = { eye, target, up?, bounds } – stejný výřez jako SVG varianta.
+ * quality: 'high' (stíny 2048), 'mobile' (stíny 1024, rozlišení max 1,5×),
+ * 'low' (bez stínů a vyhlazování, rozlišení 1×). onLost() – grafika v prohlížeči spadla.
  */
-export function createThreeScene() {
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
+export function createThreeScene({ quality = 'high', onLost } = {}) {
+  const low = quality === 'low';
+  const renderer = new THREE.WebGLRenderer({ antialias: !low, powerPreference: low ? 'low-power' : 'default' });
+  renderer.setPixelRatio(low ? 1 : Math.min(window.devicePixelRatio, quality === 'mobile' ? 1.5 : 2));
+  renderer.shadowMap.enabled = !low;
   const canvas = renderer.domElement;
+  // ztráta kontextu = prohlížeč grafiku zastavil (málo paměti, ovladač…); bez
+  // preventDefault by se už nikdy neobnovila
+  let lost = false;
+  canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); lost = true; onLost?.(); });
+  canvas.addEventListener('webglcontextrestored', () => { lost = false; });
   canvas.className = 'proto-canvas';
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Animace situace (Three.js)');
@@ -242,8 +258,9 @@ export function createThreeScene() {
   scene.add(new THREE.HemisphereLight(0xffffff, 0x6b7a90, 1.4));
   const sun = new THREE.DirectionalLight(0xffffff, 2.2);
   sun.position.set(5, 14, -6);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.castShadow = !low;
+  const shadowSize = quality === 'high' ? 2048 : 1024;
+  sun.shadow.mapSize.set(shadowSize, shadowSize);
   Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 40 });
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.02;
@@ -272,12 +289,14 @@ export function createThreeScene() {
   }
 
   function draw() {
+    if (lost) return;
     resize();
     renderer.render(scene, camera);
   }
 
   return {
     canvas,
+    info: `${describeGpu(renderer)} · kvalita ${{ high: 'vysoká', mobile: 'mobilní', low: 'nízká' }[quality]}`,
     setView(next) {
       view = next;
       camera.position.copy(v3(view.eye));
