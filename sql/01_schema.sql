@@ -213,3 +213,24 @@ grant execute on function private.zalozit_profil() to supabase_auth_admin;
 create or replace trigger po_registraci
   after insert on auth.users
   for each row execute function private.zalozit_profil();
+
+-- ---------------------------------------------------------------------
+-- Výchozí práva: "deny by default"
+-- Supabase nové tabulky, sekvence a funkce ve schématu public automaticky
+-- zpřístupní webu (anon, authenticated) a Postgres dává každé nové funkci
+-- EXECUTE pro PUBLIC (= všem rolím). Od teď nová tabulka/funkce/sekvence
+-- NEMÁ pro web žádná práva – každé právo se musí přidat výslovně (grant)
+-- ve skriptu, který objekt vytváří. Na už existující objekty to nemá vliv.
+-- "for role postgres" = pro objekty, které vytvoří role postgres (SQL editor).
+-- Skript jde spustit opakovaně (odebrané výchozí právo se odebere znovu).
+-- ---------------------------------------------------------------------
+alter default privileges for role postgres in schema public
+  revoke all on tables from anon, authenticated;
+alter default privileges for role postgres in schema public
+  revoke all on sequences from anon, authenticated;
+alter default privileges for role postgres in schema public
+  revoke all on functions from anon, authenticated;
+-- BEZ "in schema": výchozí EXECUTE pro PUBLIC je globální (platí ve všech
+-- schématech), ve schématu by se odebrat nedal.
+alter default privileges for role postgres
+  revoke execute on functions from public;

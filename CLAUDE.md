@@ -56,6 +56,7 @@ Platí pro `private/otazky.json` i DB (`public.otazky` + `private.otazky_reseni`
 ## Bezpečnostní pravidla (důležité)
 - Do repa a frontendu jen **Project URL** a **publishable klíč** Supabase. **Nikdy** heslo k DB ani `service_role`. Repo je veřejné.
 - Každá tabulka má **RLS** s explicitními pravidly.
+- **Deny by default** (sql/01, konec): nové tabulky, sekvence a funkce v `public` nemají pro web (`anon`, `authenticated`) žádná výchozí práva a nové funkce ani EXECUTE pro `PUBLIC`. Každý grant musí být výslovně ve skriptu, který objekt vytváří.
 - **Skóre počítá server** (Postgres RPC `zacni_kolo` / `odevzdej_kolo`), prohlížeč posílá jen odpovědi.
 - Správné odpovědi nesmí být čitelné z frontendu (žádný `SELECT` pro `anon`/`authenticated`).
 - Co nejméně osobních údajů (přezdívka, e-mail); zásady GDPR v ochrana-udaju.html.
@@ -92,7 +93,8 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - Slovníček pojmů (slovnicek/pojmy.json, js/glossary.js) je na webu.
 - **Kde jsme skončili (24. 10. 2026):** trenažér zápisu (zapis.html, krátká a dlouhá verze, js/scoresheet-*.js), pravidla zkontrolovaná agentem. Testy 26/26.
 - **Bezpečnostní úkoly (od 25. 10. 2026):** úkoly zadává druhá session (claude.ai, jen čtení repa a Supabase), já je dělám, uživatel spouští SQL a nechá to znovu zkontrolovat. Pak čitelnost, předávací dokumentace, audity.
-  - Úkol 1: denní výzva neprozradí dnešní řešení (jen přihlášení; `private.reseni_skryte`; řešení zítra přes `reseni_denni_vyzvy`).
+  - Úkol 1: denní výzva neprozradí dnešní řešení (jen přihlášení; `private.reseni_skryte`; řešení zítra přes `reseni_denni_vyzvy`). SQL spuštěné.
+  - Úkol 3.3: výchozí práva „deny by default“ (konec sql/01, sekvence v sql/06, test prava-db). Rate limit anonymních kol zatím odložený.
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.

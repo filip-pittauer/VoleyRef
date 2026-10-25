@@ -33,6 +33,8 @@ create index if not exists hlaseni_vytvoreno_idx on public.hlaseni (vytvoreno);
 -- Žádný přímý přístup z webu (zápis jen přes funkci níže).
 alter table public.hlaseni enable row level security;
 revoke all on public.hlaseni from anon, authenticated;
+-- Sekvence pro id: funkce nahlasit_chybu běží jako vlastník, z webu ji nikdo nepotřebuje.
+revoke all on sequence public.hlaseni_id_seq from anon, authenticated;
 
 -- ---------------------------------------------------------------------
 -- nahlasit_chybu(otazka_id, gesto, typ, text) – uloží hlášení

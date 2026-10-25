@@ -179,6 +179,8 @@ CDN s pevnou verzí: mezipaměť napřed; Supabase: nikdy necachovat.
 
 ## 5. Databáze (Supabase, `sql/` – spouštět v pořadí, opakovatelně)
 
+**Deny by default** (konec `01_schema.sql`): nové tabulky, sekvence a funkce nemají pro `anon`/`authenticated` žádná práva a nové funkce ani EXECUTE pro `PUBLIC` – každý grant výslovně ve skriptu. Hlídá test `private/testy/prava-db.mjs` (seznam funkcí webu `EXPECTED`; novou RPC tam přidat).
+
 ### Tabulky (`01_schema.sql`) – všechny s RLS, přímý přístup odebraný
 | Tabulka | Obsah | Přístup z prohlížeče |
 |---|---|---|
