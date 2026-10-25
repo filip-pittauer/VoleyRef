@@ -71,7 +71,7 @@ při změně upravit všech 11 souborů. Ikony navigace: `img/ikony.svg` (symbol
 ### Kvíz, žebříček, profil (používají Supabase)
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
-| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel), `getDailyStatus`, `getMistakesCount` – jediné místo volání RPC kvízu |
+| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount` – jediné místo volání RPC kvízu |
 | `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka kvízu: start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
 | `quiz-result.js` | `dom`, `categories`, `badges`, `report` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
@@ -195,17 +195,18 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 ### Funkce (RPC)
 | Soubor | Veřejné (volá prohlížeč) | Kdo smí | Volá z JS | Interní (`private.*`) |
 |---|---|---|---|---|
-| `02_funkce.sql` | `zacni_kolo(kategorie, obtiznost, rezim)` | anon, auth | `quiz-api.js` | `chybne_otazky`, `dnes`, `zkouska_otazek`, `zkouska_limit`, `zkouska_hranice`, `zkouska_splnena` |
-| | `odevzdej_kolo(kolo_id, odpovedi)` – spočítá body, uloží, udělí odznaky | anon, auth | `quiz-api.js` | |
+| `02_funkce.sql` | `zacni_kolo(kategorie, obtiznost, rezim)` | anon, auth | `quiz-api.js` | `chybne_otazky`, `dnes`, `reseni_skryte`, `otazky_kola`, `vysledky_kola`, `zkouska_otazek`, `zkouska_limit`, `zkouska_hranice`, `zkouska_splnena` |
+| | `odevzdej_kolo(kolo_id, odpovedi)` – spočítá body, uloží, udělí odznaky; u dnešní denní výzvy bez řešení | anon, auth | `quiz-api.js` | |
+| | `reseni_denni_vyzvy(den)` – řešení vlastní denní výzvy, nejdřív zítra | auth | `quiz-api.js` | |
 | | `zebricek(limit)` | anon, auth | `leaderboard.js` | |
 | | `pocet_chyb()` | auth | `quiz-api.js`, `stats.js` | |
 | | `smazat_ucet()` | auth | `account.js` | |
 | `03_statistiky.sql` | `moje_statistiky()` (vč. historie zkoušek) | auth | `stats.js` | |
-| `04_denni_vyzva.sql` | `denni_zebricek(limit)`, `stav_denni_vyzvy()` | anon, auth | `leaderboard.js`, `quiz-api.js` | `denni_poradi`, `denni_serie` |
+| `04_denni_vyzva.sql` | `denni_zebricek(limit)`, `stav_denni_vyzvy()` (vč. `vcera`) | anon, auth | `leaderboard.js`, `quiz-api.js` | `denni_poradi`, `denni_serie` |
 | `06_hlaseni.sql` | `nahlasit_chybu(otazka_id, gesto, typ, text)` | anon, auth | `report.js` | pohled `prehled_hlaseni` |
 | `05_odznaky.sql` | `moje_odznaky()`, `nastav_odznaky(odznaky)` | auth | `account.js`, `stats.js` | `metriky_odznaku`, `udel_odznaky` |
 
-Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jeden pokus),
+Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jen přihlášení, jeden pokus; řešení až zítra – `private.reseni_skryte` ho skryje i v opakování chyb, statistikách a odznacích),
 `zkouska` (30 otázek, z každé kategorie 2–3; limit 30 min + 1 min tolerance, hranice 80 % – parametry v `private.zkouska_*`; do žebříčku se nepočítá, odznak `zkouska`).
 
 ---

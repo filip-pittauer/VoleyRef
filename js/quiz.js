@@ -5,7 +5,7 @@ import { formatDuration, plural, secondsUntilNextDay, formatCountdown } from './
 import { renderMedia } from './media.js';
 import { createScore, celebrate } from './celebrate.js';
 import { renderResultItem, renderNewBadges } from './quiz-result.js';
-import { startRound, submitRound, getMistakesCount, getDailyStatus } from './quiz-api.js';
+import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolution } from './quiz-api.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -23,6 +23,7 @@ const errorBox = document.getElementById('quiz-error');
 
 const dailyText = document.getElementById('daily-text');
 const dailyButton = document.getElementById('daily-button');
+const dailySolutionButton = document.getElementById('daily-solution');
 
 const mistakesCard = document.getElementById('opakovani');
 const mistakesText = document.getElementById('mistakes-text');
@@ -39,7 +40,9 @@ const nextButton = document.getElementById('next-button');
 const answerHint = document.getElementById('answer-hint');
 const hasChoice = setupChoiceHint(questionForm, answerHint);
 
+const resultHeading = document.getElementById('result-heading');
 const resultSummary = document.getElementById('result-summary');
+const resultListHeading = document.getElementById('result-list-heading');
 const resultList = document.getElementById('result-list');
 const againButton = document.getElementById('again-button');
 
@@ -104,6 +107,16 @@ function streakText(serie) {
 
 let countdownTimer = null;
 
+// Dnešní datum podle serveru ('RRRR-MM-DD', český čas) – z něj se počítá „včera“.
+let dailyDay = null;
+
+/** Den před datem 'RRRR-MM-DD'. Počítá se v UTC, aby výsledek neposunul letní čas. */
+function previousDay(isoDate) {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() - 1);
+  return date.toISOString().slice(0, 10);
+}
+
 /** Odpočet do nové denní výzvy (o půlnoci českého času), obnovuje se každých 20 s. */
 function renderCountdown() {
   const line = el('span', { class: 'countdown' });
@@ -129,16 +142,21 @@ async function renderDaily() {
     console.error(error);
     dailyText.textContent = 'Denní výzvu se nepodařilo načíst.';
     dailyButton.hidden = true;
+    dailySolutionButton.hidden = true;
     return;
   }
 
+  dailyDay = status.den;
   const players = `V dnešním žebříčku: ${plural(status.hracu, 'hráč', 'hráči', 'hráčů')}.`;
   const lines = [];
   dailyButton.hidden = false;
   dailyButton.textContent = 'Hrát denní výzvu';
+  dailySolutionButton.hidden = !(profile && status.vcera);
 
   if (!profile) {
-    lines.push('Bez přihlášení se výsledek do denního žebříčku nezapíše.', players);
+    // Server denní výzvu anonymovi nespustí (mohl by ji hrát dokola a zjistit řešení).
+    dailyButton.hidden = true;
+    lines.push(el('span', {}, 'Denní výzva je jen pro přihlášené. ', el('a', { href: 'ucet.html' }, 'Přihlásit se')), players);
   } else if (status.stav === 'nehrano') {
     lines.push(streakText(status.serie) ? `${streakText(status.serie)} – nepřeruš ji!` : 'Dnes jsi ještě nehrál.', players);
   } else if (status.stav === 'rozehrano') {
@@ -309,24 +327,33 @@ function leaderboardNote(round, result) {
     el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
 }
 
+/** Seznam „Vysvětlení“; bez položek (dnešní denní výzva) se skryje i s nadpisem. */
+function renderResultList(questions, results) {
+  const questionsById = new Map(questions.map(q => [q.id, q]));
+  resultList.replaceChildren(...results.map(r => renderResultItem(questionsById.get(r.id), r)));
+  resultListHeading.hidden = results.length === 0;
+}
+
 function renderResult(result) {
   const round = state;
-  const questionsById = new Map(round.questions.map(q => [q.id, q]));
   const extra = el('p', { class: 'muted small' });
   const score = createScore(result.score, result.total);
 
+  resultHeading.textContent = 'Výsledek kola';
+  againButton.textContent = 'Hrát znovu';
   resultSummary.replaceChildren(
     score,
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
+    // denní výzva: řešení by ostatním prozradilo dnešní odpovědi
+    result.solutionHidden ? el('p', {}, 'Správné odpovědi a vysvětlení uvidíš zítra.') : null,
     el('p', { class: 'muted small' }, leaderboardNote(round, result)),
     extra,
     renderNewBadges(result.newBadges) ?? '');
 
-  resultList.replaceChildren(
-    ...result.results.map(r => renderResultItem(questionsById.get(r.id), r)));
+  renderResultList(round.questions, result.solutionHidden ? [] : result.results);
 
   showOnly(resultSection, sections);
-  document.getElementById('result-heading').focus();
+  resultHeading.focus();
   celebrate(score);
   state = null;
 
@@ -352,6 +379,28 @@ function renderResult(result) {
   }
 }
 
+// ---------- Řešení včerejší denní výzvy ----------
+async function showDailySolution() {
+  hideError();
+  dailySolutionButton.disabled = true;
+  try {
+    const solution = await getDailySolution(previousDay(dailyDay));
+    resultHeading.textContent = 'Řešení včerejší výzvy';
+    againButton.textContent = 'Zpět';
+    const score = createScore(solution.score, solution.total);
+    resultSummary.replaceChildren(score, el('p', {}, `Čas: ${formatDuration(solution.durationSeconds)}`));
+    renderResultList(solution.questions, solution.results);
+    showOnly(resultSection, sections);
+    resultHeading.focus();
+    celebrate(score, { ribbons: false });   // vyplní kruh; stuhy jen hned po kole
+  } catch (error) {
+    console.error(error);
+    showError('Řešení včerejší výzvy se nepodařilo načíst.');
+  } finally {
+    dailySolutionButton.disabled = false;
+  }
+}
+
 // ---------- Chyby ----------
 function showError(message) {
   errorBox.textContent = message;
@@ -370,6 +419,7 @@ difficultySelect.addEventListener('change', updateFilterNote);
 startButton.addEventListener('click', () => begin('bezne'));
 mistakesButton.addEventListener('click', () => begin('chyby'));
 dailyButton.addEventListener('click', () => begin('denni'));
+dailySolutionButton.addEventListener('click', showDailySolution);
 questionForm.addEventListener('submit', handleAnswer);
 againButton.addEventListener('click', () => {
   hideError();

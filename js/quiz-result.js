@@ -17,13 +17,17 @@ function explanationWithTerms(text) {
   return paragraph;
 }
 
-/** Položka seznamu „Vysvětlení“: situace, odpovědi, vysvětlení a odkaz do pravidel. */
+/**
+ * Položka seznamu „Vysvětlení“: situace, odpovědi, vysvětlení a odkaz do pravidel.
+ * Bez řešení (isCorrect undefined – dnešní denní výzva) jen situace a odpověď hráče.
+ */
 export function renderResultItem(question, result) {
-  return el('li', { class: `result ${result.isCorrect ? 'result--ok' : 'result--wrong'}` },
-    el('p', { class: 'result__status' }, result.isCorrect ? '✓ Správně' : '✗ Špatně'),
+  const known = typeof result.isCorrect === 'boolean';
+  return el('li', { class: `result ${known ? (result.isCorrect ? 'result--ok' : 'result--wrong') : ''}` },
+    known ? el('p', { class: 'result__status' }, result.isCorrect ? '✓ Správně' : '✗ Špatně') : null,
     el('p', {}, question.situace),
     answerLine('Tvoje odpověď', question, result.answer),
-    result.isCorrect ? null : answerLine('Správná odpověď', question, result.correctAnswer),
+    known && !result.isCorrect ? answerLine('Správná odpověď', question, result.correctAnswer) : null,
     result.explanation ? explanationWithTerms(result.explanation) : null,
     el('p', { class: 'result__rule' },
       question.pravidlo ? [el('a', { href: ruleUrl(question.pravidlo) }, `Pravidlo ${question.pravidlo}`), ' · '] : '',

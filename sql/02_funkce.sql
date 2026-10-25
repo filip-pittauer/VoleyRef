@@ -9,6 +9,87 @@
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
+-- dnes() → dnešní datum v českém čase (nový den začíná o půlnoci v ČR,
+-- ne v UTC, ve kterém běží server)
+-- ---------------------------------------------------------------------
+create or replace function private.dnes()
+returns date
+language sql
+stable
+set search_path = ''
+as $$
+  select (now() at time zone 'Europe/Prague')::date;
+$$;
+
+revoke all on function private.dnes() from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- private.reseni_skryte(rezim, den) → true u kola dnešní denní výzvy.
+-- Otázky jsou ten den pro všechny stejné, takže správné odpovědi
+-- (ani to, které otázky hráč pokazil) se nesmí ukázat dřív než zítra.
+-- ---------------------------------------------------------------------
+create or replace function private.reseni_skryte(p_rezim text, p_den date)
+returns boolean
+language sql
+stable
+set search_path = ''
+as $$
+  select p_rezim = 'denni' and p_den >= private.dnes();
+$$;
+
+revoke all on function private.reseni_skryte(text, date) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- private.otazky_kola(otazky) → otázky kola BEZ správných odpovědí
+-- (pole JSON ve stejném pořadí jako p_otazky)
+-- ---------------------------------------------------------------------
+create or replace function private.otazky_kola(p_otazky integer[])
+returns jsonb
+language sql
+stable
+set search_path = ''
+as $$
+  select jsonb_agg(
+           jsonb_build_object(
+             'id', o.id,
+             'kategorie', o.kategorie,
+             'obtiznost', o.obtiznost,
+             'situace', o.situace,
+             'media', o.media,
+             'odpovedi', o.odpovedi,
+             'pravidlo', o.pravidlo)
+           order by u.poradi)
+  from unnest(p_otazky) with ordinality as u (id, poradi)
+  join public.otazky o on o.id = u.id;
+$$;
+
+-- ---------------------------------------------------------------------
+-- private.vysledky_kola(otazky, odpovedi, skryt) → vyhodnocení po otázkách
+--   [{ id, odpoved, spravna, je_spravne, vysvetleni }]
+-- skryt = true → jen [{ id, odpoved }] (dnešní denní výzva)
+-- ---------------------------------------------------------------------
+create or replace function private.vysledky_kola(p_otazky integer[], p_odpovedi jsonb, p_skryt boolean)
+returns jsonb
+language sql
+stable
+set search_path = ''
+as $$
+  select jsonb_agg(
+           jsonb_build_object('id', u.id, 'odpoved', p_odpovedi ->> u.id::text)
+           -- || spojí dva JSON objekty (jako sloučení slovníků)
+           || case when p_skryt then '{}'::jsonb else jsonb_build_object(
+                'spravna', r.spravna,
+                'je_spravne', coalesce((p_odpovedi ->> u.id::text) = r.spravna, false),
+                'vysvetleni', r.vysvetleni) end
+           order by u.poradi)
+  from unnest(p_otazky) with ordinality as u (id, poradi)
+  join private.otazky_reseni r on r.otazka_id = u.id;
+$$;
+
+revoke all on function private.otazky_kola(integer[])                   from public, anon, authenticated;
+revoke all on function private.vysledky_kola(integer[], jsonb, boolean) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
 -- private.chybne_otazky(uzivatel) → id otázek, na které hráč NAPOSLEDY
 -- odpověděl špatně. Jakmile otázku v dalším kole zodpoví správně,
 -- ze seznamu zmizí. Pomocná funkce – z webu ji volat nejde.
@@ -26,6 +107,7 @@ as $$
     from public.kola k
     cross join lateral unnest(k.otazky) as u (id)
     where k.uzivatel_id = p_uzivatel and k.konec is not null
+      and not private.reseni_skryte(k.rezim, k.den)   -- dnešní denní výzva by prozradila chyby
     order by u.id, k.konec desc
   ) as posledni
   join private.otazky_reseni r on r.otazka_id = posledni.id
@@ -35,21 +117,6 @@ as $$
 $$;
 
 revoke all on function private.chybne_otazky(uuid) from public, anon, authenticated;
-
--- ---------------------------------------------------------------------
--- dnes() → dnešní datum v českém čase (nový den začíná o půlnoci v ČR,
--- ne v UTC, ve kterém běží server)
--- ---------------------------------------------------------------------
-create or replace function private.dnes()
-returns date
-language sql
-stable
-set search_path = ''
-as $$
-  select (now() at time zone 'Europe/Prague')::date;
-$$;
-
-revoke all on function private.dnes() from public, anon, authenticated;
 
 -- ---------------------------------------------------------------------
 -- Zkouška: parametry na jednom místě (počet otázek, časový limit,
@@ -86,7 +153,8 @@ revoke all on function private.zkouska_splnena(integer, integer, interval) from 
 --   rezim 'bezne' = až 10 náhodných otázek (lze zúžit kategorií a obtížností)
 --   rezim 'chyby' = jen otázky, ve kterých hráč naposledy chyboval
 --   rezim 'denni' = denní výzva: 5 otázek, pro všechny hráče ten den stejných.
---                   Přihlášený hráč má jeden pokus; rozehrané kolo pokračuje
+--                   Jen pro přihlášené (anonym by mohl hrát pořád dokola
+--                   a zjistit řešení). Jeden pokus; rozehrané kolo pokračuje
 --                   (čas běží dál), dokončené už znovu začít nejde.
 --   rezim 'zkouska' = test na čas: 30 otázek, z každé kategorie nejvýš 3,
 --                   aby byly zastoupené všechny. Vrací i limit a hranici.
@@ -120,6 +188,9 @@ begin
   if v_chyby and auth.uid() is null then
     raise exception 'Pro opakování chyb se přihlas.';
   end if;
+  if v_denni and auth.uid() is null then
+    raise exception 'Pro denní výzvu se přihlas.';
+  end if;
 
   -- úklid: kola, která nikdo neodevzdal do 1 dne
   delete from public.kola
@@ -142,18 +213,16 @@ begin
 
     select d.otazky into v_otazky from public.denni_vyzvy d where d.den = v_den;
 
-    -- přihlášený hráč: jeden pokus denně
-    if auth.uid() is not null then
-      select k.id, k.konec is not null
-      into v_kolo_id, v_hotovo
-      from public.kola k
-      where k.uzivatel_id = auth.uid() and k.rezim = 'denni' and k.den = v_den;
+    -- jeden pokus denně
+    select k.id, k.konec is not null
+    into v_kolo_id, v_hotovo
+    from public.kola k
+    where k.uzivatel_id = auth.uid() and k.rezim = 'denni' and k.den = v_den;
 
-      if v_hotovo then
-        raise exception 'Dnešní výzvu už máš odehranou.';
-      end if;
-      -- v_kolo_id není null → rozehrané kolo, pokračuje se v něm
+    if v_hotovo then
+      raise exception 'Dnešní výzvu už máš odehranou.';
     end if;
+    -- v_kolo_id není null → rozehrané kolo, pokračuje se v něm
   elsif v_zkouska then
     -- row_number() očísluje otázky v každé kategorii náhodně (partition by
     -- = „pro každou skupinu zvlášť“). Řazení podle tohoto čísla vezme
@@ -215,29 +284,17 @@ begin
     'zkouska', case when v_zkouska then jsonb_build_object(
                  'limit_s', extract(epoch from private.zkouska_limit())::integer,
                  'hranice', private.zkouska_hranice(cardinality(v_otazky))) end,
-    'otazky', (
-      select jsonb_agg(
-               jsonb_build_object(
-                 'id', o.id,
-                 'kategorie', o.kategorie,
-                 'obtiznost', o.obtiznost,
-                 'situace', o.situace,
-                 'media', o.media,
-                 'odpovedi', o.odpovedi,
-                 'pravidlo', o.pravidlo)
-               order by u.poradi)
-      from unnest(v_otazky) with ordinality as u (id, poradi)
-      join public.otazky o on o.id = u.id
-    )
+    'otazky', private.otazky_kola(v_otazky)
   );
 end;
 $$;
 
 -- ---------------------------------------------------------------------
--- odevzdej_kolo(kolo_id, odpovedi) → { skore, pocet, trvani_s, vysledky, nove_odznaky, zkouska }
+-- odevzdej_kolo(kolo_id, odpovedi) → { skore, pocet, trvani_s, vysledky, reseni_skryte, nove_odznaky, zkouska }
 -- odpovedi = {"12": "B", "7": "A", …}
 -- Body i čas počítá server. Kolo jde odevzdat jen jednou a jen tím,
--- kdo ho začal.
+-- kdo ho začal. U dnešní denní výzvy jsou ve výsledcích jen odpovědi
+-- hráče (reseni_skryte = true); řešení vrátí zítra reseni_denni_vyzvy.
 -- ---------------------------------------------------------------------
 create or replace function public.odevzdej_kolo(p_kolo_id uuid, p_odpovedi jsonb)
 returns jsonb
@@ -247,9 +304,9 @@ set search_path = ''
 as $$
 declare
   v_kolo      public.kola;
-  v_vysledky  jsonb;
   v_ulozene   jsonb;
   v_skore     integer;
+  v_skryt     boolean;
   v_nove      text[] := '{}';
 begin
   select * into v_kolo
@@ -268,20 +325,14 @@ begin
   end if;
 
   select
-    jsonb_agg(
-      jsonb_build_object(
-        'id', u.id,
-        'odpoved', p_odpovedi ->> u.id::text,
-        'spravna', r.spravna,
-        'je_spravne', coalesce((p_odpovedi ->> u.id::text) = r.spravna, false),
-        'vysvetleni', r.vysvetleni)
-      order by u.poradi),
     count(*) filter (where (p_odpovedi ->> u.id::text) = r.spravna),
     -- uložíme jen odpovědi na otázky z tohoto kola (nic navíc)
     jsonb_object_agg(u.id::text, p_odpovedi ->> u.id::text)
-  into v_vysledky, v_skore, v_ulozene
-  from unnest(v_kolo.otazky) with ordinality as u (id, poradi)
+  into v_skore, v_ulozene
+  from unnest(v_kolo.otazky) as u (id)
   join private.otazky_reseni r on r.otazka_id = u.id;
+
+  v_skryt := private.reseni_skryte(v_kolo.rezim, v_kolo.den);
 
   update public.kola
   set konec = now(), skore = v_skore, odpovedi = v_ulozene
@@ -302,13 +353,56 @@ begin
     'skore', v_skore,
     'pocet', v_kolo.pocet,
     'trvani_s', round(extract(epoch from now() - v_kolo.zacatek))::integer,
-    'vysledky', v_vysledky,
+    'vysledky', private.vysledky_kola(v_kolo.otazky, v_ulozene, v_skryt),
+    'reseni_skryte', v_skryt,
     'nove_odznaky', to_jsonb(v_nove),
     -- jen u zkoušky: prošel/neprošel (vcas = odevzdáno v limitu)
     'zkouska', case when v_kolo.rezim = 'zkouska' then jsonb_build_object(
                  'hranice', private.zkouska_hranice(v_kolo.pocet),
                  'vcas', now() - v_kolo.zacatek <= private.zkouska_limit() + interval '1 minute',
                  'splneno', private.zkouska_splnena(v_skore, v_kolo.pocet, now() - v_kolo.zacatek)) end
+  );
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- reseni_denni_vyzvy(den) → { den, skore, pocet, trvani_s, otazky, vysledky }
+-- Řešení denní výzvy, kterou hráč odehrál – až když je den uzavřený
+-- (nejdřív zítra). otazky jako v zacni_kolo, vysledky jako v odevzdej_kolo.
+-- Jen vlastní kolo přihlášeného hráče.
+-- ---------------------------------------------------------------------
+create or replace function public.reseni_denni_vyzvy(p_den date)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v_kolo public.kola;
+begin
+  if auth.uid() is null then
+    raise exception 'Nejsi přihlášený.';
+  end if;
+  if p_den is null or p_den >= private.dnes() then
+    raise exception 'Řešení denní výzvy bude až zítra.';
+  end if;
+
+  select * into v_kolo
+  from public.kola k
+  where k.uzivatel_id = auth.uid() and k.rezim = 'denni' and k.den = p_den and k.konec is not null;
+
+  if not found then
+    raise exception 'Tuto denní výzvu jsi neodehrál.';
+  end if;
+
+  return jsonb_build_object(
+    'den', v_kolo.den,
+    'skore', v_kolo.skore,
+    'pocet', v_kolo.pocet,
+    'trvani_s', round(extract(epoch from v_kolo.konec - v_kolo.zacatek))::integer,
+    'otazky', private.otazky_kola(v_kolo.otazky),
+    'vysledky', private.vysledky_kola(v_kolo.otazky, v_kolo.odpovedi, false)
   );
 end;
 $$;
@@ -411,12 +505,14 @@ $$;
 -- ---------------------------------------------------------------------
 revoke all on function public.zacni_kolo(text, integer, text) from public, anon, authenticated;
 revoke all on function public.odevzdej_kolo(uuid, jsonb)      from public, anon, authenticated;
-revoke all on function public.zebricek(integer)               from public, anon, authenticated;
+revoke all on function public.reseni_denni_vyzvy(date)        from public, anon, authenticated;
+revoke all on function public.zebricek(integer)              from public, anon, authenticated;
 revoke all on function public.pocet_chyb()                    from public, anon, authenticated;
 revoke all on function public.smazat_ucet()                   from public, anon, authenticated;
 
 grant execute on function public.zacni_kolo(text, integer, text) to anon, authenticated;
 grant execute on function public.odevzdej_kolo(uuid, jsonb)      to anon, authenticated;
+grant execute on function public.reseni_denni_vyzvy(date)        to authenticated;
 grant execute on function public.zebricek(integer)               to anon, authenticated;
 grant execute on function public.pocet_chyb()                    to authenticated;
 grant execute on function public.smazat_ucet()                   to authenticated;

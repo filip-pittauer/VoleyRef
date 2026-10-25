@@ -44,11 +44,12 @@
       <!-- Denní výzva: 5 otázek, pro všechny ten den stejných -->
       <div id="denni" class="card stack daily-card">
         <h2>Denní výzva</h2>
-        <p>Dnešních 5 otázek je pro všechny hráče stejných. Přihlášený hráč má jeden pokus.</p>
+        <p>Dnešních 5 otázek je pro všechny hráče stejných. Hraje se po přihlášení, jeden pokus denně. Řešení uvidíš zítra.</p>
         <p id="daily-text" class="small" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
         <div class="actions">
           <button id="daily-button" class="button" type="button" hidden>Hrát denní výzvu</button>
           <a href="zebricek.html#denni">Denní žebříček</a>
+          <button id="daily-solution" class="link-button" type="button" hidden>Řešení včerejší výzvy</button>
         </div>
       </div>
 
@@ -152,7 +153,7 @@
           <button id="again-button" class="button" type="button">Hrát znovu</button>
         </div>
       </div>
-      <h2>Vysvětlení</h2>
+      <h2 id="result-list-heading">Vysvětlení</h2>
       <ol id="result-list" class="result-list"></ol>
     </section>
   </main>

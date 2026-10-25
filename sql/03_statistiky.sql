@@ -65,6 +65,7 @@ begin
         join public.otazky o on o.id = u.id
         join private.otazky_reseni r on r.otazka_id = u.id
         where k.uzivatel_id = v_uzivatel and k.konec is not null
+          and not private.reseni_skryte(k.rezim, k.den)   -- dnešní denní výzva by prozradila řešení
         group by o.kategorie
       ) as x
     ),

@@ -34,7 +34,8 @@ export async function startRound({ category = null, difficulty = null, mode = 'b
 
 /**
  * Stav dnešní denní výzvy:
- * { den, hracu, stav: 'nehrano'|'rozehrano'|'odehrano', skore, pocet, trvani_s, poradi, serie: { aktualni, nejdelsi } }
+ * { den, hracu, stav: 'nehrano'|'rozehrano'|'odehrano', skore, pocet, trvani_s, poradi, serie: { aktualni, nejdelsi },
+ *   vcera: true = včerejší výzva je dohraná (jde zobrazit řešení) }
  */
 export async function getDailyStatus() {
   requireSupabase();
@@ -51,10 +52,22 @@ export async function getMistakesCount() {
   return data;
 }
 
+/** Vyhodnocení po otázkách: názvy z databáze (česky) → názvy, se kterými pracuje kvíz. */
+function mapResults(vysledky) {
+  return vysledky.map(v => ({
+    id: v.id,
+    answer: v.odpoved,
+    correctAnswer: v.spravna,   // u dnešní denní výzvy chybí (undefined)
+    isCorrect: v.je_spravne,
+    explanation: v.vysvetleni,
+  }));
+}
+
 /**
  * Odevzdá odpovědi kola. answers = { [idOtazky]: 'A' | 'B' | ... }
  * Vrací { score, total, durationSeconds, newBadges: [id odznaku…],
  *         results: [{ id, answer, correctAnswer, isCorrect, explanation }],
+ *         solutionHidden: true u dnešní denní výzvy (results mají jen id a answer),
  *         exam: { passScore, inTime, passed } jen u zkoušky, jinak null }
  */
 export async function submitRound(roundId, answers) {
@@ -65,21 +78,33 @@ export async function submitRound(roundId, answers) {
   });
   if (error) throw error;
 
-  // Názvy z databáze (česky) → názvy, se kterými pracuje kvíz.
   return {
     score: data.skore,
     total: data.pocet,
     durationSeconds: data.trvani_s,
     newBadges: data.nove_odznaky ?? [],
-    results: data.vysledky.map(v => ({
-      id: v.id,
-      answer: v.odpoved,
-      correctAnswer: v.spravna,
-      isCorrect: v.je_spravne,
-      explanation: v.vysvetleni,
-    })),
+    results: mapResults(data.vysledky),
+    solutionHidden: Boolean(data.reseni_skryte),
     exam: data.zkouska
       ? { passScore: data.zkouska.hranice, inTime: data.zkouska.vcas, passed: data.zkouska.splneno }
       : null,
+  };
+}
+
+/**
+ * Řešení odehrané denní výzvy z uzavřeného dne (day = 'RRRR-MM-DD', nejpozději včera).
+ * Vrací { day, score, total, durationSeconds, questions, results } – results jako u submitRound.
+ */
+export async function getDailySolution(day) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('reseni_denni_vyzvy', { p_den: day });
+  if (error) throw error;
+  return {
+    day: data.den,
+    score: data.skore,
+    total: data.pocet,
+    durationSeconds: data.trvani_s,
+    questions: data.otazky,
+    results: mapResults(data.vysledky),
   };
 }

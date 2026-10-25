@@ -29,7 +29,8 @@ as $$
     where rezim = 'bezne' and pocet >= 10 and skore = pocet
       and trvani >= make_interval(secs => pocet * 2)
   ),
-  -- úspěšnost po kategoriích (jako ve statistikách)
+  -- úspěšnost po kategoriích (jako ve statistikách, bez dnešní denní výzvy –
+  -- postup odznaku by jinak prozradil, které otázky byly správně)
   kategorie as (
     select o.kategorie,
            count(*) as otazek,
@@ -38,6 +39,7 @@ as $$
     cross join lateral unnest(k.otazky) as u (id)
     join public.otazky o on o.id = u.id
     join private.otazky_reseni r on r.otazka_id = u.id
+    where not private.reseni_skryte(k.rezim, k.den)
     group by o.kategorie
   ),
   serie as (

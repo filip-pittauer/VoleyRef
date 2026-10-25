@@ -117,7 +117,8 @@ $$;
 --   den, hracu (kolik hráčů je dnes v žebříčku),
 --   stav: 'nehrano' | 'rozehrano' | 'odehrano',
 --   skore, pocet, trvani_s, poradi (null = nezapočítáno, např. moc rychlé),
---   serie: { aktualni, nejdelsi }  (jen přihlášený)
+--   serie: { aktualni, nejdelsi }  (jen přihlášený),
+--   vcera: true = hráč včerejší výzvu dohrál → může si zobrazit řešení
 -- }
 -- ---------------------------------------------------------------------
 create or replace function public.stav_denni_vyzvy()
@@ -156,7 +157,11 @@ begin
     'pocet', v_kolo.pocet,
     'trvani_s', round(extract(epoch from v_kolo.konec - v_kolo.zacatek))::integer,
     'poradi', v_poradi,
-    'serie', case when auth.uid() is not null then private.denni_serie(auth.uid()) end
+    'serie', case when auth.uid() is not null then private.denni_serie(auth.uid()) end,
+    'vcera', exists (
+      select 1 from public.kola k
+      where k.uzivatel_id = auth.uid() and k.rezim = 'denni'
+        and k.den = v_den - 1 and k.konec is not null)
   );
 end;
 $$;
