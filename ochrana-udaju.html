@@ -37,10 +37,11 @@
   <main id="obsah" class="rules">
     <h1>Ochrana osobních údajů</h1>
     <p>Tento web je neziskový výukový projekt. Ukládáme jen údaje, které jsou nutné pro přihlášení a žebříček.</p>
+    <p class="muted small">Poslední změna zásad: <time datetime="2026-10-25">25. 10. 2026</time></p>
 
     <section class="rules-section">
       <h2>Kdo údaje zpracovává</h2>
-      <p>Správcem je provozovatel webu. Kontakt: <a href="mailto:volleyref.app@gmail.com">volleyref.app@gmail.com</a>.</p>
+      <p>Správcem osobních údajů je Filip Pittauer. Kontakt: <a href="mailto:volleyref.app@gmail.com">volleyref.app@gmail.com</a>.</p>
     </section>
 
     <section class="rules-section">
@@ -49,7 +50,8 @@
         <li><strong>E-mail a heslo</strong> slouží k přihlášení. Heslo je uložené jen v zašifrované (hashované) podobě a nikdo ho nevidí.</li>
         <li><strong>Přezdívka</strong> se zobrazuje ostatním v žebříčku. Nepoužívej proto celé jméno.</li>
         <li><strong>Výsledky kvízů</strong> (odpovědi, skóre, čas) slouží pro žebříček a pro tvůj přehled.</li>
-        <li>Při přihlášení přes <strong>Google</strong> od Googlu dostaneme e-mail a základní údaje o účtu. Jméno ani fotku nezobrazujeme. Přezdívku si nastavíš sám.</li>
+        <li>Při přihlášení se ukládá <strong>IP adresa a typ prohlížeče</strong> – slouží k ochraně účtu proti zneužití. Smažou se s odhlášením nebo vypršením přihlášení a se smazáním účtu.</li>
+        <li>Při přihlášení přes <strong>Google</strong> od Googlu dostaneme e-mail a základní údaje o účtu. Přihlašovací služba si přitom sama uloží i jméno a odkaz na profilovou fotku z Google účtu – web je nikde nezobrazuje ani nepoužívá. Smažou se se smazáním účtu. Přezdívku si nastavíš sám.</li>
         <li>Když hraješ bez přihlášení, ukládáme jen anonymní průběh kola (otázky, odpovědi, čas) bez jakékoli vazby na tebe.</li>
         <li><strong>Hlášení chyby</strong> v otázce nebo gestu (typ chyby a tvůj popis) slouží k opravě obsahu. U přihlášeného hráče si uložíme i vazbu na účet, aby šlo stejnou věc nahlásit jen jednou. Do popisu prosím nepiš osobní údaje.</li>
       </ul>
@@ -58,8 +60,12 @@
 
     <section class="rules-section">
       <h2>Kde jsou údaje uložené</h2>
-      <p>Databázi a přihlašování zajišťuje služba <a href="https://supabase.com/privacy" rel="noopener">Supabase</a>, data jsou uložená na serverech v Evropské unii.
-        Samotný web je hostovaný na <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub Pages</a>.</p>
+      <ul>
+        <li>Databázi a přihlašování zajišťuje služba <a href="https://supabase.com/privacy" rel="noopener">Supabase</a>, data jsou uložená na serverech v Evropské unii (Irsko). Supabase posílá i potvrzovací e-maily (registrace, obnovení hesla).</li>
+        <li>Samotný web je hostovaný na <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub Pages</a>. GitHub je firma z USA; předání údajů je kryté rámcem EU–USA pro ochranu dat (Data Privacy Framework).</li>
+        <li>Supabase i GitHub Pages při provozu krátkodobě zaznamenávají technické údaje (IP adresa, čas, prohlížeč) kvůli bezpečnosti a provozu.</li>
+        <li>Přihlášení přes Google zpracovává <a href="https://policies.google.com/privacy?hl=cs" rel="noopener">Google</a> – jen pokud ho zvolíš.</li>
+      </ul>
       <p>Web nepoužívá reklamní ani analytické cookies. V prohlížeči si ukládá jen údaj o přihlášení (localStorage), abys nemusel zadávat heslo pokaždé.</p>
     </section>
 
