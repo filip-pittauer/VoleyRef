@@ -45,7 +45,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `procvicovani.html` | **Procvičování** ve Výuce: dlaždice kategorií (počet otázek, úspěšnost), obtížnost, opakování chyb (`#opakovani`), `?kategorie=…` zvýrazní dlaždici; kolo v režimu `procvicovani` (bez žebříčku) | `pwa.js`, `quiz.js` (→ `quiz-practice.js`) |
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
-| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body); `?sada=carovi|rozhodci` předvybere sadu | `pwa.js`, `gesture-quiz.js` |
+| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body); `?sada=carovi` nebo `rozhodci` předvybere sadu | `pwa.js`, `gesture-quiz.js` |
 | `duel.html` | stránka výzvy `?kod=…`: kdo vyzývá a s jakým výsledkem, Přijmout a hrát (→ stránka hry `?duel=kód`), čekání, výsledek; nepřihlášenému uloží kód pro návrat z Profilu | `pwa.js`, `duel-page.js` |
 | `odpiskej.html` | **Odpískej to!**: hráč je 1./2. rozhodčí, skládá posloupnost gest v pořadí (22.2.3); 10 situací, řešení na konci; situace zatím text (později Three.js) | `pwa.js`, `whistle-game.js` |
 | `rotacni-sprint.html` | **Rotační sprint**: 60 s, situace rotace / střídání / libero / více rotací, ťuknutím prohodit hráče; patří pod Hry | `pwa.js`, `rotation-sprint.js` |
