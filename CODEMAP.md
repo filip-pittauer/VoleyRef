@@ -41,15 +41,16 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `vyuka.html` | rozcestník **Výuka** (bez bodů): pravidla, atlas gest, slovníček, procvičování, trenažéry postavení a zápisu, zkouška | `pwa.js` |
 | `kviz.html` | kvíz v Hrách: denní výzva (`#denni`; `?hrat=denni` ji rovnou spustí), běžné kolo (náhodný mix, do žebříčku); v navigaci pod Hry | `pwa.js`, `quiz.js` |
 | `kurz.html` | **Kurz po lekcích** ve Výuce: mapa 11 lekcí z `kurz/lekce.json` (přečti si + test 5 otázek, splnění od 4), postupné odemykání; kolo v režimu `lekce` (bez bodů); postup přihlášeného z `postup_kurzu`, anonym jen do zavření stránky | `pwa.js`, `quiz.js` (→ `course.js`) |
+| `role.html` | **Trénink podle role** ve Výuce: 4 dlaždice (zapisovatel, čárový, 2. a 1. rozhodčí) z `role/role.json`, detail role (úkoly, co si přečíst, trenažéry, kategorie do Procvičování); vybraná role v adrese `#druhy` | `pwa.js`, `roles.js` |
 | `procvicovani.html` | **Procvičování** ve Výuce: dlaždice kategorií (počet otázek, úspěšnost), obtížnost, opakování chyb (`#opakovani`), `?kategorie=…` zvýrazní dlaždici; kolo v režimu `procvicovani` (bez žebříčku) | `pwa.js`, `quiz.js` (→ `quiz-practice.js`) |
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
-| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body) | `pwa.js`, `gesture-quiz.js` |
+| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body); `?sada=carovi|rozhodci` předvybere sadu | `pwa.js`, `gesture-quiz.js` |
 | `duel.html` | stránka výzvy `?kod=…`: kdo vyzývá a s jakým výsledkem, Přijmout a hrát (→ stránka hry `?duel=kód`), čekání, výsledek; nepřihlášenému uloží kód pro návrat z Profilu | `pwa.js`, `duel-page.js` |
 | `odpiskej.html` | **Odpískej to!**: hráč je 1./2. rozhodčí, skládá posloupnost gest v pořadí (22.2.3); 10 situací, řešení na konci; situace zatím text (později Three.js) | `pwa.js`, `whistle-game.js` |
 | `rotacni-sprint.html` | **Rotační sprint**: 60 s, situace rotace / střídání / libero / více rotací, ťuknutím prohodit hráče; patří pod Hry | `pwa.js`, `rotation-sprint.js` |
 | `gesto-naopak.html` | **Gesto naopak**: význam jako otázka, 4 animace jako možnosti (`main data-game="gesto-naopak"`); patří pod Hry | `pwa.js`, `gesture-quiz.js` |
-| `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); patří pod Výuku | `pwa.js`, `lineup-trainer.js` |
+| `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); patří pod Výuku; `?pohled=ref2` = začít pohledem 2. rozhodčího | `pwa.js`, `lineup-trainer.js` |
 | `pravidla.html` | úplná pravidla FIVB 2025–2028, hledání, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `rules-search.js`, `gesture-atlas.js` |
 | `zebricek.html` | žebříček podle **bodů**: záložky Celkem / Tento týden / Dnes (`#tyden`, `#dnes`; starý `#denni` → Dnes), výběr hry | `pwa.js`, `leaderboard.js` |
 | `ucet.html` | **Profil**: přihlášení/registrace, statistiky, odznaky, nastavení, odhlášení, smazání účtu | `pwa.js`, `account.js` (→ `stats.js`) |
@@ -86,6 +87,7 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
 | `course.js` | `dom`, `categories` | `loadLessons`, `lessonStates`, `renderCourse`, `lessonResultNote` – kurz po lekcích: mapa lekcí (hotová / otevřená / zamčená), poznámka k výsledku testu |
+| `roles.js` | `dom`, `categories` | stránka `role.html` (bez exportů): výběr role, detail, `#id` v adrese |
 | `quiz-practice.js` | `dom`, `categories`, `format` | `renderPracticeTiles` – dlaždice Procvičování (mix + 11 kategorií, počty podle obtížnosti, pruh úspěšnosti) |
 | `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
 | `quiz-result.js` | `dom`, `categories`, `badges`, `report` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
@@ -169,6 +171,7 @@ scoresheet-model.js ─▶ scoresheet-tasks.js (krátká verze) ─┐
 | Soubor | Co obsahuje | Formát |
 |---|---|---|
 | `slovnicek/pojmy.json` | slovníček pojmů (id, pojem, tvary pro vyhledání v textu, definice, pravidlo); zdroj sekce Definice pojmů (`@slovnicek` v generátoru) i bublin | popis v souboru |
+| `role/role.json` | role pro trénink podle role: název, kde stojí, úkoly, `cist` (kotvy pravidel), `trenink` (odkazy, i s `?pohled=ref2` / `?sada=carovi`), `kategorie` | popis v souboru |
 | `kurz/lekce.json` | lekce kurzu v pořadí: kategorie (test + kotva shrnutí), úvod, odkazy do pravidel (`cist`), související hry (`navic`) | popis v souboru |
 | `gesta/gesta.json` | 32 gest (26 rozhodčích vč. 6a/6b a 25a/25b + 5 čárových), pózy, skupiny | `gesta/README.md` |
 | `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) a `q<id>-*.json` k otázkám (generuje `private/obrazky/animace.mjs`) | `animace/README.md` |

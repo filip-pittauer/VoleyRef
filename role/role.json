@@ -1,0 +1,113 @@
+{
+  "_popis": "Trénink podle role (role.html). Každá role: kde stojí, co má na starosti (vlastními slovy podle pravidel 23, 24, 27–29), co si přečíst (kotvy v pravidla.html), čím trénovat (odkazy na hry a trenažéry) a které kategorie otázek procvičit.",
+  "role": [
+    {
+      "id": "zapisovatel",
+      "nazev": "Zapisovatel",
+      "kratce": "Vede zápis o utkání a hlídá pořadí podání, střídání a oddechové časy.",
+      "kde": "Sedí u stolku zapisovatele naproti prvnímu rozhodčímu, čelem k němu. Vedle něj sedí pomocný zapisovatel, který vede výměny libera.",
+      "ukoly": [
+        "Před utkáním zapíše údaje o utkání a družstvech, libera a základní sestavy z listů se sestavou.",
+        "Zapisuje každý bod a hlídá pořadí podání. Chybu v pořadí oznámí rozhodčím hned po úderu podávajícího.",
+        "Zapisuje střídání a oddechové časy, hlídá jejich počet a upozorní na žádost, která je v rozporu s pravidly.",
+        "Zapisuje napomenutí, sankce a neoprávněné žádosti a na pokyn 2. rozhodčího i výjimečné události.",
+        "Ohlašuje konec setu a 8. bod v rozhodujícím setu, hlídá délku přestávek mezi sety.",
+        "Po utkání zapíše výsledek, zápis podepíše a získá podpisy kapitánů a rozhodčích."
+      ],
+      "cist": [
+        { "kotva": "pravidlo-27", "text": "27 Zapisovatel" },
+        { "kotva": "pravidlo-28", "text": "28 Pomocný zapisovatel" },
+        { "kotva": "rotace-postaveni", "text": "Ve zkratce: rotace a pořadí podání" },
+        { "kotva": "stridani", "text": "Ve zkratce: střídání" },
+        { "kotva": "libero", "text": "Ve zkratce: libero" },
+        { "kotva": "pravidlo-21", "text": "21 Nevhodné chování a sankce" }
+      ],
+      "trenink": [
+        { "href": "zapis.html", "text": "Trenažér zápisu", "popis": "Krátké úlohy nebo vedení celého setu." },
+        { "href": "rotacni-sprint.html", "text": "Rotační sprint", "popis": "Kdo podává po rotaci, střídání a výměně libera." }
+      ],
+      "kategorie": ["rotace-postaveni", "stridani", "preruseni-hry", "chovani"]
+    },
+    {
+      "id": "carovy",
+      "nazev": "Čárový rozhodčí",
+      "kratce": "Praporkem ukazuje míč v poli, v autu, tečovaný míč a přešlap při podání.",
+      "kde": "Při dvou čárových stojí v rozích hřiště nejblíž pravé ruce každého z rozhodčích, šikmo 1–2 m od rohu, a hlídá koncovou i postranní čáru na své straně.",
+      "ukoly": [
+        "Ukazuje míč v poli a v autu, kdykoli míč dopadne blízko jeho čáry.",
+        "Ukazuje tečovaný míč – dotek přijímajícího družstva s míčem, který letí do autu.",
+        "Ukazuje míč, který přejde síť mimo prostor přeletu nebo se dotkne anténky na jeho straně.",
+        "Ukazuje přešlap podávajícího a hráče, který v okamžiku podání stojí mimo své pole.",
+        "Ukazuje dotek hráče s horní částí anténky na své straně.",
+        "Na žádost prvního rozhodčího své znamení zopakuje."
+      ],
+      "cist": [
+        { "kotva": "pravidlo-29", "text": "29 Čároví rozhodčí" },
+        { "kotva": "diagram-11", "text": "Atlas gest (znamení čárových rozhodčích)" },
+        { "kotva": "pravidlo-1", "text": "1 Hrací plocha (čáry a zóny)" },
+        { "kotva": "podani", "text": "Ve zkratce: podání (přešlap)" }
+      ],
+      "trenink": [
+        { "href": "gesta.html?sada=carovi", "text": "Kvíz gest – čároví rozhodčí", "popis": "Poznáš znamení praporkem?" },
+        { "href": "gesto-naopak.html", "text": "Gesto naopak", "popis": "K situaci vyber správné gesto." }
+      ],
+      "kategorie": ["signalizace", "hriste", "podani"]
+    },
+    {
+      "id": "druhy",
+      "nazev": "2. rozhodčí",
+      "kratce": "Hlídá postavení přijímajícího družstva, síť ze strany blokujících, střídání a oddechové časy.",
+      "kde": "Stojí mimo hřiště u sloupku na opačné straně než první rozhodčí, čelem k němu.",
+      "ukoly": [
+        "Na začátku setu kontroluje, že postavení hráčů odpovídá listům se sestavou.",
+        "Píská chyby v postavení přijímajícího družstva.",
+        "Píská proniknutí do pole soupeře a pod síť a dotek sítě hlavně na straně blokujícího družstva a anténky na své straně.",
+        "Povoluje oddechové časy a střídání, hlídá jejich počet a délku a odmítá neoprávněné žádosti.",
+        "Dohlíží na zapisovatele, na lavice družstev a na rozcvičující se hráče.",
+        "Při zranění povoluje výjimečné střídání nebo čas na zotavení; když první rozhodčí nemůže pokračovat, nahradí ho."
+      ],
+      "cist": [
+        { "kotva": "pravidlo-24", "text": "24 Druhý rozhodčí" },
+        { "kotva": "rotace-postaveni", "text": "Ve zkratce: rotace a postavení" },
+        { "kotva": "sit-hrac", "text": "Ve zkratce: hráč u sítě" },
+        { "kotva": "preruseni-hry", "text": "Ve zkratce: přerušení hry" },
+        { "kotva": "pravidlo-22", "text": "22 Rozhodčí sbor a postupy" }
+      ],
+      "trenink": [
+        { "href": "postaveni.html?pohled=ref2", "text": "Trenažér postavení – pohled 2. rozhodčího", "popis": "Najdi chybu v postavení přijímajícího družstva." },
+        { "href": "rotacni-sprint.html", "text": "Rotační sprint", "popis": "Rotace, střídání a libero na čas." },
+        { "href": "odpiskej.html", "text": "Odpískej to!", "popis": "Posloupnost gest 1. a 2. rozhodčího." },
+        { "href": "gesta.html?sada=rozhodci", "text": "Kvíz gest – rozhodčí", "popis": "Oficiální znamení 1. a 2. rozhodčího." }
+      ],
+      "kategorie": ["rotace-postaveni", "dotyky-chyby", "stridani", "preruseni-hry"]
+    },
+    {
+      "id": "prvni",
+      "nazev": "1. rozhodčí",
+      "kratce": "Řídí celé utkání: podání, hra míčem, útok a blok nad sítí, chování a sankce.",
+      "kde": "Řídí utkání ze stupínku na jednom konci sítě, naproti zapisovateli; oči má asi 50 cm nad horním okrajem sítě.",
+      "ukoly": [
+        "Před utkáním kontroluje hrací plochu a míče, losuje s kapitány a dohlíží na rozcvičení.",
+        "Rozhoduje o chybách podávajícího a podávajícího družstva včetně clony.",
+        "Rozhoduje o chybách při hře míčem (chycení, dvojitý dotek, čtyři odbití).",
+        "Rozhoduje o chybách nad sítí, o útoku zadních hráčů a libera a o bloku zadních hráčů.",
+        "Napomíná a trestá nevhodné chování a zdržování hry.",
+        "Jeho rozhodnutí jsou konečná; kapitánovi ve hře na požádání vysvětlí, o které pravidlo rozhodnutí opřel."
+      ],
+      "cist": [
+        { "kotva": "pravidlo-23", "text": "23 První rozhodčí" },
+        { "kotva": "prijem-nahravka", "text": "Ve zkratce: hra míčem" },
+        { "kotva": "utok", "text": "Ve zkratce: útok" },
+        { "kotva": "blok", "text": "Ve zkratce: blok" },
+        { "kotva": "chovani", "text": "Ve zkratce: chování a tresty" },
+        { "kotva": "diagram-11", "text": "Znamení rozhodčích" }
+      ],
+      "trenink": [
+        { "href": "odpiskej.html", "text": "Odpískej to!", "popis": "Rozhodni situaci a ukaž gesta ve správném pořadí." },
+        { "href": "gesta.html?sada=rozhodci", "text": "Kvíz gest – rozhodčí", "popis": "Oficiální znamení 1. a 2. rozhodčího." },
+        { "href": "postaveni.html", "text": "Trenažér postavení", "popis": "Okamžik podání z pohledu 1. rozhodčího." }
+      ],
+      "kategorie": ["podani", "prijem-nahravka", "utok", "blok", "chovani"]
+    }
+  ]
+}

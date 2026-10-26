@@ -28,6 +28,9 @@ const sections = [startSection, questionSection, resultSection];
 
 const errorBox = document.getElementById('gesture-error');
 const setSelect = document.getElementById('gesture-set');
+// gesta.html?sada=carovi (z tréninku podle role) = předvybraná sada gest
+const presetSet = new URLSearchParams(location.search).get('sada');
+if (presetSet && [...setSelect.options].some(o => o.value === presetSet)) setSelect.value = presetSet;
 const startButton = document.getElementById('gesture-start-button');
 
 const progressText = document.getElementById('gesture-progress');

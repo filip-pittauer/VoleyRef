@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="description" content="Trénink podle role: co má na starosti zapisovatel, čárový, 2. a 1. rozhodčí, co si přečíst a čím trénovat.">
+  <title>Trénink podle role – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <!-- type="module": soubor je ES modul (import/export) a spustí se až po načtení HTML -->
+  <script type="module" src="js/roles.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="hry.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#hry"></use></svg><span>Hry</span></a></li>
+          <li><a href="vyuka.html" aria-current="true"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#vyuka"></use></svg><span>Výuka</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <h1>Trénink podle role</h1>
+    <p>Na co se připravuješ? Vyber roli a uvidíš, co má na starosti, co si přečíst v pravidlech a které hry a trenažéry ti pomůžou nejvíc.</p>
+
+    <p id="role-error" class="alert alert--error" role="alert" hidden></p>
+    <div id="role-picker" class="practice-grid role-picker" aria-label="Role"></div>
+    <div id="role-detail" class="stack role-detail"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

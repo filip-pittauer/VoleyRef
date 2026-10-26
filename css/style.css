@@ -34,6 +34,7 @@
      · Trenažér zápisu (zapis.html)
      · Rotační sprint, Odpískej to!, Duely
      · Kurz po lekcích (kurz.html)
+     · Trénink podle role (role.html)
    ========================================================= */
 
 /* ---------- Barvy a rozměry (CSS proměnné) ---------- */
@@ -4462,4 +4463,46 @@ main.hub h1 {
   border-left-color: var(--color-success);
   background: color-mix(in srgb, var(--color-success) 10%, transparent);
   font-weight: 700;
+}
+
+/* ---------- Trénink podle role (role.html, js/roles.js) ---------- */
+.role-picker {
+  margin-bottom: var(--space);
+}
+
+/* vybraná role: stejně jako „mix“ v procvičování – tmavě modrá */
+.role-tile[aria-pressed="true"] {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: var(--color-on-dark);
+}
+
+.role-tile[aria-pressed="true"] .practice-tile__meta {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.role-detail h2 {
+  margin-bottom: 0;
+}
+
+.role-duties {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.role-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* karta bez ikony vlevo (trenažéry u role) – text přes celou šířku */
+.news--plain {
+  grid-template-columns: 1fr;
 }

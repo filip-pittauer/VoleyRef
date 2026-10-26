@@ -22,10 +22,13 @@ const heading = document.getElementById('lineup-heading');
 const zoomReset = document.getElementById('lineup-zoom-reset');
 const zoom = attachPinchZoom(scene, { onChange: zoomed => { zoomReset.hidden = !zoomed; } });
 
+// postaveni.html?pohled=ref2 (z tréninku podle role) = začít pohledem 2. rozhodčího
+const startView = new URLSearchParams(location.search).get('pohled') === 'ref2' ? 'ref2' : 'ref1';
+
 const state = {
   situation: null,
-  view: 'ref1',          // pohled zvolený hráčem (po vyhodnocení se dočasně přepne na „shora“)
-  shownView: 'ref1',
+  view: startView,       // pohled zvolený hráčem (po vyhodnocení se dočasně přepne na „shora“)
+  shownView: startView,
   selected: [],          // pozice vybraných hráčů (nejvýš 2)
   correctLineup: false,  // hráč zvolil „Postavení je správné“
   result: null,          // po vyhodnocení { relations, faulty }
