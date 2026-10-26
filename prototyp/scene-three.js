@@ -233,14 +233,16 @@ function describeGpu(renderer) {
 }
 
 /**
- * Stupně kvality od nejlepšího. Když se kontext s jedním nevytvoří nebo spadne,
- * zkusí se další. Druhý stupeň vynechá vyhlazování (MSAA) – podezřelé u mobilních
- * čipů PowerVR – a zubaté hrany místo něj srovná vyšší rozlišení.
+ * Varianty kvality v pořadí zkoušení. Na mobilu s PowerVR vysoká naběhne a za
+ * pár sekund spadne (kontext se ztratí) – další varianty se od vysoké liší vždy
+ * jen jednou věcí, aby bylo poznat, co pád způsobuje: vyhlazování (MSAA), druh
+ * stínů (PCF = měkčí, víc vzorků v shaderu; basic = jeden vzorek), nebo stíny vůbec.
  */
 export const QUALITIES = [
   { id: 'vysoka', label: 'vysoká', antialias: true, maxRatio: 2, shadows: 2048 },
-  { id: 'ostra', label: 'bez MSAA, vyšší rozlišení', antialias: false, maxRatio: 2.5, shadows: 2048 },
-  { id: 'stredni', label: 'střední', antialias: false, maxRatio: 1.5, shadows: 1024, lowPower: true },
+  { id: 'bez-msaa', label: 'bez MSAA, rozlišení až 2,5×', antialias: false, maxRatio: 2.5, shadows: 2048 },
+  { id: 'stiny-basic', label: 'jednoduché stíny', antialias: true, maxRatio: 2, shadows: 2048, shadowType: 'basic' },
+  { id: 'bez-stinu', label: 'bez stínů', antialias: true, maxRatio: 2, shadows: 0 },
   { id: 'nizka', label: 'nízká', antialias: false, maxRatio: 1, shadows: 0, lowPower: true },
 ];
 
@@ -254,6 +256,7 @@ export function createThreeScene({ quality = QUALITIES[0], onLost } = {}) {
   const renderer = new THREE.WebGLRenderer({ antialias: quality.antialias, powerPreference: quality.lowPower ? 'low-power' : 'default' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.maxRatio));
   renderer.shadowMap.enabled = quality.shadows > 0;
+  if (quality.shadowType === 'basic') renderer.shadowMap.type = THREE.BasicShadowMap;
   const canvas = renderer.domElement;
   // ztráta kontextu = prohlížeč grafiku zastavil (málo paměti, ovladač…); bez
   // preventDefault by se už nikdy neobnovila

@@ -27,38 +27,52 @@ const situation = createSituation(await (await fetch('situace.json')).json());
 const svgScene = createSvgScene();
 $('stage-a').append(svgScene.svg);
 
-// Kvalita B: automatické pokusy od nejlepší (QUALITIES); ?kvalita=<id> začne
-// zadaným stupněm – na ruční zkoušení jednotlivých nastavení.
-const params = new URLSearchParams(location.search);
-const firstLevel = Math.max(0, QUALITIES.findIndex(q => q.id === params.get('kvalita')));
-const failed = [];   // stupně, které selhaly (pro diagnostiku)
+// Kvalita B: varianty QUALITIES v pořadí. Po pádu grafiky za běhu Chrome WebGL
+// na stránce zablokuje, takže další variantu jde zkusit až po obnovení stránky –
+// spadlé varianty si proto pamatujeme v localStorage (jen diagnostika, nevadí,
+// když se nepovede). ?kvalita=<id> vynutí konkrétní variantu.
+const CRASH_KEY = 'proto-webgl-pady';
+const readCrashes = () => { try { return JSON.parse(localStorage.getItem(CRASH_KEY)) ?? {}; } catch { return {}; } };
+const writeCrashes = value => { try { localStorage.setItem(CRASH_KEY, JSON.stringify(value)); } catch { /* bez paměti */ } };
+const crashes = readCrashes();   // { id: počet sekund do pádu }
+const forced = QUALITIES.findIndex(q => q.id === new URLSearchParams(location.search).get('kvalita'));
+const untried = QUALITIES.findIndex(q => !(q.id in crashes));
+const firstLevel = forced >= 0 ? forced : untried >= 0 ? untried : QUALITIES.length;   // všechny spadly → nic nezkoušet
+const failed = Object.entries(crashes).map(([id, s]) => `${QUALITIES.find(q => q.id === id)?.label ?? id} (spadla po ${s} s)`);
 const NO_SCENE = { setView() {}, render() {}, resize() {}, dispose() {} };   // A poběží dál
 
-/** Místo plátna B ukáže, co se stalo. */
+const makeButton = (text, onClick) => {
+  const b = Object.assign(document.createElement('button'), { type: 'button', className: 'button button--small', textContent: text });
+  b.addEventListener('click', onClick);
+  return b;
+};
+
+/** Místo plátna B ukáže, co se stalo; tlačítka obnoví stránku s další variantou / od začátku. */
 function showProblem(text) {
   const box = document.createElement('div');
   box.className = 'proto-problem';
-  box.append(Object.assign(document.createElement('p'), { textContent: text }));
+  box.append(Object.assign(document.createElement('p'), { textContent: text }),
+    makeButton('Obnovit a zkusit další variantu', () => location.replace(location.pathname)),
+    makeButton('Začít znovu od vysoké', () => { writeCrashes({}); location.replace(location.pathname); }));
   $('stage-b').replaceChildren(box);
   $('info-b').textContent = `WebGL nedostupné · selhalo: ${failed.join('; ')}`;
 }
 
-/**
- * Zkusí vytvořit scénu B od stupně `level` dolů. Pád kontextu za běhu
- * (webglcontextlost bez obnovení do 2 s) = pokus o stupeň níž.
- */
+/** Zkusí vytvořit scénu B od varianty `level`; když kontext nejde vytvořit, zkusí další. */
 function startThree(level) {
   for (let i = level; i < QUALITIES.length; i++) {
     const quality = QUALITIES[i];
     try {
+      const started = performance.now();
       const scene = createThreeScene({
         quality,
-        onLost: () => setTimeout(() => {
-          if (!scene.lost || threeScene !== scene) return;
-          failed.push(`${quality.label} (spadla za běhu)`);
-          scene.dispose();
-          startThree(i + 1);
-        }, 2000),
+        onLost: () => {
+          const seconds = (Math.round((performance.now() - started) / 100) / 10).toLocaleString('cs');
+          writeCrashes({ ...readCrashes(), [quality.id]: seconds });
+          failed.push(`${quality.label} (spadla po ${seconds} s)`);
+          threeScene = NO_SCENE;
+          showProblem(`Grafika spadla v kvalitě „${quality.label}“ po ${seconds} s.`);
+        },
       });
       $('stage-b').replaceChildren(scene.canvas);
       $('info-b').textContent = `${scene.info} · kvalita: ${quality.label}`
@@ -73,7 +87,7 @@ function startThree(level) {
   }
   threeScene = NO_SCENE;
   // po pádu grafiky Chrome často zablokuje WebGL pro celou stránku až do restartu prohlížeče
-  showProblem('Grafiku (WebGL) se nepodařilo spustit v žádné kvalitě. Pokud předtím spadla, zkuste zavřít a znovu otevřít prohlížeč.');
+  showProblem(level >= QUALITIES.length ? 'Všechny varianty už spadly – výsledek je níž pod plátnem.' : 'Grafiku (WebGL) se nepodařilo spustit. Pokud předtím spadla, zavřete prohlížeč úplně (i z přehledu aplikací) a otevřete znovu.');
 }
 
 let threeScene = NO_SCENE;
