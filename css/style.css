@@ -203,7 +203,13 @@ h4 {
 }
 
 /* ---------- Hlavička a navigace ---------- */
+/* Hlavička je kvůli view-transition-name samostatná vrstva (stacking context).
+   Spodní menu na mobilu (.main-nav, position: fixed) je uvnitř ní, takže jeho
+   z-index platí jen v hlavičce – celá hlavička proto musí být nad obsahem,
+   jinak by animovaný obsah (otázky, tlačítka) přejížděl přes menu. */
 .site-header {
+  position: relative;
+  z-index: 20;
   background: var(--color-primary-dark);
   color: var(--color-on-dark);
   border-bottom: 4px solid var(--color-accent);
