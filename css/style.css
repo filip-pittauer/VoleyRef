@@ -4166,3 +4166,66 @@ main.hub h1 {
     transform: none;
   }
 }
+
+/* ---------- Odpískej to! (odpiskej.html) ---------- */
+.whistle-role {
+  font-size: 1rem;
+}
+
+/* zástupný rámeček místo animace situace (později Three.js) */
+.whistle-scene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 5rem;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.whistle-sequence-box {
+  padding: 0.6rem 0.8rem;
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+}
+
+.whistle-sequence-box p {
+  margin: 0;
+}
+
+.whistle-sequence {
+  margin: 0.3rem 0 0;
+  padding-left: 1.4rem;
+  font-weight: 700;
+}
+
+.whistle-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.4rem;
+}
+
+.whistle-option {
+  padding: 0.55rem 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+}
+
+.whistle-option:hover:not(:disabled) {
+  border-color: var(--color-primary);
+}
+
+.whistle-option:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

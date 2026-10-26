@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="description" content="Odpískej to! Jsi první nebo druhý rozhodčí – ukaž správná gesta ve správném pořadí. Hra pro volejbalové rozhodčí.">
+  <title>Odpískej to! – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/whistle-game.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="hry.html" aria-current="true"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#hry"></use></svg><span>Hry</span></a></li>
+          <li><a href="vyuka.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#vyuka"></use></svg><span>Výuka</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="app-page">
+    <h1>Odpískej to!</h1>
+
+    <p id="whistle-error" class="alert alert--error" role="alert" hidden></p>
+
+    <!-- 1) Start -->
+    <section id="whistle-start" class="card stack">
+      <h2>Ukaž správná gesta</h2>
+      <p>Jsi první, nebo druhý rozhodčí a právě jsi odpískal chybu. Z gest vyber, co ukážeš, a <strong>ve správném pořadí</strong>. Kolo má 10 situací, vyhodnocení a vysvětlení uvidíš na konci.</p>
+      <ul class="small">
+        <li><strong>Píská 1. rozhodčí:</strong> nejdřív družstvo, které bude podávat, pak druh chyby (<a href="pravidla.html#p-22-2-3-1">22.2.3.1</a>).</li>
+        <li><strong>Píská 2. rozhodčí:</strong> nejdřív druh chyby, pak družstvo, které bude podávat (<a href="pravidla.html#p-22-2-3-2">22.2.3.2</a>).</li>
+        <li>Ukázání hráče, který chybu udělal, se v této hře nepočítá.</li>
+      </ul>
+      <p class="muted small">Přihlášený hráč dostane za první kolo dne body do žebříčku (10 za každou správnou situaci).</p>
+      <p id="whistle-login" class="small" hidden><a href="ucet.html">Přihlas se</a> a sbírej body.</p>
+      <div>
+        <button id="whistle-start-button" class="button" type="button" disabled>Začít</button>
+      </div>
+    </section>
+
+    <!-- 2) Situace -->
+    <section id="whistle-run" class="card stack" hidden>
+      <div class="board">
+        <div class="board__row">
+          <p id="whistle-progress"></p>
+          <p id="whistle-role" class="board__score whistle-role"></p>
+        </div>
+        <progress id="whistle-progress-bar" value="0" max="10" aria-hidden="true"></progress>
+      </div>
+      <h2 id="whistle-heading" tabindex="-1">Co ukážeš?</h2>
+      <div id="whistle-situation" class="stack">
+        <!-- Zatím statická situace; později ji nahradí animace (Three.js) -->
+        <div class="whistle-scene" aria-hidden="true"><svg class="nav-icon"><use href="img/ikony.svg#hry"></use></svg><span>Animace situace přibude</span></div>
+        <p id="whistle-text" class="sprint-text"></p>
+      </div>
+      <div class="whistle-sequence-box">
+        <p class="small"><strong>Tvoje znamení (v pořadí):</strong></p>
+        <ol id="whistle-sequence" class="whistle-sequence"></ol>
+        <p id="whistle-sequence-empty" class="muted small">Zatím nic – vyber gesta níže.</p>
+      </div>
+      <div class="actions">
+        <button id="whistle-done" class="button" type="button" disabled>Odpískat</button>
+        <button id="whistle-undo" class="button button--secondary" type="button" disabled>Vrátit poslední</button>
+      </div>
+      <div id="whistle-options" class="whistle-options" role="group" aria-label="Gesta rozhodčích"></div>
+    </section>
+
+    <!-- 3) Výsledek -->
+    <section id="whistle-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="whistle-result-heading" tabindex="-1">Výsledek</h2>
+        <div id="whistle-score"></div>
+        <p id="whistle-result-text"></p>
+        <p id="whistle-points" class="small"></p>
+        <div class="actions">
+          <button id="whistle-again" class="button" type="button">Hrát znovu</button>
+          <a href="pravidla.html#diagram-11">Atlas gest</a>
+        </div>
+      </div>
+      <h2>Vysvětlení</h2>
+      <ol id="whistle-results" class="result-list"></ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

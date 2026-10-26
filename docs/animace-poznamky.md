@@ -54,3 +54,8 @@ Plýtvání bufferem v bodě 4 ovladač zjevně nesnesl, jiné ano.
   nevyřeší: WebView (Capacitor, TWA) používá stejný Chromium a ovladač.
   Pomohl by jen nativní engine (Unity, Godot).
 - Pak: přeanimovat situace, minihry (Učebna/Hala, „Odpískej to!“, duely).
+- **Odpískej to! (odpiskej.html) má zatím statické situace** (jen text a zástupný
+  rámeček „Animace situace přibude“, `.whistle-scene` ve `js/whistle-game.js`).
+  Až bude rozhodnuto A/B, nahradit rámeček animací situace (Three.js) – data
+  situací jsou v `public.odpiskej_situace`, k animaci přidat sloupec/odkaz na
+  `animace/*.json`. Stejně pak Píšťalka (klepnout ve chvíli chyby).

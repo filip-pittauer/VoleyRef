@@ -151,5 +151,9 @@ kopii pro okamžitou zpětnou vazbu a test `rotace-db` hlídá shodu. 60 s,
 Edge Function zůstává pro trenažér postavení (geometrie) a zápis; při nasazení
 vynutit region `eu-central-1` (Frankfurt, `region` v `functions.invoke`).
 
-Zbývá: bodovaný zápis, další minihry (Pravda/nepravda, Odpískej to!, Najdi
-chybu v zápisu…), duely.
+Odpískej to! (27. 10.): `sql/09_odpiskej.sql`, 10 bodů za situaci (celá
+posloupnost gest ve správném pořadí). Řešení tajná jako u kvízu
+(`private/odpiskej.json` → seed). Situace zatím text, animace později.
+
+Zbývá: bodovaný zápis, další minihry (Pravda/nepravda, Najdi chybu v zápisu…),
+duely.

@@ -119,7 +119,7 @@ create index if not exists kola_uzivatel_idx
 alter table public.kola add column if not exists hra text not null default 'kviz';
 alter table public.kola drop constraint if exists kola_hra_check;
 alter table public.kola add constraint kola_hra_check
-  check (hra in ('kviz', 'gesta', 'gesto-naopak', 'rotace'));
+  check (hra in ('kviz', 'gesta', 'gesto-naopak', 'rotace', 'odpiskej'));
 alter table public.kola add column if not exists polozky text[];
 alter table public.kola add column if not exists data jsonb;
 alter table public.kola add column if not exists body integer;
@@ -152,7 +152,8 @@ insert into private.hodnoty_her (hra, rezim, body_za_spravnou, bonus_rychlost, c
   ('kviz',         'denni', 20, 50, null),   -- 2× víc + bonus za rychlost, jen 1× denně
   ('gesta',        'bezne',  5,  0, null),   -- 10 gest ~ 1,5 min
   ('gesto-naopak', 'bezne',  5,  0, null),
-  ('rotace',       'bezne',  5,  0,   60)    -- Rotační sprint: 60 s, co nejvíc situací
+  ('rotace',       'bezne',  5,  0,   60),   -- Rotační sprint: 60 s, co nejvíc situací
+  ('odpiskej',     'bezne', 10,  0, null)    -- Odpískej to!: 10 situací, celá posloupnost gest
 on conflict (hra, rezim) do update
   set body_za_spravnou = excluded.body_za_spravnou, bonus_rychlost = excluded.bonus_rychlost,
       casovy_limit_s = excluded.casovy_limit_s;

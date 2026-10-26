@@ -211,3 +211,30 @@ export async function submitSprint(roundId, answers) {
     points: data.body, pointsReason: data.body_duvod, solutions: data.reseni,
   };
 }
+
+/** Začne kolo „Odpískej to!“: { roundId, situations: [{ id, kdo, text }] } (roundId null = žádné situace). */
+export async function startWhistle() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('zacni_odpiskej');
+  if (error) throw error;
+  return { roundId: data.kolo_id, situations: data.situace };
+}
+
+/**
+ * Odevzdá „Odpískej to!“: answers = { [id situace]: [id gest v pořadí] }.
+ * Vrací { score, total, durationSeconds, points, pointsReason,
+ *         results: [{ id, answer, correct, isCorrect, explanation, rule }] }.
+ */
+export async function submitWhistle(roundId, answers) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('odevzdej_odpiskej', { p_kolo_id: roundId, p_odpovedi: answers });
+  if (error) throw error;
+  return {
+    score: data.skore, total: data.pocet, durationSeconds: data.trvani_s,
+    points: data.body, pointsReason: data.body_duvod,
+    results: data.vysledky.map(v => ({
+      id: v.id, answer: v.odpoved, correct: v.spravne, isCorrect: v.je_spravne,
+      explanation: v.vysvetleni, rule: v.pravidlo,
+    })),
+  };
+}
