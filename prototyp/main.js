@@ -38,7 +38,8 @@ const crashes = readCrashes();   // { id: počet sekund do pádu }
 const forced = QUALITIES.findIndex(q => q.id === new URLSearchParams(location.search).get('kvalita'));
 const untried = QUALITIES.findIndex(q => !(q.id in crashes));
 const firstLevel = forced >= 0 ? forced : untried >= 0 ? untried : QUALITIES.length;   // všechny spadly → nic nezkoušet
-const failed = Object.entries(crashes).map(([id, s]) => `${QUALITIES.find(q => q.id === id)?.label ?? id} (spadla po ${s} s)`);
+// pády z minulých návštěv (localStorage) – odlišené, aby nevypadaly jako právě teď
+const failed = Object.entries(crashes).map(([id, s]) => `${QUALITIES.find(q => q.id === id)?.label ?? id} (minule spadla po ${s} s)`);
 const NO_SCENE = { setView() {}, render() {}, resize() {}, dispose() {} };   // A poběží dál
 
 const makeButton = (text, onClick) => {
