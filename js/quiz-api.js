@@ -186,3 +186,28 @@ export async function submitGame(roundId, answers) {
   if (error) throw error;
   return { score: data.skore, total: data.pocet, durationSeconds: data.trvani_s, points: data.body, pointsReason: data.body_duvod };
 }
+
+/**
+ * Začne Rotační sprint (situace vygeneruje server).
+ * Vrací { roundId, limitSeconds, situations: [situace…] } – formát situace v js/rotation-logic.js.
+ */
+export async function startSprint() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('zacni_sprint');
+  if (error) throw error;
+  return { roundId: data.kolo_id, limitSeconds: data.limit_s, situations: data.situace };
+}
+
+/**
+ * Odevzdá sprint: answers = { [pořadí situace]: [6 čísel v zónách I–VI] } (jen zodpovězené).
+ * Vrací { score, total, durationSeconds, points, pointsReason, solutions: [sestavy] }.
+ */
+export async function submitSprint(roundId, answers) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('odevzdej_sprint', { p_kolo_id: roundId, p_odpovedi: answers });
+  if (error) throw error;
+  return {
+    score: data.skore, total: data.pocet, durationSeconds: data.trvani_s,
+    points: data.body, pointsReason: data.body_duvod, solutions: data.reseni,
+  };
+}

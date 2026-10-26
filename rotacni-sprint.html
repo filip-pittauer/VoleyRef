@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="description" content="Rotační sprint: 60 sekund na co nejvíc situací – rotace, střídání a libero. Trénink pořadí hráčů pro volejbalové rozhodčí.">
+  <title>Rotační sprint – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/rotation-sprint.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="hry.html" aria-current="true"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#hry"></use></svg><span>Hry</span></a></li>
+          <li><a href="vyuka.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#vyuka"></use></svg><span>Výuka</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="app-page">
+    <h1>Rotační sprint</h1>
+
+    <p id="sprint-error" class="alert alert--error" role="alert" hidden></p>
+
+    <!-- 1) Start -->
+    <section id="sprint-start" class="card stack">
+      <h2>Kdo kde stojí?</h2>
+      <p>Uvidíš postavení našeho družstva a co se stalo – vyhraná výměna, střídání, libero. Hráče přesuneš tak, jak mají stát teď: <strong>ťukni na hráče a pak na místo</strong>, kam patří (hráči se prohodí). Máš 60 sekund na co nejvíc situací a obtížnost roste.</p>
+      <ul class="small">
+        <li>Družstvo rotuje (po směru hodinových ručiček) jen když <strong>přijímalo a vyhrálo výměnu</strong>.</li>
+        <li>Libero hraje jen v zadní řadě – když by se rotací dostalo do zóny IV, jde ven a vrací se hráč, za kterého hrálo.</li>
+      </ul>
+      <p class="muted small">Přihlášený hráč dostane za první sprint dne body do žebříčku (5 za každou správnou situaci).</p>
+      <div>
+        <button id="sprint-start-button" class="button" type="button">Začít sprint</button>
+      </div>
+      <p class="small">Pravidla: <a href="pravidla.html#p-7-6">rotace (7.6)</a>, <a href="pravidla.html#pravidlo-15">střídání (15)</a>, <a href="pravidla.html#p-19-3">libero (19.3)</a>.</p>
+    </section>
+
+    <!-- 2) Situace -->
+    <section id="sprint-run" class="card stack" hidden>
+      <div class="board">
+        <div class="board__row">
+          <p id="sprint-time" class="sprint-time">60 s</p>
+          <p id="sprint-tally" class="board__score"></p>
+        </div>
+        <progress id="sprint-time-bar" value="60" max="60" aria-hidden="true"></progress>
+      </div>
+      <h2 id="sprint-heading" tabindex="-1">Situace 1</h2>
+      <p id="sprint-text" class="sprint-text"></p>
+      <p class="small muted">Jak teď stojí naše družstvo? Ťukni na hráče a pak na místo, kam patří.</p>
+      <div id="sprint-court" class="rot-court" role="group" aria-label="Hřiště našeho družstva, síť nahoře"></div>
+      <div id="sprint-bench-box" class="rot-bench" hidden>
+        <span class="small">Lavička:</span>
+        <div id="sprint-bench" class="rot-bench__players"></div>
+      </div>
+      <div id="sprint-feedback" role="status"></div>
+      <div class="actions">
+        <button id="sprint-done" class="button" type="button">Hotovo</button>
+        <button id="sprint-reset" class="button button--secondary" type="button">Vrátit postavení</button>
+      </div>
+    </section>
+
+    <!-- 3) Výsledek -->
+    <section id="sprint-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="sprint-result-heading" tabindex="-1">Výsledek sprintu</h2>
+        <div id="sprint-score"></div>
+        <p id="sprint-result-text"></p>
+        <p id="sprint-points" class="small"></p>
+        <div class="actions">
+          <button id="sprint-again" class="button" type="button">Hrát znovu</button>
+          <a href="hry.html">Zpět na hry</a>
+        </div>
+      </div>
+      <div id="sprint-mistakes-box" class="stack" hidden>
+        <h2>Tady to bylo jinak</h2>
+        <ol id="sprint-mistakes" class="result-list"></ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

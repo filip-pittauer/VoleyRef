@@ -44,6 +44,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
 | `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body) | `pwa.js`, `gesture-quiz.js` |
+| `rotacni-sprint.html` | **Rotační sprint**: 60 s, situace rotace / střídání / libero / více rotací, ťuknutím prohodit hráče; patří pod Hry | `pwa.js`, `rotation-sprint.js` |
 | `gesto-naopak.html` | **Gesto naopak**: význam jako otázka, 4 animace jako možnosti (`main data-game="gesto-naopak"`); patří pod Hry | `pwa.js`, `gesture-quiz.js` |
 | `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); patří pod Výuku | `pwa.js`, `lineup-trainer.js` |
 | `pravidla.html` | úplná pravidla FIVB 2025–2028, hledání, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `rules-search.js`, `gesture-atlas.js` |
@@ -77,7 +78,7 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 ### Kvíz, žebříček, profil (používají Supabase)
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
-| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
+| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame`, `startSprint`, `submitSprint` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
 | `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `quiz-practice`, `daily-card`, `supabase` | kvíz (`kviz.html`) i procvičování (`procvicovani.html`) – karty startu podle toho, které prvky stránka má; start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
@@ -87,6 +88,8 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate(ring, { ribbons })` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu, zkoušky i kvízu gest |
 | `media.js` | `dom`, `animation`, `court-scene`, `lineup-logic` | `renderMedia` – obrázek / video / animace / scéna postavení (`typ: "postaveni"`, hráči v datech otázky, pod scénou zápis pozic) u otázky; SVG obrázky (`img/otazky/`) vkládá přímo do stránky kvůli CSS (`dg-*`, `qd-*`, tmavý režim); obrázek bez `soubor` = zástupný rámeček |
 | `leaderboard.js` | `dom`, `badges`, `quiz-api`, `supabase` | žebříček podle bodů (`getPointsLeaderboard` → RPC `zebricek_body`); období, hra, medaile pro 1.–3. místo |
+| `rotation-logic.js` | – | pravidla sprintu bez DOM: `solve`, `isCorrect`, `rotate`, `benchOf`, `describe`, `generateSituation` (nepřihlášený), `ZONES`, `COURT_LAYOUT`; stejná pravidla v SQL (`private.sprint_reseni`, test `rotace-db`) |
+| `rotation-sprint.js` | `dom`, `format`, `rotation-logic`, `quiz-api`, `supabase`, `celebrate`, `points` | obrazovka sprintu: odpočet, výběr a prohození hráčů, okamžité ✓/✗, výsledek; přihlášený `startSprint` / `submitSprint` |
 | `points.js` | `dom`, `format` | `pointsNote` – věta pod výsledkem kola: „+70 bodů do žebříčku“, limit, příliš rychlé, pozvánka k přihlášení |
 | `games-hub.js` | `quiz-api`, `supabase`, `format` | Hry: souhrn bodů hráče a štítky `[data-points]` u her (`getMyPoints` → `moje_body`) |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
@@ -198,8 +201,8 @@ Animace menu jsou v sekci „Animace navigace“ hned za navigací.
 | `public.otazky` | otázky bez správných odpovědí | jen přes funkce |
 | `private.otazky_reseni` | **správné odpovědi** + vysvětlení | nikdy (schéma `private`) |
 | `public.profily` | přezdívka, vybrané odznaky | `select` + `update (prezdivka)` jen svůj řádek |
-| `public.kola` | odehraná kola všech her (`hra`: kviz / gesta / gesto-naopak; čas, skóre, režim, odpovědi, `polozky` = id gest, `body` + `body_duvod` 'limit'/'rychle'; null = nebodované) | `select` jen svoje |
-| `private.hodnoty_her` (`01`) | body za správnou a bonus za rychlost podle hry a režimu (chybí řádek = nebodované) | nikdy |
+| `public.kola` | odehraná kola všech her (`hra`: kviz / gesta / gesto-naopak / rotace; `data` = situace sprintu; čas, skóre, režim, odpovědi, `polozky` = id gest, `body` + `body_duvod` 'limit'/'rychle'; null = nebodované) | `select` jen svoje |
+| `private.hodnoty_her` (`01`) | body za správnou, bonus za rychlost a časový limit (sprint) podle hry a režimu (chybí řádek = nebodované) | nikdy |
 | `private.gesta` (`07`) | katalog gest (id, skupina) – musí odpovídat `gesta/gesta.json` (test `body-db`) | nikdy |
 | `public.denni_vyzvy` | otázky denní výzvy | jen přes funkce |
 | `public.odznaky_hracu` | získané odznaky | jen přes funkce |
@@ -224,6 +227,7 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 | | `zebricek_body(obdobi, hra, limit)` – součet bodů celkem / tyden / den, shoda → dřívější zisk | anon, auth | `quiz-api.js` (→ `leaderboard.js`) | |
 | | `moje_body()` – dnes / týden / celkem, `dnes_hrano` | auth | `quiz-api.js` (→ `games-hub.js`) | |
 | | (na konci souboru přepočet bodů starých kol – opakovatelný) | | | |
+| `08_rotace.sql` | `zacni_sprint()` (30 situací, limit), `odevzdej_sprint(kolo_id, odpovedi)` (skóre, body, řešení) | anon, auth | `quiz-api.js` (→ `rotation-sprint.js`) | `sprint_situace`, `sprint_reseni` |
 | `05_odznaky.sql` | `moje_odznaky()`, `nastav_odznaky(odznaky)` | auth | `account.js`, `stats.js` | `metriky_odznaku`, `udel_odznaky` |
 
 Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jen přihlášení, jeden pokus; řešení až zítra – `private.reseni_skryte` ho skryje i v opakování chyb, statistikách a odznacích),

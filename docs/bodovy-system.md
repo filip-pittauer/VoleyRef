@@ -144,5 +144,12 @@ Odchylky od návrhu:
   zůstává, web ho už nevolá.
 - Statistiky v Profilu a odznaky počítají jen kvíz (`hra = 'kviz'`).
 
-Zbývá: bodované postavení (Rotační sprint) a zápis přes Edge Function, další
-minihry (Pravda/nepravda, Odpískej to!, Najdi chybu v zápisu…), duely.
+Rotační sprint (27. 10.): **bez Edge Function** – pravidla pořadí (rotace,
+střídání, libero) jsou jednoduchá, SQL je zvládne (`sql/08_rotace.sql`), JS má
+kopii pro okamžitou zpětnou vazbu a test `rotace-db` hlídá shodu. 60 s,
+5 bodů za správnou situaci, odevzdání víc než 15 s po limitu = 0 bodů ('cas').
+Edge Function zůstává pro trenažér postavení (geometrie) a zápis; při nasazení
+vynutit region `eu-central-1` (Frankfurt, `region` v `functions.invoke`).
+
+Zbývá: bodovaný zápis, další minihry (Pravda/nepravda, Odpískej to!, Najdi
+chybu v zápisu…), duely.

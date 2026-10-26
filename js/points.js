@@ -4,7 +4,7 @@ import { el } from './dom.js';
 import { plural } from './format.js';
 
 /**
- * @param {{ points: number|null, pointsReason: 'limit'|'rychle'|null }} result
+ * @param {{ points: number|null, pointsReason: 'limit'|'rychle'|'cas'|null }} result
  * @param {boolean} loggedIn
  * @returns {Node|string|null} null = nebodované kolo (nic nepsat)
  */
@@ -15,6 +15,9 @@ export function pointsNote({ points, pointsReason }, loggedIn) {
   if (points == null) return null;
   if (pointsReason === 'limit') {
     return 'Dnešní body za tuto hru už máš, další kola jsou za 0 bodů. Zítra znovu!';
+  }
+  if (pointsReason === 'cas') {
+    return 'Kolo dorazilo na server až po časovém limitu, body se nepočítají. Zkus to znovu.';
   }
   if (pointsReason === 'rychle') {
     return 'Kolo bylo příliš rychlé (méně než 2 s na otázku), body se nepočítají. Zkus to znovu.';

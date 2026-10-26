@@ -4037,3 +4037,132 @@ main.hub h1 {
 .sc-sanctions-empty {
   margin-top: var(--space);
 }
+
+/* ---------- Rotační sprint (rotacni-sprint.html) ---------- */
+/* hřiště našeho družstva shora: síť nahoře, přední řada IV III II, zadní V VI I */
+.rot-court {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  max-width: 26rem;
+  padding: 0.5rem;
+  border: 3px solid #fff;
+  border-radius: var(--radius);
+  background: #e98a3c;   /* podlaha hřiště – stejná barva ve světlém i tmavém režimu */
+}
+
+.rot-court__net {
+  grid-column: 1 / -1;
+  padding: 0.15rem;
+  border-radius: 4px;
+  background: #1e293b;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.rot-player {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 4.2rem;
+  padding: 0.3rem;
+  border: 3px solid transparent;
+  border-radius: var(--radius);
+  background: #b91c1c;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.12s;
+}
+
+.rot-player__number {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.rot-player__zone {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+/* libero: jiný dres (19.2) */
+.rot-player--libero {
+  background: #0f9f6e;
+}
+
+.rot-player.is-selected {
+  border-color: #ffe14d;
+  transform: scale(1.06);
+}
+
+.rot-player:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+.rot-player:disabled {
+  cursor: default;
+}
+
+.rot-bench {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rot-bench__players {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.rot-bench .rot-player {
+  min-width: 4rem;
+  min-height: 3.4rem;
+  background: #475569;
+}
+
+.sprint-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.sprint-text {
+  font-weight: 600;
+}
+
+.sprint-flash {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  font-weight: 700;
+}
+
+.sprint-flash--ok {
+  background: color-mix(in srgb, var(--color-success) 14%, var(--color-surface));
+  color: var(--color-success);
+}
+
+.sprint-flash--bad {
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rot-player {
+    transition: none;
+  }
+
+  .rot-player.is-selected {
+    transform: none;
+  }
+}

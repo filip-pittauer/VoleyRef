@@ -32,7 +32,7 @@ css/style.css       všechny styly (vzhled „Svaz“), css/fonts.css + fonts/ (
 js/                 moduly (viz CODEMAP.md); js/config.js = Supabase URL + publishable klíč
 slovnicek/pojmy.json  slovníček pojmů (definice v pravidlech + bubliny)
 gesta/gesta.json    gesta jako data; animace/*.json situace jako data
-sql/                SQL pro Supabase (spouštět v pořadí 01, 02, …, 07_hry = hry a body)
+sql/                SQL pro Supabase (spouštět v pořadí 01, 02, …, 07_hry = hry a body, 08_rotace = sprint)
 tools/              Node skripty (seed-otazky.mjs)
 .claude/skills/     postupy pro Clauda (nove-otazky)
 private/            NENÍ ve veřejném repu: vlastní SOUKROMÉ repo filip-pittauer/VoleyRef-private
@@ -105,7 +105,7 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - **Čitelnost (od 25. 10. 2026, už bez druhé session):** krok 1 ESLint + .editorconfig, krok 2 komentáře (JSDoc u funkcí, obsah v css/style.css). Další: 12 varování o složitosti/délce funkcí (`npm run lint`), pak předávací dokumentace a audity.
 - **Kde jsme skončili (26. 10. 2026):** prototyp animací `prototyp/animace.html` (A = SVG, B = Three.js; podrobnosti docs/historie.md). Na PC je B mnohem hezčí. Pády B na mobilu (PowerVR) způsobovalo `setSize` v každém snímku. Po opravě B na mobilu běží se stíny. Na Samsungu A26 a tabletu Lenovo B běží plynule ve vysoké kvalitě. **Prototyp odložen. Před návratem k animacím přečíst docs/animace-poznamky.md** (testy zařízení, co zbývá). Pak přeanimovat situace, minihry (Učebna/Hala, „Odpískej to!“, duely).
 - **Hry / Výuka (26. 10. 2026):** rozcestníky hry.html a vyuka.html, nová navigace. Kvíz rozdělený: kviz.html (Hry, denní výzva + náhodné kolo) a procvicovani.html (Výuka, dlaždice kategorií, režim kola `procvicovani`, RPC `prehled_kategorii`). Karta denní výzvy na úvodu (jen do odehrání) a v Hrách (js/daily-card.js). Testovací hráči: private/testovaci-hraci.sql (uživatel ho má spustit v Supabase). 
-- **Body a žebříčky (26. 10. 2026, větev `body-a-minihry`, NE na main):** menší ilustrace u otázek na PC, bodový systém (sql/01, 02, 07_hry.sql; žebříček celkem/týden/dnes a za hru; 1 bodované kolo hry za den), kvíz gest přes server s body, nová minihra Gesto naopak (gesto-naopak.html). Stav a odchylky: docs/bodovy-system.md. **Čeká na uživatele:** vyzkoušet, sloučit do main, spustit SQL 01, 02, 03, 05, 07. **Další:** bodované postavení/zápis přes Edge Function, další minihry z docs/napady-hry-vyuka.md.
+- **Body a žebříčky (26. 10. 2026, větev `body-a-minihry`, NE na main):** menší ilustrace u otázek na PC, bodový systém (sql/01, 02, 07_hry.sql; žebříček celkem/týden/dnes a za hru; 1 bodované kolo hry za den), kvíz gest přes server s body, nová minihra Gesto naopak (gesto-naopak.html). Stav a odchylky: docs/bodovy-system.md. **Čeká na uživatele:** vyzkoušet, sloučit do main, spustit SQL 01, 02, 03, 05, 07. **Rotační sprint (27. 10.):** rotacni-sprint.html, js/rotation-logic.js + rotation-sprint.js, sql/08_rotace.sql (bez Edge Function). **Další:** další minihry z docs/napady-hry-vyuka.md, bodovaný zápis.
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.

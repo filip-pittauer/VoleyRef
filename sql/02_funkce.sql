@@ -324,7 +324,8 @@ $$;
 
 -- prirad_body(kolo_id) → { body, duvod } – zapíše body právě odevzdanému kolu.
 -- 0 bodů: 'rychle' (méně než 2 s na otázku; nepočítá se do limitu, hráč
--- může hrát znovu) nebo 'limit' (dnes už má bodované kolo této hry).
+-- může hrát znovu), 'cas' (hra na čas odevzdaná víc než 15 s po limitu)
+-- nebo 'limit' (dnes už má bodované kolo této hry).
 create or replace function private.prirad_body(p_kolo_id uuid)
 returns jsonb
 language plpgsql
@@ -334,6 +335,7 @@ declare
   v_kolo  public.kola;
   v_body  integer;
   v_duvod text;
+  v_limit integer;
 begin
   select * into v_kolo from public.kola where id = p_kolo_id;
   if v_kolo.uzivatel_id is null or v_kolo.konec is null then
@@ -347,9 +349,16 @@ begin
   -- dvě současná odevzdání téhož hráče se nepotkají (oba by prošla limitem)
   perform pg_advisory_xact_lock(hashtext(v_kolo.uzivatel_id::text));
 
+  select h.casovy_limit_s into v_limit
+  from private.hodnoty_her h where h.hra = v_kolo.hra and h.rezim = v_kolo.rezim;
+
   if v_kolo.konec - v_kolo.zacatek < make_interval(secs => v_kolo.pocet * 2) then
     v_body := 0;
     v_duvod := 'rychle';
+  elsif v_limit is not null and v_kolo.konec - v_kolo.zacatek > make_interval(secs => v_limit + 15) then
+    -- rezerva 15 s na síť; později = hráč si mohl „zastavit čas“
+    v_body := 0;
+    v_duvod := 'cas';
   elsif (select count(*)
          from public.kola k
          where k.uzivatel_id = v_kolo.uzivatel_id and k.hra = v_kolo.hra and k.rezim = v_kolo.rezim
