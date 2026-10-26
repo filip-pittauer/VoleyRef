@@ -92,7 +92,8 @@ alter table public.kola drop constraint if exists kola_rezim_check;
 alter table public.kola add constraint kola_rezim_check
   check (rezim in ('bezne', 'chyby', 'denni', 'zkouska',      -- + zkouška (test na čas, 02_funkce.sql)
                    'procvicovani',                            -- + procvičování ve Výuce (kategorie/obtížnost, bez žebříčku)
-                   'duel'));                                  -- + kolo soupeře v duelu (10_duely.sql), bez bodů za odpovědi
+                   'duel',                                    -- + kolo soupeře v duelu (10_duely.sql), bez bodů za odpovědi
+                   'lekce'));                                 -- + test lekce kurzu ve Výuce (02_funkce.sql), bez bodů
 
 -- Dřívější „běžná“ kola s vybranou kategorií nebo obtížností jsou podle
 -- dnešního rozdělení procvičování (do žebříčku se nepočítala ani dřív).

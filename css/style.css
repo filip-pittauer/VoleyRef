@@ -32,6 +32,8 @@
      · Animace stránek a detailů
      · Slovníček pojmů (js/glossary.js)
      · Trenažér zápisu (zapis.html)
+     · Rotační sprint, Odpískej to!, Duely
+     · Kurz po lekcích (kurz.html)
    ========================================================= */
 
 /* ---------- Barvy a rozměry (CSS proměnné) ---------- */
@@ -4322,4 +4324,142 @@ main.hub h1 {
   margin-left: auto;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Kurz po lekcích (kurz.html, js/course.js) ---------- */
+.course-progress {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.course-progress p {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* lekce pod sebou spojené svislou čarou – „cesta“ kurzem */
+.course {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.course::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: calc(0.8rem + 1rem - 1px);
+  width: 2px;
+  background: var(--color-border);
+}
+
+.lesson {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.lesson--open {
+  border: 2px solid var(--color-accent);
+}
+
+.lesson--locked {
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+}
+
+.lesson__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.lesson__summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson--locked .lesson__summary {
+  cursor: default;
+}
+
+.lesson__step {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.lesson--open .lesson__step {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-dark);
+}
+
+.lesson--done .lesson__step {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-on-dark);
+}
+
+.lesson__head {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.lesson__name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+.lesson__status {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.lesson__body {
+  padding: 0 0.8rem 0.9rem calc(0.8rem + 2.75rem);
+}
+
+.lesson__body p {
+  margin: 0;
+}
+
+.lesson__label {
+  font-weight: 700;
+}
+
+.lesson__links {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.lesson-verdict {
+  padding: 0.6rem 0.8rem;
+  border-left: 4px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+
+.lesson-verdict--pass {
+  border-left-color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+  font-weight: 700;
 }

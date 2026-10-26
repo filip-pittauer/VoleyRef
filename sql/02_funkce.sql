@@ -147,6 +147,20 @@ revoke all on function private.zkouska_hranice(integer)                    from 
 revoke all on function private.zkouska_splnena(integer, integer, interval) from public, anon, authenticated;
 
 -- ---------------------------------------------------------------------
+-- Kurz po lekcích (kurz.html): test lekce = 5 otázek z kategorie,
+-- lekce je splněná se 4 správnými. Pořadí lekcí je v kurz/lekce.json –
+-- odemykání hlídá jen web, za lekce nejsou body, takže obejít ho nic nedá.
+-- ---------------------------------------------------------------------
+create or replace function private.lekce_otazek()
+returns integer language sql immutable set search_path = '' as $$ select 5 $$;
+
+create or replace function private.lekce_hranice()
+returns integer language sql immutable set search_path = '' as $$ select 4 $$;
+
+revoke all on function private.lekce_otazek()  from public, anon, authenticated;
+revoke all on function private.lekce_hranice() from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
 -- zacni_kolo(kategorie, obtiznost, rezim) → { kolo_id, otazky: [...] }
 -- Založí kolo a uloží čas startu (na serveru, takže ho hráč nemůže
 -- podvrhnout). Vrací otázky BEZ správných odpovědí.
@@ -160,6 +174,8 @@ revoke all on function private.zkouska_splnena(integer, integer, interval) from 
 --                   (čas běží dál), dokončené už znovu začít nejde.
 --   rezim 'zkouska' = test na čas: 30 otázek, z každé kategorie nejvýš 3,
 --                   aby byly zastoupené všechny. Vrací i limit a hranici.
+--   rezim 'lekce' = test lekce kurzu: 5 otázek z povinné kategorie (Výuka,
+--                   bez bodů). Vrací i hranici splnění.
 -- ---------------------------------------------------------------------
 -- Starší verze měla jen jeden parametr. Bez smazání by vedle sebe
 -- existovaly dvě funkce stejného jména a API by nevědělo, kterou volat.
@@ -181,11 +197,15 @@ declare
   v_chyby   boolean := p_rezim = 'chyby';
   v_denni   boolean := p_rezim = 'denni';
   v_zkouska boolean := p_rezim = 'zkouska';
+  v_lekce   boolean := p_rezim = 'lekce';
   v_den     date := private.dnes();
   v_hotovo  boolean;
 begin
-  if p_rezim is null or p_rezim not in ('bezne', 'procvicovani', 'chyby', 'denni', 'zkouska') then
+  if p_rezim is null or p_rezim not in ('bezne', 'procvicovani', 'chyby', 'denni', 'zkouska', 'lekce') then
     raise exception 'Neznámý režim kola.';
+  end if;
+  if v_lekce and p_kategorie is null then
+    raise exception 'Lekce potřebuje kategorii.';
   end if;
   if v_chyby and auth.uid() is null then
     raise exception 'Pro opakování chyb se přihlas.';
@@ -257,9 +277,9 @@ begin
         -- opakování chyb: jen chybné otázky, filtry kategorie a obtížnosti se ignorují
         and (not v_chyby or o.id in (select private.chybne_otazky(auth.uid())))
         and (v_chyby or p_kategorie is null or o.kategorie = p_kategorie)
-        and (v_chyby or p_obtiznost is null or o.obtiznost = p_obtiznost)
+        and (v_chyby or v_lekce or p_obtiznost is null or o.obtiznost = p_obtiznost)
       order by random()
-      limit 10
+      limit case when v_lekce then private.lekce_otazek() else 10 end
     ) as vyber;
   end if;
 
@@ -271,7 +291,7 @@ begin
     insert into public.kola (uzivatel_id, kategorie, obtiznost, rezim, den, otazky, pocet)
     values (
       auth.uid(),
-      case when p_rezim in ('bezne', 'procvicovani') then p_kategorie end,
+      case when p_rezim in ('bezne', 'procvicovani', 'lekce') then p_kategorie end,
       case when p_rezim in ('bezne', 'procvicovani') then p_obtiznost end,
       p_rezim,
       case when v_denni then v_den end,
@@ -286,6 +306,9 @@ begin
     'zkouska', case when v_zkouska then jsonb_build_object(
                  'limit_s', extract(epoch from private.zkouska_limit())::integer,
                  'hranice', private.zkouska_hranice(cardinality(v_otazky))) end,
+    -- jen u lekce: kolik správných odpovědí je potřeba ke splnění
+    'lekce', case when v_lekce then jsonb_build_object(
+               'hranice', least(private.lekce_hranice(), cardinality(v_otazky))) end,
     'otazky', private.otazky_kola(v_otazky)
   );
 end;
@@ -456,7 +479,12 @@ begin
     'zkouska', case when v_kolo.rezim = 'zkouska' then jsonb_build_object(
                  'hranice', private.zkouska_hranice(v_kolo.pocet),
                  'vcas', now() - v_kolo.zacatek <= private.zkouska_limit() + interval '1 minute',
-                 'splneno', private.zkouska_splnena(v_skore, v_kolo.pocet, now() - v_kolo.zacatek)) end
+                 'splneno', private.zkouska_splnena(v_skore, v_kolo.pocet, now() - v_kolo.zacatek)) end,
+    -- jen u lekce: splněno = dost správných odpovědí (další lekce se odemkne)
+    'lekce', case when v_kolo.rezim = 'lekce' then jsonb_build_object(
+               'kategorie', v_kolo.kategorie,
+               'hranice', least(private.lekce_hranice(), v_kolo.pocet),
+               'splneno', v_skore >= least(private.lekce_hranice(), v_kolo.pocet)) end
   );
 end;
 $$;
@@ -587,6 +615,31 @@ as $$
 $$;
 
 -- ---------------------------------------------------------------------
+-- postup_kurzu() → [{ kategorie, nejlepsi, pocet, splneno }]
+-- Odehrané testy lekcí přihlášeného hráče: nejlepší výsledek v každé
+-- kategorii a zda je lekce splněná. Postup se neukládá zvlášť – počítá
+-- se z kol, takže nemůže „rozejít“ s tím, co hráč opravdu odehrál.
+-- ---------------------------------------------------------------------
+create or replace function public.postup_kurzu()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select coalesce(jsonb_agg(jsonb_build_object('kategorie', x.kategorie, 'nejlepsi', x.skore, 'pocet', x.pocet,
+                                               'splneno', x.skore >= least(private.lekce_hranice(), x.pocet))
+                            order by x.kategorie), '[]'::jsonb)
+  from (
+    -- distinct on = jeden řádek na kategorii, ten s nejlepším skóre
+    select distinct on (k.kategorie) k.kategorie, k.skore, k.pocet
+    from public.kola k
+    where k.uzivatel_id = auth.uid() and k.rezim = 'lekce' and k.konec is not null
+    order by k.kategorie, k.skore desc, k.konec
+  ) as x;
+$$;
+
+-- ---------------------------------------------------------------------
 -- pocet_chyb() → kolik otázek má přihlášený hráč k opakování
 -- ---------------------------------------------------------------------
 create or replace function public.pocet_chyb()
@@ -631,6 +684,7 @@ revoke all on function public.zebricek(integer)              from public, anon, 
 revoke all on function public.pocet_chyb()                    from public, anon, authenticated;
 revoke all on function public.smazat_ucet()                   from public, anon, authenticated;
 revoke all on function public.prehled_kategorii()             from public, anon, authenticated;
+revoke all on function public.postup_kurzu()                  from public, anon, authenticated;
 
 grant execute on function public.zacni_kolo(text, integer, text) to anon, authenticated;
 grant execute on function public.odevzdej_kolo(uuid, jsonb)      to anon, authenticated;
@@ -639,3 +693,4 @@ grant execute on function public.zebricek(integer)               to anon, authen
 grant execute on function public.pocet_chyb()                    to authenticated;
 grant execute on function public.smazat_ucet()                   to authenticated;
 grant execute on function public.prehled_kategorii()             to anon, authenticated;
+grant execute on function public.postup_kurzu()                  to authenticated;

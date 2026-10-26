@@ -40,6 +40,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `hry.html` | rozcestník **Hry** (bodované): karta denní výzvy, souhrn Tvoje body (dnes/týden/celkem), hry se stavem „dnešní body získány“, žebříček, „Připravujeme“ | `pwa.js`, `daily-teaser.js`, `games-hub.js` |
 | `vyuka.html` | rozcestník **Výuka** (bez bodů): pravidla, atlas gest, slovníček, procvičování, trenažéry postavení a zápisu, zkouška | `pwa.js` |
 | `kviz.html` | kvíz v Hrách: denní výzva (`#denni`; `?hrat=denni` ji rovnou spustí), běžné kolo (náhodný mix, do žebříčku); v navigaci pod Hry | `pwa.js`, `quiz.js` |
+| `kurz.html` | **Kurz po lekcích** ve Výuce: mapa 11 lekcí z `kurz/lekce.json` (přečti si + test 5 otázek, splnění od 4), postupné odemykání; kolo v režimu `lekce` (bez bodů); postup přihlášeného z `postup_kurzu`, anonym jen do zavření stránky | `pwa.js`, `quiz.js` (→ `course.js`) |
 | `procvicovani.html` | **Procvičování** ve Výuce: dlaždice kategorií (počet otázek, úspěšnost), obtížnost, opakování chyb (`#opakovani`), `?kategorie=…` zvýrazní dlaždici; kolo v režimu `procvicovani` (bez žebříčku) | `pwa.js`, `quiz.js` (→ `quiz-practice.js`) |
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
@@ -81,9 +82,10 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
 | `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame`, `startSprint`, `submitSprint`, `startWhistle`, `submitWhistle`, `createDuel`, `getDuel`, `acceptDuel`, `getMyDuels` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
-| `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `quiz-practice`, `daily-card`, `supabase` | kvíz (`kviz.html`) i procvičování (`procvicovani.html`) – karty startu podle toho, které prvky stránka má; start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
+| `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `quiz-practice`, `course`, `daily-card`, `supabase` | kvíz (`kviz.html`), procvičování (`procvicovani.html`) i kurz (`kurz.html`) – karty startu podle toho, které prvky stránka má; start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
+| `course.js` | `dom`, `categories` | `loadLessons`, `lessonStates`, `renderCourse`, `lessonResultNote` – kurz po lekcích: mapa lekcí (hotová / otevřená / zamčená), poznámka k výsledku testu |
 | `quiz-practice.js` | `dom`, `categories`, `format` | `renderPracticeTiles` – dlaždice Procvičování (mix + 11 kategorií, počty podle obtížnosti, pruh úspěšnosti) |
 | `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
 | `quiz-result.js` | `dom`, `categories`, `badges`, `report` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
@@ -167,6 +169,7 @@ scoresheet-model.js ─▶ scoresheet-tasks.js (krátká verze) ─┐
 | Soubor | Co obsahuje | Formát |
 |---|---|---|
 | `slovnicek/pojmy.json` | slovníček pojmů (id, pojem, tvary pro vyhledání v textu, definice, pravidlo); zdroj sekce Definice pojmů (`@slovnicek` v generátoru) i bublin | popis v souboru |
+| `kurz/lekce.json` | lekce kurzu v pořadí: kategorie (test + kotva shrnutí), úvod, odkazy do pravidel (`cist`), související hry (`navic`) | popis v souboru |
 | `gesta/gesta.json` | 32 gest (26 rozhodčích vč. 6a/6b a 25a/25b + 5 čárových), pózy, skupiny | `gesta/README.md` |
 | `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) a `q<id>-*.json` k otázkám (generuje `private/obrazky/animace.mjs`) | `animace/README.md` |
 | `img/otazky/*.svg` | obrázky k otázkám (generuje `private/obrazky/diagramy.mjs`, kromě 201/212/213/217 kreslených ručně) | SVG s třídami `dg-*`/`qd-*` |
@@ -221,12 +224,13 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 ### Funkce (RPC)
 | Soubor | Veřejné (volá prohlížeč) | Kdo smí | Volá z JS | Interní (`private.*`) |
 |---|---|---|---|---|
-| `02_funkce.sql` | `zacni_kolo(kategorie, obtiznost, rezim)` – režimy `bezne`, `procvicovani`, `chyby`, `denni`, `zkouska` | anon, auth | `quiz-api.js` | `chybne_otazky`, `dnes`, `reseni_skryte`, `otazky_kola`, `vysledky_kola`, `zkouska_otazek`, `zkouska_limit`, `zkouska_hranice`, `zkouska_splnena` |
+| `02_funkce.sql` | `zacni_kolo(kategorie, obtiznost, rezim)` – režimy `bezne`, `procvicovani`, `chyby`, `denni`, `zkouska`, `lekce` | anon, auth | `quiz-api.js` | `chybne_otazky`, `dnes`, `reseni_skryte`, `otazky_kola`, `vysledky_kola`, `zkouska_otazek`, `zkouska_limit`, `zkouska_hranice`, `zkouska_splnena`, `lekce_otazek`, `lekce_hranice` |
 | | `odevzdej_kolo(kolo_id, odpovedi)` – spočítá body, uloží, udělí odznaky; u dnešní denní výzvy bez řešení | anon, auth | `quiz-api.js` | |
 | | `reseni_denni_vyzvy(den)` – řešení vlastní denní výzvy, nejdřív zítra | auth | `quiz-api.js` | |
 | | `zebricek(limit)` | anon, auth | `leaderboard.js` | |
 | | `pocet_chyb()` | auth | `quiz-api.js`, `stats.js` | |
 | | `prehled_kategorii()` – počty aktivních otázek po kategorii a obtížnosti | anon, auth | `quiz-api.js` | |
+| | `postup_kurzu()` – nejlepší test lekce v každé kategorii, splněno ano/ne (počítá se z kol) | auth | `quiz-api.js` (→ `quiz.js`, kurz) | `lekce_hranice` |
 | | `smazat_ucet()` | auth | `account.js` | |
 | `03_statistiky.sql` | `moje_statistiky()` (vč. historie zkoušek) | auth | `stats.js`, `quiz-api.js` (úspěšnost v dlaždicích) | |
 | `04_denni_vyzva.sql` | `denni_zebricek(limit)`, `stav_denni_vyzvy()` (vč. `vcera`) | anon, auth | `leaderboard.js`, `quiz-api.js` (→ `daily-card.js`) | `denni_poradi`, `denni_serie` |

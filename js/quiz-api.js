@@ -15,7 +15,8 @@ function requireSupabase() {
  *   difficulty = 1–3, nebo null pro všechny
  *   mode       = 'bezne' (kvíz v Hrách) | 'procvicovani' (Výuka, s kategorií/obtížností)
  *                | 'chyby' (opakování chyb) | 'denni' (denní výzva) | 'zkouska'
- *                kategorie a obtížnost se berou jen u 'bezne' a 'procvicovani'
+ *                | 'lekce' (test lekce kurzu, kategorie povinná)
+ *                kategorie a obtížnost se berou jen u 'bezne' a 'procvicovani' (u 'lekce' jen kategorie)
  *   exam       = jen u zkoušky: { limitSeconds, passScore }, jinak null
  */
 export async function startRound({ category = null, difficulty = null, mode = 'bezne' } = {}) {
@@ -90,6 +91,9 @@ export async function submitRound(roundId, answers) {
     exam: data.zkouska
       ? { passScore: data.zkouska.hranice, inTime: data.zkouska.vcas, passed: data.zkouska.splneno }
       : null,
+    lesson: data.lekce
+      ? { category: data.lekce.kategorie, passScore: data.lekce.hranice, passed: data.lekce.splneno }
+      : null,
     points: data.body ?? null,
     pointsReason: data.body_duvod ?? null,
   };
@@ -111,6 +115,17 @@ export async function getDailySolution(day) {
     questions: data.otazky,
     results: mapResults(data.vysledky),
   };
+}
+
+/**
+ * Postup přihlášeného hráče v kurzu: nejlepší test lekce v každé kategorii.
+ * @returns {Promise<Array<{ kategorie: string, nejlepsi: number, pocet: number, splneno: boolean }>>}
+ */
+export async function getCourseProgress() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('postup_kurzu');
+  if (error) throw error;
+  return data;
 }
 
 /**

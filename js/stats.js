@@ -88,6 +88,7 @@ function roundLabel(round) {
   if (round.rezim === 'chyby') return 'Opakování chyb';
   if (round.rezim === 'denni') return 'Denní výzva';
   if (round.rezim === 'zkouska') return 'Zkouška';
+  if (round.rezim === 'lekce') return `Lekce kurzu · ${categoryName(round.kategorie)}`;
   return [round.kategorie ? categoryName(round.kategorie) : 'Všechny', difficultyName(round.obtiznost)]
     .filter(Boolean).join(' · ');
 }

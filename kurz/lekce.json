@@ -1,0 +1,125 @@
+{
+  "_popis": "Kurz po lekcích (kurz.html). Pořadí = pořadí lekcí; další lekce se odemkne po splnění testu předchozí. kategorie = id kategorie otázek (test lekce) i kotva shrnutí v pravidla.html. cist = odkazy do pravidel (kotva bez #), navic = související hry a trenažéry.",
+  "lekce": [
+    {
+      "kategorie": "hriste",
+      "uvod": "Začneme tím, na čem se hraje: rozměry hřiště, čáry a zóny, síť a anténky, míče. Patří sem i složení družstva, kdo za něj smí jednat a jak se získává bod, set a utkání.",
+      "cist": [
+        { "kotva": "hriste", "text": "Ve zkratce: hřiště a vybavení" },
+        { "kotva": "pravidlo-1", "text": "1 Hrací plocha" },
+        { "kotva": "pravidlo-2", "text": "2 Síť a sloupky" },
+        { "kotva": "pravidlo-4", "text": "4 Družstva" },
+        { "kotva": "body", "text": "Ve zkratce: bod, set a utkání" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "rotace-postaveni",
+      "uvod": "Postavení a rotace jsou základ, bez kterého nejde řídit žádné utkání. Kdo s kým nesmí prohodit místo v okamžiku podání, kdy se rotuje a co dělat při chybě v pořadí podání.",
+      "cist": [
+        { "kotva": "rotace-postaveni", "text": "Ve zkratce: rotace a postavení" },
+        { "kotva": "pravidlo-7", "text": "7 Struktura hry" }
+      ],
+      "navic": [
+        { "href": "postaveni.html", "text": "Trenažér postavení" }
+      ]
+    },
+    {
+      "kategorie": "podani",
+      "uvod": "Podání zahajuje každou rozehru. Projdeš si, co smí a nesmí podávající, jak dlouho na podání má a kdy hráči podávajícího družstva cloní.",
+      "cist": [
+        { "kotva": "podani", "text": "Ve zkratce: podání" },
+        { "kotva": "pravidlo-12", "text": "12 Podání" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "prijem-nahravka",
+      "uvod": "Jak se smí míč odbít: kolik dotyků má družstvo, kdy je dotyk chybný (chycení, dvojitý dotyk) a co platí pro první odbití.",
+      "cist": [
+        { "kotva": "prijem-nahravka", "text": "Ve zkratce: příjem a nahrávka" },
+        { "kotva": "pravidlo-9", "text": "9 Hra míčem" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "utok",
+      "uvod": "Útočný úder je každé odbití směrem k soupeři kromě podání a bloku. Hlavní téma lekce: co smí zadní hráč, libero a kdy se útočí na podání soupeře.",
+      "cist": [
+        { "kotva": "utok", "text": "Ve zkratce: útok" },
+        { "kotva": "pravidlo-13", "text": "13 Útočný úder" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "blok",
+      "uvod": "Blok je jediný dotyk, který se nepočítá do tří odbití družstva. Kdo smí blokovat, kdy smí blokař zasáhnout do prostoru soupeře a co je chyba při bloku.",
+      "cist": [
+        { "kotva": "blok", "text": "Ve zkratce: blok" },
+        { "kotva": "pravidlo-14", "text": "14 Blok" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "dotyky-chyby",
+      "uvod": "Míč ve hře a mimo hru, míč na síti a hráč u sítě: dotyk sítě, přešlap střední čáry, zasahování do hry soupeře. Taky co se stane, když chybují obě družstva současně.",
+      "cist": [
+        { "kotva": "dotyky-chyby", "text": "Ve zkratce: dotyky a chyby ve hře" },
+        { "kotva": "pravidlo-8", "text": "8 Situace ve hře" },
+        { "kotva": "pravidlo-10", "text": "10 Míč na síti" },
+        { "kotva": "sit-hrac", "text": "Ve zkratce: hráč u sítě" },
+        { "kotva": "pravidlo-11", "text": "11 Hráč u sítě" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "stridani",
+      "uvod": "Střídání hráčů a libero: kolik střídání má družstvo v setu, kdo za koho smí nastoupit, výjimečné a nepovolené střídání a výměny libera, které se za střídání nepočítají.",
+      "cist": [
+        { "kotva": "stridani", "text": "Ve zkratce: střídání" },
+        { "kotva": "libero", "text": "Ve zkratce: libero" },
+        { "kotva": "pravidlo-19", "text": "19 Hráč libero" }
+      ],
+      "navic": [
+        { "href": "zapis.html", "text": "Trenažér zápisu" }
+      ]
+    },
+    {
+      "kategorie": "preruseni-hry",
+      "uvod": "Oddechové časy, žádosti o střídání, nepřípustné žádosti a zdržování hry. K tomu zranění, vnější překážky, přestávky mezi sety a výměna stran.",
+      "cist": [
+        { "kotva": "preruseni-hry", "text": "Ve zkratce: přerušení hry" },
+        { "kotva": "pravidlo-15", "text": "15 Řádná přerušení hry" },
+        { "kotva": "pravidlo-16", "text": "16 Zdržování hry" },
+        { "kotva": "pravidlo-17", "text": "17 Výjimečná přerušení hry" },
+        { "kotva": "pravidlo-18", "text": "18 Přestávky a výměna polí" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "chovani",
+      "uvod": "Chování hráčů a členů družstva: rozdíl mezi drobným a hrubým přestupkem, napomenutí, trest, vyloučení a diskvalifikace a jak se sankce stupňují.",
+      "cist": [
+        { "kotva": "chovani", "text": "Ve zkratce: chování a tresty" },
+        { "kotva": "pravidlo-20", "text": "20 Požadavky na chování" },
+        { "kotva": "pravidlo-21", "text": "21 Nevhodné chování a sankce" }
+      ],
+      "navic": []
+    },
+    {
+      "kategorie": "signalizace",
+      "uvod": "Na závěr práce rozhodčích: kdo co řídí a posuzuje, v jakém pořadí rozhodčí signalizují a jak vypadají oficiální znamení rozhodčích a čárových rozhodčích.",
+      "cist": [
+        { "kotva": "signalizace", "text": "Ve zkratce: signalizace" },
+        { "kotva": "pravidlo-22", "text": "22 Rozhodčí sbor a postupy" },
+        { "kotva": "pravidlo-23", "text": "23 První rozhodčí" },
+        { "kotva": "pravidlo-24", "text": "24 Druhý rozhodčí" },
+        { "kotva": "pravidlo-29", "text": "29 Čároví rozhodčí" },
+        { "kotva": "diagram-11", "text": "Atlas gest" }
+      ],
+      "navic": [
+        { "href": "gesta.html", "text": "Kvíz gest" }
+      ]
+    }
+  ]
+}

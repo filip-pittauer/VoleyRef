@@ -6,8 +6,9 @@ import { renderMedia } from './media.js';
 import { createScore, celebrate } from './celebrate.js';
 import { renderResultItem, renderNewBadges } from './quiz-result.js';
 import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolution,
-  getCategoryOverview, getCategoryStats } from './quiz-api.js';
+  getCategoryOverview, getCategoryStats, getCourseProgress } from './quiz-api.js';
 import { renderPracticeTiles } from './quiz-practice.js';
+import { loadLessons, renderCourse, lessonResultNote } from './course.js';
 import { renderDailyCard, streakText, previousDay } from './daily-card.js';
 import { pointsNote } from './points.js';
 import { acceptDuel } from './quiz-api.js';
@@ -24,6 +25,8 @@ const playerInfo = document.getElementById('player-info');
 // jen v Hrách (kviz.html): denní výzva a běžné kolo; jen v procvičování: obtížnost, dlaždice, chyby
 const difficultySelect = document.getElementById('difficulty');
 const practiceTiles = document.getElementById('practice-tiles');
+// jen v kurzu (kurz.html): mapa lekcí
+const courseMap = document.getElementById('course-map');
 const startButton = document.getElementById('start-button');
 const errorBox = document.getElementById('quiz-error');
 
@@ -82,17 +85,57 @@ async function renderPlayerInfo() {
 /** Řádek o hráči: v Hrách jde o žebříček, v procvičování o statistiky a chyby. */
 function playerText() {
   if (profile) return el('span', {}, 'Hraješ jako ', el('strong', {}, profile.prezdivka), '.');
-  const why = practiceTiles
-    ? 'Po přihlášení uvidíš úspěšnost v kategoriích a můžeš si opakovat chyby. '
-    : 'Nejsi přihlášený, výsledek se nezapíše do žebříčku ani statistik. ';
+  const why = courseMap
+    ? 'Nejsi přihlášený, postup v kurzu se ti uloží jen do zavření stránky. '
+    : practiceTiles
+      ? 'Po přihlášení uvidíš úspěšnost v kategoriích a můžeš si opakovat chyby. '
+      : 'Nejsi přihlášený, výsledek se nezapíše do žebříčku ani statistik. ';
   return el('span', {}, why, el('a', { href: 'ucet.html' }, 'Přihlásit se'));
 }
 
-/** Karty na startu, které stránka má (kvíz v Hrách: denní výzva; procvičování: chyby a dlaždice). */
+/** Karty na startu, které stránka má (kvíz v Hrách: denní výzva; procvičování: chyby a dlaždice; kurz: lekce). */
 function renderStartCards() {
   if (mistakesCard) renderMistakes();
   if (dailyText) renderDaily();
   if (practiceTiles) renderPractice();
+  if (courseMap) renderCoursePage();
+}
+
+// ---------- Start: kurz po lekcích ----------
+let lessons = null;
+// Postup nepřihlášeného (jen do zavření stránky); přihlášenému ho počítá server.
+const guestProgress = new Map();
+
+/** Mapa lekcí s postupem hráče (jen kurz.html). */
+async function renderCoursePage() {
+  try {
+    lessons ??= await loadLessons();
+  } catch (error) {
+    console.error(error);
+    showError('Kurz se nepodařilo načíst. Zkontroluj připojení k internetu.');
+    return;
+  }
+  let progress = guestProgress;
+  if (profile) {
+    try {
+      progress = new Map((await getCourseProgress()).map(p => [p.kategorie, p]));
+    } catch (error) {
+      console.error(error);
+      showError('Postup v kurzu se nepodařilo načíst.');
+    }
+  }
+  renderCourse(courseMap, {
+    lessons,
+    progress,
+    onStart: (category, button) => begin('lekce', { category, button }),
+  });
+}
+
+/** Nepřihlášený: zapamatovat nejlepší test lekce (jako postup_kurzu na serveru). */
+function rememberGuestLesson(lesson, result) {
+  const best = guestProgress.get(lesson.category);
+  if (best && best.nejlepsi >= result.score) return;
+  guestProgress.set(lesson.category, { nejlepsi: result.score, pocet: result.total, splneno: lesson.passed || Boolean(best?.splneno) });
 }
 
 // ---------- Start: procvičování (dlaždice kategorií) ----------
@@ -205,7 +248,7 @@ async function begin(mode, { category = null, button = null } = {}) {
   hideError();
   const filters = mode === 'procvicovani'
     ? { category, difficulty: difficultySelect.value ? Number(difficultySelect.value) : null }
-    : { category: null, difficulty: null };
+    : { category: mode === 'lekce' ? category : null, difficulty: null };
   button ??= { bezne: startButton, chyby: mistakesButton, denni: dailyButton }[mode];
   button.disabled = true;
   try {
@@ -216,6 +259,7 @@ async function begin(mode, { category = null, button = null } = {}) {
         procvicovani: 'Pro tento výběr kategorie a obtížnosti zatím nejsou žádné otázky.',
         chyby: 'Nemáš žádné chyby k opakování.',
         denni: 'Denní výzva dnes nemá žádné otázky.',
+        lekce: 'Pro tuto lekci zatím nejsou žádné otázky.',
       }[mode]);
       return;
     }
@@ -306,6 +350,7 @@ async function handleAnswer(event) {
 /** Poznámka pod skóre: body do žebříčku (počítá server), nebo proč žádné nejsou. */
 function leaderboardNote(round, result) {
   if (round.mode === 'procvicovani') return 'Procvičování se do žebříčku nepočítá.';
+  if (round.mode === 'lekce') return null;
   if (round.mode === 'chyby' && profile) return 'Opakování chyb se do žebříčku nepočítá.';
   if (round.mode === 'duel') return 'V duelu se body za odpovědi nepočítají – za výhru dostaneš bonus.';
   return pointsNote(result, Boolean(profile));
@@ -324,14 +369,16 @@ function renderResult(result) {
   const extra = el('p', { class: 'muted small' });
   const score = createScore(result.score, result.total);
 
-  resultHeading.textContent = 'Výsledek kola';
-  againButton.textContent = practiceTiles ? 'Zpět na kategorie' : 'Hrát znovu';
+  resultHeading.textContent = round.mode === 'lekce' ? 'Výsledek testu lekce' : 'Výsledek kola';
+  againButton.textContent = courseMap ? 'Zpět na kurz' : practiceTiles ? 'Zpět na kategorie' : 'Hrát znovu';
+  if (result.lesson && !profile) rememberGuestLesson(result.lesson, result);
   resultSummary.replaceChildren(
     score,
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
     // denní výzva: řešení by ostatním prozradilo dnešní odpovědi
     result.solutionHidden ? el('p', {}, 'Správné odpovědi a vysvětlení uvidíš zítra.') : '',
     el('p', { class: 'small' }, leaderboardNote(round, result) ?? ''),
+    result.lesson && lessons ? lessonResultNote(result.lesson, lessons) : '',
     extra,
     renderNewBadges(result.newBadges) ?? '');
 
