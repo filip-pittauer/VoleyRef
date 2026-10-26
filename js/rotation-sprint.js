@@ -5,7 +5,8 @@
 import { el, showOnly, replayAnimation } from './dom.js';
 import { plural } from './format.js';
 import { COURT_LAYOUT, ZONES, solve, isCorrect, benchOf, describe, generateSituation } from './rotation-logic.js';
-import { startSprint, submitSprint } from './quiz-api.js';
+import { startSprint, submitSprint, acceptDuel } from './quiz-api.js';
+import { duelCodeFromUrl, renderChallenge, renderDuelResult } from './duel.js';
 import { getProfile, isConfigured } from './supabase.js';
 import { createScore, celebrate } from './celebrate.js';
 import { pointsNote } from './points.js';
@@ -24,11 +25,23 @@ let profile = null;
 let state = null;   // { roundId, situations, index, answers, correct, court, bench, selected, deadline, timer, locked }
 
 // ---------- Start ----------
-async function begin() {
+/** code = kód duelu (rotacni-sprint.html?duel=…): stejné situace jako vyzyvatel. */
+async function begin(code = null) {
   $('sprint-error').hidden = true;
   $('sprint-start-button').disabled = true;
   let round = null;
-  if (profile) {
+  if (code) {
+    try {
+      const duel = await acceptDuel(code);
+      round = { roundId: duel.kolo_id, limitSeconds: duel.limit_s, situations: duel.situace, duelCode: code };
+    } catch (error) {
+      console.error(error);
+      $('sprint-start-button').disabled = false;
+      $('sprint-error').textContent = error.message ?? 'Duel se nepodařilo spustit.';
+      $('sprint-error').hidden = false;
+      return;
+    }
+  } else if (profile) {
     try {
       round = await startSprint();
     } catch (error) {
@@ -39,6 +52,7 @@ async function begin() {
   const limit = round?.limitSeconds ?? LOCAL_LIMIT;
   state = {
     roundId: round?.roundId ?? null,
+    duelCode: round?.duelCode ?? null,
     situations: round?.situations ?? Array.from({ length: LOCAL_COUNT }, (_, i) => generateSituation(i)),
     index: 0, answers: {}, correct: 0, mistakes: [],
     limit, deadline: performance.now() + limit * 1000, timer: null, locked: false,
@@ -181,16 +195,29 @@ async function renderPoints(round) {
   }
   try {
     const result = await submitSprint(round.roundId, round.answers);
-    box.replaceChildren(pointsNote(result, true) ?? '');
+    box.replaceChildren((round.duelCode ? 'V duelu se body za odpovědi nepočítají – za výhru dostaneš bonus.' : pointsNote(result, true)) ?? '');
+    renderDuelBox(round);
   } catch (error) {
     console.error(error);
     box.textContent = 'Body se nepodařilo uložit (výpadek spojení?).';
   }
 }
 
+/** Pod výsledkem: výsledek duelu, nebo „Vyzvat kamaráda“ (kolo ze serveru). */
+function renderDuelBox(round) {
+  const box = $('duel-box');
+  box.hidden = false;
+  if (round.duelCode) {
+    renderDuelResult(box, round.duelCode);
+    history.replaceState(null, '', location.pathname);
+  } else {
+    renderChallenge(box, round.roundId, 'rotace');
+  }
+}
+
 // ---------- Inicializace ----------
-$('sprint-start-button').addEventListener('click', begin);
-$('sprint-again').addEventListener('click', () => showOnly($('sprint-start'), sections));
+$('sprint-start-button').addEventListener('click', () => begin());
+$('sprint-again').addEventListener('click', () => { $('duel-box').hidden = true; showOnly($('sprint-start'), sections); });
 doneButton.addEventListener('click', submitSituation);
 $('sprint-reset').addEventListener('click', () => {
   if (state.locked) return;
@@ -200,4 +227,10 @@ $('sprint-reset').addEventListener('click', () => {
   state.selected = null;
   renderPlayers();
 });
-if (isConfigured) getProfile().then(p => { profile = p; }).catch(() => {});
+if (isConfigured) {
+  getProfile().then(p => {
+    profile = p;
+    // odkaz ze stránky duelu: rovnou hrát stejné situace jako vyzyvatel
+    if (duelCodeFromUrl() && profile) begin(duelCodeFromUrl());
+  }).catch(() => {});
+}

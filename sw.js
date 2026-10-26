@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v41';
+const CACHE = 'voleyref-v42';
 
 const APP_SHELL = [
   './',
@@ -33,6 +33,7 @@ const APP_SHELL = [
   'gesto-naopak.html',
   'rotacni-sprint.html',
   'odpiskej.html',
+  'duel.html',
   'css/style.css',
   'css/fonts.css',
   'fonts/barlow-400-latin-ext.woff2',
@@ -53,6 +54,9 @@ const APP_SHELL = [
   'js/config.js',
   'js/court-scene.js',
   'js/daily-card.js',
+  'js/duel.js',
+  'js/duel-page.js',
+  'js/duels-profile.js',
   'js/daily-teaser.js',
   'js/games-hub.js',
   'js/points.js',

@@ -44,6 +44,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
 | `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body) | `pwa.js`, `gesture-quiz.js` |
+| `duel.html` | stránka výzvy `?kod=…`: kdo vyzývá a s jakým výsledkem, Přijmout a hrát (→ stránka hry `?duel=kód`), čekání, výsledek; nepřihlášenému uloží kód pro návrat z Profilu | `pwa.js`, `duel-page.js` |
 | `odpiskej.html` | **Odpískej to!**: hráč je 1./2. rozhodčí, skládá posloupnost gest v pořadí (22.2.3); 10 situací, řešení na konci; situace zatím text (později Three.js) | `pwa.js`, `whistle-game.js` |
 | `rotacni-sprint.html` | **Rotační sprint**: 60 s, situace rotace / střídání / libero / více rotací, ťuknutím prohodit hráče; patří pod Hry | `pwa.js`, `rotation-sprint.js` |
 | `gesto-naopak.html` | **Gesto naopak**: význam jako otázka, 4 animace jako možnosti (`main data-game="gesto-naopak"`); patří pod Hry | `pwa.js`, `gesture-quiz.js` |
@@ -79,7 +80,7 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 ### Kvíz, žebříček, profil (používají Supabase)
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
-| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame`, `startSprint`, `submitSprint`, `startWhistle`, `submitWhistle` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
+| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame`, `startSprint`, `submitSprint`, `startWhistle`, `submitWhistle`, `createDuel`, `getDuel`, `acceptDuel`, `getMyDuels` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
 | `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `quiz-practice`, `daily-card`, `supabase` | kvíz (`kviz.html`) i procvičování (`procvicovani.html`) – karty startu podle toho, které prvky stránka má; start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
@@ -89,6 +90,9 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate(ring, { ribbons })` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu, zkoušky i kvízu gest |
 | `media.js` | `dom`, `animation`, `court-scene`, `lineup-logic` | `renderMedia` – obrázek / video / animace / scéna postavení (`typ: "postaveni"`, hráči v datech otázky, pod scénou zápis pozic) u otázky; SVG obrázky (`img/otazky/`) vkládá přímo do stránky kvůli CSS (`dg-*`, `qd-*`, tmavý režim); obrázek bez `soubor` = zástupný rámeček |
 | `leaderboard.js` | `dom`, `badges`, `quiz-api`, `supabase` | žebříček podle bodů (`getPointsLeaderboard` → RPC `zebricek_body`); období, hra, medaile pro 1.–3. místo |
+| `duel.js` | `dom`, `format`, `quiz-api`, `supabase` | duely pro všechny hry: `renderChallenge` (Vyzvat kamaráda), `renderShareBox` (odkaz, sdílení/kopírování), `renderDuelResult`, `duelVerdict`, `renderDuelScore`, `duelCodeFromUrl`, `duelLink`, `DUEL_GAMES`, `PENDING_DUEL_KEY` |
+| `duel-page.js` | `dom`, `quiz-api`, `supabase`, `duel` | stránka `duel.html` |
+| `duels-profile.js` | `dom`, `quiz-api`, `duel` | Profil → Duely (`#duely`): aktivní (s odkazem k poslání) a odehrané; `loadDuels` volá `account.js` |
 | `whistle-game.js` | `dom`, `format`, `categories`, `gesture-data`, `referee-figure`, `quiz-api`, `supabase`, `celebrate`, `points` | Odpískej to!: nabídka 27 gest rozhodčích, pořadí, vrácení posledního, výsledek s animacemi správných gest (`startWhistle` / `submitWhistle`) |
 | `rotation-logic.js` | – | pravidla sprintu bez DOM: `solve`, `isCorrect`, `rotate`, `benchOf`, `describe`, `generateSituation` (nepřihlášený), `ZONES`, `COURT_LAYOUT`; stejná pravidla v SQL (`private.sprint_reseni`, test `rotace-db`) |
 | `rotation-sprint.js` | `dom`, `format`, `rotation-logic`, `quiz-api`, `supabase`, `celebrate`, `points` | obrazovka sprintu: odpočet, výběr a prohození hráčů, okamžité ✓/✗, výsledek; přihlášený `startSprint` / `submitSprint` |
@@ -204,6 +208,7 @@ Animace menu jsou v sekci „Animace navigace“ hned za navigací.
 | `private.otazky_reseni` | **správné odpovědi** + vysvětlení | nikdy (schéma `private`) |
 | `public.profily` | přezdívka, vybrané odznaky | `select` + `update (prezdivka)` jen svůj řádek |
 | `public.kola` | odehraná kola všech her (`hra`: kviz / gesta / gesto-naopak / rotace / odpiskej; `data` = situace sprintu; čas, skóre, režim, odpovědi, `polozky` = id gest, `body` + `body_duvod` 'limit'/'rychle'; null = nebodované) | `select` jen svoje |
+| `public.duely` (`01`, funkce v `10`) | duely: kód, hra, vyzyvatel a jeho kolo, soupeř a jeho kolo (režim `duel`), výsledek, bonusy; body bonusů sčítá `private.zisky_bodu` (07) do žebříčku | jen přes funkce |
 | `private.hodnoty_her` (`01`) | body za správnou, bonus za rychlost a časový limit (sprint) podle hry a režimu (chybí řádek = nebodované) | nikdy |
 | `public.odpiskej_situace` + `private.odpiskej_reseni` (`09`) | situace Odpískej to! (kdo píská, text) a **tajná** správná gesta v pořadí; obsah `private/odpiskej.json` → `node tools/seed-odpiskej.mjs` → `private/seed-odpiskej.sql` | jen přes funkce |
 | `private.gesta` (`07`) | katalog gest (id, skupina) – musí odpovídat `gesta/gesta.json` (test `body-db`) | nikdy |
@@ -230,6 +235,7 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 | | `zebricek_body(obdobi, hra, limit)` – součet bodů celkem / tyden / den, shoda → dřívější zisk | anon, auth | `quiz-api.js` (→ `leaderboard.js`) | |
 | | `moje_body()` – dnes / týden / celkem, `dnes_hrano` | auth | `quiz-api.js` (→ `games-hub.js`) | |
 | | (na konci souboru přepočet bodů starých kol – opakovatelný) | | | |
+| `10_duely.sql` | `vytvor_duel(kolo_id)`, `detail_duelu(kod)`, `prijmi_duel(kod)` (kopie kola vyzyvatele, režim `duel`), `moje_duely()` | auth | `quiz-api.js` (→ `duel.js`, `duel-page.js`, `duels-profile.js`) | `duel_nastaveni` (bonusy 30/15, limit 3 denně, platnost 7 dní), `duel_stav`, `duel_zadani`, `bonus_duelu`, trigger `kola_duel_dohrano` → `dokonci_duel` |
 | `09_odpiskej.sql` | `zacni_odpiskej()` (10 situací bez řešení), `odevzdej_odpiskej(kolo_id, odpovedi)` (skóre, body, výsledky s vysvětlením) | anon, auth | `quiz-api.js` (→ `whistle-game.js`) | tabulky `public.odpiskej_situace`, `private.odpiskej_reseni` |
 | `08_rotace.sql` | `zacni_sprint()` (30 situací, limit), `odevzdej_sprint(kolo_id, odpovedi)` (skóre, body, řešení) | anon, auth | `quiz-api.js` (→ `rotation-sprint.js`) | `sprint_situace`, `sprint_reseni` |
 | `05_odznaky.sql` | `moje_odznaky()`, `nastav_odznaky(odznaky)` | auth | `account.js`, `stats.js` | `metriky_odznaku`, `udel_odznaky` |

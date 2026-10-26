@@ -8,7 +8,8 @@ import { plural } from './format.js';
 import { ruleUrl } from './categories.js';
 import { loadGestures } from './gesture-data.js';
 import { createGesturePlayer } from './referee-figure.js';
-import { startWhistle, submitWhistle } from './quiz-api.js';
+import { startWhistle, submitWhistle, acceptDuel } from './quiz-api.js';
+import { duelCodeFromUrl, renderChallenge, renderDuelResult } from './duel.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 import { createScore, celebrate } from './celebrate.js';
 import { pointsNote } from './points.js';
@@ -29,19 +30,22 @@ function showError(message) {
 }
 
 // ---------- Start ----------
-async function begin() {
+/** code = kód duelu (odpiskej.html?duel=…): stejné situace jako vyzyvatel. */
+async function begin(code = null) {
   $('whistle-error').hidden = true;
   $('whistle-start-button').disabled = true;
   try {
-    const { roundId, situations } = await startWhistle();
+    const { roundId, situations } = code
+      ? await acceptDuel(code).then(d => ({ roundId: d.kolo_id, situations: d.situace }))
+      : await startWhistle();
     if (!roundId) return showError('Hra zatím nemá žádné situace.');
-    state = { roundId, situations, index: 0, answers: {}, sequence: [] };
+    state = { roundId, duelCode: code, situations, index: 0, answers: {}, sequence: [] };
     showOnly($('whistle-run'), sections);
     renderOptions();
     showSituation();
   } catch (error) {
     console.error(error);
-    showError('Hru se nepodařilo spustit. Zkontroluj připojení k internetu a zkus to znovu.');
+    showError(code ? (error.message ?? 'Duel se nepodařilo spustit.') : 'Hru se nepodařilo spustit. Zkontroluj připojení k internetu a zkus to znovu.');
   } finally {
     $('whistle-start-button').disabled = false;
   }
@@ -117,11 +121,24 @@ async function finish() {
   const score = createScore(result.score, result.total);
   $('whistle-score').replaceChildren(score);
   $('whistle-result-text').textContent = `Správně ${plural(result.score, 'situace', 'situace', 'situací')} z ${result.total}.`;
-  $('whistle-points').replaceChildren(pointsNote(result, Boolean(profile)) ?? '');
+  $('whistle-points').replaceChildren((state.duelCode ? 'V duelu se body za odpovědi nepočítají – za výhru dostaneš bonus.' : pointsNote(result, Boolean(profile))) ?? '');
+  renderDuelBox(state);
   $('whistle-results').replaceChildren(...result.results.map(r => renderResultItem(textById.get(r.id), r)));
   showOnly($('whistle-result'), sections);
   $('whistle-result-heading').focus();
   celebrate(score);
+}
+
+/** Pod výsledkem: výsledek duelu, nebo „Vyzvat kamaráda“ (jen přihlášený). */
+function renderDuelBox(round) {
+  const box = $('duel-box');
+  box.hidden = !profile;
+  if (round.duelCode) {
+    renderDuelResult(box, round.duelCode);
+    history.replaceState(null, '', location.pathname);
+  } else if (profile) {
+    renderChallenge(box, round.roundId, 'odpiskej');
+  }
 }
 
 /** Jedna situace ve výsledku: tvoje gesta, správná gesta (u chyby i s animacemi), vysvětlení. */
@@ -141,10 +158,10 @@ function renderResultItem(situation, r) {
 }
 
 // ---------- Inicializace ----------
-$('whistle-start-button').addEventListener('click', begin);
+$('whistle-start-button').addEventListener('click', () => begin());
 $('whistle-done').addEventListener('click', submitSituation);
 $('whistle-undo').addEventListener('click', () => { state.sequence.pop(); renderSequence(); });
-$('whistle-again').addEventListener('click', () => showOnly($('whistle-start'), sections));
+$('whistle-again').addEventListener('click', () => { $('duel-box').hidden = true; showOnly($('whistle-start'), sections); });
 
 if (!isConfigured) {
   showError(NOT_CONFIGURED_MESSAGE);
@@ -155,6 +172,7 @@ if (!isConfigured) {
       profile = player;
       $('whistle-start-button').disabled = false;
       $('whistle-login').hidden = Boolean(profile);
+      if (duelCodeFromUrl() && profile) begin(duelCodeFromUrl());
     })
     .catch(error => {
       console.error(error);

@@ -238,3 +238,40 @@ export async function submitWhistle(roundId, answers) {
     })),
   };
 }
+
+// ---------- Duely (sql/10_duely.sql) ----------
+
+/** Vytvoří výzvu z vlastního odehraného kola. Vrací kód duelu. */
+export async function createDuel(roundId) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('vytvor_duel', { p_kolo_id: roundId });
+  if (error) throw error;
+  return data.kod;
+}
+
+/**
+ * Detail duelu: { kod, hra, stav: 'ceka'|'hraje'|'hotovo'|'vyprselo', vyzyvatel, souper,
+ *   je_vyzyvatel, je_souper, vyzyvatel_vysledek, souper_vysledek, vysledek, muj_bonus }
+ */
+export async function getDuel(code) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('detail_duelu', { p_kod: code });
+  if (error) throw error;
+  return data;
+}
+
+/** Přijme výzvu: { hra, kolo_id, …zadání ve tvaru zacni_* dané hry }. */
+export async function acceptDuel(code) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('prijmi_duel', { p_kod: code });
+  if (error) throw error;
+  return data;
+}
+
+/** Duely přihlášeného hráče: { aktivni: [...], hotove: [...] } (formát v sql/10_duely.sql). */
+export async function getMyDuels() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('moje_duely');
+  if (error) throw error;
+  return data;
+}

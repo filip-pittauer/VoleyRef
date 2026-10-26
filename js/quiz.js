@@ -10,6 +10,8 @@ import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolu
 import { renderPracticeTiles } from './quiz-practice.js';
 import { renderDailyCard, streakText, previousDay } from './daily-card.js';
 import { pointsNote } from './points.js';
+import { acceptDuel } from './quiz-api.js';
+import { duelCodeFromUrl, renderChallenge, renderDuelResult } from './duel.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -49,6 +51,7 @@ const resultSummary = document.getElementById('result-summary');
 const resultListHeading = document.getElementById('result-list-heading');
 const resultList = document.getElementById('result-list');
 const againButton = document.getElementById('again-button');
+const duelBox = document.getElementById('duel-box');
 
 // ---------- Stav ----------
 // Jeden objekt se vším, co se během kola mění (podobně jako ViewModel v C#).
@@ -73,6 +76,7 @@ async function renderPlayerInfo() {
   playerInfo?.replaceChildren(playerText());
   renderStartCards();
   startDailyFromLink();
+  startDuelFromLink();
 }
 
 /** Řádek o hráči: v Hrách jde o žebříček, v procvičování o statistiky a chyby. */
@@ -138,6 +142,22 @@ function startDailyFromLink() {
   // parametr pryč, aby obnovení stránky nespustilo výzvu znovu
   history.replaceState(null, '', location.pathname + location.hash);
   begin('denni');
+}
+
+/** Odkaz kviz.html?duel=kód (ze stránky duelu): přijme výzvu a rovnou hraje stejné otázky. */
+async function startDuelFromLink() {
+  const code = duelCodeFromUrl();
+  if (!code || !profile) return;
+  hideError();
+  try {
+    const { kolo_id: roundId, otazky: questions } = await acceptDuel(code);
+    state = { roundId, questions, mode: 'duel', duelCode: code, category: null, difficulty: null, index: 0, answers: {} };
+    showOnly(questionSection, sections);
+    renderQuestion();
+  } catch (error) {
+    console.error(error);
+    showError(error.message ?? 'Duel se nepodařilo spustit.');
+  }
 }
 
 // ---------- Start: opakování chyb ----------
@@ -287,6 +307,7 @@ async function handleAnswer(event) {
 function leaderboardNote(round, result) {
   if (round.mode === 'procvicovani') return 'Procvičování se do žebříčku nepočítá.';
   if (round.mode === 'chyby' && profile) return 'Opakování chyb se do žebříčku nepočítá.';
+  if (round.mode === 'duel') return 'V duelu se body za odpovědi nepočítají – za výhru dostaneš bonus.';
   return pointsNote(result, Boolean(profile));
 }
 
@@ -309,7 +330,7 @@ function renderResult(result) {
     score,
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
     // denní výzva: řešení by ostatním prozradilo dnešní odpovědi
-    result.solutionHidden ? el('p', {}, 'Správné odpovědi a vysvětlení uvidíš zítra.') : null,
+    result.solutionHidden ? el('p', {}, 'Správné odpovědi a vysvětlení uvidíš zítra.') : '',
     el('p', { class: 'small' }, leaderboardNote(round, result) ?? ''),
     extra,
     renderNewBadges(result.newBadges) ?? '');
@@ -320,6 +341,7 @@ function renderResult(result) {
   resultHeading.focus();
   celebrate(score);
   state = null;
+  renderDuelBox(round);
 
   // Doplňující informace se načtou dodatečně (další dotaz na server).
   if (round.mode === 'chyby') {
@@ -340,6 +362,19 @@ function renderResult(result) {
         ].filter(Boolean).join(' ');
       })
       .catch(error => console.error(error));
+  }
+}
+
+/** Pod výsledkem: výsledek duelu, nebo „Vyzvat kamaráda“ (jen běžné kolo přihlášeného). */
+function renderDuelBox(round) {
+  duelBox.hidden = true;
+  if (round.mode === 'duel') {
+    duelBox.hidden = false;
+    renderDuelResult(duelBox, round.duelCode);
+    history.replaceState(null, '', location.pathname);   // obnovení stránky už duel znovu nespustí
+  } else if (profile && round.mode === 'bezne' && round.roundId && !round.category && !round.difficulty) {
+    duelBox.hidden = false;
+    renderChallenge(duelBox, round.roundId, 'kviz');
   }
 }
 
@@ -389,6 +424,7 @@ dailySolutionButton?.addEventListener('click', showDailySolution);
 questionForm.addEventListener('submit', handleAnswer);
 againButton.addEventListener('click', () => {
   hideError();
+  duelBox.hidden = true;
   showOnly(startSection, sections);
   renderStartCards();   // počet chyb, stav denní výzvy i úspěšnost se po kole mohly změnit
 });

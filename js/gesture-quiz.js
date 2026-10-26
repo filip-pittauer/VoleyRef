@@ -6,7 +6,8 @@
 // (zacni_hru / odevzdej_hru); nepřihlášený hraje jen v prohlížeči.
 import { el, showOnly, replayAnimation, setupChoiceHint } from './dom.js';
 import { plural } from './format.js';
-import { startGame, submitGame } from './quiz-api.js';
+import { startGame, submitGame, acceptDuel } from './quiz-api.js';
+import { duelCodeFromUrl, renderChallenge, renderDuelResult } from './duel.js';
 import { getProfile, isConfigured } from './supabase.js';
 import { pointsNote } from './points.js';
 import { loadGestures, gestureDetails } from './gesture-data.js';
@@ -46,6 +47,7 @@ const hasChoice = setupChoiceHint(form, answerHint);
 const scoreText = document.getElementById('gesture-score');
 const resultText = document.getElementById('gesture-result-text');
 const pointsText = document.getElementById('gesture-points');
+const duelBox = document.getElementById('duel-box');
 const mistakesBox = document.getElementById('gesture-mistakes-box');
 const mistakesList = document.getElementById('gesture-mistakes');
 
@@ -102,15 +104,30 @@ async function serverRound(set) {
   }
 }
 
-async function begin() {
+/** Kolo z výzvy (gesta.html?duel=kód): stejná gesta jako vyzyvatel. */
+async function duelRound(code) {
+  const { kolo_id: roundId, polozky } = await acceptDuel(code);
+  return { roundId, duelCode: code, questions: polozky.map(id => data.gesta.find(g => g.id === id)).filter(Boolean) };
+}
+
+async function begin(code = null) {
   hideError();
   startButton.disabled = true;
   const set = setSelect.value || null;
-  const round = await serverRound(set);
+  let round;
+  try {
+    round = code ? await duelRound(code) : await serverRound(set);
+  } catch (error) {
+    console.error(error);
+    startButton.disabled = false;
+    showError(error.message ?? 'Duel se nepodařilo spustit.');
+    return;
+  }
   startButton.disabled = false;
   const pool = data.gesta.filter(g => !set || g.skupina === set);
   state = {
     roundId: round?.roundId ?? null,
+    duelCode: round?.duelCode ?? null,
     questions: round?.questions ?? shuffle(pool).slice(0, ROUND_SIZE),
     answers: {},    // { id gesta: id zvolené odpovědi } – pro server
     index: 0,
@@ -246,10 +263,22 @@ async function renderPoints(round) {
   }
   try {
     const result = await submitGame(round.roundId, round.answers);
-    pointsText.replaceChildren(pointsNote(result, true) ?? '');
+    pointsText.replaceChildren((round.duelCode ? 'V duelu se body za odpovědi nepočítají – za výhru dostaneš bonus.' : pointsNote(result, true)) ?? '');
+    renderDuelBox(round);
   } catch (error) {
     console.error(error);
     pointsText.textContent = 'Body se nepodařilo uložit (výpadek spojení?).';
+  }
+}
+
+/** Pod výsledkem: výsledek duelu, nebo „Vyzvat kamaráda“ (kolo ze serveru, přihlášený). */
+function renderDuelBox(round) {
+  duelBox.hidden = false;
+  if (round.duelCode) {
+    renderDuelResult(duelBox, round.duelCode);
+    history.replaceState(null, '', location.pathname);
+  } else {
+    renderChallenge(duelBox, round.roundId, GAME);
   }
 }
 
@@ -279,10 +308,10 @@ function hideError() {
 }
 
 // ---------- Inicializace ----------
-startButton.addEventListener('click', begin);
+startButton.addEventListener('click', () => begin());
 form.addEventListener('submit', handleAnswer);
 nextButton.addEventListener('click', next);
-document.getElementById('gesture-again').addEventListener('click', () => showOnly(startSection, sections));
+document.getElementById('gesture-again').addEventListener('click', () => { duelBox.hidden = true; showOnly(startSection, sections); });
 
 // gesta i hráč najednou; profil je jen kvůli bodům, jeho chyba hru nezastaví
 Promise.all([loadGestures(), isConfigured ? getProfile().catch(() => null) : null])
@@ -290,6 +319,8 @@ Promise.all([loadGestures(), isConfigured ? getProfile().catch(() => null) : nul
     data = loaded;
     profile = player;
     startButton.disabled = false;
+    // odkaz ze stránky duelu: rovnou hrát stejná gesta jako vyzyvatel
+    if (duelCodeFromUrl() && profile) begin(duelCodeFromUrl());
   })
   .catch(error => {
     console.error(error);

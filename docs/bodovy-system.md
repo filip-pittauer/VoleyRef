@@ -155,5 +155,10 @@ Odpískej to! (27. 10.): `sql/09_odpiskej.sql`, 10 bodů za situaci (celá
 posloupnost gest ve správném pořadí). Řešení tajná jako u kvízu
 (`private/odpiskej.json` → seed). Situace zatím text, animace později.
 
-Zbývá: bodovaný zápis, další minihry (Pravda/nepravda, Najdi chybu v zápisu…),
-duely.
+Duely (27. 10.): `sql/10_duely.sql`, jen přihlášení, výzva odkazem s kódem pod
+výsledkem kvízu, gest, Gesta naopak, Odpískej to! a Rotačního sprintu. Kolo
+soupeře (režim `duel`) nedává body za odpovědi; bonus za výsledek výhra 30 /
+remíza 15, nejvýš 3 bonusy denně (`private.duel_nastaveni`). Žebříček sčítá
+body z kol i bonusy (`private.zisky_bodu`). Tím je naplněná „kniha bodů“.
+
+Zbývá: bodovaný zápis, další minihry (Pravda/nepravda, Najdi chybu v zápisu…).

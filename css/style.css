@@ -4229,3 +4229,91 @@ main.hub h1 {
   opacity: 0.4;
   cursor: default;
 }
+
+/* ---------- Duely (js/duel.js, duel.html, Profil → Duely) ---------- */
+.duel-box h3 {
+  margin: 0;
+}
+
+.duel-share__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.duel-link {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.duel-score {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.duel-verdict {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.duel-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.duel-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.duel-item.stack {
+  display: grid;
+}
+
+.duel-item p {
+  margin: 0;
+}
+
+.duel-item__result {
+  min-width: 4.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.duel-item--vyhra .duel-item__result {
+  color: var(--color-success);
+}
+
+.duel-item--prohra .duel-item__result {
+  color: var(--color-accent);
+}
+
+.duel-item__score {
+  margin-left: auto;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

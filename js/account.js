@@ -3,6 +3,7 @@
 import { el, showOnly } from './dom.js';
 import { BADGE_GROUPS } from './badges.js';
 import { loadStats } from './stats.js';
+import { loadDuels } from './duels-profile.js';
 import {
   supabase, isConfigured, NOT_CONFIGURED_MESSAGE,
   getProfile, pageUrl, errorMessage,
@@ -117,6 +118,7 @@ async function renderLoggedIn(user) {
   // odkaz ucet.html#statistiky / #nastaveni – sekce byla skrytá, prohlížeč na ni nedoskočil
   if (['#statistiky', '#nastaveni'].includes(location.hash)) $(location.hash.slice(1)).scrollIntoView();
   loadStats();
+  loadDuels();
   renderBadgePicker().catch(error => console.error(error));
 }
 

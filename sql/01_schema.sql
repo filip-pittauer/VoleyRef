@@ -91,7 +91,8 @@ alter table public.kola add column if not exists
 alter table public.kola drop constraint if exists kola_rezim_check;
 alter table public.kola add constraint kola_rezim_check
   check (rezim in ('bezne', 'chyby', 'denni', 'zkouska',      -- + zkouška (test na čas, 02_funkce.sql)
-                   'procvicovani'));                          -- + procvičování ve Výuce (kategorie/obtížnost, bez žebříčku)
+                   'procvicovani',                            -- + procvičování ve Výuce (kategorie/obtížnost, bez žebříčku)
+                   'duel'));                                  -- + kolo soupeře v duelu (10_duely.sql), bez bodů za odpovědi
 
 -- Dřívější „běžná“ kola s vybranou kategorií nebo obtížností jsou podle
 -- dnešního rozdělení procvičování (do žebříčku se nepočítala ani dřív).
@@ -158,6 +159,33 @@ on conflict (hra, rezim) do update
   set body_za_spravnou = excluded.body_za_spravnou, bonus_rychlost = excluded.bonus_rychlost,
       casovy_limit_s = excluded.casovy_limit_s;
 
+-- ---------------------------------------------------------------------
+-- Duely (10_duely.sql): hráč po kole vyzve kamaráda odkazem s kódem,
+-- kamarád hraje stejné otázky/situace. Tabulka je tady (ne v 10), protože
+-- ji čtou i žebříčky v 07_hry.sql. Z webu jen přes funkce.
+--   vysledek: 'vyzyvatel' | 'souper' | 'remiza' (null = ještě se nehrálo)
+--   bonus_*:  body do žebříčku za výsledek (výhra / remíza), null = žádné
+-- ---------------------------------------------------------------------
+create table if not exists public.duely (
+  id               uuid primary key default gen_random_uuid(),
+  kod              text not null unique,
+  hra              text not null,
+  vyzyvatel_id     uuid not null references auth.users (id) on delete cascade,
+  kolo_vyzyvatele  uuid not null references public.kola (id) on delete cascade,
+  souper_id        uuid references auth.users (id) on delete cascade,
+  kolo_soupere     uuid references public.kola (id) on delete set null,
+  vytvoreno        timestamptz not null default now(),
+  prijato          timestamptz,
+  dohrano          timestamptz,
+  vysledek         text check (vysledek in ('vyzyvatel', 'souper', 'remiza')),
+  bonus_vyzyvatel  integer,
+  bonus_souper     integer
+);
+alter table public.duely enable row level security;   -- žádné politiky: jen přes funkce
+
+create index if not exists duely_vyzyvatel_idx on public.duely (vyzyvatel_id, vytvoreno desc);
+create index if not exists duely_souper_idx on public.duely (souper_id, vytvoreno desc);
+
 -- Denní výzva: přihlášený hráč má na každý den jen jedno kolo
 -- (jedinečný index to hlídá i při dvou současných požadavcích).
 create unique index if not exists kola_denni_jednou_idx
@@ -211,6 +239,8 @@ revoke all on public.profily         from anon, authenticated;
 revoke all on public.kola            from anon, authenticated;
 revoke all on public.denni_vyzvy     from anon, authenticated;   -- jen přes funkce
 revoke all on public.odznaky_hracu   from anon, authenticated;   -- jen přes funkce
+revoke all on public.duely           from anon, authenticated;   -- jen přes funkce (10_duely.sql)
+revoke all on private.hodnoty_her    from anon, authenticated;
 
 -- Otázky: žádný přímý přístup. Hráč je dostane jen přes zacni_kolo().
 

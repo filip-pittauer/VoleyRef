@@ -156,7 +156,29 @@ $$;
 --           český čas, nový den začíná o půlnoci v ČR
 --   hra:    null = všechny hry, jinak jen jedna ('kviz' vč. denní výzvy, 'gesta'…)
 -- Při shodě bodů je výš ten, kdo součtu dosáhl dřív (dřívější poslední zisk).
+-- Body = body z kol + bonusy z duelů (private.zisky_bodu); kol = jen kola.
 -- ---------------------------------------------------------------------
+
+-- zisky_bodu() → všechny zisky bodů (hráč, hra, body, kdy, zdroj 'kolo'/'duel')
+-- Jedno místo pro žebříček i moje_body: kola s body a bonusy z duelů.
+create or replace function private.zisky_bodu()
+returns table (uzivatel_id uuid, hra text, body integer, kdy timestamptz, zdroj text)
+language sql
+stable
+set search_path = ''
+as $$
+  select k.uzivatel_id, k.hra, k.body, k.konec, 'kolo'
+  from public.kola k where k.body > 0 and k.uzivatel_id is not null
+  union all
+  select d.vyzyvatel_id, d.hra, d.bonus_vyzyvatel, d.dohrano, 'duel'
+  from public.duely d where d.bonus_vyzyvatel > 0
+  union all
+  select d.souper_id, d.hra, d.bonus_souper, d.dohrano, 'duel'
+  from public.duely d where d.bonus_souper > 0;
+$$;
+
+revoke all on function private.zisky_bodu() from public, anon, authenticated;
+
 drop function if exists public.zebricek_body(text, text, integer);
 
 create or replace function public.zebricek_body(
@@ -178,22 +200,20 @@ security definer
 set search_path = ''
 as $$
   with soucty as (
-    select k.uzivatel_id,
-           sum(k.body) as body,
-           count(*) as kol,
-           max(k.konec) as dosazeno
-    from public.kola k
-    where k.body > 0
-      and k.uzivatel_id is not null
-      and (p_hra is null or k.hra = p_hra)
+    select z.uzivatel_id,
+           sum(z.body) as body,
+           count(*) filter (where z.zdroj = 'kolo') as kol,
+           max(z.kdy) as dosazeno
+    from private.zisky_bodu() z
+    where (p_hra is null or z.hra = p_hra)
       and case p_obdobi
-            when 'den'   then (k.konec at time zone 'Europe/Prague')::date = private.dnes()
+            when 'den'   then (z.kdy at time zone 'Europe/Prague')::date = private.dnes()
             -- isodow: pondělí = 1 → odečíst 0 dní, neděle = 7 → 6 dní
-            when 'tyden' then (k.konec at time zone 'Europe/Prague')::date
+            when 'tyden' then (z.kdy at time zone 'Europe/Prague')::date
                               >= private.dnes() - (extract(isodow from private.dnes())::integer - 1)
             else true
           end
-    group by k.uzivatel_id
+    group by z.uzivatel_id
   )
   select
     rank() over (order by s.body desc, s.dosazeno asc),
@@ -221,17 +241,19 @@ security definer
 set search_path = ''
 as $$
   select jsonb_build_object(
-    'celkem', coalesce(sum(k.body), 0),
-    'tyden',  coalesce(sum(k.body) filter (
-                where (k.konec at time zone 'Europe/Prague')::date
+    'celkem', coalesce(sum(z.body), 0),
+    'tyden',  coalesce(sum(z.body) filter (
+                where (z.kdy at time zone 'Europe/Prague')::date
                       >= private.dnes() - (extract(isodow from private.dnes())::integer - 1)), 0),
-    'dnes',   coalesce(sum(k.body) filter (
-                where (k.konec at time zone 'Europe/Prague')::date = private.dnes()), 0),
-    'dnes_hrano', coalesce(jsonb_agg(distinct k.hra || '/' || k.rezim) filter (
-                where (k.konec at time zone 'Europe/Prague')::date = private.dnes()
-                  and k.body_duvod is null), '[]'::jsonb))
-  from public.kola k
-  where k.uzivatel_id = auth.uid() and k.body is not null;
+    'dnes',   coalesce(sum(z.body) filter (
+                where (z.kdy at time zone 'Europe/Prague')::date = private.dnes()), 0),
+    'dnes_hrano', (
+      select coalesce(jsonb_agg(distinct k.hra || '/' || k.rezim), '[]'::jsonb)
+      from public.kola k
+      where k.uzivatel_id = auth.uid() and k.body is not null and k.body_duvod is null
+        and (k.konec at time zone 'Europe/Prague')::date = private.dnes()))
+  from private.zisky_bodu() z
+  where z.uzivatel_id = auth.uid();
 $$;
 
 -- ---------------------------------------------------------------------
