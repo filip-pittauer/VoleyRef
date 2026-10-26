@@ -41,6 +41,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | `vyuka.html` | rozcestník **Výuka** (bez bodů): pravidla, atlas gest, slovníček, procvičování, trenažéry postavení a zápisu, zkouška | `pwa.js` |
 | `kviz.html` | kvíz v Hrách: denní výzva (`#denni`; `?hrat=denni` ji rovnou spustí), běžné kolo (náhodný mix, do žebříčku); v navigaci pod Hry | `pwa.js`, `quiz.js` |
 | `kurz.html` | **Kurz po lekcích** ve Výuce: mapa 11 lekcí z `kurz/lekce.json` (přečti si + test 5 otázek, splnění od 4), postupné odemykání; kolo v režimu `lekce` (bez bodů); postup přihlášeného z `postup_kurzu`, anonym jen do zavření stránky | `pwa.js`, `quiz.js` (→ `course.js`) |
+| `zmeny.html` | **Co je nového v pravidlech 2025–2028** ve Výuce: karty změn (dřív / teď / pro rozhodčího) z `zmeny/zmeny.json`, filtr „jen změny, které mění hru“, pokusná pravidla FIVB; `#id` změny v adrese | `pwa.js`, `rule-changes.js` |
 | `role.html` | **Trénink podle role** ve Výuce: 4 dlaždice (zapisovatel, čárový, 2. a 1. rozhodčí) z `role/role.json`, detail role (úkoly, co si přečíst, trenažéry, kategorie do Procvičování); vybraná role v adrese `#druhy` | `pwa.js`, `roles.js` |
 | `procvicovani.html` | **Procvičování** ve Výuce: dlaždice kategorií (počet otázek, úspěšnost), obtížnost, opakování chyb (`#opakovani`), `?kategorie=…` zvýrazní dlaždici; kolo v režimu `procvicovani` (bez žebříčku) | `pwa.js`, `quiz.js` (→ `quiz-practice.js`) |
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
@@ -87,6 +88,7 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
 | `course.js` | `dom`, `categories` | `loadLessons`, `lessonStates`, `renderCourse`, `lessonResultNote` – kurz po lekcích: mapa lekcí (hotová / otevřená / zamčená), poznámka k výsledku testu |
+| `rule-changes.js` | `dom` | stránka `zmeny.html` (bez exportů): karty změn, filtr, pokusná pravidla |
 | `roles.js` | `dom`, `categories` | stránka `role.html` (bez exportů): výběr role, detail, `#id` v adrese |
 | `quiz-practice.js` | `dom`, `categories`, `format` | `renderPracticeTiles` – dlaždice Procvičování (mix + 11 kategorií, počty podle obtížnosti, pruh úspěšnosti) |
 | `exam.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `supabase` | stránka zkoušky: odpočet (samo-odevzdání), volný pohyb mezi otázkami, mřížka přehledu, `<dialog>` potvrzení, výsledek po kategoriích |
@@ -171,6 +173,7 @@ scoresheet-model.js ─▶ scoresheet-tasks.js (krátká verze) ─┐
 | Soubor | Co obsahuje | Formát |
 |---|---|---|
 | `slovnicek/pojmy.json` | slovníček pojmů (id, pojem, tvary pro vyhledání v textu, definice, pravidlo); zdroj sekce Definice pojmů (`@slovnicek` v generátoru) i bublin | popis v souboru |
+| `zmeny/zmeny.json` | změny pravidel 2025–2028: `vaha` (zasadni / upresneni), `pravidla`, `driv`, `ted`, `rozhodci`, `odkazy` (kotvy pravidel); `pokusy` = pokusná pravidla FIVB | popis v souboru |
 | `role/role.json` | role pro trénink podle role: název, kde stojí, úkoly, `cist` (kotvy pravidel), `trenink` (odkazy, i s `?pohled=ref2` / `?sada=carovi`), `kategorie` | popis v souboru |
 | `kurz/lekce.json` | lekce kurzu v pořadí: kategorie (test + kotva shrnutí), úvod, odkazy do pravidel (`cist`), související hry (`navic`) | popis v souboru |
 | `gesta/gesta.json` | 32 gest (26 rozhodčích vč. 6a/6b a 25a/25b + 5 čárových), pózy, skupiny | `gesta/README.md` |

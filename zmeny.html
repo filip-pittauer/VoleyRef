@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="description" content="Co je nového v pravidlech volejbalu 2025–2028: postavení podávajícího družstva, clona, míč mimo anténky a další změny.">
+  <title>Co je nového v pravidlech – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <!-- type="module": soubor je ES modul (import/export) a spustí se až po načtení HTML -->
+  <script type="module" src="js/rule-changes.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="hry.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#hry"></use></svg><span>Hry</span></a></li>
+          <li><a href="vyuka.html" aria-current="true"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#vyuka"></use></svg><span>Výuka</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <h1>Co je nového v pravidlech</h1>
+    <p>Pravidla FIVB 2025–2028 platí pro soutěže, které začaly po 1. lednu 2025. Tady je přehled, co se změnilo proti pravidlům 2021–2024 a co to znamená pro rozhodčího.</p>
+
+    <p id="changes-error" class="alert alert--error" role="alert" hidden></p>
+    <div class="field changes-filter">
+      <label for="changes-filter">Zobrazit</label>
+      <select id="changes-filter">
+        <option value="">Všechny změny</option>
+        <option value="zasadni">Jen změny, které mění hru</option>
+      </select>
+    </div>
+    <ol id="changes-list" class="changes" aria-live="polite"></ol>
+
+    <section class="card stack">
+      <h2>Zkouší se jen na akcích FIVB</h2>
+      <p class="small muted">Pokusná pravidla nejsou součástí pravidel 2025–2028 a v našich soutěžích neplatí.</p>
+      <ul id="changes-trials" class="role-duties"></ul>
+    </section>
+
+    <p class="small muted">Zdroj: oficiální srovnání FIVB „Rules modification 2025–2028“ a pokyny pro rozhodčí 2025. Texty jsou vlastními slovy – závazné je znění pravidel ČVS a FIVB.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

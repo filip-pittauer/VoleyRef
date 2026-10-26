@@ -1,0 +1,100 @@
+{
+  "_popis": "Co je nového v pravidlech 2025–2028 (zmeny.html). Zdroj: srovnání FIVB „Rules modification 2025–2028“ (verze 6. 2. 2025) a pokyny pro rozhodčí 2025. Texty vlastními slovy. vaha: 'zasadni' = mění hru, 'upresneni' = jiné znění, hra stejná. odkazy = kotvy v pravidla.html.",
+  "zmeny": [
+    {
+      "id": "postaveni-podavajicich",
+      "vaha": "zasadni",
+      "nazev": "Podávající družstvo už nemůže udělat chybu v postavení",
+      "pravidla": "7.4, 7.4.4",
+      "driv": "V okamžiku úderu podávajícího musela obě družstva stát ve svém poli ve správném pořadí postupu. Chybu v postavení mohlo udělat podávající i přijímající družstvo.",
+      "ted": "Pořadí postupu musí v okamžiku podání dodržet jen přijímající družstvo. Hráči podávajícího družstva smějí stát kdekoli ve svém poli – třeba se už předem rozestavit do obrany.",
+      "rozhodci": "Chybu v postavení podávajícího družstva už nepískáš. Pořád ale platí, že všichni (kromě podávajícího) musí stát ve svém poli a že podávat se musí v pořadí podle sestavy – podání mimo pořadí je dál chyba v pořadí postupu, kterou hlídá zapisovatel.",
+      "odkazy": [
+        { "kotva": "p-7-4", "text": "Pravidlo 7.4" },
+        { "kotva": "diagram-4", "text": "Diagram 4: postavení" }
+      ]
+    },
+    {
+      "id": "ruce-nad-hlavou",
+      "vaha": "zasadni",
+      "nazev": "Clona: při podání nesmí nikdo zvednout ruce nad hlavu",
+      "pravidla": "12.5.3",
+      "driv": "Clona byla zakázaná, ale posuzovala se podle toho, jestli hráči mávají, poskakují nebo stojí ve skupině a přijímající nevidí podání ani let míče.",
+      "ted": "Přibylo jasné pravidlo: žádný hráč podávajícího družstva nesmí během podání zvednout ruce nad hlavu, dokud míč nepřeletí síť. Hlavu si chránit smí, ruce nad ni ale nezvedne.",
+      "rozhodci": "První rozhodčí smí družstvo, které podle něj cloní úmyslně, upozornit přes kapitána ve hře (před podáním hvizdem, aby se hráči rozestoupili). Když to neudělají, píská clonu hned po podání, nečeká, až míč přeletí skupinu.",
+      "odkazy": [
+        { "kotva": "p-12-5-3", "text": "Pravidlo 12.5.3" },
+        { "kotva": "diagram-6", "text": "Diagram 6: kolektivní clona" }
+      ]
+    },
+    {
+      "id": "mic-mimo-anteny",
+      "vaha": "zasadni",
+      "nazev": "Míč mimo anténky smí družstvo vracet jen po prvním odbití",
+      "pravidla": "10.1.2",
+      "driv": "Míč, který přeletěl vnějším prostorem (mimo anténky) do volné zóny soupeře, smělo družstvo vrátit zpět po kterémkoli odbití, pokud zbývala odbití.",
+      "ted": "Vracet se smí jen míč z prvního odbití družstva (typicky příjem nebo obrana). Míč, který tam poslalo druhé nebo třetí odbití, je v autu hned, jak přejde rovinu sítě. Vracený míč musí jít zpět vnějším prostorem na stejné straně – jinak je taky v autu.",
+      "rozhodci": "Po druhém nebo třetím odbití mimo anténky pískáš aut okamžitě, nečekáš na pokus o vrácení. Při vracení míče z prvního odbití se hráč nesmí dotknout pole soupeře; nově je výslovně povolená jen výjimka podle 11.2.2.1 (část chodidla zůstane na střední čáře nebo nad ní).",
+      "odkazy": [
+        { "kotva": "p-10-1-2", "text": "Pravidlo 10.1.2" },
+        { "kotva": "diagram-5", "text": "Diagram 5: přelet míče" }
+      ]
+    },
+    {
+      "id": "druhe-odbiti-anteny",
+      "vaha": "upresneni",
+      "nazev": "Rozhodčí a čároví hlídají mimo anténky i druhé odbití",
+      "pravidla": "23.3.2.3 i), 24.3.2.8, 29.2.1.3",
+      "driv": "Popis povinností zmiňoval jen podaný míč a třetí odbití, které přeletí nad anténkou nebo mimo ni.",
+      "ted": "Výslovně je tam i druhé odbití – souvisí to s novým pravidlem 10.1.2 o míči mimo anténky.",
+      "rozhodci": "Oba rozhodčí na své straně i čároví ukazují také druhé odbití, které přejde síť nad anténkou nebo mimo prostor přeletu.",
+      "odkazy": [
+        { "kotva": "p-23-3-2-3", "text": "Pravidlo 23.3.2.3" },
+        { "kotva": "pravidlo-29", "text": "Pravidlo 29 Čároví rozhodčí" }
+      ]
+    },
+    {
+      "id": "prodlouzeny-kontakt",
+      "vaha": "upresneni",
+      "nazev": "Prodloužený kontakt nad sítí může skončit nad polem soupeře",
+      "pravidla": "9.1.2.3",
+      "driv": "Když současný dotek dvou soupeřů nad sítí přešel v delší kontakt s míčem, hrálo se dál.",
+      "ted": "Doplněno: hraje se dál, i když kontakt skončí až nad polem soupeře.",
+      "rozhodci": "Souboj dvou hráčů nad sítí, který se „dotlačí“ na stranu soupeře, není chyba – nepískáš.",
+      "odkazy": [
+        { "kotva": "p-9-1-2-3", "text": "Pravidlo 9.1.2.3" }
+      ]
+    },
+    {
+      "id": "ruka-pres-sit",
+      "vaha": "upresneni",
+      "nazev": "Ruka přes síť „po“ útočném úderu, ne „během“",
+      "pravidla": "11.1.2",
+      "driv": "Hráč smí přenést ruku přes síť během útočného úderu, pokud se míče poprvé dotkl ve svém prostoru.",
+      "ted": "Znění je „po útočném úderu“. Rozhodčí to tak posuzovali už dřív, hra se nemění.",
+      "rozhodci": "Dotek míče musí začít na straně útočníka; dokončení švihu nad polem soupeře je v pořádku, pokud míč nechytil ani nehodil.",
+      "odkazy": [
+        { "kotva": "p-11-1-2", "text": "Pravidlo 11.1.2" }
+      ]
+    },
+    {
+      "id": "nove-libero",
+      "vaha": "upresneni",
+      "nazev": "Nové libero může určit i asistent trenéra",
+      "pravidla": "19.4.2.1, 19.4.2.3",
+      "driv": "Nové libero určoval trenér, a když trenér chyběl, kapitán ve hře. Ten to také oznamoval druhému rozhodčímu.",
+      "ted": "Když trenér chybí, může nové libero určit a druhému rozhodčímu oznámit i asistent trenéra (jinak kapitán ve hře).",
+      "rozhodci": "Při chybějícím trenérovi přijmeš nové určení libera od asistenta trenéra. Zapisovatel číslo nového libera zapíše do poznámek a do kontrolního listu libera.",
+      "odkazy": [
+        { "kotva": "p-19-4-2-1", "text": "Pravidlo 19.4.2" },
+        { "kotva": "libero", "text": "Ve zkratce: libero" }
+      ]
+    }
+  ],
+  "pokusy": [
+    {
+      "nazev": "Postavení přijímajícího družstva už při nadhozu",
+      "text": "Na akcích FIVB se v roce 2025 zkoušelo, že se postavení přijímajícího družstva posuzuje v okamžiku nadhozu podávajícího, ne až při úderu. V našich soutěžích to neplatí – rozhoduje okamžik úderu (7.5.1)."
+    }
+  ]
+}
