@@ -97,14 +97,27 @@ Body dostávají jen přihlášení hráči (stejně jako dnes žebříček).
 3. Kvíz gest přes server (body za gesta), záložka Gesta v žebříčku.
 4. Každá další minihra přijde rovnou s vlastní hodnotou bodů a záložkou.
 
-## K rozhodnutí
+## Rozhodnuto (26. 10. 2026)
 
-1. Denní strop: ano/ne, kolik kol (návrh 5).
-2. Kvíz podle kategorií a opakování chyb bez bodů (návrh ano)?
-3. Zkouška: bez bodů, jen odznak (návrh), nebo body?
-4. Týdenní žebříček: ano/ne.
-5. Přepočítat stará kola kvízu (návrh ano).
+1. **Denní strop = 1 bodované kolo každé hry za den.** První kolo kvízu dá
+   body, druhé už ne. První kolo postavení dá body, druhé ne atd. Počet je
+   jedna proměnná na serveru (funkce `private.denni_limit_kol()`, stejně
+   jako `zkouska_limit()`), aby šel změnit jedním přepsáním.
+2. Kvíz podle kategorií a opakování chyb **bez bodů** (Výuka).
+3. Zkouška (celá simulace 30 otázek / 30 min) **jen odznak**, bez bodů.
+4. **Týdenní žebříček ano** (od pondělí), aby to dávalo smysl i pro nové
+   hráče.
+5. Stará kola kvízu **přepočítat** (i se stropem 1 kolo za den).
+6. **Denní výzva nemá vlastní žebříček.** Dává 2× víc bodů za správnou než
+   ostatní hry (20 místo 10) a odměňuje i rychlost. Návrh bonusu: až +50
+   bodů, plný do 30 s celého kola, pak lineárně klesá na 0 ve 2 min,
+   a násobí se podílem správných odpovědí, aby se nevyplatilo rychle
+   tipovat. Server zná jen čas celého kola (začátek a odevzdání), ne čas
+   jednotlivých otázek. Příklad: 4/5 za 45 s = 80 + 50 × (1 − 15/90) × 4/5
+   = 80 + 33 = 113 bodů. Max 150.
 
-## Rozhodnuto
+## Otevřené: ověřování postavení a zápisu na serveru
 
-(zatím nic)
+Vysvětlení možností je v chatu ze session 26. 10. (A = přepsat do SQL,
+B = Edge Function se sdíleným JS, C = věřit prohlížeči s pojistkami).
+Rozhodnutí sem.

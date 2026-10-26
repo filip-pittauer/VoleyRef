@@ -16,3 +16,28 @@
 
 - **Neomezená kola pro anonymy:** nepřihlášený hráč může hrát běžná kola bez omezení a skriptem by z výsledků postupně zjistil správné odpovědi (i k otázkám dnešní denní výzvy). Řešit omezením podle IP – až na vlastním backendu (Postgres v Supabase IP adresu klienta spolehlivě nezná).
 - **Neviditelné znaky v přezdívkách:** přezdívka může obsahovat neviditelné znaky (např. mezeru nulové šířky), takže jde v žebříčku napodobit cizí přezdívku. Řešit kontrolou povolených znaků v `profily_prezdivka_check` (sql/01) a v `private.zalozit_profil`.
+
+## Náklady a zneužití (zkontrolovat před spuštěním)
+
+Stav 26. 10. 2026: organizace Supabase `VolleyRef` je na tarifu **Free** bez
+platební karty → účet za překročení nemůže přijít. Při vyčerpání kvóty
+Supabase služby omezí (web přestane fungovat do dalšího měsíce), nic
+neúčtuje.
+
+- **Při přechodu na Pro** (kvůli zálohám, výkonu…): nechat zapnutý
+  **Spend Cap** (výchozí). S ním se nad rámec tarifu neúčtuje, služby se jen
+  omezí. Vypnout ho jen vědomě.
+- **Edge Functions** (bodování postavení a zápisu): Free = 500 000 volání za
+  měsíc. Pojistky: volat jen přihlášení (kontrola JWT ve funkci), limit kol
+  za den na hráče už dává strop 1 bodovaného kola, nebodovaná kola funkci
+  nevolají. Sledovat využití v dashboardu (Usage).
+- **AI „Zeptej se pravidel“** (Claude API, platí se za tokeny):
+  - v Anthropic Console nastavit **měsíční limit útraty** (spend limit) a
+    upozornění, vlastní API klíč jen pro tento web,
+  - klíč jen v tajemstvích Edge Function, nikdy ve frontendu,
+  - jen pro přihlášené, limit dotazů na hráče za den (tabulka + kontrola
+    ve funkci), krátké `max_tokens`, omezená délka dotazu,
+  - systémový prompt omezený na pravidla volejbalu, aby funkce nešla
+    používat jako obecný chatbot zdarma.
+- **Kvóty Free** hlídat: velikost DB 500 MB (anonymní kola, viz
+  „Neomezená kola pro anonymy“ níže), přenos dat, počet uživatelů Auth.
