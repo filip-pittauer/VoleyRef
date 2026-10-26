@@ -1,13 +1,14 @@
 // Ovládání stránky kvízu: start → otázky → výsledek.
 import { el, showOnly, replayAnimation, setupChoiceHint } from './dom.js';
 import { DIFFICULTIES, categoryName, difficultyName } from './categories.js';
-import { formatDuration, plural, secondsUntilNextDay, formatCountdown } from './format.js';
+import { formatDuration, plural } from './format.js';
 import { renderMedia } from './media.js';
 import { createScore, celebrate } from './celebrate.js';
 import { renderResultItem, renderNewBadges } from './quiz-result.js';
 import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolution,
   getCategoryOverview, getCategoryStats } from './quiz-api.js';
 import { renderPracticeTiles } from './quiz-practice.js';
+import { renderDailyCard, streakText, previousDay } from './daily-card.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -70,6 +71,7 @@ async function renderPlayerInfo() {
   }
   playerInfo?.replaceChildren(playerText());
   renderStartCards();
+  startDailyFromLink();
 }
 
 /** Řádek o hráči: v Hrách jde o žebříček, v procvičování o statistiky a chyby. */
@@ -120,77 +122,21 @@ function fillDifficulty() {
 }
 
 // ---------- Start: denní výzva ----------
-function streakText(serie) {
-  if (!serie || serie.aktualni === 0) return null;
-  return `🔥 Série: ${plural(serie.aktualni, 'den', 'dny', 'dní')} v řadě`;
-}
-
-let countdownTimer = null;
-
 // Dnešní datum podle serveru ('RRRR-MM-DD', český čas) – z něj se počítá „včera“.
 let dailyDay = null;
 
-/** Den před datem 'RRRR-MM-DD'. Počítá se v UTC, aby výsledek neposunul letní čas. */
-function previousDay(isoDate) {
-  const date = new Date(`${isoDate}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() - 1);
-  return date.toISOString().slice(0, 10);
-}
-
-/** Odpočet do nové denní výzvy (o půlnoci českého času), obnovuje se každých 20 s. */
-function renderCountdown() {
-  const line = el('span', { class: 'countdown' });
-  const update = () => {
-    const seconds = secondsUntilNextDay();
-    line.textContent = `Další výzva za ${formatCountdown(seconds)}.`;
-    if (seconds < 30) {
-      clearInterval(countdownTimer);
-      setTimeout(renderDaily, seconds * 1000 + 2000);   // po půlnoci načíst novou výzvu
-    }
-  };
-  clearInterval(countdownTimer);
-  countdownTimer = setInterval(update, 20000);
-  update();
-  return line;
-}
-
-/** Karta denní výzvy: stav (hráno / nehráno), počet hráčů, odkaz na včerejší řešení. */
+/** Karta denní výzvy (sdílená s úvodem a Hrami, viz daily-card.js). */
 async function renderDaily() {
-  let status;
-  try {
-    status = await getDailyStatus();
-  } catch (error) {
-    console.error(error);
-    dailyText.textContent = 'Denní výzvu se nepodařilo načíst.';
-    dailyButton.hidden = true;
-    dailySolutionButton.hidden = true;
-    return;
-  }
+  const status = await renderDailyCard({ text: dailyText, button: dailyButton, solutionButton: dailySolutionButton, profile });
+  if (status) dailyDay = status.den;
+}
 
-  dailyDay = status.den;
-  const players = `V dnešním žebříčku: ${plural(status.hracu, 'hráč', 'hráči', 'hráčů')}.`;
-  const lines = [];
-  dailyButton.hidden = false;
-  dailyButton.textContent = 'Hrát denní výzvu';
-  dailySolutionButton.hidden = !(profile && status.vcera);
-
-  if (!profile) {
-    // Server denní výzvu anonymovi nespustí (mohl by ji hrát dokola a zjistit řešení).
-    dailyButton.hidden = true;
-    lines.push(el('span', {}, 'Denní výzva je jen pro přihlášené. ', el('a', { href: 'ucet.html' }, 'Přihlásit se')), players);
-  } else if (status.stav === 'nehrano') {
-    lines.push(streakText(status.serie) ? `${streakText(status.serie)} – nepřeruš ji!` : 'Dnes jsi ještě nehrál.', players);
-  } else if (status.stav === 'rozehrano') {
-    lines.push('Výzvu máš rozehranou. Čas běží od prvního otevření.');
-    dailyButton.textContent = 'Pokračovat';
-  } else {
-    dailyButton.hidden = true;
-    lines.push(`Dnes: ${status.skore}/${status.pocet} za ${formatDuration(status.trvani_s)}`
-      + (status.poradi ? ` · ${status.poradi}. místo z ${status.hracu}.` : ' · do žebříčku se nezapočítalo (moc rychlé).'));
-    if (streakText(status.serie)) lines.push(streakText(status.serie));
-    lines.push(renderCountdown());
-  }
-  dailyText.replaceChildren(...lines.filter(Boolean).flatMap((line, i) => (i ? [el('br'), line] : [line])));
+/** Odkaz kviz.html?hrat=denni (z úvodu a Her) rovnou spustí denní výzvu. */
+function startDailyFromLink() {
+  if (new URLSearchParams(location.search).get('hrat') !== 'denni' || !profile) return;
+  // parametr pryč, aby obnovení stránky nespustilo výzvu znovu
+  history.replaceState(null, '', location.pathname + location.hash);
+  begin('denni');
 }
 
 // ---------- Start: opakování chyb ----------

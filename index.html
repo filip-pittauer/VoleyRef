@@ -15,6 +15,7 @@
   <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
   <script type="module" src="js/pwa.js"></script>
+  <script type="module" src="js/daily-teaser.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -57,6 +58,16 @@
     </section>
 
     <div class="home__inner stack">
+      <!-- Denní výzva (js/daily-teaser.js); hraje se v kvízu přes kviz.html?hrat=denni -->
+      <section id="denni" class="card stack daily-card" data-hide-when-played hidden aria-labelledby="denni-nadpis">
+        <h2 id="denni-nadpis">Denní výzva</h2>
+        <p>Dnešních 5 otázek je pro všechny hráče stejných. Jeden pokus denně, řešení uvidíš zítra.</p>
+        <p id="daily-text" class="small" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
+        <div class="actions">
+          <a id="daily-button" class="button" href="kviz.html?hrat=denni" hidden>Hrát denní výzvu</a>
+          <a href="zebricek.html#denni">Denní žebříček</a>
+        </div>
+      </section>
       <h2>Trénink</h2>
       <div class="news-list">
         <a class="news" href="hry.html">

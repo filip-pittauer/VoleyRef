@@ -1967,7 +1967,7 @@ progress::-moz-progress-bar {
   box-shadow: inset 0 -3px 0 var(--color-accent);
 }
 
-/* ---------- Denní výzva (karta v kvízu) ---------- */
+/* ---------- Denní výzva (karta v kvízu, na úvodu a v Hrách) ---------- */
 /* tmavě modrý banner s červeným okrajem – hlavní akce dne */
 .daily-card {
   border: 0;

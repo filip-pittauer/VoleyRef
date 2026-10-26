@@ -11,6 +11,7 @@
 - **Vlastní SMTP** (Brevo): vestavěný v Supabase posílá jen pár e-mailů za hodinu a nejspíš jen členům týmu (ověřit registrací cizí adresou). **Čeká na vlastní doménu** („VoleyRef“ je jen pracovní název). Postup: doména → Brevo (účet na volleyref.app@gmail.com, DNS záznamy) → SMTP klíč → Supabase SMTP Settings → Rate Limits → české šablony e-mailů. Odesílatel musí být na vlastní doméně (gmail.com přes cizí SMTP neprojde). Alternativa: jen přihlášení přes Google.
 - **Obsah:** 200 otázek a text pravidel zkontroluje zkušený rozhodčí (uživatel zařídí; PDF jsou připravená, viz docs/historie.md).
 - Zvážit vypnutí/zapnutí registrací.
+- **Smazat testovací hráče** TestGuest01–10: `private/testovaci-hraci-smazat.sql` v SQL editoru (založení: `private/testovaci-hraci.sql`).
 
 ## Známá omezení dema (bezpečnost, odloženo)
 
