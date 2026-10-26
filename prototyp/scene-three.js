@@ -295,9 +295,14 @@ export function createThreeScene({ quality = QUALITIES[0], onLost } = {}) {
   let view = null;
   let lastFrame = null;
 
+  // velikost měnit jen při změně: každé nastavení canvas.width/height znovu
+  // alokuje celý obrazový buffer (i se stejnou hodnotou) – v každém snímku to
+  // zahlcuje ovladač (podezření na náhodné pády na PowerVR)
+  let size = '';
   function resize() {
     const width = canvas.clientWidth, height = canvas.clientHeight;
-    if (!width || !height) return;
+    if (!width || !height || size === `${width}x${height}`) return;
+    size = `${width}x${height}`;
     renderer.setSize(width, height, false);
   }
 
