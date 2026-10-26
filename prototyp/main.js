@@ -2,7 +2,7 @@
 // i B (Three.js), takže obě ukazují vždy stejný okamžik ze stejné kamery.
 import { createSituation } from './motion.js';
 import { createSvgScene } from './scene-svg.js';
-import { createThreeScene } from './scene-three.js';
+import { createThreeScene, QUALITIES } from './scene-three.js';
 
 const ASPECT = 16 / 9;
 
@@ -27,40 +27,60 @@ const situation = createSituation(await (await fetch('situace.json')).json());
 const svgScene = createSvgScene();
 $('stage-a').append(svgScene.svg);
 
-// Kvalita B: ?kvalita=nizka (tlačítko po pádu), dotyková zařízení střední, jinak vysoká.
+// Kvalita B: automatické pokusy od nejlepší (QUALITIES); ?kvalita=<id> začne
+// zadaným stupněm – na ruční zkoušení jednotlivých nastavení.
 const params = new URLSearchParams(location.search);
-const quality = params.get('kvalita') === 'nizka' ? 'low' : matchMedia('(pointer: coarse)').matches ? 'mobile' : 'high';
+const firstLevel = Math.max(0, QUALITIES.findIndex(q => q.id === params.get('kvalita')));
+const failed = [];   // stupně, které selhaly (pro diagnostiku)
+const NO_SCENE = { setView() {}, render() {}, resize() {}, dispose() {} };   // A poběží dál
 
-/** Místo plátna B ukáže, co se stalo, a nabídne nižší kvalitu. */
+/** Místo plátna B ukáže, co se stalo. */
 function showProblem(text) {
   const box = document.createElement('div');
   box.className = 'proto-problem';
-  const p = Object.assign(document.createElement('p'), { textContent: text });
-  box.append(p);
-  if (quality !== 'low') {
-    const link = Object.assign(document.createElement('a'), { href: '?kvalita=nizka', className: 'button button--small', textContent: 'Zkusit v nižší kvalitě' });
-    box.append(link);
-  }
+  box.append(Object.assign(document.createElement('p'), { textContent: text }));
   $('stage-b').replaceChildren(box);
+  $('info-b').textContent = `WebGL nedostupné · selhalo: ${failed.join('; ')}`;
 }
 
-let threeScene;
-try {
-  threeScene = createThreeScene({
-    quality,
-    onLost: () => showProblem('Grafika (WebGL) v tomto prohlížeči spadla – nejspíš na ni nestačí paměť nebo grafický čip.'),
-  });
-  $('stage-b').append(threeScene.canvas);
-  $('info-b').textContent = threeScene.info;
-} catch (error) {
-  console.error(error);
-  showProblem(`Grafiku (WebGL) se nepodařilo spustit: ${error.message}`);
-  threeScene = { setView() {}, render() {}, resize() {} };   // A poběží dál
-  $('info-b').textContent = 'WebGL nedostupné';
+/**
+ * Zkusí vytvořit scénu B od stupně `level` dolů. Pád kontextu za běhu
+ * (webglcontextlost bez obnovení do 2 s) = pokus o stupeň níž.
+ */
+function startThree(level) {
+  for (let i = level; i < QUALITIES.length; i++) {
+    const quality = QUALITIES[i];
+    try {
+      const scene = createThreeScene({
+        quality,
+        onLost: () => setTimeout(() => {
+          if (!scene.lost || threeScene !== scene) return;
+          failed.push(`${quality.label} (spadla za běhu)`);
+          scene.dispose();
+          startThree(i + 1);
+        }, 2000),
+      });
+      $('stage-b').replaceChildren(scene.canvas);
+      $('info-b').textContent = `${scene.info} · kvalita: ${quality.label}`
+        + (failed.length ? ` · selhalo: ${failed.join('; ')}` : '');
+      threeScene = scene;
+      if (view) { scene.setView(view); draw(); }
+      return;
+    } catch (error) {
+      console.error(error);
+      failed.push(`${quality.label} (${error.message})`);
+    }
+  }
+  threeScene = NO_SCENE;
+  // po pádu grafiky Chrome často zablokuje WebGL pro celou stránku až do restartu prohlížeče
+  showProblem('Grafiku (WebGL) se nepodařilo spustit v žádné kvalitě. Pokud předtím spadla, zkuste zavřít a znovu otevřít prohlížeč.');
 }
+
+let threeScene = NO_SCENE;
+let view = null;
+startThree(firstLevel);
 
 // ---------- Kamera ----------
-let view = null;
 function setView(next) {
   view = { ...next, bounds: next.bounds ?? fitBounds(next) };
   svgScene.setView(view);

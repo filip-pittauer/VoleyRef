@@ -233,16 +233,27 @@ function describeGpu(renderer) {
 }
 
 /**
- * Vytvoří WebGL scénu. Vrací { canvas, info, setView(view), render(frame), resize() }.
- * view = { eye, target, up?, bounds } – stejný výřez jako SVG varianta.
- * quality: 'high' (stíny 2048), 'mobile' (stíny 1024, rozlišení max 1,5×),
- * 'low' (bez stínů a vyhlazování, rozlišení 1×). onLost() – grafika v prohlížeči spadla.
+ * Stupně kvality od nejlepšího. Když se kontext s jedním nevytvoří nebo spadne,
+ * zkusí se další. Druhý stupeň vynechá vyhlazování (MSAA) – podezřelé u mobilních
+ * čipů PowerVR – a zubaté hrany místo něj srovná vyšší rozlišení.
  */
-export function createThreeScene({ quality = 'high', onLost } = {}) {
-  const low = quality === 'low';
-  const renderer = new THREE.WebGLRenderer({ antialias: !low, powerPreference: low ? 'low-power' : 'default' });
-  renderer.setPixelRatio(low ? 1 : Math.min(window.devicePixelRatio, quality === 'mobile' ? 1.5 : 2));
-  renderer.shadowMap.enabled = !low;
+export const QUALITIES = [
+  { id: 'vysoka', label: 'vysoká', antialias: true, maxRatio: 2, shadows: 2048 },
+  { id: 'ostra', label: 'bez MSAA, vyšší rozlišení', antialias: false, maxRatio: 2.5, shadows: 2048 },
+  { id: 'stredni', label: 'střední', antialias: false, maxRatio: 1.5, shadows: 1024, lowPower: true },
+  { id: 'nizka', label: 'nízká', antialias: false, maxRatio: 1, shadows: 0, lowPower: true },
+];
+
+/**
+ * Vytvoří WebGL scénu. Vrací { canvas, info, lost, setView(view), render(frame), resize(), dispose() }.
+ * view = { eye, target, up?, bounds } – stejný výřez jako SVG varianta.
+ * quality = jeden z QUALITIES. onLost() – grafika v prohlížeči spadla.
+ * Když WebGL kontext nejde vytvořit, Three.js vyhodí výjimku.
+ */
+export function createThreeScene({ quality = QUALITIES[0], onLost } = {}) {
+  const renderer = new THREE.WebGLRenderer({ antialias: quality.antialias, powerPreference: quality.lowPower ? 'low-power' : 'default' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.maxRatio));
+  renderer.shadowMap.enabled = quality.shadows > 0;
   const canvas = renderer.domElement;
   // ztráta kontextu = prohlížeč grafiku zastavil (málo paměti, ovladač…); bez
   // preventDefault by se už nikdy neobnovila
@@ -258,9 +269,8 @@ export function createThreeScene({ quality = 'high', onLost } = {}) {
   scene.add(new THREE.HemisphereLight(0xffffff, 0x6b7a90, 1.4));
   const sun = new THREE.DirectionalLight(0xffffff, 2.2);
   sun.position.set(5, 14, -6);
-  sun.castShadow = !low;
-  const shadowSize = quality === 'high' ? 2048 : 1024;
-  sun.shadow.mapSize.set(shadowSize, shadowSize);
+  sun.castShadow = quality.shadows > 0;
+  if (quality.shadows) sun.shadow.mapSize.set(quality.shadows, quality.shadows);
   Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 40 });
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.02;
@@ -296,7 +306,8 @@ export function createThreeScene({ quality = 'high', onLost } = {}) {
 
   return {
     canvas,
-    info: `${describeGpu(renderer)} · kvalita ${{ high: 'vysoká', mobile: 'mobilní', low: 'nízká' }[quality]}`,
+    info: describeGpu(renderer),
+    get lost() { return lost; },
     setView(next) {
       view = next;
       camera.position.copy(v3(view.eye));
@@ -330,5 +341,7 @@ export function createThreeScene({ quality = 'high', onLost } = {}) {
       draw();
     },
     resize: () => { if (lastFrame) draw(); },
+    // uvolní GPU paměť před pokusem s nižší kvalitou
+    dispose() { renderer.dispose(); canvas.remove(); },
   };
 }
