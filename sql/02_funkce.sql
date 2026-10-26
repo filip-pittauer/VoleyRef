@@ -292,7 +292,86 @@ end;
 $$;
 
 -- ---------------------------------------------------------------------
--- odevzdej_kolo(kolo_id, odpovedi) → { skore, pocet, trvani_s, vysledky, reseni_skryte, nove_odznaky, zkouska }
+-- Body do žebříčku (docs/bodovy-system.md)
+-- denni_limit_kol() → kolik kol každé hry (a režimu) za den dává body.
+-- Jediné místo, kde se limit mění.
+-- ---------------------------------------------------------------------
+create or replace function private.denni_limit_kol()
+returns integer
+language sql
+immutable
+set search_path = ''
+as $$
+  select 1;
+$$;
+
+-- body_za(hra, rezim, skore, pocet, trvani) → body podle private.hodnoty_her
+-- (bez denního limitu); null = nebodovaný režim. Bonus za rychlost (denní
+-- výzva): plný do 30 s celého kola, pak klesá a ve 2 min je 0; násobí se
+-- podílem správných odpovědí, aby se nevyplatilo rychle tipovat.
+create or replace function private.body_za(p_hra text, p_rezim text, p_skore integer, p_pocet integer, p_trvani interval)
+returns integer
+language sql
+stable
+set search_path = ''
+as $$
+  select h.body_za_spravnou * p_skore
+         + round(h.bonus_rychlost * (p_skore::numeric / greatest(p_pocet, 1))
+                 * least(1, greatest(0, (120 - extract(epoch from p_trvani)) / 90)))::integer
+  from private.hodnoty_her h
+  where h.hra = p_hra and h.rezim = p_rezim;
+$$;
+
+-- prirad_body(kolo_id) → { body, duvod } – zapíše body právě odevzdanému kolu.
+-- 0 bodů: 'rychle' (méně než 2 s na otázku; nepočítá se do limitu, hráč
+-- může hrát znovu) nebo 'limit' (dnes už má bodované kolo této hry).
+create or replace function private.prirad_body(p_kolo_id uuid)
+returns jsonb
+language plpgsql
+set search_path = ''
+as $$
+declare
+  v_kolo  public.kola;
+  v_body  integer;
+  v_duvod text;
+begin
+  select * into v_kolo from public.kola where id = p_kolo_id;
+  if v_kolo.uzivatel_id is null or v_kolo.konec is null then
+    return jsonb_build_object('body', null, 'duvod', null);
+  end if;
+  v_body := private.body_za(v_kolo.hra, v_kolo.rezim, v_kolo.skore, v_kolo.pocet, v_kolo.konec - v_kolo.zacatek);
+  if v_body is null then
+    return jsonb_build_object('body', null, 'duvod', null);
+  end if;
+
+  -- dvě současná odevzdání téhož hráče se nepotkají (oba by prošla limitem)
+  perform pg_advisory_xact_lock(hashtext(v_kolo.uzivatel_id::text));
+
+  if v_kolo.konec - v_kolo.zacatek < make_interval(secs => v_kolo.pocet * 2) then
+    v_body := 0;
+    v_duvod := 'rychle';
+  elsif (select count(*)
+         from public.kola k
+         where k.uzivatel_id = v_kolo.uzivatel_id and k.hra = v_kolo.hra and k.rezim = v_kolo.rezim
+           and k.id <> v_kolo.id and k.body is not null and k.body_duvod is null
+           and (k.konec at time zone 'Europe/Prague')::date = (v_kolo.konec at time zone 'Europe/Prague')::date
+        ) >= private.denni_limit_kol() then
+    v_body := 0;
+    v_duvod := 'limit';
+  end if;
+
+  update public.kola set body = v_body, body_duvod = v_duvod where id = p_kolo_id;
+  return jsonb_build_object('body', v_body, 'duvod', v_duvod);
+end;
+$$;
+
+revoke all on function private.denni_limit_kol()                                  from public, anon, authenticated;
+revoke all on function private.body_za(text, text, integer, integer, interval)    from public, anon, authenticated;
+revoke all on function private.prirad_body(uuid)                                  from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- odevzdej_kolo(kolo_id, odpovedi) → { skore, pocet, trvani_s, vysledky, reseni_skryte, nove_odznaky, zkouska,
+--                                     body, body_duvod }
 -- odpovedi = {"12": "B", "7": "A", …}
 -- Body i čas počítá server. Kolo jde odevzdat jen jednou a jen tím,
 -- kdo ho začal. U dnešní denní výzvy jsou ve výsledcích jen odpovědi
@@ -310,6 +389,7 @@ declare
   v_skore     integer;
   v_skryt     boolean;
   v_nove      text[] := '{}';
+  v_body      jsonb;
 begin
   select * into v_kolo
   from public.kola
@@ -318,7 +398,8 @@ begin
 
   if not found
      or v_kolo.konec is not null
-     or v_kolo.uzivatel_id is distinct from auth.uid() then
+     or v_kolo.uzivatel_id is distinct from auth.uid()
+     or v_kolo.hra <> 'kviz' then   -- ostatní hry se odevzdávají přes odevzdej_hru (07_hry.sql)
     raise exception 'Kolo neexistuje nebo už bylo odevzdané.';
   end if;
 
@@ -340,6 +421,8 @@ begin
   set konec = now(), skore = v_skore, odpovedi = v_ulozene
   where id = p_kolo_id;
 
+  v_body := private.prirad_body(p_kolo_id);
+
   -- Odznaky (05_odznaky.sql) – jen přihlášený hráč. Chyba při jejich
   -- výpočtu nesmí zmařit odevzdání kola, proto vlastní blok s ošetřením
   -- výjimky (vrátí se jen zápis odznaků, výsledek kola zůstane).
@@ -358,6 +441,8 @@ begin
     'vysledky', private.vysledky_kola(v_kolo.otazky, v_ulozene, v_skryt),
     'reseni_skryte', v_skryt,
     'nove_odznaky', to_jsonb(v_nove),
+    'body', v_body -> 'body',
+    'body_duvod', v_body -> 'duvod',
     -- jen u zkoušky: prošel/neprošel (vcas = odevzdáno v limitu)
     'zkouska', case when v_kolo.rezim = 'zkouska' then jsonb_build_object(
                  'hranice', private.zkouska_hranice(v_kolo.pocet),
@@ -446,6 +531,7 @@ as $$
     from public.kola k
     where k.konec is not null
       and k.uzivatel_id is not null
+      and k.hra = 'kviz'
       and k.rezim = 'bezne'
       and k.kategorie is null
       and k.obtiznost is null

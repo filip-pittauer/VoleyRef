@@ -104,6 +104,52 @@ alter table public.kola add column if not exists
 create index if not exists kola_uzivatel_idx
   on public.kola (uzivatel_id, konec desc) where konec is not null;
 
+-- ---------------------------------------------------------------------
+-- Hry a body do žebříčku (docs/bodovy-system.md)
+--   hra        = která hra kolo je (kvíz, kvíz gest…)
+--   polozky    = položky kola, které nejsou otázky z tabulky otazky (id gest)
+--   body       = body do žebříčku; null = nebodované kolo (procvičování,
+--                chyby, zkouška, nepřihlášený hráč)
+--   body_duvod = proč 0 bodů: 'limit' = dnešní bodované kolo této hry už
+--                bylo, 'rychle' = méně než 2 s na otázku (ochrana proti botům)
+-- Body počítá server (private.prirad_body v 02_funkce.sql).
+-- ---------------------------------------------------------------------
+alter table public.kola add column if not exists hra text not null default 'kviz';
+alter table public.kola drop constraint if exists kola_hra_check;
+alter table public.kola add constraint kola_hra_check
+  check (hra in ('kviz', 'gesta', 'gesto-naopak'));
+alter table public.kola add column if not exists polozky text[];
+alter table public.kola add column if not exists body integer;
+alter table public.kola add column if not exists body_duvod text;
+alter table public.kola drop constraint if exists kola_body_duvod_check;
+alter table public.kola add constraint kola_body_duvod_check
+  check (body_duvod in ('limit', 'rychle'));
+
+-- žebříčky sčítají jen kola s body
+create index if not exists kola_body_idx
+  on public.kola (konec) where body > 0;
+
+-- Kolik bodů dává která hra a režim. Řádek chybí = režim je nebodovaný.
+-- Hodnoty se ladí tady (jedno místo); cíl je zhruba stejně bodů za minutu
+-- hraní u každé hry. bonus_rychlost = až tolik bodů navíc za rychlé kolo
+-- (denní výzva, viz private.body_za).
+create table if not exists private.hodnoty_her (
+  hra              text not null,
+  rezim            text not null,
+  body_za_spravnou integer not null check (body_za_spravnou >= 0),
+  bonus_rychlost   integer not null default 0 check (bonus_rychlost >= 0),
+  primary key (hra, rezim)
+);
+alter table private.hodnoty_her enable row level security;   -- web k ní nemá přístup vůbec
+
+insert into private.hodnoty_her (hra, rezim, body_za_spravnou, bonus_rychlost) values
+  ('kviz',         'bezne', 10,  0),   -- 10 otázek ~ 3 min
+  ('kviz',         'denni', 20, 50),   -- 2× víc + bonus za rychlost, jen 1× denně
+  ('gesta',        'bezne',  5,  0),   -- 10 gest ~ 1,5 min
+  ('gesto-naopak', 'bezne',  5,  0)
+on conflict (hra, rezim) do update
+  set body_za_spravnou = excluded.body_za_spravnou, bonus_rychlost = excluded.bonus_rychlost;
+
 -- Denní výzva: přihlášený hráč má na každý den jen jedno kolo
 -- (jedinečný index to hlídá i při dvou současných požadavcích).
 create unique index if not exists kola_denni_jednou_idx

@@ -38,7 +38,7 @@ begin
         'cas_s', coalesce(round(extract(epoch from sum(k.konec - k.zacatek)))::integer, 0)
       )
       from public.kola k
-      where k.uzivatel_id = v_uzivatel and k.konec is not null
+      where k.uzivatel_id = v_uzivatel and k.konec is not null and k.hra = 'kviz'
     ),
 
     -- nejlepší kolo = nejvyšší podíl správných, při shodě rychlejší
@@ -47,7 +47,7 @@ begin
       select jsonb_build_object('skore', k.skore, 'pocet', k.pocet,
                'trvani_s', round(extract(epoch from k.konec - k.zacatek))::integer)
       from public.kola k
-      where k.uzivatel_id = v_uzivatel and k.konec is not null and k.rezim = 'bezne'
+      where k.uzivatel_id = v_uzivatel and k.konec is not null and k.hra = 'kviz' and k.rezim = 'bezne'
       order by k.skore::numeric / k.pocet desc, k.konec - k.zacatek asc
       limit 1
     ),
@@ -64,7 +64,7 @@ begin
         cross join lateral unnest(k.otazky) as u (id)
         join public.otazky o on o.id = u.id
         join private.otazky_reseni r on r.otazka_id = u.id
-        where k.uzivatel_id = v_uzivatel and k.konec is not null
+        where k.uzivatel_id = v_uzivatel and k.konec is not null and k.hra = 'kviz'
           and not private.reseni_skryte(k.rezim, k.den)   -- dnešní denní výzva by prozradila řešení
         group by o.kategorie
       ) as x
@@ -79,7 +79,7 @@ begin
         select k.konec, k.kategorie, k.obtiznost, k.rezim, k.skore, k.pocet,
                round(extract(epoch from k.konec - k.zacatek))::integer as trvani_s
         from public.kola k
-        where k.uzivatel_id = v_uzivatel and k.konec is not null
+        where k.uzivatel_id = v_uzivatel and k.konec is not null and k.hra = 'kviz'
         order by k.konec desc
         limit 10
       ) as p
@@ -102,7 +102,7 @@ begin
                private.zkouska_splnena(k.skore, k.pocet, k.konec - k.zacatek) as splneno,
                row_number() over (order by k.konec desc) as poradi
         from public.kola k
-        where k.uzivatel_id = v_uzivatel and k.konec is not null and k.rezim = 'zkouska'
+        where k.uzivatel_id = v_uzivatel and k.konec is not null and k.hra = 'kviz' and k.rezim = 'zkouska'
       ) as z
     )
   );

@@ -21,7 +21,7 @@ as $$
   with moje_kola as (
     select k.*, k.konec - k.zacatek as trvani
     from public.kola k
-    where k.uzivatel_id = p_uzivatel and k.konec is not null
+    where k.uzivatel_id = p_uzivatel and k.konec is not null and k.hra = 'kviz'
   ),
   -- běžné kolo nebo procvičování s aspoň 10 otázkami bez chyby
   dokonala as (
