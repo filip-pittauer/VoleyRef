@@ -150,7 +150,9 @@ revoke all on function private.zkouska_splnena(integer, integer, interval) from 
 -- zacni_kolo(kategorie, obtiznost, rezim) → { kolo_id, otazky: [...] }
 -- Založí kolo a uloží čas startu (na serveru, takže ho hráč nemůže
 -- podvrhnout). Vrací otázky BEZ správných odpovědí.
---   rezim 'bezne' = až 10 náhodných otázek (lze zúžit kategorií a obtížností)
+--   rezim 'bezne' = až 10 náhodných otázek, kvíz v Hrách (do žebříčku jen bez filtrů)
+--   rezim 'procvicovani' = jako 'bezne', zúžené kategorií a obtížností (Výuka,
+--                   do žebříčku se nepočítá)
 --   rezim 'chyby' = jen otázky, ve kterých hráč naposledy chyboval
 --   rezim 'denni' = denní výzva: 5 otázek, pro všechny hráče ten den stejných.
 --                   Jen pro přihlášené (anonym by mohl hrát pořád dokola
@@ -182,7 +184,7 @@ declare
   v_den     date := private.dnes();
   v_hotovo  boolean;
 begin
-  if p_rezim is null or p_rezim not in ('bezne', 'chyby', 'denni', 'zkouska') then
+  if p_rezim is null or p_rezim not in ('bezne', 'procvicovani', 'chyby', 'denni', 'zkouska') then
     raise exception 'Neznámý režim kola.';
   end if;
   if v_chyby and auth.uid() is null then
@@ -269,8 +271,8 @@ begin
     insert into public.kola (uzivatel_id, kategorie, obtiznost, rezim, den, otazky, pocet)
     values (
       auth.uid(),
-      case when p_rezim = 'bezne' then p_kategorie end,
-      case when p_rezim = 'bezne' then p_obtiznost end,
+      case when p_rezim in ('bezne', 'procvicovani') then p_kategorie end,
+      case when p_rezim in ('bezne', 'procvicovani') then p_obtiznost end,
       p_rezim,
       case when v_denni then v_den end,
       v_otazky,
@@ -466,6 +468,30 @@ as $$
 $$;
 
 -- ---------------------------------------------------------------------
+-- prehled_kategorii() → [{ kategorie, obtiznost, pocet }]
+-- Kolik aktivních otázek je v každé kategorii a obtížnosti (dlaždice
+-- Procvičování). Jen počty, žádné texty ani řešení. Tabulka otázek není
+-- pro web čitelná (deny by default), proto security definer.
+-- ---------------------------------------------------------------------
+create or replace function public.prehled_kategorii()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select coalesce(jsonb_agg(jsonb_build_object('kategorie', x.kategorie, 'obtiznost', x.obtiznost, 'pocet', x.pocet)
+                            order by x.kategorie, x.obtiznost), '[]'::jsonb)
+  from (
+    select o.kategorie, o.obtiznost, count(*)::integer as pocet
+    from public.otazky o
+    where o.aktivni
+      and exists (select 1 from private.otazky_reseni r where r.otazka_id = o.id)
+    group by o.kategorie, o.obtiznost
+  ) as x;
+$$;
+
+-- ---------------------------------------------------------------------
 -- pocet_chyb() → kolik otázek má přihlášený hráč k opakování
 -- ---------------------------------------------------------------------
 create or replace function public.pocet_chyb()
@@ -509,6 +535,7 @@ revoke all on function public.reseni_denni_vyzvy(date)        from public, anon,
 revoke all on function public.zebricek(integer)              from public, anon, authenticated;
 revoke all on function public.pocet_chyb()                    from public, anon, authenticated;
 revoke all on function public.smazat_ucet()                   from public, anon, authenticated;
+revoke all on function public.prehled_kategorii()             from public, anon, authenticated;
 
 grant execute on function public.zacni_kolo(text, integer, text) to anon, authenticated;
 grant execute on function public.odevzdej_kolo(uuid, jsonb)      to anon, authenticated;
@@ -516,3 +543,4 @@ grant execute on function public.reseni_denni_vyzvy(date)        to authenticate
 grant execute on function public.zebricek(integer)               to anon, authenticated;
 grant execute on function public.pocet_chyb()                    to authenticated;
 grant execute on function public.smazat_ucet()                   to authenticated;
+grant execute on function public.prehled_kategorii()             to anon, authenticated;

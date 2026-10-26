@@ -85,11 +85,18 @@ alter table public.kola add column if not exists
   rezim text not null default 'bezne'
   check (rezim in ('bezne', 'chyby', 'denni'));                -- běžné kolo / opakování chyb / denní výzva
 
--- Režim 'zkouska' přibyl později. Kontrolu u existující tabulky "add column
--- if not exists" nezmění → smazat a vytvořit znovu s aktuálním seznamem.
+-- Režimy 'zkouska' a 'procvicovani' přibyly později. Kontrolu u existující
+-- tabulky "add column if not exists" nezmění → smazat a vytvořit znovu
+-- s aktuálním seznamem.
 alter table public.kola drop constraint if exists kola_rezim_check;
 alter table public.kola add constraint kola_rezim_check
-  check (rezim in ('bezne', 'chyby', 'denni', 'zkouska'));    -- + zkouška (test na čas, 02_funkce.sql)
+  check (rezim in ('bezne', 'chyby', 'denni', 'zkouska',      -- + zkouška (test na čas, 02_funkce.sql)
+                   'procvicovani'));                          -- + procvičování ve Výuce (kategorie/obtížnost, bez žebříčku)
+
+-- Dřívější „běžná“ kola s vybranou kategorií nebo obtížností jsou podle
+-- dnešního rozdělení procvičování (do žebříčku se nepočítala ani dřív).
+update public.kola set rezim = 'procvicovani'
+where rezim = 'bezne' and (kategorie is not null or obtiznost is not null);
 
 alter table public.kola add column if not exists
   den date;                                                    -- jen u denní výzvy: ke kterému dni patří

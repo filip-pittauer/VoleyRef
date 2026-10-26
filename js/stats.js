@@ -70,13 +70,13 @@ function renderCategories(categories, mistakes) {
     mistakes > 0
       ? el('p', { class: 'card' },
           'K opakování máš ', el('strong', {}, plural(mistakes, 'otázku', 'otázky', 'otázek')),
-          ', ve kterých jsi naposledy chyboval. ', el('a', { href: 'kviz.html#opakovani' }, 'Opakovat chyby'), '.')
+          ', ve kterých jsi naposledy chyboval. ', el('a', { href: 'procvicovani.html#opakovani' }, 'Opakovat chyby'), '.')
       : null,
     weakest && weakest.spravne < weakest.otazek
       ? el('p', { class: 'card' },
           'Nejvíc chybuješ v kategorii ', el('strong', {}, categoryName(weakest.kategorie)), '. ',
           el('a', { href: categoryRulesUrl(weakest.kategorie) }, 'Zopakuj si pravidla'), ' nebo ',
-          el('a', { href: `kviz.html?kategorie=${encodeURIComponent(weakest.kategorie)}` }, 'si ji procvič'), '.')
+          el('a', { href: `procvicovani.html?kategorie=${encodeURIComponent(weakest.kategorie)}` }, 'si ji procvič'), '.')
       : null,
     el('ul', { class: 'cat-list' },
       ...Object.keys(CATEGORIES).map(id => categoryRow(id, byId.get(id)))));

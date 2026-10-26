@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="description" content="Procvičování otázek pro volejbalové rozhodčí podle kategorií pravidel a obtížnosti, s opakováním chyb.">
+  <title>Procvičování – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+  <!-- type="module": soubor je ES modul (import/export) a spustí se až po načtení HTML -->
+  <script type="module" src="js/quiz.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="hry.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#hry"></use></svg><span>Hry</span></a></li>
+          <li><a href="vyuka.html" aria-current="true"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#vyuka"></use></svg><span>Výuka</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah">
+    <h1>Procvičování</h1>
+
+    <p id="quiz-error" class="alert alert--error" role="alert" hidden></p>
+
+    <!-- 1) Start kola -->
+    <section id="quiz-start" class="stack">
+      <p>Vyber oblast pravidel. Kolo má až 10 otázek, vysvětlení uvidíš na konci. Do žebříčku se procvičování nepočítá.</p>
+      <p id="player-info" class="muted small" aria-live="polite"></p>
+
+      <!-- Jen pro přihlášené: otázky, ve kterých hráč naposledy chyboval -->
+      <div id="opakovani" class="card stack" hidden>
+        <h2>Opakování chyb</h2>
+        <p id="mistakes-text"></p>
+        <div>
+          <button id="mistakes-button" class="button button--secondary" type="button" hidden>Opakovat chyby</button>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="practice-head">
+          <h2>Kategorie</h2>
+          <div class="field">
+            <label for="difficulty">Obtížnost</label>
+            <select id="difficulty">
+              <option value="">Všechny obtížnosti</option>
+            </select>
+          </div>
+        </div>
+        <div id="practice-tiles" class="practice-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- 2) Otázka -->
+    <section id="quiz-question" class="card stack" hidden>
+      <div class="board">
+        <p id="quiz-progress"></p>
+        <progress id="quiz-progress-bar" value="0" max="10" aria-hidden="true"></progress>
+      </div>
+      <h2 id="question-heading" class="visually-hidden" tabindex="-1">Situace</h2>
+      <p id="question-text" class="situation"></p>
+      <div id="question-media"></div>
+      <form id="question-form" class="stack">
+        <fieldset class="answers">
+          <legend>Jak má rozhodčí postupovat?</legend>
+          <div id="answers" class="stack"></div>
+        </fieldset>
+        <p id="answer-hint" class="choice-hint" role="alert" hidden>Vyber jednu odpověď.</p>
+        <div>
+          <button id="next-button" class="button" type="submit">Další otázka</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 3) Výsledek -->
+    <section id="quiz-result" class="stack" hidden>
+      <div class="card stack">
+        <h2 id="result-heading" tabindex="-1">Výsledek kola</h2>
+        <div id="result-summary"></div>
+        <div>
+          <button id="again-button" class="button" type="button">Hrát znovu</button>
+        </div>
+      </div>
+      <h2 id="result-list-heading">Vysvětlení</h2>
+      <ol id="result-list" class="result-list"></ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>

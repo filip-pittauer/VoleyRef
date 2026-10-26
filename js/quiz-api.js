@@ -13,8 +13,9 @@ function requireSupabase() {
  * Začne nové kolo. Vrací { roundId, questions, exam }.
  *   category   = id kategorie, nebo null pro všechny
  *   difficulty = 1–3, nebo null pro všechny
- *   mode       = 'bezne' | 'chyby' (opakování chyb) | 'denni' (denní výzva) | 'zkouska'
- *                u ostatních než 'bezne' se kategorie a obtížnost ignorují
+ *   mode       = 'bezne' (kvíz v Hrách) | 'procvicovani' (Výuka, s kategorií/obtížností)
+ *                | 'chyby' (opakování chyb) | 'denni' (denní výzva) | 'zkouska'
+ *                kategorie a obtížnost se berou jen u 'bezne' a 'procvicovani'
  *   exam       = jen u zkoušky: { limitSeconds, passScore }, jinak null
  */
 export async function startRound({ category = null, difficulty = null, mode = 'bezne' } = {}) {
@@ -107,4 +108,26 @@ export async function getDailySolution(day) {
     questions: data.otazky,
     results: mapResults(data.vysledky),
   };
+}
+
+/**
+ * Kolik aktivních otázek je v každé kategorii a obtížnosti (dlaždice Procvičování).
+ * @returns {Promise<Array<{ kategorie: string, obtiznost: number, pocet: number }>>}
+ */
+export async function getCategoryOverview() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('prehled_kategorii');
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Úspěšnost přihlášeného hráče po kategoriích (stejná data jako statistiky v Profilu).
+ * @returns {Promise<Array<{ kategorie: string, otazek: number, spravne: number }>>}
+ */
+export async function getCategoryStats() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('moje_statistiky');
+  if (error) throw error;
+  return data.kategorie;
 }

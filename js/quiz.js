@@ -1,11 +1,13 @@
 // Ovládání stránky kvízu: start → otázky → výsledek.
 import { el, showOnly, replayAnimation, setupChoiceHint } from './dom.js';
-import { CATEGORIES, DIFFICULTIES, categoryName, difficultyName } from './categories.js';
+import { DIFFICULTIES, categoryName, difficultyName } from './categories.js';
 import { formatDuration, plural, secondsUntilNextDay, formatCountdown } from './format.js';
 import { renderMedia } from './media.js';
 import { createScore, celebrate } from './celebrate.js';
 import { renderResultItem, renderNewBadges } from './quiz-result.js';
-import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolution } from './quiz-api.js';
+import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolution,
+  getCategoryOverview, getCategoryStats } from './quiz-api.js';
+import { renderPracticeTiles } from './quiz-practice.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -15,9 +17,9 @@ const resultSection = document.getElementById('quiz-result');
 const sections = [startSection, questionSection, resultSection];
 
 const playerInfo = document.getElementById('player-info');
-const categorySelect = document.getElementById('category');
+// jen v Hrách (kviz.html): denní výzva a běžné kolo; jen v procvičování: obtížnost, dlaždice, chyby
 const difficultySelect = document.getElementById('difficulty');
-const filterNote = document.getElementById('filter-note');
+const practiceTiles = document.getElementById('practice-tiles');
 const startButton = document.getElementById('start-button');
 const errorBox = document.getElementById('quiz-error');
 
@@ -53,12 +55,12 @@ let state = null;
 // Profil přihlášeného hráče (null = hraje bez přihlášení).
 let profile = null;
 
-// ---------- Start: hráč a filtry ----------
-/** Kdo hraje (přihlášený / anonym); pak karty opakování chyb a denní výzvy. */
+// ---------- Start: hráč ----------
+/** Kdo hraje (přihlášený / anonym); pak karty podle stránky (denní výzva, chyby, dlaždice). */
 async function renderPlayerInfo() {
   if (!isConfigured) {
     showError(NOT_CONFIGURED_MESSAGE);
-    dailyText.textContent = '';
+    if (dailyText) dailyText.textContent = '';
     return;
   }
   try {
@@ -66,38 +68,55 @@ async function renderPlayerInfo() {
   } catch (error) {
     console.error(error);
   }
-  playerInfo.replaceChildren(profile
-    ? el('span', {}, 'Hraješ jako ', el('strong', {}, profile.prezdivka), '.')
-    : el('span', {}, 'Nejsi přihlášený, výsledek se nezapíše do žebříčku ani statistik. ',
-        el('a', { href: 'ucet.html' }, 'Přihlásit se')));
-  updateFilterNote();
-  renderMistakes();
-  renderDaily();
+  playerInfo?.replaceChildren(playerText());
+  renderStartCards();
 }
 
-function fillSelects() {
-  for (const [id, name] of Object.entries(CATEGORIES)) {
-    categorySelect.append(el('option', { value: id }, name));
-  }
+/** Řádek o hráči: v Hrách jde o žebříček, v procvičování o statistiky a chyby. */
+function playerText() {
+  if (profile) return el('span', {}, 'Hraješ jako ', el('strong', {}, profile.prezdivka), '.');
+  const why = practiceTiles
+    ? 'Po přihlášení uvidíš úspěšnost v kategoriích a můžeš si opakovat chyby. '
+    : 'Nejsi přihlášený, výsledek se nezapíše do žebříčku ani statistik. ';
+  return el('span', {}, why, el('a', { href: 'ucet.html' }, 'Přihlásit se'));
+}
+
+/** Karty na startu, které stránka má (kvíz v Hrách: denní výzva; procvičování: chyby a dlaždice). */
+function renderStartCards() {
+  if (mistakesCard) renderMistakes();
+  if (dailyText) renderDaily();
+  if (practiceTiles) renderPractice();
+}
+
+// ---------- Start: procvičování (dlaždice kategorií) ----------
+let overview = null;   // počty otázek – stačí načíst jednou
+
+/** Dlaždice kategorií s počty otázek a úspěšností (jen procvicovani.html). */
+async function renderPractice() {
+  const [overviewResult, statsResult] = await Promise.allSettled([
+    overview ? Promise.resolve(overview) : getCategoryOverview(),
+    profile ? getCategoryStats() : Promise.resolve(null),
+  ]);
+  if (overviewResult.status === 'fulfilled') overview = overviewResult.value;
+  else console.error(overviewResult.reason);
+  if (statsResult.status === 'rejected') console.error(statsResult.reason);
+
+  // procvicovani.html?kategorie=blok (odkaz ze statistik) → dlaždice zvýrazněná
+  const suggested = new URLSearchParams(location.search).get('kategorie');
+  renderPracticeTiles(practiceTiles, {
+    overview,
+    stats: statsResult.status === 'fulfilled' ? statsResult.value : null,
+    difficulty: difficultySelect.value ? Number(difficultySelect.value) : null,
+    suggested,
+    onStart: (category, button) => begin('procvicovani', { category, button }),
+  });
+  practiceTiles.querySelector('.practice-tile--suggested')?.scrollIntoView({ block: 'center' });
+}
+
+function fillDifficulty() {
   for (const [level, name] of Object.entries(DIFFICULTIES)) {
     difficultySelect.append(el('option', { value: level }, name));
   }
-  // kviz.html?kategorie=blok → kategorie předvybraná (odkaz ze statistik)
-  const fromUrl = new URLSearchParams(location.search).get('kategorie');
-  if (fromUrl && CATEGORIES[fromUrl]) categorySelect.value = fromUrl;
-}
-
-function selectedFilters() {
-  return {
-    category: categorySelect.value || null,
-    difficulty: difficultySelect.value ? Number(difficultySelect.value) : null,
-  };
-}
-
-/** Upozornění, že kolo s filtrem se do žebříčku nepočítá (jen pro přihlášené). */
-function updateFilterNote() {
-  const { category, difficulty } = selectedFilters();
-  filterNote.hidden = !profile || (!category && !difficulty);
 }
 
 // ---------- Start: denní výzva ----------
@@ -211,19 +230,23 @@ async function renderMistakes() {
 
 // ---------- Začátek kola ----------
 /**
- * Začne kolo. mode: 'bezne' (s filtry z formuláře), 'chyby' (opakování chyb),
- * 'denni' (denní výzva) – otázky vybere server podle režimu.
+ * Začne kolo. mode: 'bezne' (kvíz v Hrách), 'procvicovani' (dlaždice kategorie
+ * + obtížnost), 'chyby' (opakování chyb), 'denni' (denní výzva) – otázky vybere
+ * server podle režimu. button = dlaždice, která kolo spustila (procvičování).
  */
-async function begin(mode) {
+async function begin(mode, { category = null, button = null } = {}) {
   hideError();
-  const filters = mode === 'bezne' ? selectedFilters() : { category: null, difficulty: null };
-  const button = { bezne: startButton, chyby: mistakesButton, denni: dailyButton }[mode];
+  const filters = mode === 'procvicovani'
+    ? { category, difficulty: difficultySelect.value ? Number(difficultySelect.value) : null }
+    : { category: null, difficulty: null };
+  button ??= { bezne: startButton, chyby: mistakesButton, denni: dailyButton }[mode];
   button.disabled = true;
   try {
     const { roundId, questions } = await startRound({ ...filters, mode });
     if (questions.length === 0) {
       showError({
-        bezne: 'Pro tento výběr kategorie a obtížnosti zatím nejsou žádné otázky.',
+        bezne: 'Kvíz zatím nemá žádné otázky.',
+        procvicovani: 'Pro tento výběr kategorie a obtížnosti zatím nejsou žádné otázky.',
         chyby: 'Nemáš žádné chyby k opakování.',
         denni: 'Denní výzva dnes nemá žádné otázky.',
       }[mode]);
@@ -318,14 +341,12 @@ const MIN_SECONDS_PER_QUESTION = 2;
 
 /** Poznámka pod skóre: proč se (ne)zapsalo do žebříčku. */
 function leaderboardNote(round, result) {
+  if (round.mode === 'procvicovani') return 'Procvičování se do žebříčku nepočítá.';
   if (!profile) {
     return el('span', {}, 'Výsledek se nezapsal do žebříčku, protože nejsi přihlášený. ',
       el('a', { href: 'ucet.html' }, 'Přihlásit se'));
   }
   if (round.mode === 'chyby') return 'Opakování chyb se do žebříčku nepočítá.';
-  if (round.category || round.difficulty) {
-    return 'Kola s vybranou kategorií nebo obtížností se do žebříčku nepočítají.';
-  }
   if (result.durationSeconds < result.total * MIN_SECONDS_PER_QUESTION) {
     return `Kolo bylo příliš rychlé (méně než ${MIN_SECONDS_PER_QUESTION} s na otázku), do žebříčku se nepočítá.`;
   }
@@ -350,7 +371,7 @@ function renderResult(result) {
   const score = createScore(result.score, result.total);
 
   resultHeading.textContent = 'Výsledek kola';
-  againButton.textContent = 'Hrát znovu';
+  againButton.textContent = practiceTiles ? 'Zpět na kategorie' : 'Hrát znovu';
   resultSummary.replaceChildren(
     score,
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
@@ -423,18 +444,18 @@ function hideError() {
 }
 
 // ---------- Inicializace ----------
-fillSelects();
+if (difficultySelect) {
+  fillDifficulty();
+  difficultySelect.addEventListener('change', renderPractice);
+}
 renderPlayerInfo();
-categorySelect.addEventListener('change', updateFilterNote);
-difficultySelect.addEventListener('change', updateFilterNote);
-startButton.addEventListener('click', () => begin('bezne'));
-mistakesButton.addEventListener('click', () => begin('chyby'));
-dailyButton.addEventListener('click', () => begin('denni'));
-dailySolutionButton.addEventListener('click', showDailySolution);
+startButton?.addEventListener('click', () => begin('bezne'));
+mistakesButton?.addEventListener('click', () => begin('chyby'));
+dailyButton?.addEventListener('click', () => begin('denni'));
+dailySolutionButton?.addEventListener('click', showDailySolution);
 questionForm.addEventListener('submit', handleAnswer);
 againButton.addEventListener('click', () => {
   hideError();
   showOnly(startSection, sections);
-  renderMistakes();   // počet chyb i stav denní výzvy se po kole mohl změnit
-  renderDaily();
+  renderStartCards();   // počet chyb, stav denní výzvy i úspěšnost se po kole mohly změnit
 });

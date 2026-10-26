@@ -3105,6 +3105,116 @@ main.hub h1 {
   color: var(--color-text);
 }
 
+/* Procvičování (procvicovani.html): dlaždice kategorií */
+.practice-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+/* mobil: dva sloupce, ať 12 dlaždic nezabere několik obrazovek */
+.practice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+@media (min-width: 40em) {
+  .practice-grid {
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+.practice-tile {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.practice-tile:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.practice-tile:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* mix přes celou šířku mřížky – je to jiná volba než jedna kategorie */
+.practice-tile--mix {
+  grid-column: 1 / -1;
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: var(--color-on-dark);
+}
+
+.practice-tile--mix .practice-tile__meta {
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* kategorie z odkazu ve statistikách („si ji procvič“) */
+.practice-tile--suggested {
+  border: 2px solid var(--color-accent);
+}
+
+.practice-tile__name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+.practice-tile__meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.practice-tile__success {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.practice-tile__bar {
+  height: 0.4rem;
+  overflow: hidden;
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+.practice-tile__bar > span {
+  display: block;
+  height: 100%;
+  background: var(--color-success);
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .practice-tile {
+    transition: none;
+  }
+
+  .practice-tile:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
 /* rozcestník jako seznam článků: štítek, titulek, krátký text */
 .news-list {
   display: grid;

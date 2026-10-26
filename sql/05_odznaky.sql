@@ -23,10 +23,10 @@ as $$
     from public.kola k
     where k.uzivatel_id = p_uzivatel and k.konec is not null
   ),
-  -- běžné kolo s aspoň 10 otázkami bez chyby
+  -- běžné kolo nebo procvičování s aspoň 10 otázkami bez chyby
   dokonala as (
     select * from moje_kola
-    where rezim = 'bezne' and pocet >= 10 and skore = pocet
+    where rezim in ('bezne', 'procvicovani') and pocet >= 10 and skore = pocet
       and trvani >= make_interval(secs => pocet * 2)
   ),
   -- úspěšnost po kategoriích (jako ve statistikách, bez dnešní denní výzvy –
@@ -65,7 +65,7 @@ as $$
     ('neomylny',    (select count(*) from dokonala)::integer, 5),
     ('rychly',      (select count(*) from dokonala where trvani < interval '2 minutes')::integer, 1),
     ('tezka-vaha',  (select count(*) from moje_kola
-                     where rezim = 'bezne' and obtiznost = 3 and pocet >= 3 and skore = pocet
+                     where rezim in ('bezne', 'procvicovani') and obtiznost = 3 and pocet >= 3 and skore = pocet
                        and trvani >= make_interval(secs => pocet * 2))::integer, 1),
     -- učení
     ('pouceny',     (select coalesce(sum(skore), 0) from moje_kola where rezim = 'chyby')::integer, 10),
