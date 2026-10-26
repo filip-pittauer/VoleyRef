@@ -69,7 +69,8 @@ function mapResults(vysledky) {
  * Vrací { score, total, durationSeconds, newBadges: [id odznaku…],
  *         results: [{ id, answer, correctAnswer, isCorrect, explanation }],
  *         solutionHidden: true u dnešní denní výzvy (results mají jen id a answer),
- *         exam: { passScore, inTime, passed } jen u zkoušky, jinak null }
+ *         exam: { passScore, inTime, passed } jen u zkoušky, jinak null,
+ *         points: body do žebříčku (null = nebodované kolo), pointsReason: 'limit' | 'rychle' | null }
  */
 export async function submitRound(roundId, answers) {
   requireSupabase();
@@ -89,6 +90,8 @@ export async function submitRound(roundId, answers) {
     exam: data.zkouska
       ? { passScore: data.zkouska.hranice, inTime: data.zkouska.vcas, passed: data.zkouska.splneno }
       : null,
+    points: data.body ?? null,
+    pointsReason: data.body_duvod ?? null,
   };
 }
 
@@ -130,4 +133,56 @@ export async function getCategoryStats() {
   const { data, error } = await supabase.rpc('moje_statistiky');
   if (error) throw error;
   return data.kategorie;
+}
+
+/**
+ * Žebříček podle bodů.
+ * @param {{ period?: 'celkem'|'tyden'|'den'|'dnes', game?: string|null, limit?: number }} options
+ *   game = null pro všechny hry, jinak 'kviz' | 'gesta' | 'gesto-naopak'
+ * @returns {Promise<Array<{ poradi: number, prezdivka: string, body: number, kol: number,
+ *   je_moje: boolean, odznaky: string[] }>>}
+ */
+export async function getPointsLeaderboard({ period = 'celkem', game = null, limit = 50 } = {}) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('zebricek_body', {
+    p_obdobi: period === 'dnes' ? 'den' : period,
+    p_hra: game,
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Body přihlášeného hráče: { celkem, tyden, dnes, dnes_hrano: ['kviz/bezne', 'gesta/bezne', …] }
+ * (dnes_hrano = hry, které už dnes daly bodované kolo).
+ */
+export async function getMyPoints() {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('moje_body');
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Začne kolo hry mimo kvíz (gesta vybere server). Vrací { roundId, items: [id gest] }.
+ * @param {'gesta'|'gesto-naopak'} game
+ * @param {string|null} set skupina gest ('rozhodci' / 'carovi'), null = všechna
+ */
+export async function startGame(game, set = null) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('zacni_hru', { p_hra: game, p_sada: set });
+  if (error) throw error;
+  return { roundId: data.kolo_id, items: data.polozky };
+}
+
+/**
+ * Odevzdá kolo hry: answers = { [id položky]: id zvolené odpovědi }.
+ * Vrací { score, total, durationSeconds, points, pointsReason }.
+ */
+export async function submitGame(roundId, answers) {
+  requireSupabase();
+  const { data, error } = await supabase.rpc('odevzdej_hru', { p_kolo_id: roundId, p_odpovedi: answers });
+  if (error) throw error;
+  return { score: data.skore, total: data.pocet, durationSeconds: data.trvani_s, points: data.body, pointsReason: data.body_duvod };
 }

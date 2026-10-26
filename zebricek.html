@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
-  <meta name="description" content="Žebříček nejlepších výsledků v kvízu pro volejbalové rozhodčí.">
+  <meta name="description" content="Žebříček hráčů podle bodů ze všech her pro volejbalové rozhodčí – celkem, tento týden a dnes.">
   <title>Žebříček – Volejbal: trénink rozhodčích</title>
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
@@ -39,56 +39,49 @@
     <h1>Žebříček</h1>
 
     <p id="login-hint" class="muted small" hidden>
-      Chceš být v žebříčku? <a href="ucet.html">Přihlas se</a> a <a href="kviz.html">zahraj si kvíz</a>.
+      Chceš být v žebříčku? <a href="ucet.html">Přihlas se</a> a <a href="hry.html">zahraj si hry</a>.
     </p>
 
-    <!-- Záložky: přepínají dva panely níže (zebricek.html#denni otevře denní) -->
-    <div class="tabs" role="tablist" aria-label="Typ žebříčku">
-      <button id="tab-celkovy" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-celkovy">Celkový</button>
-      <button id="tab-denni" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-denni">Dnešní výzva</button>
+    <!-- Záložky období (zebricek.html#tyden / #dnes otevře danou záložku) -->
+    <div class="tabs" role="tablist" aria-label="Období">
+      <button id="tab-celkem" class="tab" type="button" role="tab" aria-selected="true" aria-controls="board-panel">Celkem</button>
+      <button id="tab-tyden" class="tab" type="button" role="tab" aria-selected="false" aria-controls="board-panel">Tento týden</button>
+      <button id="tab-dnes" class="tab" type="button" role="tab" aria-selected="false" aria-controls="board-panel">Dnes</button>
     </div>
 
-    <section id="panel-celkovy" class="stack" role="tabpanel" aria-labelledby="tab-celkovy">
-      <p>Nejlepší kolo každého hráče. Rozhoduje počet bodů, při shodě kratší čas.</p>
+    <section id="board-panel" class="stack" role="tabpanel" aria-labelledby="tab-celkem">
+      <div class="board-head">
+        <p id="board-intro">Součet bodů ze všech her za celou dobu.</p>
+        <div class="field">
+          <label for="board-game">Hra</label>
+          <select id="board-game">
+            <option value="">Všechny hry</option>
+            <option value="kviz">Kvíz (vč. denní výzvy)</option>
+            <option value="gesta">Kvíz gest</option>
+            <option value="gesto-naopak">Gesto naopak</option>
+          </select>
+        </div>
+      </div>
       <details class="small">
-        <summary>Která kola se počítají?</summary>
+        <summary>Jak se počítají body?</summary>
         <ul>
-          <li>jen kola přihlášených hráčů,</li>
-          <li>jen kola <strong>bez výběru</strong> kategorie a obtížnosti (ne opakování chyb ani denní výzva),</li>
-          <li>jen kola, která trvala aspoň 2 sekundy na otázku (ochrana proti botům).</li>
+          <li>Body dostávají jen přihlášení hráči za správné odpovědi: kvíz 10 bodů, denní výzva 20 bodů a bonus až 50 za rychlost, gesta 5 bodů.</li>
+          <li>Body dává jen <strong>první kolo každé hry za den</strong>. Další kola si zahraješ, ale za 0 bodů.</li>
+          <li>Kolo rychlejší než 2 sekundy na otázku se nepočítá (ochrana proti botům).</li>
+          <li>Procvičování, opakování chyb, zkouška a trenažéry ve Výuce body nedávají.</li>
+          <li>Při shodě bodů je výš ten, kdo jich dosáhl dřív.</li>
         </ul>
       </details>
-      <p id="overall-status" class="muted" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
+      <p id="board-status" class="muted" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
       <div class="table-wrap">
-        <table id="overall-table" class="leaderboard leaderboard--ranked" hidden>
-          <caption class="visually-hidden">Celkový žebříček</caption>
+        <table id="board-table" class="leaderboard leaderboard--ranked" hidden>
+          <caption id="board-caption" class="visually-hidden">Žebříček</caption>
           <thead>
             <tr>
               <th scope="col" class="num">#</th>
               <th scope="col">Hráč</th>
               <th scope="col" class="num">Body</th>
-              <th scope="col" class="num">Čas</th>
-              <th scope="col" class="num hide-narrow">Datum</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="panel-denni" class="stack" role="tabpanel" aria-labelledby="tab-denni" hidden>
-      <p>Dnešních 5 otázek je pro všechny stejných a každý má jeden pokus. Nová výzva začíná o půlnoci.
-        <a href="kviz.html#denni">Hrát denní výzvu</a></p>
-      <p id="daily-status" class="muted" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
-      <div class="table-wrap">
-        <table id="daily-table" class="leaderboard leaderboard--ranked" hidden>
-          <caption class="visually-hidden">Žebříček dnešní výzvy</caption>
-          <thead>
-            <tr>
-              <th scope="col" class="num">#</th>
-              <th scope="col">Hráč</th>
-              <th scope="col" class="num">Body</th>
-              <th scope="col" class="num">Čas</th>
+              <th scope="col" class="num">Kol</th>
             </tr>
           </thead>
           <tbody></tbody>

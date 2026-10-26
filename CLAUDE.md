@@ -23,7 +23,7 @@ procvicovani.html   procvičování otázek po kategoriích (Výuka; js/quiz-pra
 kviz.html           kvíz (+ karty gest a trenažéru)
 pravidla.html       úplná pravidla: <details class="rule"> (kotvy #pravidlo-12, body #p-12-4-3), shrnutí s id
                     kategorií, diagramy #diagram-N; obsah mezi značkami generuje private/pravidla-zdroj/build.mjs
-gesta.html          kvíz gest (jen prohlížeč, bez DB)
+gesta.html          kvíz gest (přihlášený: kolo ze serveru, body); gesto-naopak.html = Gesto naopak
 postaveni.html      trenažér postavení (jen prohlížeč; js/lineup-logic.js, court-scene.js, lineup-trainer.js)
 zapis.html          trenažér zápisu: úlohy / vedení setu (jen prohlížeč; js/scoresheet-*.js)
 zkouska.html        zkouška: 30 otázek / 30 min / 80 % (js/exam.js, režim 'zkouska' v zacni_kolo)
@@ -32,7 +32,7 @@ css/style.css       všechny styly (vzhled „Svaz“), css/fonts.css + fonts/ (
 js/                 moduly (viz CODEMAP.md); js/config.js = Supabase URL + publishable klíč
 slovnicek/pojmy.json  slovníček pojmů (definice v pravidlech + bubliny)
 gesta/gesta.json    gesta jako data; animace/*.json situace jako data
-sql/                SQL pro Supabase (spouštět v pořadí 01, 02, …)
+sql/                SQL pro Supabase (spouštět v pořadí 01, 02, …, 07_hry = hry a body)
 tools/              Node skripty (seed-otazky.mjs)
 .claude/skills/     postupy pro Clauda (nove-otazky)
 private/            NENÍ ve veřejném repu: vlastní SOUKROMÉ repo filip-pittauer/VoleyRef-private
@@ -104,7 +104,8 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - **Bezpečnost hotová (25. 10. 2026):** denní výzva bez prozrazení řešení, výchozí práva „deny by default“ (test prava-db), supabase-js v js/vendor/ + CSP (test e2e-csp), zásady GDPR. Odložené (známá omezení dema): docs/pred-spustenim.md.
 - **Čitelnost (od 25. 10. 2026, už bez druhé session):** krok 1 ESLint + .editorconfig, krok 2 komentáře (JSDoc u funkcí, obsah v css/style.css). Další: 12 varování o složitosti/délce funkcí (`npm run lint`), pak předávací dokumentace a audity.
 - **Kde jsme skončili (26. 10. 2026):** prototyp animací `prototyp/animace.html` (A = SVG, B = Three.js; podrobnosti docs/historie.md). Na PC je B mnohem hezčí. Pády B na mobilu (PowerVR) způsobovalo `setSize` v každém snímku. Po opravě B na mobilu běží se stíny. Na Samsungu A26 a tabletu Lenovo B běží plynule ve vysoké kvalitě. **Prototyp odložen. Před návratem k animacím přečíst docs/animace-poznamky.md** (testy zařízení, co zbývá). Pak přeanimovat situace, minihry (Učebna/Hala, „Odpískej to!“, duely).
-- **Hry / Výuka (26. 10. 2026):** rozcestníky hry.html a vyuka.html, nová navigace. Kvíz rozdělený: kviz.html (Hry, denní výzva + náhodné kolo) a procvicovani.html (Výuka, dlaždice kategorií, režim kola `procvicovani`, RPC `prehled_kategorii`). Karta denní výzvy na úvodu (jen do odehrání) a v Hrách (js/daily-card.js). Testovací hráči: private/testovaci-hraci.sql (uživatel ho má spustit v Supabase). **Příště nejdřív:** na počítači jsou animace (a ilustrace) u otázek kvízu moc velké – zmenšit (desktop). **Další:** bodový systém podle docs/bodovy-system.md (rozhodnutí tam; postavení a zápis ověřovat přes Supabase Edge Function), pak minihry z docs/napady-hry-vyuka.md.
+- **Hry / Výuka (26. 10. 2026):** rozcestníky hry.html a vyuka.html, nová navigace. Kvíz rozdělený: kviz.html (Hry, denní výzva + náhodné kolo) a procvicovani.html (Výuka, dlaždice kategorií, režim kola `procvicovani`, RPC `prehled_kategorii`). Karta denní výzvy na úvodu (jen do odehrání) a v Hrách (js/daily-card.js). Testovací hráči: private/testovaci-hraci.sql (uživatel ho má spustit v Supabase). 
+- **Body a žebříčky (26. 10. 2026, větev `body-a-minihry`, NE na main):** menší ilustrace u otázek na PC, bodový systém (sql/01, 02, 07_hry.sql; žebříček celkem/týden/dnes a za hru; 1 bodované kolo hry za den), kvíz gest přes server s body, nová minihra Gesto naopak (gesto-naopak.html). Stav a odchylky: docs/bodovy-system.md. **Čeká na uživatele:** vyzkoušet, sloučit do main, spustit SQL 01, 02, 03, 05, 07. **Další:** bodované postavení/zápis přes Edge Function, další minihry z docs/napady-hry-vyuka.md.
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.

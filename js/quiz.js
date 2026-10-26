@@ -9,6 +9,7 @@ import { startRound, submitRound, getMistakesCount, getDailyStatus, getDailySolu
   getCategoryOverview, getCategoryStats } from './quiz-api.js';
 import { renderPracticeTiles } from './quiz-practice.js';
 import { renderDailyCard, streakText, previousDay } from './daily-card.js';
+import { pointsNote } from './points.js';
 import { getProfile, isConfigured, NOT_CONFIGURED_MESSAGE } from './supabase.js';
 
 // ---------- Prvky stránky ----------
@@ -282,25 +283,11 @@ async function handleAnswer(event) {
 }
 
 // ---------- Výsledek ----------
-// Stejné pravidlo jako v SQL funkci zebricek(): ochrana proti botům.
-const MIN_SECONDS_PER_QUESTION = 2;
-
-/** Poznámka pod skóre: proč se (ne)zapsalo do žebříčku. */
+/** Poznámka pod skóre: body do žebříčku (počítá server), nebo proč žádné nejsou. */
 function leaderboardNote(round, result) {
   if (round.mode === 'procvicovani') return 'Procvičování se do žebříčku nepočítá.';
-  if (!profile) {
-    return el('span', {}, 'Výsledek se nezapsal do žebříčku, protože nejsi přihlášený. ',
-      el('a', { href: 'ucet.html' }, 'Přihlásit se'));
-  }
-  if (round.mode === 'chyby') return 'Opakování chyb se do žebříčku nepočítá.';
-  if (result.durationSeconds < result.total * MIN_SECONDS_PER_QUESTION) {
-    return `Kolo bylo příliš rychlé (méně než ${MIN_SECONDS_PER_QUESTION} s na otázku), do žebříčku se nepočítá.`;
-  }
-  if (round.mode === 'denni') {
-    return el('span', {}, 'Výsledek je v ', el('a', { href: 'zebricek.html#denni' }, 'denním žebříčku'), '.');
-  }
-  return el('span', {}, 'Výsledek je uložený. Pokud je to tvé nejlepší kolo, uvidíš ho v ',
-    el('a', { href: 'zebricek.html' }, 'žebříčku'), '.');
+  if (round.mode === 'chyby' && profile) return 'Opakování chyb se do žebříčku nepočítá.';
+  return pointsNote(result, Boolean(profile));
 }
 
 /** Seznam „Vysvětlení“; bez položek (dnešní denní výzva) se skryje i s nadpisem. */
@@ -323,7 +310,7 @@ function renderResult(result) {
     el('p', {}, `Čas: ${formatDuration(result.durationSeconds)}`),
     // denní výzva: řešení by ostatním prozradilo dnešní odpovědi
     result.solutionHidden ? el('p', {}, 'Správné odpovědi a vysvětlení uvidíš zítra.') : null,
-    el('p', { class: 'muted small' }, leaderboardNote(round, result)),
+    el('p', { class: 'small' }, leaderboardNote(round, result) ?? ''),
     extra,
     renderNewBadges(result.newBadges) ?? '');
 

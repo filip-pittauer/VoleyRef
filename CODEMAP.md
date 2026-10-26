@@ -37,16 +37,17 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 | Stránka | Účel | Skripty (vstupní moduly) |
 |---|---|---|
 | `index.html` | úvod / rozcestník: karta denní výzvy (jen dokud ji hráč dnes nedohrál), karty sekcí (Hry, Výuka, Pravidla, Žebříček), instalace PWA | `pwa.js`, `daily-teaser.js` |
-| `hry.html` | rozcestník **Hry** (bodované/soutěžní): karta denní výzvy pod nadpisem (vždy, i s dnešním výsledkem), kvíz, kvíz gest, žebříček, seznam „Připravujeme“ | `pwa.js`, `daily-teaser.js` |
+| `hry.html` | rozcestník **Hry** (bodované): karta denní výzvy, souhrn Tvoje body (dnes/týden/celkem), hry se stavem „dnešní body získány“, žebříček, „Připravujeme“ | `pwa.js`, `daily-teaser.js`, `games-hub.js` |
 | `vyuka.html` | rozcestník **Výuka** (bez bodů): pravidla, atlas gest, slovníček, procvičování, trenažéry postavení a zápisu, zkouška | `pwa.js` |
 | `kviz.html` | kvíz v Hrách: denní výzva (`#denni`; `?hrat=denni` ji rovnou spustí), běžné kolo (náhodný mix, do žebříčku); v navigaci pod Hry | `pwa.js`, `quiz.js` |
 | `procvicovani.html` | **Procvičování** ve Výuce: dlaždice kategorií (počet otázek, úspěšnost), obtížnost, opakování chyb (`#opakovani`), `?kategorie=…` zvýrazní dlaždici; kolo v režimu `procvicovani` (bez žebříčku) | `pwa.js`, `quiz.js` (→ `quiz-practice.js`) |
 | `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
 | `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
-| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry | `pwa.js`, `gesture-quiz.js` |
+| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry; přihlášený hraje kolo ze serveru (body) | `pwa.js`, `gesture-quiz.js` |
+| `gesto-naopak.html` | **Gesto naopak**: význam jako otázka, 4 animace jako možnosti (`main data-game="gesto-naopak"`); patří pod Hry | `pwa.js`, `gesture-quiz.js` |
 | `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); patří pod Výuku | `pwa.js`, `lineup-trainer.js` |
 | `pravidla.html` | úplná pravidla FIVB 2025–2028, hledání, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `rules-search.js`, `gesture-atlas.js` |
-| `zebricek.html` | žebříček celkový + denní (záložky) | `pwa.js`, `leaderboard.js` |
+| `zebricek.html` | žebříček podle **bodů**: záložky Celkem / Tento týden / Dnes (`#tyden`, `#dnes`; starý `#denni` → Dnes), výběr hry | `pwa.js`, `leaderboard.js` |
 | `ucet.html` | **Profil**: přihlášení/registrace, statistiky, odznaky, nastavení, odhlášení, smazání účtu | `pwa.js`, `account.js` (→ `stats.js`) |
 | `ochrana-udaju.html` | zásady GDPR (statický text) | `pwa.js` |
 | `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | `stats-redirect.js` (klasický skript; inline by CSP zablokovala) |
@@ -76,7 +77,7 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 ### Kvíz, žebříček, profil (používají Supabase)
 | Modul | ← importuje | Exporty / co dělá |
 |---|---|---|
-| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats` – jediné místo volání RPC kvízu |
+| `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
 | `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `quiz-practice`, `daily-card`, `supabase` | kvíz (`kviz.html`) i procvičování (`procvicovani.html`) – karty startu podle toho, které prvky stránka má; start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
@@ -85,7 +86,9 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | `quiz-result.js` | `dom`, `categories`, `badges`, `report` | `renderResultItem` (vysvětlení otázky s odkazem do pravidel), `renderNewBadges` – společné pro kvíz a zkoušku |
 | `celebrate.js` | `dom` | `createScore` (skóre v kruhu úspěšnosti), `celebrate(ring, { ribbons })` (napočítání + stuhy na canvasu od 60 % správně; respektuje omezený pohyb) – výsledek kvízu, zkoušky i kvízu gest |
 | `media.js` | `dom`, `animation`, `court-scene`, `lineup-logic` | `renderMedia` – obrázek / video / animace / scéna postavení (`typ: "postaveni"`, hráči v datech otázky, pod scénou zápis pozic) u otázky; SVG obrázky (`img/otazky/`) vkládá přímo do stránky kvůli CSS (`dg-*`, `qd-*`, tmavý režim); obrázek bez `soubor` = zástupný rámeček |
-| `leaderboard.js` | `dom`, `format`, `badges`, `supabase` | žebříček; RPC `zebricek` / `denni_zebricek`; medaile pro 1.–3. místo |
+| `leaderboard.js` | `dom`, `badges`, `quiz-api`, `supabase` | žebříček podle bodů (`getPointsLeaderboard` → RPC `zebricek_body`); období, hra, medaile pro 1.–3. místo |
+| `points.js` | `dom`, `format` | `pointsNote` – věta pod výsledkem kola: „+70 bodů do žebříčku“, limit, příliš rychlé, pozvánka k přihlášení |
+| `games-hub.js` | `quiz-api`, `supabase`, `format` | Hry: souhrn bodů hráče a štítky `[data-points]` u her (`getMyPoints` → `moje_body`) |
 | `account.js` | `dom`, `badges`, `stats`, `supabase` | Profil: Auth (heslo, Google, reset, nové heslo), přezdívka, výběr odznaků, odhlášení, smazání účtu |
 | `report.js` | `dom` (+ `supabase` načtený až při odeslání přes `import()`) | `createReportLink({ questionId } | { gestureId })` – odkaz „Nahlásit chybu“ s formulářem; RPC `nahlasit_chybu` |
 | `stats.js` | `dom`, `format`, `categories`, `badges`, `supabase` | `loadStats` – statistiky a odznaky v Profilu |
@@ -111,7 +114,7 @@ gesta/gesta.json ─▶ gesture-data.js ─▶ gesture-quiz.js (gesta.html)
 | `gesture-pose.js` | `BODY` (rozměry postavy), `createPoseSampler` (gesto → funkce čas → poloha paží) |
 | `referee-figure.js` | `createRefereeScene`, `createGesturePlayer` (výřez scény se přizpůsobí rozsahu pohybu gesta – `fitViewBox`) |
 | `gesture-data.js` | `loadGestures` (fetch jednou za návštěvu), `gestureSource`, `gestureDetails` |
-| `gesture-quiz.js` | – (stránka kvízu gest; 10 gest, 4 možnosti, okamžité vyhodnocení; výsledek přes `celebrate.js`; hlášení přes `report.js`) |
+| `gesture-quiz.js` | – (kvíz gest i Gesto naopak; 10 gest, 4 možnosti, okamžité vyhodnocení; přihlášený: gesta vybere server `startGame`, na konci `submitGame` → body přes `points.js`; hlášení přes `report.js`) |
 | `gesture-atlas.js` | – (karty všech 32 gest, kotvy `#gesto-<id>`) ← `rules-page.js` |
 
 ### Trenažér postavení (jen prohlížeč)
@@ -195,7 +198,9 @@ Animace menu jsou v sekci „Animace navigace“ hned za navigací.
 | `public.otazky` | otázky bez správných odpovědí | jen přes funkce |
 | `private.otazky_reseni` | **správné odpovědi** + vysvětlení | nikdy (schéma `private`) |
 | `public.profily` | přezdívka, vybrané odznaky | `select` + `update (prezdivka)` jen svůj řádek |
-| `public.kola` | odehraná kola (čas, skóre, režim, odpovědi) | `select` jen svoje |
+| `public.kola` | odehraná kola všech her (`hra`: kviz / gesta / gesto-naopak; čas, skóre, režim, odpovědi, `polozky` = id gest, `body` + `body_duvod` 'limit'/'rychle'; null = nebodované) | `select` jen svoje |
+| `private.hodnoty_her` (`01`) | body za správnou a bonus za rychlost podle hry a režimu (chybí řádek = nebodované) | nikdy |
+| `private.gesta` (`07`) | katalog gest (id, skupina) – musí odpovídat `gesta/gesta.json` (test `body-db`) | nikdy |
 | `public.denni_vyzvy` | otázky denní výzvy | jen přes funkce |
 | `public.odznaky_hracu` | získané odznaky | jen přes funkce |
 | `public.hlaseni` (`06_hlaseni.sql`) | hlášení chyb v otázkách/gestech, stav `nove`/`vyreseno`/`zamitnuto` | jen zápis přes funkci; čtení v dashboardu (pohled `private.prehled_hlaseni`) |
@@ -215,6 +220,10 @@ Trigger `po_registraci` → `private.zalozit_profil()` založí profil při regi
 | `03_statistiky.sql` | `moje_statistiky()` (vč. historie zkoušek) | auth | `stats.js`, `quiz-api.js` (úspěšnost v dlaždicích) | |
 | `04_denni_vyzva.sql` | `denni_zebricek(limit)`, `stav_denni_vyzvy()` (vč. `vcera`) | anon, auth | `leaderboard.js`, `quiz-api.js` (→ `daily-card.js`) | `denni_poradi`, `denni_serie` |
 | `06_hlaseni.sql` | `nahlasit_chybu(otazka_id, gesto, typ, text)` | anon, auth | `report.js` | pohled `prehled_hlaseni` |
+| `07_hry.sql` | `zacni_hru(hra, sada)`, `odevzdej_hru(kolo_id, odpovedi)` | anon, auth | `quiz-api.js` (→ `gesture-quiz.js`) | `prirad_body`, `body_za`, `denni_limit_kol` (v `02`) |
+| | `zebricek_body(obdobi, hra, limit)` – součet bodů celkem / tyden / den, shoda → dřívější zisk | anon, auth | `quiz-api.js` (→ `leaderboard.js`) | |
+| | `moje_body()` – dnes / týden / celkem, `dnes_hrano` | auth | `quiz-api.js` (→ `games-hub.js`) | |
+| | (na konci souboru přepočet bodů starých kol – opakovatelný) | | | |
 | `05_odznaky.sql` | `moje_odznaky()`, `nastav_odznaky(odznaky)` | auth | `account.js`, `stats.js` | `metriky_odznaku`, `udel_odznaky` |
 
 Režimy kola: `bezne` (až 10 otázek, filtr kategorie/obtížnosti), `chyby` (opakování chyb), `denni` (5 stejných otázek pro všechny, jen přihlášení, jeden pokus; řešení až zítra – `private.reseni_skryte` ho skryje i v opakování chyb, statistikách a odznacích),
@@ -263,7 +272,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat/změnit otázku | `private/otazky.json` → seed SQL → spustit v Supabase |
 | přidat kategorii otázek | `js/categories.js`, `tools/seed-otazky.mjs` (`CATEGORIES`), `check (kategorie in …)` v `sql/01_schema.sql`, shrnutí s tím id v pravidlech, cíl odznaku Všestranný (`sql/05` + `js/badges.js`), `CATS` v `private/testy/otazky-check.mjs` |
 | změnit zkoušku (počet, limit, hranice) | `private.zkouska_*` v `sql/02_funkce.sql` + texty v `zkouska.html`, karta ve `vyuka.html`, popis odznaku v `js/badges.js` |
-| přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) |
+| přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) **a** do katalogu `private.gesta` v `sql/07_hry.sql` (hlídá test `body-db`) |
 | upravit trenažér zápisu | pravidla a důsledky: `js/scoresheet-model.js`; úlohy: `scoresheet-tasks.js`; četnost událostí dlouhé verze: `scoresheet-game.js`; vzhled: `scoresheet-view.js` + CSS `sc-*`; testy `scoresheet-logic`, `e2e-zapis` |
 | upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |
 | přidat animaci situace | `animace/<id>.json` + `APP_SHELL` v `sw.js` |
@@ -272,6 +281,8 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 | přidat/upravit pojem slovníčku | `slovnicek/pojmy.json` → `node private/pravidla-zdroj/build.mjs pravidla.html` (definice v pravidlech); test `e2e-slovnicek` |
 | upravit text pravidel | `private/pravidla-zdroj/src/*.txt` + build (nebo drobnost přímo v `pravidla.html`) |
 | přidat odznak | `js/badges.js` + `private.metriky_odznaku` v `sql/05_odznaky.sql` (stejné id) |
+| změnit body / denní limit | hodnoty: `private.hodnoty_her` v `sql/01_schema.sql`; limit: `private.denni_limit_kol()` v `sql/02_funkce.sql`; texty v `zebricek.html` (Jak se počítají body) a `hry.html`; pravidla `docs/bodovy-system.md` |
+| přidat bodovanou hru | hodnota do `private.hodnoty_her`, hodnota do `kola_hra_check` (`01`), start/odevzdání na serveru (vzor `zacni_hru`/`odevzdej_hru` v `07`), volba v `#board-game` (`zebricek.html`), štítek `data-points` v `hry.html` |
 | novou stránku | HTML s hlavičkou/navigací jako ostatní **včetně meta CSP**, `APP_SHELL` + `CACHE` v `sw.js`, navigace ve všech stránkách, stránku do `PAGES` v `private/testy/e2e-csp.mjs` |
 | novou externí službu (API, obrázky…) | upravit CSP (`connect-src`, `img-src`…) ve **všech** HTML stejně; test `e2e-csp` hlídá, že je všude stejná |
 | aktualizovat supabase-js | postup v `docs/historie.md` (Knihovna Supabase a CSP) |

@@ -44,7 +44,7 @@
     <section id="gesture-start" class="card stack">
       <h2>Co znamená toto gesto?</h2>
       <p>Uvidíš animaci gesta rozhodčího a vybereš, co znamená. Hned po odpovědi zjistíš, jestli máš pravdu, a dozvíš se, jak se gesto správně ukazuje.</p>
-      <p class="muted small">Kvíz běží jen v tvém prohlížeči – nepotřebuje přihlášení a nepočítá se do žebříčku.</p>
+      <p class="muted small">Přihlášený hráč dostane za první kolo dne body do žebříčku (5 za každé správné gesto). Hrát můžeš i bez přihlášení.</p>
       <div class="field">
         <label for="gesture-set">Gesta</label>
         <select id="gesture-set">
@@ -90,6 +90,7 @@
         <h2 id="gesture-result-heading" tabindex="-1">Výsledek</h2>
         <div id="gesture-score"></div>
         <p id="gesture-result-text"></p>
+        <p id="gesture-points" class="small"></p>
         <div class="actions">
           <button id="gesture-again" class="button" type="button">Hrát znovu</button>
           <a href="pravidla.html#signalizace">Přehled všech gest</a>

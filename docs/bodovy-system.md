@@ -116,8 +116,33 @@ Body dostávají jen přihlášení hráči (stejně jako dnes žebříček).
    jednotlivých otázek. Příklad: 4/5 za 45 s = 80 + 50 × (1 − 15/90) × 4/5
    = 80 + 33 = 113 bodů. Max 150.
 
-## Otevřené: ověřování postavení a zápisu na serveru
+## Ověřování postavení a zápisu na serveru
 
-Vysvětlení možností je v chatu ze session 26. 10. (A = přepsat do SQL,
-B = Edge Function se sdíleným JS, C = věřit prohlížeči s pojistkami).
-Rozhodnutí sem.
+Rozhodnuto 26. 10.: **B = Supabase Edge Function se sdíleným JS**
+(`lineup-logic.js`, `scoresheet-*.js` běží i na serveru). Zatím
+neimplementováno – před nasazením první funkce ověřit, kde fyzicky běží (GDPR),
+a nastavit pojistky (docs/pred-spustenim.md, Náklady a zneužití).
+
+## Stav implementace (větev body-a-minihry)
+
+Hotovo:
+- `sql/01`: `kola.hra`, `polozky`, `body`, `body_duvod`, tabulka `private.hodnoty_her`.
+- `sql/02`: `private.denni_limit_kol()` (= 1), `body_za`, `prirad_body`
+  (při odevzdání kola), `odevzdej_kolo` vrací body.
+- `sql/07_hry.sql`: katalog gest, `zacni_hru` / `odevzdej_hru` (kvíz gest,
+  Gesto naopak), `zebricek_body` (celkem / týden / den, za hru), `moje_body`,
+  přepočet starých kol.
+- Web: žebříček podle bodů (záložky + výběr hry), body ve výsledku kvízu
+  a her s gesty, souhrn bodů a stav her v Hrách, nová minihra Gesto naopak.
+
+Odchylky od návrhu:
+- **Kniha bodů** není samostatná tabulka – body jsou sloupec `kola.body`
+  (zatím všechny body pocházejí z kol). Až přijdou duely s bonusem za výhru,
+  zvážit tabulku zisků, nebo bonus jako sloupec kola duelu.
+- Denní výzva je v žebříčku „Kvíz“ (hra `kviz`, režim `denni`), vlastní žebříček
+  nemá. Starý žebříček nejlepšího kola (`zebricek`, `denni_zebricek`) v DB
+  zůstává, web ho už nevolá.
+- Statistiky v Profilu a odznaky počítají jen kvíz (`hra = 'kviz'`).
+
+Zbývá: bodované postavení (Rotační sprint) a zápis přes Edge Function, další
+minihry (Pravda/nepravda, Odpískej to!, Najdi chybu v zápisu…), duely.

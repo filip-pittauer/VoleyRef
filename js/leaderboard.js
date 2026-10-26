@@ -1,34 +1,28 @@
-// Stránka žebříčku: celkový (nejlepší kolo hráče) a dnešní výzva.
-// Pořadí počítá server (sql/02_funkce.sql – zebricek, sql/04_denni_vyzva.sql – denni_zebricek).
+// Stránka žebříčku: součet bodů za období (celkem / tento týden / dnes),
+// volitelně jen z jedné hry. Pořadí i body počítá server
+// (sql/07_hry.sql – zebricek_body; pravidla bodů v docs/bodovy-system.md).
 import { el } from './dom.js';
-import { formatDuration } from './format.js';
 import { badgeById } from './badges.js';
-import { supabase, isConfigured, NOT_CONFIGURED_MESSAGE, getUser } from './supabase.js';
+import { getPointsLeaderboard } from './quiz-api.js';
+import { isConfigured, NOT_CONFIGURED_MESSAGE, getUser } from './supabase.js';
 
 const LIMIT = 50;
 
 const loginHint = document.getElementById('login-hint');
+const panel = document.getElementById('board-panel');
+const intro = document.getElementById('board-intro');
+const gameSelect = document.getElementById('board-game');
+const status = document.getElementById('board-status');
+const table = document.getElementById('board-table');
+const caption = document.getElementById('board-caption');
 
-// Intl.DateTimeFormat – formátování data podle češtiny (jako CultureInfo v C#)
-const dateFormat = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });
-
-// Dva žebříčky se stejnou logikou, liší se jen RPC funkcí, prvky a sloupcem s datem.
-const boards = {
-  celkovy: {
-    rpc: 'zebricek',
-    status: document.getElementById('overall-status'),
-    table: document.getElementById('overall-table'),
-    withDate: true,
-    empty: 'Zatím tu nikdo není. Buď první!',
-  },
-  denni: {
-    rpc: 'denni_zebricek',
-    status: document.getElementById('daily-status'),
-    table: document.getElementById('daily-table'),
-    withDate: false,
-    empty: 'Dnešní výzvu zatím nikdo nedohrál. Buď první!',
-  },
+// období → záložka a texty; kotva v adrese (#tyden, #dnes) otevře záložku
+const PERIODS = {
+  celkem: { tab: document.getElementById('tab-celkem'), intro: 'Součet bodů za celou dobu.', empty: 'Zatím tu nikdo není. Buď první!' },
+  tyden: { tab: document.getElementById('tab-tyden'), intro: 'Body od pondělí – každý týden začínají všichni znovu.', empty: 'Tento týden zatím nikdo nebodoval. Buď první!' },
+  dnes: { tab: document.getElementById('tab-dnes'), intro: 'Body jen za dnešek, nový den začíná o půlnoci.', empty: 'Dnes zatím nikdo nebodoval. Buď první!' },
 };
+let period = 'celkem';
 
 // ---------- Tabulka ----------
 /** Odznaky, které si hráč vybral do žebříčku (ikony s popiskem pro čtečku i myš). */
@@ -48,74 +42,78 @@ function renderRank(rank) {
 }
 
 /** index = pořadí řádku v tabulce – řádky se „naskládají“ postupně (CSS proměnná --i). */
-function renderRow(row, withDate, index) {
+function renderRow(row, index) {
   return el('tr', { class: row.je_moje ? 'is-me' : null, style: `--i: ${index}` },
-    el('td', { class: 'num' }, renderRank(row.poradi)),
+    el('td', { class: 'num' }, renderRank(Number(row.poradi))),
     el('th', { scope: 'row' },
       row.prezdivka,
       renderBadgeIcons(row.odznaky),
       row.je_moje ? [' ', el('span', { class: 'you-tag' }, 'ty')] : null),
-    el('td', { class: 'num' }, `${row.skore}/${row.pocet}`),
-    el('td', { class: 'num' }, formatDuration(row.trvani_s)),
-    withDate ? el('td', { class: 'num hide-narrow' }, dateFormat.format(new Date(row.datum))) : null);
+    el('td', { class: 'num' }, String(row.body)),
+    el('td', { class: 'num' }, String(row.kol)));
 }
 
-/** Načte jeden žebříček (celkový, nebo denní) přes RPC a vykreslí tabulku. */
-async function loadBoard(board) {
-  const { data, error } = await supabase.rpc(board.rpc, { p_limit: LIMIT });
-  if (error) {
+/** Načte žebříček pro zvolené období a hru. */
+async function loadBoard() {
+  const game = gameSelect.value || null;
+  const texts = PERIODS[period];
+  intro.textContent = texts.intro;
+  caption.textContent = `Žebříček – ${texts.tab.textContent}${game ? `, ${gameSelect.selectedOptions[0].textContent}` : ''}`;
+  let rows;
+  try {
+    rows = await getPointsLeaderboard({ period, game, limit: LIMIT });
+  } catch (error) {
     console.error(error);
-    board.status.textContent = 'Žebříček se nepodařilo načíst. Zkus obnovit stránku.';
+    showStatus('Žebříček se nepodařilo načíst. Zkus obnovit stránku.');
     return;
   }
-  if (data.length === 0) {
-    board.status.textContent = board.empty;
+  if (rows.length === 0) {
+    showStatus(texts.empty);
     return;
   }
-  board.table.querySelector('tbody').replaceChildren(...data.map((row, i) => renderRow(row, board.withDate, i)));
-  board.status.hidden = true;
-  board.table.hidden = false;
+  table.querySelector('tbody').replaceChildren(...rows.map(renderRow));
+  status.hidden = true;
+  table.hidden = false;
+}
+
+function showStatus(text) {
+  status.textContent = text;
+  status.hidden = false;
+  table.hidden = true;
 }
 
 // ---------- Záložky ----------
-const tabs = {
-  celkovy: { tab: document.getElementById('tab-celkovy'), panel: document.getElementById('panel-celkovy') },
-  denni: { tab: document.getElementById('tab-denni'), panel: document.getElementById('panel-denni') },
-};
-
-function selectTab(name) {
-  for (const [key, { tab, panel }] of Object.entries(tabs)) {
-    const active = key === name;
-    tab.setAttribute('aria-selected', String(active));
-    panel.hidden = !active;
+function selectPeriod(name) {
+  period = name;
+  for (const [key, { tab }] of Object.entries(PERIODS)) {
+    tab.setAttribute('aria-selected', String(key === name));
   }
-  // adresa #denni → po obnovení stránky nebo sdílení odkazu zůstane stejná záložka
-  history.replaceState(null, '', name === 'denni' ? '#denni' : location.pathname + location.search);
+  panel.setAttribute('aria-labelledby', PERIODS[name].tab.id);
+  // adresa #tyden / #dnes → po obnovení nebo sdílení odkazu zůstane stejná záložka
+  history.replaceState(null, '', name === 'celkem' ? location.pathname + location.search : `#${name}`);
 }
 
-for (const [name, { tab }] of Object.entries(tabs)) {
-  tab.addEventListener('click', () => selectTab(name));
+/** Záložka z adresy; staré odkazy #denni (dřívější žebříček denní výzvy) → Dnes. */
+function periodFromHash() {
+  const hash = location.hash.slice(1);
+  if (hash === 'denni') return 'dnes';
+  return PERIODS[hash] ? hash : 'celkem';
 }
 
 // ---------- Načtení ----------
-async function load() {
-  if (location.hash === '#denni') selectTab('denni');
-
+async function init() {
+  selectPeriod(periodFromHash());
   if (!isConfigured) {
-    for (const board of Object.values(boards)) board.status.textContent = NOT_CONFIGURED_MESSAGE;
+    showStatus(NOT_CONFIGURED_MESSAGE);
     return;
   }
-
-  const user = await getUser();
+  for (const [name, { tab }] of Object.entries(PERIODS)) {
+    tab.addEventListener('click', () => { selectPeriod(name); loadBoard(); });
+  }
+  gameSelect.addEventListener('change', loadBoard);
+  const user = await getUser().catch(() => null);
   loginHint.hidden = Boolean(user);
-  await Promise.all(Object.values(boards).map(loadBoard));
+  await loadBoard();
 }
 
-load().catch(error => {
-  // neočekávaná chyba (např. výpadek sítě) – raději hláška než věčné „Načítám…“
-  console.error(error);
-  for (const board of Object.values(boards)) {
-    board.status.hidden = false;
-    board.status.textContent = 'Žebříček se nepodařilo načíst. Zkus obnovit stránku.';
-  }
-});
+init();

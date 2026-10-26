@@ -39,7 +39,7 @@ function renderCountdown(refresh) {
 
 /** Řádky textu karty podle stavu; tlačítku nastaví text a viditelnost. */
 function statusLines(status, profile, button, refresh) {
-  const players = `V dnešním žebříčku: ${plural(status.hracu, 'hráč', 'hráči', 'hráčů')}.`;
+  const players = `Výzvu dnes dohráli: ${plural(status.hracu, 'hráč', 'hráči', 'hráčů')}.`;
   button.hidden = false;
   button.textContent = 'Hrát denní výzvu';
 

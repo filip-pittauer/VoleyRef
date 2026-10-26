@@ -16,6 +16,7 @@
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
   <script type="module" src="js/pwa.js"></script>
   <script type="module" src="js/daily-teaser.js"></script>
+  <script type="module" src="js/games-hub.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -44,17 +45,28 @@
       <p id="daily-text" class="small" aria-live="polite"><span class="visually-hidden">Načítám…</span><span class="skeleton" aria-hidden="true"><span class="skeleton__line"></span><span class="skeleton__line"></span></span></p>
       <div class="actions">
         <a id="daily-button" class="button" href="kviz.html?hrat=denni" hidden>Hrát denní výzvu</a>
-        <a href="zebricek.html#denni">Denní žebříček</a>
+        <a href="zebricek.html#dnes">Dnešní žebříček</a>
       </div>
     </section>
-    <p class="lead">Soutěž s ostatními v žebříčku. Zatím se počítá kvíz, body za další hry přibudou.</p>
+    <!-- Body přihlášeného hráče (js/games-hub.js); bez přihlášení pozvánka -->
+    <section id="my-points" class="points-summary" aria-labelledby="my-points-title" hidden>
+      <h2 id="my-points-title" class="visually-hidden">Tvoje body</h2>
+      <dl class="points-summary__list">
+        <div><dt>Dnes</dt><dd id="points-today">–</dd></div>
+        <div><dt>Tento týden</dt><dd id="points-week">–</dd></div>
+        <div><dt>Celkem</dt><dd id="points-total">–</dd></div>
+      </dl>
+      <a href="zebricek.html">Žebříček</a>
+    </section>
+    <p class="lead">Soutěž s ostatními v žebříčku. Body dává <strong>první kolo každé hry za den</strong> – zítra zase.</p>
     <div class="news-list">
         <a class="news" href="kviz.html">
           <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg></span>
           <span class="news__body">
             <span class="news__label">Kvíz</span>
             <span class="news__title">10 herních situací v jednom kole</span>
-            <span class="news__text">Rozhodni, jak má rozhodčí postupovat. Vysvětlení uvidíš na konci kola.</span>
+            <span class="news__text">Rozhodni, jak má rozhodčí postupovat. 10 bodů za správnou odpověď.</span>
+            <span class="news__status" data-points="kviz/bezne" hidden></span>
           </span>
         </a>
         <a class="news" href="gesta.html">
@@ -62,7 +74,17 @@
           <span class="news__body">
             <span class="news__label">Kvíz gest</span>
             <span class="news__title">Poznáš 32 oficiálních gest?</span>
-            <span class="news__text">Uvidíš animaci gesta a vybereš jeho význam.</span>
+            <span class="news__text">Uvidíš animaci gesta a vybereš jeho význam. 5 bodů za správnou odpověď.</span>
+            <span class="news__status" data-points="gesta/bezne" hidden></span>
+          </span>
+        </a>
+        <a class="news" href="gesto-naopak.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Gesto naopak</span>
+            <span class="news__title">Najdi správné gesto</span>
+            <span class="news__text">Hra řekne význam, ty ze čtyř animací vybereš to správné. 5 bodů za správnou odpověď.</span>
+            <span class="news__status" data-points="gesto-naopak/bezne" hidden></span>
           </span>
         </a>
         <a class="news" href="zebricek.html">
@@ -70,7 +92,7 @@
           <span class="news__body">
             <span class="news__label">Žebříček</span>
             <span class="news__title">Kdo píská nejlépe?</span>
-            <span class="news__text">Nejlepší výsledky přihlášených hráčů a denní žebříček.</span>
+            <span class="news__text">Součet bodů ze všech her – celkem, tento týden a dnes.</span>
           </span>
         </a>
     </div>
@@ -78,7 +100,6 @@
       <h2 id="pripravujeme">Připravujeme</h2>
       <ul class="soon-list">
         <li><strong>Odpískej to!</strong> Přehraje se situace a ty ukážeš správná gesta ve správném pořadí.</li>
-        <li><strong>Gesto naopak</strong> Hra řekne význam, ty najdeš správnou animaci.</li>
         <li><strong>Rotační sprint</strong> Přetáhni hráče na nové pozice, na čas.</li>
         <li><strong>Pravda / nepravda</strong> Co nejvíc tvrzení z pravidel za 60 sekund.</li>
         <li><strong>Duely</strong> Vyzvi kamaráda na stejné otázky.</li>
