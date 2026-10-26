@@ -788,7 +788,10 @@ progress::-moz-progress-bar {
   background: rgb(255 255 255 / 0.2);
 }
 
+/* ilustrace u otázky (obrázek, animace, scéna postavení): na počítači by
+   přes celou šířku karty byla obří a odpovědi by odjely pod obrazovku */
 .media {
+  max-width: 32rem;
   margin: 0;
 }
 
@@ -908,7 +911,7 @@ progress::-moz-progress-bar {
 /* SVG obrázek k otázce (img/otazky/*.svg, vložený do stránky): styl diagramů dg-*,
    ale bez minimální šířky – v kvízu se nemá posouvat do strany */
 .media--diagram {
-  max-width: 36rem;
+  max-width: 32rem;
 }
 
 .media--diagram svg {
@@ -961,6 +964,13 @@ progress::-moz-progress-bar {
 .qd-antenna-outline { stroke: #475569; stroke-width: 4.6; }
 /* popisky přímo na podlaze hřiště: tmavé i v tmavém režimu (podlaha je pořád oranžová) */
 .dg-note.qd-on-court text { fill: #111827; }
+
+/* animace a scéna postavení jsou skoro čtvercové – na počítači omezit
+   i výškou okna, aby se pod ně vešly odpovědi */
+.media.anim,
+.media--scene {
+  max-width: min(32rem, 55vh);
+}
 
 /* scéna postavení u otázky: pod ní zápis pozic */
 .media--scene figcaption {
