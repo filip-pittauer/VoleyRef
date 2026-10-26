@@ -18,6 +18,7 @@ CODEMAP.md          mapa kódu (moduly, importy, RPC, kotvy, „kam sáhnout“)
 docs/historie.md    podrobnosti hotových částí, odložené nápady, testování podrobně – číst při práci na dané části
 docs/pred-spustenim.md  kontrolní seznam před zveřejněním (OAuth, SMTP, e-mail, kontrola obsahu)
 index.html          úvod / rozcestník
+hry.html, vyuka.html  rozcestníky Hry (soutěž) a Výuka (bez bodů)
 kviz.html           kvíz (+ karty gest a trenažéru)
 pravidla.html       úplná pravidla: <details class="rule"> (kotvy #pravidlo-12, body #p-12-4-3), shrnutí s id
                     kategorií, diagramy #diagram-N; obsah mezi značkami generuje private/pravidla-zdroj/build.mjs
@@ -65,7 +66,7 @@ Platí pro `private/otazky.json` i DB (`public.otazky` + `private.otazky_reseni`
 - **Nový soubor webu (HTML/JS/CSS/animace) přidat do `APP_SHELL` v `sw.js` a zvýšit verzi `CACHE`.** Při změně existujících souborů webu `CACHE` taky zvýšit.
 - **Content Security Policy** je `<meta http-equiv="Content-Security-Policy">` v každém HTML zvlášť (GitHub Pages neumí hlavičky): nová stránka = zkopírovat CSP, nová externí služba = upravit CSP ve všech stránkách stejně. Žádné inline `<script>`, `onclick=`, `style="…"` (ani ve vložených SVG) – styly třídou v CSS, z JS přes `element.style`/`el(…, { style })`. Hlídá test `e2e-csp`.
 - **CODEMAP.md držet aktuální** (soubor, modul, export, RPC, tabulka) ve stejném commitu.
-- Navigace: Kvíz, Gesta, Pravidla, Žebříček, Profil (úvod přes logo); max. 5 položek. Hlavička a navigace jsou v každém HTML zvlášť – při změně upravit všechny stránky.
+- Navigace: Hry, Výuka, Pravidla, Žebříček, Profil (úvod přes logo); max. 5 položek. **Hry = bodované, Výuka = bez bodů** (docs/bodovy-system.md). Hlavička a navigace jsou v každém HTML zvlášť – při změně upravit všechny stránky.
 - UI česky; názvy v kódu anglicky, komentáře česky.
 - Sémantické HTML, přístupnost, mobile-first CSS, CSS proměnné pro barvy. Stránky her mají `main.app-page` (kompaktní na mobilu).
 - Obsah jako data (JSON / DB), ne natvrdo v kódu. Malé, čitelné soubory a funkce, žádné zbytečné závislosti.
@@ -102,6 +103,7 @@ Ve `private/testy/` (soukromé repo, knihovny nainstalované, `node_modules` ign
 - **Bezpečnost hotová (25. 10. 2026):** denní výzva bez prozrazení řešení, výchozí práva „deny by default“ (test prava-db), supabase-js v js/vendor/ + CSP (test e2e-csp), zásady GDPR. Odložené (známá omezení dema): docs/pred-spustenim.md.
 - **Čitelnost (od 25. 10. 2026, už bez druhé session):** krok 1 ESLint + .editorconfig, krok 2 komentáře (JSDoc u funkcí, obsah v css/style.css). Další: 12 varování o složitosti/délce funkcí (`npm run lint`), pak předávací dokumentace a audity.
 - **Kde jsme skončili (26. 10. 2026):** prototyp animací `prototyp/animace.html` (A = SVG, B = Three.js; podrobnosti docs/historie.md). Na PC je B mnohem hezčí. Pády B na mobilu (PowerVR) způsobovalo `setSize` v každém snímku. Po opravě B na mobilu běží se stíny. Na Samsungu A26 a tabletu Lenovo B běží plynule ve vysoké kvalitě. **Prototyp odložen. Před návratem k animacím přečíst docs/animace-poznamky.md** (testy zařízení, co zbývá). Pak přeanimovat situace, minihry (Učebna/Hala, „Odpískej to!“, duely).
+- **Hry / Výuka (26. 10. 2026):** rozcestníky hry.html a vyuka.html, nová navigace. **Další:** bodový systém podle docs/bodovy-system.md (rozhodnutí tam; postavení a zápis ověřovat přes Supabase Edge Function), pak minihry z docs/napady-hry-vyuka.md.
 - **Otevřené body:**
   - V budoucnu AI hledání „Zeptej se pravidel“ (Supabase Edge Function + Claude API) – uživatel chce, samostatný balíček.
   - Obrázky k otázkám `hriste` (zástupné rámečky): dodá uživatel, nebo nakreslíme SVG.

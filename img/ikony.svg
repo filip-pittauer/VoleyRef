@@ -26,4 +26,25 @@
     <circle cx="12" cy="8" r="4"/>
     <path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>
   </symbol>
+  <symbol id="hry" viewBox="0 0 24 24">
+    <path d="M9 9h12v4h-6.3"/>
+    <circle cx="9" cy="14.5" r="5.5"/><circle cx="9" cy="14.5" r="1.6"/>
+    <path d="M3 4.5l1.8 1.8M7.5 2.5l.6 2.4"/>
+  </symbol>
+  <symbol id="vyuka" viewBox="0 0 24 24">
+    <path d="M2 9.5L12 4.5l10 5-10 5z"/>
+    <path d="M6 11.5v4.5c0 1.6 2.7 3.2 6 3.2s6-1.6 6-3.2v-4.5M22 9.5v5.5"/>
+  </symbol>
+  <symbol id="zapis" viewBox="0 0 24 24">
+    <rect x="5" y="4" width="14" height="17" rx="1.5"/>
+    <path d="M9 2.5h6v3H9zM8.5 10h7M8.5 13.5h7M8.5 17h4"/>
+  </symbol>
+  <symbol id="zkouska" viewBox="0 0 24 24">
+    <circle cx="12" cy="13.5" r="7.5"/>
+    <path d="M12 13.5V9.5M10 2.5h4M18 6l1.5-1.5"/>
+  </symbol>
+  <symbol id="denni" viewBox="0 0 24 24">
+    <rect x="3.5" y="5" width="17" height="15.5" rx="1.5"/>
+    <path d="M3.5 9.5h17M8 3v4M16 3v4M12 12.2l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2-1.45-1.4 2-.3z"/>
+  </symbol>
 </svg>

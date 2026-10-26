@@ -36,20 +36,23 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 
 | Stránka | Účel | Skripty (vstupní moduly) |
 |---|---|---|
-| `index.html` | úvod / rozcestník, karty sekcí, instalace PWA | `pwa.js` |
-| `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`), karty zkoušky (`#zkouska`), gest a trenažéru postavení | `pwa.js`, `quiz.js` |
-| `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, odkaz z kvízu | `pwa.js`, `scoresheet-trainer.js` |
-| `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); není v navigaci, odkaz z kvízu | `pwa.js`, `exam.js` |
-| `gesta.html` | kvíz „Co znamená toto gesto?“ | `pwa.js`, `gesture-quiz.js` |
-| `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); není v navigaci, odkaz z kvízu a úvodu | `pwa.js`, `lineup-trainer.js` |
+| `index.html` | úvod / rozcestník, karty sekcí (Hry, Výuka, Pravidla, Žebříček), instalace PWA | `pwa.js` |
+| `hry.html` | rozcestník **Hry** (bodované/soutěžní): kvíz, denní výzva, kvíz gest, žebříček, seznam „Připravujeme“ | `pwa.js` |
+| `vyuka.html` | rozcestník **Výuka** (bez bodů): pravidla, atlas gest, slovníček, procvičování, trenažéry postavení a zápisu, zkouška | `pwa.js` |
+| `kviz.html` | kvíz: běžné kolo, denní výzva (`#denni`), opakování chyb (`#opakovani`); v navigaci patří pod Hry | `pwa.js`, `quiz.js` |
+| `zapis.html` | trenažér zápisu: krátká verze (10 úloh nad rozepsaným zápisem), dlouhá verze (vedení celého setu); bez DB, patří pod Výuku | `pwa.js`, `scoresheet-trainer.js` |
+| `zkouska.html` | zkouška: 30 otázek ze všech kategorií za 30 min, přehled otázek, potvrzení odevzdání, prošel/neprošel (80 %); patří pod Výuku | `pwa.js`, `exam.js` |
+| `gesta.html` | kvíz „Co znamená toto gesto?“; patří pod Hry | `pwa.js`, `gesture-quiz.js` |
+| `postaveni.html` | trenažér postavení přijímajícího týmu (3D pohled 1./2. rozhodčího, po odpovědi shora); patří pod Výuku | `pwa.js`, `lineup-trainer.js` |
 | `pravidla.html` | úplná pravidla FIVB 2025–2028, hledání, diagramy, atlas gest (pravidlo 30) | `pwa.js`, `rules-page.js`, `rules-search.js`, `gesture-atlas.js` |
 | `zebricek.html` | žebříček celkový + denní (záložky) | `pwa.js`, `leaderboard.js` |
 | `ucet.html` | **Profil**: přihlášení/registrace, statistiky, odznaky, nastavení, odhlášení, smazání účtu | `pwa.js`, `account.js` (→ `stats.js`) |
 | `ochrana-udaju.html` | zásady GDPR (statický text) | `pwa.js` |
 | `statistiky.html` | jen přesměrování na `ucet.html#statistiky` (staré odkazy) | `stats-redirect.js` (klasický skript; inline by CSP zablokovala) |
 
-Hlavička s navigací (Kvíz, Gesta, Pravidla, Žebříček, Profil) je v **každém** HTML zvlášť –
-při změně upravit všech 11 souborů. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
+Hlavička s navigací (Hry, Výuka, Pravidla, Žebříček, Profil) je v **každém** HTML zvlášť –
+při změně upravit všech 12 stránek s navigací. Stránka sekce má u položky `aria-current="true"`
+(kvíz a gesta → Hry; postavení, zápis, zkouška → Výuka), rozcestník sám `aria-current="page"`. Ikony navigace: `img/ikony.svg` (symboly pro `<use>`).
 
 ---
 
@@ -152,7 +155,7 @@ scoresheet-model.js ─▶ scoresheet-tasks.js (krátká verze) ─┐
 | `animace/*.json` | animace situací (`mic-antena`, `podani-preslap`, `utok-zadni-rada`) a `q<id>-*.json` k otázkám (generuje `private/obrazky/animace.mjs`) | `animace/README.md` |
 | `img/otazky/*.svg` | obrázky k otázkám (generuje `private/obrazky/diagramy.mjs`, kromě 201/212/213/217 kreslených ručně) | SVG s třídami `dg-*`/`qd-*` |
 | `pravidla.html` | text pravidel; obsah mezi značkami `<!-- PRAVIDLA:START/END -->` a `<!-- OBSAH:START/END -->` je **generovaný** | viz níže |
-| `img/ikony.svg` | ikony navigace (`#kviz`, `#gesta`, `#pravidla`, `#zebricek`, `#profil`) a `#postaveni` (úvod) | SVG symboly |
+| `img/ikony.svg` | ikony navigace (`#hry`, `#vyuka`, `#pravidla`, `#zebricek`, `#profil`) a karet (`#kviz`, `#gesta`, `#postaveni`, `#zapis`, `#zkouska`, `#denni`) | SVG symboly |
 | `img/icons/` | ikony aplikace (PWA, favicon), zdroj `icon.svg` | |
 | `fonts/` + `css/fonts.css` | Barlow, Barlow Condensed (woff2, latin + latin-ext), offline bez Googlu | |
 | `manifest.json` | PWA manifest | |
@@ -254,7 +257,7 @@ Kliknutí na vnitřní odkaz rozbalí cíl dřív, než prohlížeč skočí.
 |---|---|
 | přidat/změnit otázku | `private/otazky.json` → seed SQL → spustit v Supabase |
 | přidat kategorii otázek | `js/categories.js`, `tools/seed-otazky.mjs` (`CATEGORIES`), `check (kategorie in …)` v `sql/01_schema.sql`, shrnutí s tím id v pravidlech, cíl odznaku Všestranný (`sql/05` + `js/badges.js`), `CATS` v `private/testy/otazky-check.mjs` |
-| změnit zkoušku (počet, limit, hranice) | `private.zkouska_*` v `sql/02_funkce.sql` + texty v `zkouska.html`, karta v `kviz.html`, popis odznaku v `js/badges.js` |
+| změnit zkoušku (počet, limit, hranice) | `private.zkouska_*` v `sql/02_funkce.sql` + texty v `zkouska.html`, karta ve `vyuka.html`, popis odznaku v `js/badges.js` |
 | přidat gesto | záznam v `gesta/gesta.json` (formát `gesta/README.md`) |
 | upravit trenažér zápisu | pravidla a důsledky: `js/scoresheet-model.js`; úlohy: `scoresheet-tasks.js`; četnost událostí dlouhé verze: `scoresheet-game.js`; vzhled: `scoresheet-view.js` + CSS `sc-*`; testy `scoresheet-logic`, `e2e-zapis` |
 | upravit trenažér postavení | generování a pravidla: `js/lineup-logic.js`; vzhled scény, kamery pohledů: `js/court-scene.js` (`VIEWS`) a CSS `ct-*`; texty a ovládání: `js/lineup-trainer.js` |

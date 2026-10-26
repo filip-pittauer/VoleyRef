@@ -12,7 +12,7 @@
 //  - Supabase (databáze, přihlášení): vůbec necachovat, vždy živě
 //
 // Po změně seznamu souborů zvyš číslo verze – stará mezipaměť se smaže.
-const CACHE = 'voleyref-v33';
+const CACHE = 'voleyref-v34';
 
 const APP_SHELL = [
   './',
@@ -27,6 +27,8 @@ const APP_SHELL = [
   'postaveni.html',
   'zkouska.html',
   'zapis.html',
+  'hry.html',
+  'vyuka.html',
   'css/style.css',
   'css/fonts.css',
   'fonts/barlow-400-latin-ext.woff2',

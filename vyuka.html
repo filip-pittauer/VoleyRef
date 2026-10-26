@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Content Security Policy: odkud smí stránka načítat skripty, styly, data… (GitHub Pages neumí hlavičky, proto meta). Stejná ve všech stránkách – viz CLAUDE.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://bazkmqpxixfxjutuyfsy.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="description" content="Výuka pro volejbalové rozhodčí: pravidla vlastními slovy, atlas gest, trenažéry postavení a zápisu, procvičování otázek a zkouška.">
+  <title>Výuka – Volejbal: trénink rozhodčích</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b2a5b">
+  <link rel="icon" href="img/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+  <script type="module" src="js/pwa.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html"><svg class="logo__icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg>Trénink <span>rozhodčích</span></a>
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="hry.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#hry"></use></svg><span>Hry</span></a></li>
+          <li><a href="vyuka.html" aria-current="page"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#vyuka"></use></svg><span>Výuka</span></a></li>
+          <li><a href="pravidla.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg><span>Pravidla</span></a></li>
+          <li><a href="zebricek.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zebricek"></use></svg><span>Žebříček</span></a></li>
+          <li><a href="ucet.html"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#profil"></use></svg><span>Profil</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" class="hub">
+    <h1>Výuka</h1>
+    <p class="lead">Uč se vlastním tempem, bez tlaku a bez žebříčku.</p>
+    <div class="news-list">
+        <a class="news" href="pravidla.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Pravidla</span>
+            <span class="news__title">Pravidla volejbalu vlastními slovy</span>
+            <span class="news__text">S obrázky, hledáním a odkazy na oficiální znění ČVS a FIVB.</span>
+          </span>
+        </a>
+        <a class="news" href="pravidla.html#diagram-11">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#gesta"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Atlas gest</span>
+            <span class="news__title">Všechna znamení rozhodčích</span>
+            <span class="news__text">Animace každého gesta podle pravidel FIVB 2025–2028.</span>
+          </span>
+        </a>
+        <a class="news" href="pravidla.html#definice">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#pravidla"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Slovníček</span>
+            <span class="news__title">Definice pojmů</span>
+            <span class="news__text">Co znamená blok, clona, dotyk nebo zadní hráč.</span>
+          </span>
+        </a>
+        <a class="news" href="kviz.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#kviz"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Procvičování</span>
+            <span class="news__title">Otázky podle kategorie a obtížnosti</span>
+            <span class="news__text">Vyber si oblast pravidel. Přihlášený si může zopakovat otázky, ve kterých chyboval.</span>
+          </span>
+        </a>
+        <a class="news" href="postaveni.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#postaveni"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Trenažér postavení</span>
+            <span class="news__title">Vidíš chybu postavení?</span>
+            <span class="news__text">Okamžik podání z pohledu 1. nebo 2. rozhodčího. Najdi hráče v chybném pořadí.</span>
+          </span>
+        </a>
+        <a class="news" href="zapis.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zapis"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Trenažér zápisu</span>
+            <span class="news__title">Práce zapisovatele</span>
+            <span class="news__text">Kdo podává, střídání, libero, oddechové časy a sankce. Krátké úlohy nebo celý set.</span>
+          </span>
+        </a>
+        <a class="news" href="zkouska.html">
+          <span class="news__thumb"><svg class="nav-icon" aria-hidden="true"><use href="img/ikony.svg#zkouska"></use></svg></span>
+          <span class="news__body">
+            <span class="news__label">Zkouška</span>
+            <span class="news__title">30 otázek za 30 minut</span>
+            <span class="news__text">Test jako u zkoušky rozhodčích. Ke splnění potřebuješ 80 % správně.</span>
+          </span>
+        </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Neoficiální výukový web. Závazná jsou <a href="https://www.cvf.cz/" rel="noopener">pravidla ČVS</a> a <a href="https://www.fivb.com/" rel="noopener">FIVB</a>.
+      · <a href="ochrana-udaju.html">Ochrana osobních údajů</a></p>
+  </footer>
+</body>
+</html>
