@@ -36,7 +36,7 @@ Stav: 23. 10. 2026 (vzhled „Svaz“, úplná pravidla, gesta rozhodčích, tre
 
 | Stránka | Účel | Skripty (vstupní moduly) |
 |---|---|---|
-| `index.html` | úvod / rozcestník: karta denní výzvy (jen dokud ji hráč dnes nedohrál), karty sekcí (Hry, Výuka, Pravidla, Žebříček), instalace PWA | `pwa.js`, `daily-teaser.js` |
+| `index.html` | úvod / rozcestník: karta denní výzvy (jen dokud ji hráč dnes nedohrál), karta „Pokračuj“ (přihlášený: další lekce kurzu, chyby k opakování, hry s dnešními body; nepřihlášený: kde začít), instalace PWA | `pwa.js`, `daily-teaser.js`, `home-continue.js` |
 | `hry.html` | rozcestník **Hry** (bodované): karta denní výzvy, souhrn Tvoje body (dnes/týden/celkem), hry se stavem „dnešní body získány“, žebříček, „Připravujeme“ | `pwa.js`, `daily-teaser.js`, `games-hub.js` |
 | `vyuka.html` | rozcestník **Výuka** (bez bodů): pravidla, atlas gest, slovníček, procvičování, trenažéry postavení a zápisu, zkouška | `pwa.js` |
 | `kviz.html` | kvíz v Hrách: denní výzva (`#denni`; `?hrat=denni` ji rovnou spustí), běžné kolo (náhodný mix, do žebříčku); v navigaci pod Hry | `pwa.js`, `quiz.js` |
@@ -86,6 +86,7 @@ při změně upravit všech 12 stránek s navigací. Stránka sekce má u polož
 | `quiz-api.js` | `supabase.js` | `startRound`, `submitRound` (u zkoušky navíc `exam`: limit, hranice, prošel; u dnešní denní výzvy `solutionHidden`), `getDailyStatus`, `getDailySolution`, `getMistakesCount`, `getCategoryOverview`, `getCategoryStats`, `getPointsLeaderboard`, `getMyPoints`, `startGame`, `submitGame`, `startSprint`, `submitSprint`, `startWhistle`, `submitWhistle`, `createDuel`, `getDuel`, `acceptDuel`, `getMyDuels` – jediné místo volání RPC kvízu a her; `submitRound` vrací i `points`, `pointsReason` |
 | `quiz.js` | `dom`, `categories`, `format`, `media`, `celebrate`, `quiz-result`, `quiz-api`, `quiz-practice`, `course`, `daily-card`, `supabase` | kvíz (`kviz.html`), procvičování (`procvicovani.html`) i kurz (`kurz.html`) – karty startu podle toho, které prvky stránka má; start → otázky → výsledek (skóre, vysvětlení, odkaz na bod pravidla, nové odznaky) |
 | `daily-card.js` | `dom`, `format`, `quiz-api` | `renderDailyCard` (stav, skóre, pořadí, série, odpočet; tlačítko/odkaz „Hrát“), `streakText`, `previousDay` – karta denní výzvy pro kvíz, úvod i Hry |
+| `home-continue.js` | `dom`, `categories`, `format`, `quiz-api`, `course`, `duel`, `supabase` | karta „Pokračuj“ na úvodu (bez exportů): `postup_kurzu`, `pocet_chyb`, `moje_body` souběžně (`Promise.allSettled`), seznam her z `DUEL_GAMES` |
 | `daily-teaser.js` | `supabase`, `daily-card` | vstupní modul karty na úvodu a v Hrách; `data-hide-when-played` = skrýt po odehrání |
 | `course.js` | `dom`, `categories` | `loadLessons`, `lessonStates`, `renderCourse`, `lessonResultNote` – kurz po lekcích: mapa lekcí (hotová / otevřená / zamčená), poznámka k výsledku testu |
 | `rule-changes.js` | `dom` | stránka `zmeny.html` (bez exportů): karty změn, filtr, pokusná pravidla |
